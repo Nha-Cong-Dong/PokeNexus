@@ -1,0 +1,54 @@
+name: Báo lỗi
+description: Báo một lỗi để được sửa
+title: "[Bug] "
+labels: ["type: bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Mô tả lỗi
+      description: Lỗi gì xảy ra, ở trang hoặc endpoint nào.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Các bước tái hiện
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Kết quả mong đợi
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Kết quả thực tế
+      description: Kèm ảnh chụp màn hình, log hoặc response lỗi nếu có.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Khu vực
+      options:
+        - Backend
+        - Frontend
+        - Database
+        - Ingestion
+        - CI
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Môi trường
+      placeholder: "Local / Production, trình duyệt, hệ điều hành, commit"
+    validations:
+      required: false

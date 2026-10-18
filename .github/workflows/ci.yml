@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (Java 25)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Detect backend project
+        id: detect
+        run: |
+          if [ -f backend/pom.xml ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Backend::backend/pom.xml not found yet, skipping backend build."
+          fi
+
+      - name: Set up JDK 25
+        if: steps.detect.outputs.present == 'true'
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+
+      - name: Build and test
+        if: steps.detect.outputs.present == 'true'
+        working-directory: backend
+        run: |
+          chmod +x mvnw
+          ./mvnw -B -ntp verify
+
+  frontend:
+    name: Frontend (Node 24)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Detect frontend project
+        id: detect
+        run: |
+          if [ -f frontend/package.json ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Frontend::frontend/package.json not found yet, skipping frontend build."
+          fi
+
+      - name: Set up Node.js
+        if: steps.detect.outputs.present == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        if: steps.detect.outputs.present == 'true'
+        working-directory: frontend
+        run: npm ci
+
+      - name: Lint
+        if: steps.detect.outputs.present == 'true'
+        working-directory: frontend
+        run: npm run lint --if-present
+
+      - name: Test
+        if: steps.detect.outputs.present == 'true'
+        working-directory: frontend
+        run: npm run test --if-present
+
+      - name: Build
+        if: steps.detect.outputs.present == 'true'
+        working-directory: frontend
+        run: npm run build

@@ -1,0 +1,19 @@
+* text=auto eol=lf
+
+*.cmd text eol=crlf
+*.bat text eol=crlf
+mvnw text eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.jar binary
+*.ogg binary
+*.mp3 binary
+*.mp4 binary
+
+*.csv text eol=lf
+*.sql text eol=lf linguist-detectable=false

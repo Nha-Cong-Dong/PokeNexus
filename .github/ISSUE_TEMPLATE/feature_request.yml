@@ -1,0 +1,54 @@
+name: Tính năng
+description: Đề xuất hoặc mô tả một tính năng cần làm
+title: "[Feature] "
+labels: ["type: feature"]
+body:
+  - type: textarea
+    id: user-story
+    attributes:
+      label: User Story
+      description: "Là [ai], tôi muốn [làm gì], để [đạt được gì]."
+      placeholder: Là người chơi VGC, tôi muốn thấy lỗ hổng phòng thủ của đội để chọn Pokémon bổ sung.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Tiêu chí chấp nhận
+      description: Các điều kiện kiểm tra được để coi tính năng là xong.
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Khu vực
+      multiple: true
+      options:
+        - Backend
+        - Frontend
+        - Database
+        - Ingestion
+        - CI
+        - Docs
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Mức ưu tiên
+      options:
+        - MVP
+        - Mở rộng
+        - Hướng phát triển
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Ghi chú kỹ thuật
+      description: Endpoint, bảng dữ liệu, wireframe hoặc tài liệu liên quan.
+    validations:
+      required: false
