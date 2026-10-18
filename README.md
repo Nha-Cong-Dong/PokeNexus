@@ -2,8 +2,7 @@
 
 **Ultimate Encyclopedia & VGC Meta Hub** - bách khoa toàn thư Pokémon kiêm công cụ xây dựng và phân tích đội hình cho thể thức đấu đôi VGC.
 
-[![CI](https://github.com/<github-username>/pokenexus/actions/workflows/ci.yml/badge.svg)](https://github.com/<github-username>/pokenexus/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+https://github.com/Nha-Cong-Dong/PokeNexus
 
 > Trạng thái: **Tuần 1 - Khởi tạo dự án.** Repo hiện chứa tài liệu và cấu hình; mã nguồn backend và frontend được khởi tạo ở Tuần 2.
 
@@ -24,11 +23,11 @@
 
 ### III. Người dùng mục tiêu
 
-| Nhóm | Nhu cầu chính |
-|---|---|
-| Người chơi mới | Tra cứu nhanh, hiểu hệ nào khắc hệ nào |
-| Người chơi VGC | Kiểm tra lỗ hổng đội hình, tìm Pokémon bổ sung |
-| Người thích số liệu | So sánh chỉ số, xem thống kê |
+| Nhóm                | Nhu cầu chính                                  |
+| ------------------- | ---------------------------------------------- |
+| Người chơi mới      | Tra cứu nhanh, hiểu hệ nào khắc hệ nào         |
+| Người chơi VGC      | Kiểm tra lỗ hổng đội hình, tìm Pokémon bổ sung |
+| Người thích số liệu | So sánh chỉ số, xem thống kê                   |
 
 ---
 
@@ -36,14 +35,14 @@
 
 ### I. Phạm vi MVP
 
-| Tính năng | Mô tả | Trạng thái |
-|---|---|---|
-| Omni-Dex | Tra cứu Pokémon, lọc theo Hệ, Thế hệ, Chỉ số; phân trang; trạng thái lọc lưu trên URL | Kế hoạch |
-| Chi tiết Pokémon | Chỉ số gốc, hệ, bảng phòng thủ 18 hệ, các dạng (form) | Kế hoạch |
-| Bảng tương khắc | Ma trận 18 x 18 tương tác, hỗ trợ tra hệ kép | Kế hoạch |
-| Bàn Cân Sức Mạnh | So sánh 2 Pokémon bằng biểu đồ Radar và kết luận tự động | Kế hoạch |
-| Team Builder và Synergy Analyzer | Chọn tối đa 5 Pokémon, xem ma trận điểm yếu, nhận 3 đề xuất cho vị trí thứ 6 | Kế hoạch |
-| Lưu và chia sẻ đội hình | Lưu đội không cần đăng nhập, chia sẻ bằng đường dẫn | Kế hoạch |
+| Tính năng                        | Mô tả                                                                                 | Trạng thái |
+| -------------------------------- | ------------------------------------------------------------------------------------- | ---------- |
+| Omni-Dex                         | Tra cứu Pokémon, lọc theo Hệ, Thế hệ, Chỉ số; phân trang; trạng thái lọc lưu trên URL | Kế hoạch   |
+| Chi tiết Pokémon                 | Chỉ số gốc, hệ, bảng phòng thủ 18 hệ, các dạng (form)                                 | Kế hoạch   |
+| Bảng tương khắc                  | Ma trận 18 x 18 tương tác, hỗ trợ tra hệ kép                                          | Kế hoạch   |
+| Bàn Cân Sức Mạnh                 | So sánh 2 Pokémon bằng biểu đồ Radar và kết luận tự động                              | Kế hoạch   |
+| Team Builder và Synergy Analyzer | Chọn tối đa 5 Pokémon, xem ma trận điểm yếu, nhận 3 đề xuất cho vị trí thứ 6          | Kế hoạch   |
+| Lưu và chia sẻ đội hình          | Lưu đội không cần đăng nhập, chia sẻ bằng đường dẫn                                   | Kế hoạch   |
 
 ### II. Mở rộng (sau MVP)
 
@@ -62,13 +61,13 @@
 
 ## Phần 3. Công nghệ
 
-| Tầng | Công nghệ |
-|---|---|
-| Frontend | React, TypeScript, Vite, Tailwind CSS, TanStack Query, React Router, Recharts |
-| Backend | Java 25 (LTS), Spring Boot 4.1, Spring Web MVC, Spring Data JPA (Hibernate), Bean Validation, Flyway, springdoc-openapi |
-| Database | MySQL 8.4 (LTS) |
-| Dữ liệu | PokéAPI (nạp một lần từ bộ CSV công khai, không gọi API lúc chạy) |
-| Hạ tầng | Docker Compose, GitHub Actions |
+| Tầng     | Công nghệ                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Frontend | React, TypeScript, Vite, Tailwind CSS, TanStack Query, React Router, Recharts                                           |
+| Backend  | Java 25 (LTS), Spring Boot 4.1, Spring Web MVC, Spring Data JPA (Hibernate), Bean Validation, Flyway, springdoc-openapi |
+| Database | MySQL 8.4 (LTS)                                                                                                         |
+| Dữ liệu  | PokéAPI (nạp một lần từ bộ CSV công khai, không gọi API lúc chạy)                                                       |
+| Hạ tầng  | Docker Compose, GitHub Actions                                                                                          |
 
 - Lý do lựa chọn các công nghệ chính được ghi trong [docs/adr](docs/adr).
 
@@ -95,12 +94,12 @@ Spring Boot API  (Controller -> Service -> Repository)
 
 ### I. Yêu cầu
 
-| Công cụ | Phiên bản |
-|---|---|
-| JDK | 25 |
-| Node.js | 24 LTS (xem file `.nvmrc`) |
-| Docker và Docker Compose | Bản ổn định mới nhất |
-| Git | 2.40 trở lên |
+| Công cụ                  | Phiên bản                  |
+| ------------------------ | -------------------------- |
+| JDK                      | 25                         |
+| Node.js                  | 24 LTS (xem file `.nvmrc`) |
+| Docker và Docker Compose | Bản ổn định mới nhất       |
+| Git                      | 2.40 trở lên               |
 
 ### II. Khởi động cơ sở dữ liệu
 
@@ -144,12 +143,12 @@ pokenexus/
 
 ## Phần 7. Lộ trình
 
-| Mốc | Nội dung | Trạng thái |
-|---|---|---|
-| Tuần 1 | Nghiên cứu, ý tưởng, khởi tạo repo và tài liệu | Đang thực hiện |
-| Tuần 2 | Chốt đặc tả, dựng khung backend, frontend, cơ sở dữ liệu | Kế hoạch |
-| Tuần 3 | Xây dựng MVP | Kế hoạch |
-| Tuần 4 | Hoàn thiện, triển khai, demo | Kế hoạch |
+| Mốc    | Nội dung                                                 | Trạng thái     |
+| ------ | -------------------------------------------------------- | -------------- |
+| Tuần 1 | Nghiên cứu, ý tưởng, khởi tạo repo và tài liệu           | Đang thực hiện |
+| Tuần 2 | Chốt đặc tả, dựng khung backend, frontend, cơ sở dữ liệu | Kế hoạch       |
+| Tuần 3 | Xây dựng MVP                                             | Kế hoạch       |
+| Tuần 4 | Hoàn thiện, triển khai, demo                             | Kế hoạch       |
 
 - Chi tiết: [docs/roadmap.md](docs/roadmap.md).
 
@@ -157,16 +156,16 @@ pokenexus/
 
 ## Phần 8. Tài liệu
 
-| Tài liệu | Nội dung |
-|---|---|
-| [docs/product.md](docs/product.md) | Tầm nhìn, người dùng, user story |
-| [docs/spec.md](docs/spec.md) | Đặc tả MVP, tiêu chí chấp nhận |
-| [docs/architecture.md](docs/architecture.md) | Kiến trúc, công nghệ, cấu trúc mã nguồn |
-| [docs/database.md](docs/database.md) | Mô hình dữ liệu, từ điển dữ liệu |
-| [docs/api.md](docs/api.md) | Quy ước và danh sách REST API |
-| [docs/roadmap.md](docs/roadmap.md) | Lộ trình 4 tuần |
+| Tài liệu                                     | Nội dung                                      |
+| -------------------------------------------- | --------------------------------------------- |
+| [docs/product.md](docs/product.md)           | Tầm nhìn, người dùng, user story              |
+| [docs/spec.md](docs/spec.md)                 | Đặc tả MVP, tiêu chí chấp nhận                |
+| [docs/architecture.md](docs/architecture.md) | Kiến trúc, công nghệ, cấu trúc mã nguồn       |
+| [docs/database.md](docs/database.md)         | Mô hình dữ liệu, từ điển dữ liệu              |
+| [docs/api.md](docs/api.md)                   | Quy ước và danh sách REST API                 |
+| [docs/roadmap.md](docs/roadmap.md)           | Lộ trình 4 tuần                               |
 | [docs/github-setup.md](docs/github-setup.md) | Thiết lập repo, nhãn, milestone, bảo vệ nhánh |
-| [docs/adr](docs/adr) | Các quyết định kiến trúc |
+| [docs/adr](docs/adr)                         | Các quyết định kiến trúc                      |
 
 ---
 
@@ -188,4 +187,4 @@ pokenexus/
 
 ### IV. Tác giả
 
-- Nguyễn Quốc Khánh - <github-username>
+- Nguyễn Quốc Khánh - https://github.com/NgQKhanh2906
