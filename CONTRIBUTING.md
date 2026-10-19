@@ -28,58 +28,19 @@ docker compose up -d mysql
 
 - Mỗi việc bắt đầu bằng một Issue (dùng mẫu Feature hoặc Bug), gắn nhãn và milestone.
 - Tạo nhánh từ `main` theo quy ước đặt tên ở mục II.
-- Commit nhỏ, thường xuyên, theo quy ước ở mục III.
+- Commit nhỏ, thường xuyên, theo quy ước ở mục II.
 - Mở Pull Request vào `main`, điền đủ mẫu PR, liên kết Issue bằng `Closes #<số>`.
 - CI phải xanh trước khi merge. Dùng **Squash and merge** để lịch sử `main` gọn.
 
-### II. Quy ước đặt tên nhánh
+### II. Quy ước nhánh, commit, PR và tag
 
-| Tiền tố | Dùng cho | Ví dụ |
+| Nội dung | Tóm tắt | Chi tiết |
 |---|---|---|
-| `feature/` | Tính năng mới | `feature/12-omni-dex-filter` |
-| `fix/` | Sửa lỗi | `fix/27-dual-type-multiplier` |
-| `docs/` | Chỉ thay đổi tài liệu | `docs/update-api-spec` |
-| `chore/` | Cấu hình, công cụ, phụ thuộc | `chore/setup-ci` |
-| `refactor/` | Tái cấu trúc, không đổi hành vi | `refactor/synergy-service` |
-
-- Nên đặt số Issue ngay sau tiền tố để dễ truy vết.
-
-### III. Quy ước commit (Conventional Commits)
-
-#### 1. Cú pháp
-
-```text
-<type>(<scope>): <mô tả ngắn, thể mệnh lệnh>
-```
-
-#### 2. Các type được dùng
-
-| Type | Ý nghĩa |
-|---|---|
-| `feat` | Thêm tính năng |
-| `fix` | Sửa lỗi |
-| `docs` | Tài liệu |
-| `test` | Thêm hoặc sửa test |
-| `refactor` | Tái cấu trúc mã |
-| `chore` | Cấu hình, build, phụ thuộc |
-| `ci` | Thay đổi CI |
-
-#### 3. Ví dụ
-
-```text
-feat(pokedex): add multi-condition filter with pagination
-fix(synergy): handle immunity when computing defense score
-docs(api): describe synergy recommendation endpoint
-test(synergy): cover team weak to rock
-chore(deps): bump spring boot to 4.1.2
-```
-
-- Scope gợi ý: `pokedex`, `typechart`, `compare`, `synergy`, `team`, `ingestion`, `ui`, `db`, `api`, `deps`.
-
-### IV. Phiên bản và tag
-
-- Gắn tag theo mốc: `v0.1.0` (khung dự án), `v0.2.0` (MVP), `v1.0.0` (bản demo).
-- Mỗi tag đi kèm một mục trong [CHANGELOG.md](CHANGELOG.md).
+| Mô hình nhánh | GitHub Flow, chỉ `main` lâu dài, Squash and merge | [git-workflow.md](docs/git-workflow.md), Phần 1 |
+| Tên nhánh | `<feature\|fix\|docs\|chore\|refactor\|test>/<số Issue>-<mo-ta>` | Phần 1, mục IV |
+| Commit, tiêu đề PR | Conventional Commits: `<type>(<scope>): <mô tả>` | Phần 3 |
+| Pull Request | Tối đa khoảng 400 dòng, một Issue, checklist tự review | Phần 4 |
+| Phiên bản và tag | `v0.1.0`, `v0.2.0`, `v1.0.0` kèm mục CHANGELOG | Phần 6 |
 
 ---
 

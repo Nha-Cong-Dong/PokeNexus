@@ -132,12 +132,15 @@ pokenexus/
 ├── frontend/               React + TypeScript (Vite)
 ├── data/                   Dữ liệu nguồn (CSV PokéAPI, không commit file CSV)
 ├── docs/                   Tài liệu sản phẩm, đặc tả, kiến trúc, ADR
+├── scripts/                Script tải dữ liệu, sprite, sao lưu DB (tạo ở Tuần 2)
 ├── .github/                Issue template, PR template, CI, Dependabot
 ├── docker-compose.yml      MySQL và công cụ phát triển
 ├── .env.example            Mẫu biến môi trường
 ├── CONTRIBUTING.md         Quy trình làm việc, quy ước commit và nhánh
 └── CHANGELOG.md            Lịch sử thay đổi
 ```
+
+- Chi tiết đến cấp package và file: [docs/folder-structure.md](docs/folder-structure.md).
 
 ---
 
@@ -160,10 +163,14 @@ pokenexus/
 | -------------------------------------------- | --------------------------------------------- |
 | [docs/product.md](docs/product.md)           | Tầm nhìn, người dùng, user story              |
 | [docs/spec.md](docs/spec.md)                 | Đặc tả MVP, tiêu chí chấp nhận                |
-| [docs/architecture.md](docs/architecture.md) | Kiến trúc, công nghệ, cấu trúc mã nguồn       |
-| [docs/database.md](docs/database.md)         | Mô hình dữ liệu, từ điển dữ liệu              |
-| [docs/api.md](docs/api.md)                   | Quy ước và danh sách REST API                 |
-| [docs/roadmap.md](docs/roadmap.md)           | Lộ trình 4 tuần                               |
+| [docs/roadmap.md](docs/roadmap.md)           | Lộ trình 4 tuần, task theo ngày               |
+| [docs/architecture.md](docs/architecture.md) | Kiến trúc, luồng xử lý, thuật toán, triển khai |
+| [docs/database.md](docs/database.md)         | ERD, từ điển dữ liệu, migration               |
+| [docs/api.md](docs/api.md)                   | Đặc tả REST API, schema DTO, mã lỗi           |
+| [docs/folder-structure.md](docs/folder-structure.md) | Cấu trúc thư mục, quy tắc đặt tên     |
+| [docs/design-system.md](docs/design-system.md) | Design System, UI Guidelines                |
+| [docs/assets.md](docs/assets.md)             | Kế hoạch quản lý assets                       |
+| [docs/git-workflow.md](docs/git-workflow.md) | Quy trình nhánh, commit, PR, phát hành        |
 | [docs/github-setup.md](docs/github-setup.md) | Thiết lập repo, nhãn, milestone, bảo vệ nhánh |
 | [docs/adr](docs/adr)                         | Các quyết định kiến trúc                      |
 

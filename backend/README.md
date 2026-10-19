@@ -55,4 +55,4 @@
 
 ### I. Package
 
-- Xem [docs/architecture.md](../docs/architecture.md), Phần 3, mục I.
+- Xem [docs/folder-structure.md](../docs/folder-structure.md), Phần 2.
