@@ -1,4 +1,4 @@
-# PokéNexus - Đặc tả REST API
+# PokeNexus - Đặc tả REST API
 
 - Phiên bản: 0.1 (phạm vi MVP)
 - Tài liệu tương tác (sau khi có backend): Swagger UI tại `http://localhost:8080/swagger-ui.html`.

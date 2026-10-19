@@ -1,4 +1,4 @@
-# PokéNexus - Thiết kế cơ sở dữ liệu
+# PokeNexus - Thiết kế cơ sở dữ liệu
 
 - Phiên bản: 0.1 (phạm vi MVP)
 - Hệ quản trị: MySQL 8.4, bộ mã `utf8mb4`.

@@ -1,4 +1,4 @@
-# PokéNexus - Lộ trình 4 tuần
+# PokeNexus - Lộ trình 4 tuần
 
 - Mỗi tuần tương ứng một **Milestone** trên GitHub (cách tạo ở [github-setup.md](github-setup.md)).
 - Mỗi đầu việc là một Issue gắn vào milestone tương ứng.

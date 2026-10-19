@@ -1,4 +1,4 @@
-# Tài liệu dự án PokéNexus
+# Tài liệu dự án PokeNexus
 
 ## Phần 1. Mục lục
 

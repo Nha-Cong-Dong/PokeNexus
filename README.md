@@ -1,4 +1,4 @@
-# PokéNexus
+# PokeNexus
 
 **Ultimate Encyclopedia & VGC Meta Hub** - bách khoa toàn thư Pokémon kiêm công cụ xây dựng và phân tích đội hình cho thể thức đấu đôi VGC.
 
@@ -104,8 +104,8 @@ Spring Boot API  (Controller -> Service -> Repository)
 ### II. Khởi động cơ sở dữ liệu
 
 ```bash
-git clone https://github.com/<github-username>/pokenexus.git
-cd pokenexus
+git clone https://github.com/Nha-Cong-Dong/PokeNexus.git
+cd PokeNexus
 cp .env.example .env
 docker compose up -d mysql
 docker compose ps
@@ -182,9 +182,11 @@ pokenexus/
 ### III. Miễn trừ và nguồn dữ liệu
 
 - Pokémon cùng tên gọi, nhân vật, hình ảnh liên quan là thương hiệu của Nintendo, Game Freak và The Pokémon Company.
-- PokéNexus là dự án phi thương mại của người hâm mộ, không liên kết hay được bảo trợ bởi các công ty trên.
+- PokeNexus là dự án phi thương mại của người hâm mộ, không liên kết hay được bảo trợ bởi các công ty trên.
 - Dữ liệu và hình ảnh lấy từ [PokéAPI](https://pokeapi.co), tuân theo giấy phép của PokéAPI.
 
 ### IV. Tác giả
 
-- Nguyễn Quốc Khánh - https://github.com/NgQKhanh2906
+- Nguyễn Quốc Khánh - Full-stack
+  - GitHub: https://github.com/NgQKhanh2906
+  - Email: nguyenqkhanhlc2006@gmail.com

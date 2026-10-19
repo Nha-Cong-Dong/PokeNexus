@@ -1,6 +1,6 @@
 # Hướng dẫn đóng góp
 
-Tài liệu mô tả quy trình làm việc của dự án PokéNexus: nhánh, commit, Pull Request và tiêu chí hoàn thành.
+Tài liệu mô tả quy trình làm việc của dự án PokeNexus: nhánh, commit, Pull Request và tiêu chí hoàn thành.
 
 ---
 

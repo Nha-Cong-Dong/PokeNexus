@@ -22,13 +22,13 @@ git commit -m "chore: initialize repository with docs and config"
 ### II. Tạo repo và đẩy lên
 
 ```bash
-gh repo create pokenexus --public --source=. --remote=origin --push \
+gh repo create Nha-Cong-Dong/PokeNexus --public --source=. --remote=origin --push \
   --description "Pokémon encyclopedia and VGC team builder with synergy analysis. Spring Boot + React + MySQL."
 gh repo edit --add-topic pokemon,pokeapi,vgc,spring-boot,java,react,typescript,mysql,hackathon
 gh repo edit --enable-wiki=false --delete-branch-on-merge
 ```
 
-- Sau khi tạo, thay `<github-username>` trong `README.md` bằng tên tài khoản GitHub thật để huy hiệu CI hiển thị đúng.
+- Repo chính thức: https://github.com/Nha-Cong-Dong/PokeNexus. Nếu đổi tên hoặc chuyển repo, cập nhật đường dẫn trong `README.md` và `.github/ISSUE_TEMPLATE/config.yml`.
 
 ---
 
@@ -82,13 +82,13 @@ gh label create "status: blocked" --color 000000 --description "Đang bị chặ
 ### I. Lệnh tạo
 
 ```bash
-gh api repos/{owner}/{repo}/milestones -f title="W1 - Ý tưởng và khởi tạo" -f due_on="YYYY-MM-DDT23:59:59Z"
-gh api repos/{owner}/{repo}/milestones -f title="W2 - Đặc tả và khung dự án" -f due_on="YYYY-MM-DDT23:59:59Z"
-gh api repos/{owner}/{repo}/milestones -f title="W3 - MVP" -f due_on="YYYY-MM-DDT23:59:59Z"
-gh api repos/{owner}/{repo}/milestones -f title="W4 - Hoàn thiện và demo" -f due_on="YYYY-MM-DDT23:59:59Z"
+gh api repos/{owner}/{repo}/milestones -f title="W1 - Ý tưởng và khởi tạo" -f due_on="2026-10-25T23:59:59Z"
+gh api repos/{owner}/{repo}/milestones -f title="W2 - Đặc tả và khung dự án" -f due_on="2026-11-01T23:59:59Z"
+gh api repos/{owner}/{repo}/milestones -f title="W3 - MVP" -f due_on="2026-11-08T23:59:59Z"
+gh api repos/{owner}/{repo}/milestones -f title="W4 - Hoàn thiện và demo" -f due_on="2026-11-15T23:59:59Z"
 ```
 
-- Thay `YYYY-MM-DD` bằng ngày kết thúc từng tuần theo lịch của cuộc thi. `{owner}` và `{repo}` được `gh` tự điền khi chạy trong thư mục repo.
+- Mỗi milestone kết thúc vào Chủ nhật của tuần tương ứng, tuần 1 bắt đầu ngày 2026-10-18. `{owner}` và `{repo}` được `gh` tự điền khi chạy trong thư mục repo.
 - Nội dung từng milestone xem ở [roadmap.md](roadmap.md).
 
 ---
@@ -122,7 +122,7 @@ gh api repos/{owner}/{repo}/milestones -f title="W4 - Hoàn thiện và demo" -f
 
 ### I. Thiết lập
 
-- Tạo Project dạng **Board** từ tab **Projects** của repo, đặt tên `PokéNexus`.
+- Tạo Project dạng **Board** từ tab **Projects** của repo, đặt tên `PokeNexus`.
 - Các cột: `Backlog`, `To Do`, `In Progress`, `In Review`, `Done`.
 - Thêm trường `Milestone` và `Labels` vào chế độ xem; lọc theo milestone tuần hiện tại.
 - Giới hạn cột `In Progress` tối đa 2 thẻ.

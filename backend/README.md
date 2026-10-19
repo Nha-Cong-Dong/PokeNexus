@@ -1,4 +1,4 @@
-# PokéNexus Backend
+# PokeNexus Backend
 
 - Trạng thái: **chưa khởi tạo mã nguồn.** Dự án Spring Boot được tạo ở Tuần 2 ([docs/roadmap.md](../docs/roadmap.md)).
 

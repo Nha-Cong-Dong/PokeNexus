@@ -1,4 +1,4 @@
-# PokéNexus - Tài liệu Sản phẩm
+# PokeNexus - Tài liệu Sản phẩm
 
 - Phiên bản: 0.1 (Tuần 1)
 - Mục đích: thống nhất **làm gì, cho ai, vì sao** trước khi đặc tả chi tiết ở [spec.md](spec.md).
@@ -9,11 +9,11 @@
 
 ### I. Câu giới thiệu
 
-- "PokéNexus là bách khoa Pokémon kiêm cố vấn chiến thuật: xây đội, thấy ngay lỗ hổng, nhận gợi ý lấp lỗ hổng kèm lý do."
+- "PokeNexus là bách khoa Pokémon kiêm cố vấn chiến thuật: xây đội, thấy ngay lỗ hổng, nhận gợi ý lấp lỗ hổng kèm lý do."
 
 ### II. Vấn đề và giải pháp
 
-| Vấn đề | Giải pháp của PokéNexus |
+| Vấn đề | Giải pháp của PokeNexus |
 |---|---|
 | Dữ liệu rời rạc trên nhiều trang | Một ứng dụng duy nhất cho tra cứu, so sánh, xây đội |
 | Bảng tương khắc 18 x 18 khó nhớ | Bảng tương tác và lưới phòng thủ tô màu cho từng Pokémon |

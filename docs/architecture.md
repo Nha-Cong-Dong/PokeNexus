@@ -1,4 +1,4 @@
-# PokéNexus - Kiến trúc hệ thống
+# PokeNexus - Kiến trúc hệ thống
 
 - Phiên bản: 0.1
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).

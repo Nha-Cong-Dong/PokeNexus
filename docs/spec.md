@@ -1,4 +1,4 @@
-# PokéNexus - Đặc tả MVP
+# PokeNexus - Đặc tả MVP
 
 - Phiên bản: 0.1 (bản nháp, chốt ở Tuần 2)
 - Tài liệu liên quan: [product.md](product.md), [architecture.md](architecture.md), [database.md](database.md), [api.md](api.md).
