@@ -137,7 +137,11 @@ pokenexus/
 ├── docker-compose.yml      MySQL và công cụ phát triển
 ├── .env.example            Mẫu biến môi trường
 ├── CONTRIBUTING.md         Quy trình làm việc, quy ước commit và nhánh
-└── CHANGELOG.md            Lịch sử thay đổi
+├── CHANGELOG.md            Lịch sử thay đổi
+├── MAP.md                  Bản đồ: muốn làm gì thì đọc, sửa ở đâu
+├── SPEC.md                 Bảng truy vết tính năng, endpoint, trang, task, test
+├── PLAN.md                 Tiến độ tuần hiện tại
+└── CLAUDE.md, AGENTS.md    Hướng dẫn cho AI agent (kèm .claude/)
 ```
 
 - Chi tiết đến cấp package và file: [docs/folder-structure.md](docs/folder-structure.md).

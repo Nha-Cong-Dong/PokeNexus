@@ -29,10 +29,16 @@ pokenexus/
 │   ├── wireframes/                Wireframe các trang
 │   └── *.md                       Tài liệu sản phẩm, kỹ thuật, quy trình
 ├── scripts/                       Script tiện ích (Phần 4)
+├── .claude/
+│   ├── settings.json              Quyền lệnh dùng chung cho Claude Code
+│   └── commands/                  Slash command: task.md, adr.md, done.md
 ├── docker-compose.yml             MySQL, Adminer
 ├── .env.example
 ├── .editorconfig, .gitattributes, .gitignore, .nvmrc
 ├── CHANGELOG.md, CONTRIBUTING.md, LICENSE, README.md
+├── CLAUDE.md, AGENTS.md           Hướng dẫn cho AI agent (thêm backend/CLAUDE.md, frontend/CLAUDE.md)
+├── MAP.md, SPEC.md, PLAN.md       Bản đồ điều hướng, bảng truy vết đặc tả, tiến độ hiện tại
+└── CLAUDE.local.md                Cấu hình cá nhân (không commit)
 ```
 
 ### II. Nguyên tắc
