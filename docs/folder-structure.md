@@ -139,7 +139,7 @@ frontend/
 ├── vite.config.ts
 ├── tsconfig.json, tsconfig.app.json, tsconfig.node.json
 ├── eslint.config.js
-├── .prettierrc
+├── .prettierrc, .prettierignore
 ├── public/
 │   ├── favicon.svg
 │   ├── og-image.png               Ảnh xem trước khi chia sẻ link
@@ -152,7 +152,7 @@ frontend/
     │   ├── App.tsx
     │   ├── router.tsx
     │   ├── providers.tsx          QueryClientProvider
-    │   └── layout/                AppLayout.tsx, Header.tsx, Footer.tsx
+    │   └── layout/                AppLayout.tsx, Header.tsx, Footer.tsx, navItems.ts
     ├── pages/                     DexPage, PokemonDetailPage, TypeChartPage, ComparePage,
     │                              TeamBuilderPage, SharedTeamPage, NotFoundPage (.tsx)
     ├── features/
@@ -176,6 +176,8 @@ frontend/
     │   └── index.css              @import "tailwindcss", @theme token, font
     ├── assets/
     │   └── logo.svg
+    ├── test/
+    │   └── setup.ts               Nạp matcher jest-dom cho Vitest, dọn DOM sau mỗi test
     └── types/
         └── api.ts                 Kiểu DTO khớp docs/api.md Phần 3
 ```

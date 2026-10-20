@@ -1,0 +1,6 @@
+dist
+coverage
+package-lock.json
+public/sprites
+README.md
+CLAUDE.md

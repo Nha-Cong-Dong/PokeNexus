@@ -1,0 +1,116 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --pn-bg: #f8fafc;
+  --pn-surface: #ffffff;
+  --pn-surface-muted: #f1f5f9;
+  --pn-border: #e2e8f0;
+  --pn-border-strong: #64748b;
+  --pn-text: #0f172a;
+  --pn-text-muted: #475569;
+  --pn-primary: #4f46e5;
+  --pn-primary-hover: #4338ca;
+  --pn-on-primary: #ffffff;
+  --pn-accent: #c2410c;
+  --pn-success: #15803d;
+  --pn-warning: #b45309;
+  --pn-danger: #dc2626;
+  --pn-focus-ring: #6366f1;
+}
+
+.dark {
+  --pn-bg: #0b1120;
+  --pn-surface: #111827;
+  --pn-surface-muted: #1f2937;
+  --pn-border: #334155;
+  --pn-border-strong: #94a3b8;
+  --pn-text: #f1f5f9;
+  --pn-text-muted: #94a3b8;
+  --pn-primary: #818cf8;
+  --pn-primary-hover: #a5b4fc;
+  --pn-on-primary: #0b1120;
+  --pn-accent: #fb923c;
+  --pn-success: #4ade80;
+  --pn-warning: #fbbf24;
+  --pn-danger: #f87171;
+  --pn-focus-ring: #a5b4fc;
+}
+
+@theme inline {
+  --color-bg: var(--pn-bg);
+  --color-surface: var(--pn-surface);
+  --color-surface-muted: var(--pn-surface-muted);
+  --color-border: var(--pn-border);
+  --color-border-strong: var(--pn-border-strong);
+  --color-text: var(--pn-text);
+  --color-text-muted: var(--pn-text-muted);
+  --color-primary: var(--pn-primary);
+  --color-primary-hover: var(--pn-primary-hover);
+  --color-on-primary: var(--pn-on-primary);
+  --color-accent: var(--pn-accent);
+  --color-success: var(--pn-success);
+  --color-warning: var(--pn-warning);
+  --color-danger: var(--pn-danger);
+  --color-focus-ring: var(--pn-focus-ring);
+}
+
+@theme {
+  --font-sans: 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
+
+  --color-type-normal: #a8a77a;
+  --color-type-fire: #ee8130;
+  --color-type-water: #6390f0;
+  --color-type-electric: #f7d02c;
+  --color-type-grass: #7ac74c;
+  --color-type-ice: #96d9d6;
+  --color-type-fighting: #c22e28;
+  --color-type-poison: #a33ea1;
+  --color-type-ground: #e2bf65;
+  --color-type-flying: #a98ff3;
+  --color-type-psychic: #f95587;
+  --color-type-bug: #a6b91a;
+  --color-type-rock: #b6a136;
+  --color-type-ghost: #735797;
+  --color-type-dragon: #6f35fc;
+  --color-type-dark: #705746;
+  --color-type-steel: #b7b7ce;
+  --color-type-fairy: #d685ad;
+
+  --color-mult-0: #1e293b;
+  --color-mult-025: #1d4ed8;
+  --color-mult-05: #93c5fd;
+  --color-mult-1: #f1f5f9;
+  --color-mult-2: #fdba74;
+  --color-mult-4: #c2410c;
+
+  --color-pressure-safe: #f1f5f9;
+  --color-pressure-low: #fed7aa;
+  --color-pressure-mid: #fb923c;
+  --color-pressure-high: #b91c1c;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
