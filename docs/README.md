@@ -8,11 +8,15 @@
 |---|---|---|
 | [product.md](product.md) | Tầm nhìn, persona, user story, phạm vi | Thay đổi phạm vi sản phẩm |
 | [spec.md](spec.md) | Đặc tả MVP, tiêu chí chấp nhận, kịch bản kiểm chứng | Chốt hoặc thay đổi yêu cầu |
-| [architecture.md](architecture.md) | Kiến trúc, công nghệ, cấu trúc mã nguồn, thuật toán | Thay đổi kiến trúc |
-| [database.md](database.md) | Thiết kế cơ sở dữ liệu, từ điển dữ liệu | Thêm hoặc sửa migration |
-| [api.md](api.md) | Quy ước và danh sách REST API | Thêm hoặc sửa endpoint |
-| [roadmap.md](roadmap.md) | Lộ trình 4 tuần, tiêu chí hoàn thành | Cuối mỗi tuần |
-| [github-setup.md](github-setup.md) | Thiết lập repo, nhãn, milestone, bảo vệ nhánh | Thay đổi quy trình |
+| [roadmap.md](roadmap.md) | Lộ trình 4 tuần: Epic, task theo ngày, MoSCoW, buffer, rủi ro | Cuối mỗi tuần |
+| [architecture.md](architecture.md) | Kiến trúc C4, luồng xử lý, thuật toán, bảo mật, triển khai, chiến lược test | Thay đổi kiến trúc |
+| [database.md](database.md) | ERD, từ điển dữ liệu, index, migration, ingestion | Thêm hoặc sửa migration |
+| [api.md](api.md) | Quy ước, đặc tả từng endpoint, schema DTO, danh mục lỗi | Thêm hoặc sửa endpoint |
+| [folder-structure.md](folder-structure.md) | Cây thư mục repo, package và class backend, cấu trúc frontend, quy tắc đặt tên | Thêm package hoặc thư mục cấp 1-2 |
+| [design-system.md](design-system.md) | Design token, Tailwind, component, pattern, bố cục trang, accessibility | Thay đổi giao diện chung |
+| [assets.md](assets.md) | Danh mục assets, sprite, font, ảnh, dung lượng, giấy phép | Thêm loại asset mới |
+| [git-workflow.md](git-workflow.md) | Mô hình nhánh, commit, PR, xung đột, tag, hoàn tác | Thay đổi quy trình |
+| [github-setup.md](github-setup.md) | Thiết lập repo, nhãn, milestone, bảo vệ nhánh | Thay đổi cấu hình GitHub |
 | [adr/](adr) | Các quyết định kiến trúc (ADR) | Có quyết định quan trọng mới |
 | `wireframes/` | Wireframe các trang chính | Thay đổi bố cục giao diện |
 

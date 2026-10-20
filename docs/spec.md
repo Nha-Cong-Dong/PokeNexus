@@ -1,6 +1,6 @@
 # PokeNexus - Đặc tả MVP
 
-- Phiên bản: 0.1 (bản nháp, chốt ở Tuần 2)
+- Phiên bản: 0.2 (bản nháp, chốt 1.0 ở task T201 ngày 26/10)
 - Tài liệu liên quan: [product.md](product.md), [architecture.md](architecture.md), [database.md](database.md), [api.md](api.md).
 - Mục **Câu hỏi còn mở** ở cuối phải được trả lời hết trước khi chốt phiên bản 1.0.
 
@@ -85,7 +85,7 @@
 
 #### 5. Thuật toán
 
-- Mô tả chi tiết ở [architecture.md](architecture.md), Phần 4.
+- Mô tả chi tiết ở [architecture.md](architecture.md), Phần 5.
 
 ### VI. F06 - Lưu và chia sẻ đội
 
@@ -133,8 +133,10 @@
 | Phạm vi phình to | Mọi ý tưởng mới đưa vào Backlog, chỉ xét sau MVP |
 | Hosting miễn phí chậm khi demo | Luôn có bản chạy local bằng Docker |
 
-### II. Câu hỏi còn mở
+### II. Câu hỏi còn mở và đề xuất trả lời
 
-- Có hiển thị các dạng đặc biệt (Mega, Gigantamax) trong Omni-Dex không, hay chỉ dạng mặc định và dạng vùng miền?
-- Trọng số chấm điểm đề xuất (phòng thủ, độ phủ tấn công, chỉ số) cố định hay cho người dùng chỉnh?
-- Giới hạn số đội được lưu từ một địa chỉ IP để tránh spam?
+| Câu hỏi | Đề xuất (chờ chốt ở T201) | Tài liệu bị ảnh hưởng |
+|---|---|---|
+| Có hiển thị các dạng đặc biệt (Mega, Gigantamax) trong Omni-Dex không? | DB lưu mọi dạng kèm `form_category`. Omni-Dex mặc định hiện `DEFAULT` và `REGIONAL`, người dùng bật thêm được. Team Builder nhận mọi dạng; ứng viên đề xuất chỉ gồm `DEFAULT` và `REGIONAL` | [database.md](database.md), Phần 1, mục IV; [api.md](api.md) |
+| Trọng số chấm điểm đề xuất cố định hay cho người dùng chỉnh? | Cố định trong MVP (60/25/15), là hằng số trong code | [architecture.md](architecture.md), Phần 5 |
+| Giới hạn số đội được lưu từ một địa chỉ IP? | 10 lần lưu mỗi phút mỗi IP, bộ đếm trong bộ nhớ, vượt thì trả 429 | [architecture.md](architecture.md), Phần 8; [api.md](api.md) |

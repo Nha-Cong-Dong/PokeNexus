@@ -50,4 +50,4 @@ npm run build
 
 ### I. Thư mục
 
-- Xem [docs/architecture.md](../docs/architecture.md), Phần 3, mục II.
+- Xem [docs/folder-structure.md](../docs/folder-structure.md), Phần 3. Token giao diện và component: [docs/design-system.md](../docs/design-system.md).

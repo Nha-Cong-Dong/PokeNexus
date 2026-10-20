@@ -49,7 +49,6 @@ Thumbs.db
 desktop.ini
 
 # Local tooling (not part of the project)
-CLAUDE.md
 CLAUDE.local.md
-.claude/
+.claude/settings.local.json
 .mcp.json
