@@ -1,0 +1,4 @@
+app:
+  ingestion:
+    enabled: true
+    csv-dir: ../data/csv

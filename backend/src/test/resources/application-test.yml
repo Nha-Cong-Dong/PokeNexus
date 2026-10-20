@@ -1,0 +1,6 @@
+app:
+  ingestion:
+    enabled: false
+    csv-dir: src/test/resources/csv
+  cors:
+    allowed-origins: http://localhost:5173
