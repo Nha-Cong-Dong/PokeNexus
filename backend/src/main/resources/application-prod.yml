@@ -1,0 +1,6 @@
+server:
+  forward-headers-strategy: framework
+
+app:
+  ingestion:
+    enabled: false

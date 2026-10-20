@@ -1,7 +1,7 @@
 # PokeNexus Backend - Hướng dẫn cho Claude
 
 - Nạp khi làm việc trong `backend/`. Bổ sung cho `CLAUDE.md` ở gốc, không lặp lại quy tắc chung.
-- Trạng thái: chưa khởi tạo mã nguồn. Khởi tạo ở T202 theo [README.md](README.md), Phần 1.
+- Trạng thái: đã khởi tạo khung ở T202 (Spring Boot 4.1.1). Dependency và tên artifact thực tế: [README.md](README.md), Phần 1.
 
 ---
 
@@ -17,7 +17,8 @@
 | Chạy ứng dụng | `./mvnw spring-boot:run` | `.\mvnw.cmd spring-boot:run` |
 
 - Cần MySQL đang chạy (`docker compose up -d mysql` ở thư mục gốc) và biến môi trường theo `.env.example`.
-- Test tích hợp (`*IT`) dùng Testcontainers nên cần Docker đang chạy.
+- Test tích hợp (`*IT`) dùng Testcontainers nên cần Docker đang chạy; không có Docker thì `*IT` bị Skipped (`@Testcontainers(disabledWithoutDocker = true)`), khi báo kết quả phải nêu rõ số test bị Skipped.
+- Test web dùng `MockMvcTester` (AssertJ) và `@MockitoBean`; `@WebMvcTest` import từ `org.springframework.boot.webmvc.test.autoconfigure`.
 - Swagger UI: `http://localhost:8080/swagger-ui.html`.
 
 ---

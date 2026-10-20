@@ -62,6 +62,7 @@
 ### II. `GET /api/v1/health`
 
 - Response 200: `{ "status": "UP", "dataLoaded": true, "pokemonCount": 1302 }` (số liệu minh họa).
+- `pokemonCount` là số dòng bảng `pokemon`; bảng chưa tồn tại hoặc rỗng thì trả `0`. Từ T202, `dataLoaded = pokemonCount > 0`; khi có cache ở T305, bổ sung điều kiện cache đã nạp.
 
 ### III. `GET /api/v1/pokemon`
 
@@ -323,6 +324,7 @@ interface TeamResponse {
 | `DATA_NOT_READY` | 503 | Dữ liệu tĩnh chưa nạp |
 | `INTERNAL_ERROR` | 500 | Lỗi không lường trước |
 
+- Lỗi khung Spring không có mã riêng (ví dụ 405 sai method, 415 sai `Content-Type`) giữ mã HTTP gốc và dùng `code` `INVALID_PARAMETER`; lỗi 404 khác dùng `ROUTE_NOT_FOUND`; lỗi 5xx dùng `INTERNAL_ERROR`.
 - `detail` là thông điệp tiếng Anh cho nhà phát triển. Frontend hiển thị thông điệp tiếng Việt dựa trên `code`, không hiển thị trực tiếp `detail`.
 
 ### II. Ví dụ
