@@ -35,7 +35,8 @@
 - `is_fully_evolved` của một loài là TRUE khi ID loài đó không xuất hiện ở cột `evolves_from_species_id` của loài nào khác.
 - `damage_factor` lưu dạng phần trăm: 0, 50, 100, 200.
 - `pokemon_evolution.csv` không có cột loài gốc: loài tiến hóa **từ** lấy ở cột `evolves_from_species_id` của `pokemon_species.csv`, loài tiến hóa **thành** là `evolved_species_id`.
-- `pokemon_evolution.csv` có thể có nhiều dòng cho cùng một loài (khác phiên bản game hoặc khác điều kiện); ưu tiên dòng có `is_default = 1`.
+- `pokemon_evolution.csv` có thể có nhiều dòng cho cùng một loài (khác phiên bản game hoặc khác điều kiện); chọn dòng có `is_default = 1`, nếu nhiều dòng như vậy thì lấy dòng có `id` nhỏ nhất.
+- `pokemon_species.csv`, `pokemon_evolution.csv` có nhiều cột hơn bảng trên; chương trình nạp đọc theo tên cột, không theo vị trí.
 
 ---
 
@@ -76,3 +77,41 @@ Get-ChildItem data/csv
 
 - Kiểm tra file `LICENSE` trong repo PokéAPI trước khi phát hành và ghi nguồn PokéAPI trong README của dự án.
 - Tên và hình ảnh Pokémon thuộc bản quyền của Nintendo, Game Freak và The Pokémon Company; dự án chỉ dùng cho mục đích phi thương mại.
+
+---
+
+## Phần 4. Kết quả khảo sát (T102)
+
+### I. Số liệu bộ CSV ngày 2026-10-21
+
+| File | Số dòng dữ liệu | Ghi chú |
+|---|---|---|
+| `types.csv` | 21 | ID 1-18 là 18 hệ chuẩn; bỏ `stellar` (19), `unknown` (10001), `shadow` (10002) |
+| `type_efficacy.csv` | 324 | Cả 324 dòng có hai hệ trong 1-18; `damage_factor`: 0 (8 dòng), 50 (61), 100 (204), 200 (51) |
+| `regions.csv` | 11 | |
+| `generations.csv` | 9 | |
+| `evolution_chains.csv` | 540 | |
+| `pokemon_species.csv` | 1025 | 568 loài đã tiến hóa hoàn toàn; 71 huyền thoại, 23 thần thoại |
+| `pokemon.csv` | 1351 | 1025 dạng mặc định, 326 dạng khác; ID lớn nhất 10326 |
+| `pokemon_types.csv` | 2116 | Mọi Pokémon có hệ; không có hệ ngoài 1-18 |
+| `pokemon_stats.csv` | 8106 | Đúng 6 dòng (`stat_id` 1-6) cho mỗi Pokémon |
+| `stats.csv` | 9 | Chỉ dùng ID 1-6 (`hp` đến `speed`) |
+| `pokemon_evolution.csv` | 676 | 484 loài được tiến hóa tới; 60 loài có nhiều dòng, 48 loài có nhiều dòng `is_default = 1` |
+| `evolution_triggers.csv` | 18 | |
+
+### II. Phân loại dạng và sprite
+
+- `form_category` theo quy tắc ở [docs/database.md](../docs/database.md), Phần 1, mục IV: `DEFAULT` 1025, `REGIONAL` 58, `MEGA` 97, `GMAX` 34, `OTHER` 137.
+- Hậu tố dạng phổ biến: `mega` (91), `gmax` (30), `galar` (20), `alola` (19), `hisui` (16), `totem` (12), `paldea` (4); Mega mới có hậu tố `-mega-x`, `-mega-y`, `-mega-z`.
+- Sprite trong `PokeAPI/sprites`: 1342/1351 ID có ảnh, tổng khoảng 1,5 MB. Thiếu 9 ID: 10264-10267 (Koraidon), 10268-10271 (Miraidon), 10301 (`zygarde-mega`).
+
+### III. Mẫu đối chiếu
+
+| Pokémon | ID | `height` (dm) | `weight` (hg) |
+|---|---|---|---|
+| Charizard | 6 | 17 | 905 |
+| Eevee | 133 | 3 | 65 |
+| Salamence | 373 | 15 | 1026 |
+| Garchomp | 445 | 19 | 950 |
+
+- Số liệu thay đổi khi PokéAPI cập nhật CSV; tải lại thì khảo sát lại và sửa bảng này.

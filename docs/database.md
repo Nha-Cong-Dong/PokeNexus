@@ -1,6 +1,6 @@
 # PokeNexus - Thiết kế cơ sở dữ liệu
 
-- Phiên bản: 0.2 (phạm vi MVP, cập nhật 2026-10-19)
+- Phiên bản: 0.3 (phạm vi MVP, cập nhật 2026-10-21; chỉnh quy tắc `form_category` và chọn dòng tiến hóa theo khảo sát T102)
 - Hệ quản trị: MySQL 8.4, bộ mã `utf8mb4`, collation `utf8mb4_0900_ai_ci`.
 - Schema được tạo bằng Flyway; tài liệu này là nguồn tham chiếu khi viết migration.
 - Thay đổi so với 0.1: thêm cột `pokemon.form_category`; bỏ `pokemon.sprite_url` (URL ảnh sinh từ ID ở frontend, xem [ADR 0005](adr/0005-hybrid-image-assets.md)); thêm Phần 4 (index) và Phần 5 (migration, ingestion).
@@ -36,12 +36,14 @@
 | `form_category` | Quy tắc suy ra từ `pokemon.csv` | Ví dụ | Hiện ở Omni-Dex mặc định |
 |---|---|---|---|
 | `DEFAULT` | `is_default = 1` | `charizard` | Có |
+| `OTHER` | Tên chứa `-totem` hoặc kết thúc bằng `-cap` | `raticate-totem-alola`, `pikachu-alola-cap` | Không |
 | `REGIONAL` | Tên chứa `-alola`, `-galar`, `-hisui` hoặc `-paldea` | `vulpix-alola` | Có |
 | `MEGA` | Tên chứa `-mega` | `charizard-mega-x` | Không |
 | `GMAX` | Tên kết thúc bằng `-gmax` | `charizard-gmax` | Không |
-| `OTHER` | Các trường hợp còn lại | `rotom-wash`, `pikachu-original-cap` | Không |
+| `OTHER` | Các trường hợp còn lại | `rotom-wash`, `kyogre-primal` | Không |
 
-- Quy tắc áp dụng theo thứ tự từ trên xuống, dừng ở quy tắc khớp đầu tiên. Danh sách hậu tố được xác nhận lại ở task khảo sát CSV (T102).
+- Quy tắc áp dụng theo thứ tự từ trên xuống, dừng ở quy tắc khớp đầu tiên. Đã xác nhận bằng khảo sát T102 (2026-10-21): dòng `OTHER` thứ hai đứng trước `REGIONAL` để dạng totem và Pikachu đội mũ không bị tính là dạng vùng miền.
+- Số dạng kỳ vọng với bộ CSV ngày 2026-10-21: `DEFAULT` 1025, `REGIONAL` 58, `MEGA` 97, `GMAX` 34, `OTHER` 137 (tổng 1351). Dạng Primal xếp `OTHER`.
 - Team Builder nhận mọi dạng; tập ứng viên để đề xuất chỉ gồm `DEFAULT` và `REGIONAL` (quyết định ở [spec.md](spec.md), Phần 5).
 
 ### V. Ràng buộc đội hình
@@ -301,7 +303,7 @@ erDiagram
 | 4 | `evolution_chains` | `evolution_chains.csv` | Chỉ lấy `id` |
 | 5 | `species` | `pokemon_species.csv` | Tính `is_fully_evolved` |
 | 6 | `pokemon` | `pokemon.csv`, `pokemon_types.csv`, `pokemon_stats.csv`, `stats.csv` | Gom hệ theo `slot`, gom 6 chỉ số; tính `form_category` |
-| 7 | `evolution_links` | `pokemon_evolution.csv`, `evolution_triggers.csv`, `pokemon_species.csv` | Lấy loài gốc từ `evolves_from_species_id`; mỗi loài một dòng |
+| 7 | `evolution_links` | `pokemon_evolution.csv`, `evolution_triggers.csv`, `pokemon_species.csv` | Lấy loài gốc từ `evolves_from_species_id`; mỗi loài một dòng: chọn dòng `is_default = 1` có `id` nhỏ nhất (48 loài có nhiều dòng mặc định) |
 
 - Chi tiết cột và lưu ý của từng file: [data/README.md](../data/README.md).
 - Toàn bộ quá trình nạp chạy trong một transaction. Lỗi ở bất kỳ bước nào thì rollback và dừng ứng dụng với log nêu rõ file, dòng.

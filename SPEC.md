@@ -1,6 +1,6 @@
 # PokeNexus - Bảng truy vết đặc tả
 
-- Phiên bản: 0.1 (cập nhật 2026-10-20), khớp [docs/spec.md](docs/spec.md) bản 0.2.
+- Phiên bản: 0.2 (cập nhật 2026-10-21), khớp [docs/spec.md](docs/spec.md) bản 1.0.
 - Nguồn chuẩn của yêu cầu và tiêu chí chấp nhận là [docs/spec.md](docs/spec.md). File này chỉ nối mỗi tính năng với user story, endpoint, trang, package, task và test; không chép tiêu chí.
 - Yêu cầu thay đổi thì sửa `docs/spec.md` trước, sau đó cập nhật bảng ở đây.
 
@@ -72,8 +72,8 @@
 
 | Câu hỏi | Trạng thái | Hạn chốt |
 |---|---|---|
-| Hiển thị dạng Mega, Gigantamax trong Omni-Dex | Có đề xuất, chưa chốt | T201 (26/10) |
-| Trọng số chấm điểm đề xuất cố định hay cho chỉnh | Có đề xuất, chưa chốt | T201 (26/10) |
-| Giới hạn số lần lưu đội mỗi IP | Có đề xuất, chưa chốt | T201 (26/10) |
+| Hiển thị dạng Mega, Gigantamax trong Omni-Dex | Đã chốt | T201 (2026-10-21) |
+| Trọng số chấm điểm đề xuất cố định hay cho chỉnh | Đã chốt | T201 (2026-10-21) |
+| Giới hạn số lần lưu đội mỗi IP | Đã chốt | T201 (2026-10-21) |
 
-- Nội dung đề xuất: [docs/spec.md](docs/spec.md), Phần 5, mục II. Khi chốt, cập nhật `docs/spec.md` lên 1.0 và đổi cột Trạng thái ở đây thành "Đã chốt".
+- Nội dung quyết định: [docs/spec.md](docs/spec.md), Phần 5, mục II. Spec đã lên 1.0; câu hỏi mới phát sinh thì thêm dòng ở đây và tăng phiên bản `docs/spec.md`.
