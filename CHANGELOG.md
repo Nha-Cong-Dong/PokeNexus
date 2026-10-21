@@ -18,8 +18,14 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - Tài liệu mới: `folder-structure.md`, `design-system.md`, `assets.md`, `git-workflow.md`, ADR 0005 (ảnh Pokémon dạng Hybrid).
 - Tài liệu điều hướng ở gốc: `MAP.md` (bản đồ dự án), `SPEC.md` (bảng truy vết đặc tả), `PLAN.md` (tiến độ hiện tại).
 - Cấu hình AI agent: `CLAUDE.md`, `backend/CLAUDE.md`, `frontend/CLAUDE.md`, `AGENTS.md`, `.claude/settings.json`, slash command `/task`, `/adr`, `/done`.
+- Kết quả khảo sát bộ CSV PokéAPI (`data/README.md`, Phần 4).
+- Khung backend Spring Boot 4.1.1, Java 25: `GET /api/v1/health`, `GlobalExceptionHandler` trả `ProblemDetail` có `code`, CORS, Swagger UI, profile `dev`/`prod`/`test`, test tích hợp Testcontainers.
+- Khung frontend Vite 8, React 19, TypeScript 6.0: Tailwind 4 với design token, React Router 8 (7 route), TanStack Query, `AppLayout`, ESLint, Prettier, Vitest.
 
 ### Changed
+
+- Đặc tả MVP lên 1.0: chốt hiển thị dạng đặc biệt, trọng số đề xuất cố định 60/25/15, giới hạn 10 lần lưu đội mỗi phút mỗi IP.
+- Quy tắc dữ liệu: dạng totem và Pikachu đội mũ xếp `OTHER`; mỗi loài chọn dòng tiến hóa `is_default = 1` có `id` nhỏ nhất.
 
 - Schema dự kiến: thêm `pokemon.form_category`, bỏ `pokemon.sprite_url`; `teams.share_code` dùng collation `utf8mb4_bin`.
 - API dự kiến: bỏ `spriteUrl`; response đề xuất đổi sang object `{ candidateCount, items }`; thêm mã lỗi `code`, mã 429 và 503.

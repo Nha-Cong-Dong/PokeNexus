@@ -1,7 +1,8 @@
 # PokeNexus Frontend - Hướng dẫn cho Claude
 
 - Nạp khi làm việc trong `frontend/`. Bổ sung cho `CLAUDE.md` ở gốc, không lặp lại quy tắc chung.
-- Trạng thái: chưa khởi tạo mã nguồn. Khởi tạo ở T203 theo [README.md](README.md), Phần 2. Khi tạo bằng `npm create vite`, giữ lại `README.md` và `CLAUDE.md` có sẵn.
+- Trạng thái: đã khởi tạo khung ở T203. Phiên bản thư viện và lý do giữ TypeScript 6.0: [README.md](README.md), Phần 1.
+- Route khai báo trong `src/app/router.tsx` (mảng `routes`); test route dùng `createMemoryRouter(routes)`. `RouterProvider` cho trình duyệt import từ `react-router/dom`.
 
 ---
 
