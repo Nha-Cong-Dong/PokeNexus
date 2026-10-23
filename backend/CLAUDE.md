@@ -48,6 +48,8 @@
 - `@Transactional(readOnly = true)` cho truy vấn, `@Transactional` cho ghi, đặt ở Service.
 - Cấu hình `app.*` đọc qua record `AppProperties` (`@ConfigurationProperties`), không dùng `@Value` rải rác.
 - `spring.jpa.hibernate.ddl-auto=validate`, `spring.jpa.open-in-view=false`.
+- Cột số `UNSIGNED` ánh xạ sang `Integer` hoặc `Long` kèm `@Column(columnDefinition = "tinyint unsigned")` (hoặc `smallint unsigned`, `int unsigned`) để `validate` khớp kiểu. Không dùng `Byte`, `Short` hay `@JdbcTypeCode(TINYINT)`: giá trị 255 hoặc trên 32767 bị tràn.
+- Vi phạm `CHECK` của MySQL (mã 3819) được Spring dịch thành `UncategorizedSQLException`, không phải `DataIntegrityViolationException`.
 
 ---
 
