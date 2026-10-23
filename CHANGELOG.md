@@ -25,6 +25,8 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - Flyway migration V1-V3 tạo 10 bảng MVP; Entity và Repository cho `typechart`, `pokedex`; `FormCategory`, `PokemonTypeConverter`.
 - Nạp CSV PokéAPI vào MySQL khi khởi động (`IngestionRunner`, 5 loader JDBC batch, một transaction, bỏ qua khi đã có dữ liệu); CSV mẫu 23 loài cho test; dependency `commons-csv` 1.14.1.
 - `GET /api/v1/pokemon`: lọc theo hệ (tối đa 2), thế hệ, BST, tốc độ, dạng; sắp xếp whitelist có khóa phụ `id`; `PageResponse`; 503 `DATA_NOT_READY` khi chưa nạp dữ liệu.
+- Script `scripts/download-sprites.sh` và 1342 sprite tự host trong `frontend/public/sprites/pokemon/`, `placeholder.svg`.
+- Omni-Dex bản cơ bản: lưới thẻ Pokémon từ API, bộ lọc hệ, thế hệ, dạng, sắp xếp đồng bộ trên URL, phân trang, trạng thái tải, rỗng, lỗi; `http.ts`, `assets.ts`, `pokemonTypes.ts`, `errorMessages.ts`, `formatters.ts`, `TypeBadge`, `PokemonSprite`, `PokemonCard`.
 
 ### Changed
 

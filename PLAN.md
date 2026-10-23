@@ -13,8 +13,8 @@
 | Mục | Giá trị |
 |---|---|
 | Tuần | W1 - Ý tưởng và khởi tạo (19/10 - 25/10) |
-| Task hôm nay | T206 - `GET /api/v1/pokemon` (Issue #13) |
-| Task kế tiếp | T207 - Script tải sprite (Issue #14), T301 rút gọn (Issue #17) |
+| Task hôm nay | T207 - Sprite (Issue #14), T301 bản cơ bản (Issue #17) |
+| Task kế tiếp | Review và merge PR #28 trở đi; T208 CI (Issue #15); T303 chi tiết Pokémon |
 | Mốc gần nhất | Tag `v0.1.0` ngày 01/11 |
 
 ### II. Trạng thái task tuần W1
@@ -38,6 +38,8 @@
 | T204 | 28/10 | Flyway migration V1-V3 | Xong | 10 bảng, Entity `typechart` và `pokedex` qua `validate`; `SchemaMigrationIT` (10 test), `PokemonRepositoryIT` (3 test); PR chờ review |
 | T205 | 29/10 | Ingestion CSV vào MySQL | Xong | Bộ đầy đủ nạp trong 3,1 s: 18 hệ, 324 hệ số, 1025 loài, 1351 dạng, 484 tiến hóa; `item_name` để NULL |
 | T206 | 30/10 | `GET /api/v1/pokemon` | Xong | `?type=dragon&gen=4` có Garchomp; `size=101` trả 400; mặc định 1083 dạng (`DEFAULT` + `REGIONAL`) |
+| T207 | 30/10 | Script tải sprite | Xong | 1342 file, 9 ID thiếu (khớp T102), 1,5 MB |
+| T301 | 02/11 | Omni-Dex UI | Đang làm | Bản cơ bản chạy với dữ liệu thật; còn thiếu ngăn kéo bộ lọc trên mobile, lọc BST và tốc độ trên giao diện, kiểm tra 375 px |
 
 - Giá trị cột Trạng thái: Chưa làm, Đang làm, Bị chặn, Xong, Cắt giảm.
 
@@ -89,3 +91,4 @@
 | 2026-10-23 | T103 wireframe 6 trang (PR #27); T104 nhãn, milestone, Issue #9-#26; T204 migration V1-V3, Entity, Repository | 12 ảnh wireframe 375/1440 px; `verify`: 27 unit test, 16 IT pass, 0 Skipped; MySQL Docker: `flyway_schema_history` 3 dòng `success = 1`, 11 bảng |
 | 2026-10-23 | T205 nạp CSV: `CsvReader`, `FormCategoryResolver`, 5 loader, `IngestionRunner`; thêm `commons-csv` 1.14.1 (đã hỏi) | `verify`: 41 unit test, 24 IT pass, 0 Skipped; MySQL Docker: Charizard 78/84/78/109/85/100 BST 534, `form_category` 1025/58/97/34/137, `/health` `dataLoaded: true` 1351 |
 | 2026-10-23 | T206 `GET /api/v1/pokemon`: `PokemonFilter`, `PageRequestFactory`, `PokemonSpecifications`, `PokemonQueryService`, `PokemonController` | `verify`: 48 unit test, 31 IT pass, 0 Skipped; dữ liệu thật: dragon gen 4 trả 6 kết quả có Garchomp, `size=101` 400 `INVALID_PARAMETER` |
+| 2026-10-23 | T207 sprite; T301 bản cơ bản: `DexPage` gọi API thật, bộ lọc trên URL, phân trang | Frontend: lint sạch, 23 test pass, build pass; chạy thật: trang `/` hiện 1.083 kết quả có sprite, `?type=dragon&gen=4` hiện 6 kết quả có Garchomp |
