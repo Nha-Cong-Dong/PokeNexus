@@ -177,7 +177,8 @@ frontend/
     ├── assets/
     │   └── logo.svg
     ├── test/
-    │   └── setup.ts               Nạp matcher jest-dom cho Vitest, dọn DOM sau mỗi test
+    │   ├── setup.ts               Nạp matcher jest-dom cho Vitest, dọn DOM sau mỗi test
+    │   └── renderRoute.tsx        Render route với QueryClient và MemoryRouter; giả lập fetch
     └── types/
         └── api.ts                 Kiểu DTO khớp docs/api.md Phần 3
 ```

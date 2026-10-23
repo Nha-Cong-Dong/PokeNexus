@@ -1,15 +1,18 @@
-import { render, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { createMemoryRouter, RouterProvider } from 'react-router'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { routes } from './router'
+import { renderRoute, stubFetch } from '../test/renderRoute'
 
-function renderAt(path: string) {
-  const memoryRouter = createMemoryRouter(routes, { initialEntries: [path] })
-  render(<RouterProvider router={memoryRouter} />)
-  return memoryRouter
-}
+const renderAt = renderRoute
+
+beforeEach(() => {
+  stubFetch()
+})
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
 
 describe('app routes', () => {
   it('renders the layout with header navigation and footer on the home page', () => {
