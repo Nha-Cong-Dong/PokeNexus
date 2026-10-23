@@ -21,7 +21,7 @@
 
 | Mã | Ngày | Task | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| T101 | 19/10 | Bộ tài liệu kế hoạch v0.2 | Xong | Commit `2b97191` trên nhánh `docs/planning-and-ai-guides`, chờ PR |
+| T101 | 19/10 | Bộ tài liệu kế hoạch v0.2 | Xong | Commit `2b97191` trên nhánh `docs/planning-and-ai-guides`, đã merge vào `main` qua PR #4 |
 | T102 | 20/10 | Khảo sát bộ CSV PokéAPI | Xong | Làm ngày 21/10; kết quả ở [data/README.md](data/README.md), Phần 4 |
 | T103 | 21-22/10 | Wireframe 6 trang | Chưa làm | |
 | T104 | 23/10 | Nhãn, milestone, board, Issue W2-W3 | Chưa làm | `gh` đã cài, chưa đăng nhập (`gh auth login`); hoặc làm trên web |
@@ -34,7 +34,7 @@
 |---|---|---|---|---|
 | T201 | 26/10 | Chốt spec 1.0 | Xong | Nhánh `docs/spec-1-0`; chấp nhận cả 3 đề xuất, thêm 2 quy tắc dữ liệu từ T102 |
 | T202 | 26/10 | Khởi tạo backend | Xong | `verify` xanh: 22 unit test và 3 test `*IT` (Testcontainers) pass; `spring-boot:run` trên MySQL Docker, Swagger UI và `/health` trả 200 |
-| T203 | 27/10 | Khởi tạo frontend | Xong | `lint`, `test` (11 test), `build` xanh; chưa xem bằng trình duyệt thật |
+| T203 | 27/10 | Khởi tạo frontend | Xong | `lint`, `test` (11 test), `build` xanh; `npm run dev` hiển thị header, 4 mục điều hướng, footer (kiểm tra 23/10) |
 
 - Giá trị cột Trạng thái: Chưa làm, Đang làm, Bị chặn, Xong, Cắt giảm.
 
@@ -68,7 +68,7 @@
 | Máy chưa cài Docker | Không chạy được MySQL, Testcontainers, không khởi động được backend; chặn T204, T205 | Cài Docker Desktop; service `MySQL80` chiếm cổng 3306 nên `.env` đặt `DB_PORT=3307` | Đã xử lý |
 | `./mvnw` trong Git Bash không tải được Maven (curl lỗi `CRYPT_E_REVOCATION_OFFLINE`) | Lệnh Git Bash của backend thất bại trên máy này | Dùng `.\mvnw.cmd` trong PowerShell (đã tải Maven 3.10.0 vào `~/.m2/wrapper`) | Có cách vòng |
 | Node trên máy là 25, `.nvmrc` là 24 | Lệch phiên bản với CI | Tạm dùng Node 25; cài Node 24 (nvm-windows) khi có thời gian | Mở |
-| PR `docs/planning-and-ai-guides` chưa merge | Nhánh `docs/spec-1-0`, `chore/init-*` tách nối tiếp từ nhánh này | Merge PR tài liệu trước, sau đó lần lượt các nhánh nối tiếp | Mở |
+| PR `docs/planning-and-ai-guides` chưa merge | Nhánh `docs/spec-1-0`, `chore/init-*` tách nối tiếp từ nhánh này | Merge PR tài liệu trước, sau đó lần lượt các nhánh nối tiếp | Đã xử lý: PR #4-#7 đã merge vào `main` |
 
 ---
 
@@ -82,4 +82,4 @@
 | 2026-10-20 | Thêm `CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md`, `MAP.md`, `SPEC.md`, `PLAN.md`, `backend/CLAUDE.md`, `frontend/CLAUDE.md`, `.claude/settings.json`, `.claude/commands/` | Xem PR tương ứng |
 | 2026-10-21 | T102 khảo sát CSV; T201 chốt spec 1.0, chỉnh quy tắc `form_category` và chọn dòng tiến hóa | 18 hệ, 324 dòng tương khắc, 1025 loài, 1351 dạng, 9 ID thiếu sprite |
 | 2026-10-21 | T202 khung backend (Boot 4.1.1, springdoc 3.1.1); T203 khung frontend (Vite 8, React 19, Tailwind 4.3, React Router 8) | Backend: 22 test pass, 3 IT Skipped (không có Docker). Frontend: lint, 11 test, build pass |
-| 2026-10-23 | Cài Docker Desktop, tạo `.env` (`DB_PORT=3307`), chạy MySQL 8.4 bằng Compose; chạy backend bằng `spring-boot:run`; đóng T202 | Container `healthy`; `verify`: 22 test và 3 IT pass, 0 Skipped; `GET /api/v1/health` 200 (`pokemonCount` 0, chờ T204-T205); Swagger UI 200 |
+| 2026-10-23 | Cài Docker Desktop, tạo `.env` (`DB_PORT=3307`), chạy MySQL 8.4 bằng Compose; chạy backend bằng `spring-boot:run`; đóng T202; xem frontend bằng trình duyệt | Container `healthy`; `verify`: 22 test và 3 IT pass, 0 Skipped; `GET /api/v1/health` 200 (`pokemonCount` 0, chờ T204-T205); Swagger UI 200 |
