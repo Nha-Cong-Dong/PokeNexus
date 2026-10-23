@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PokeNexus Wireframes</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 13px/1.4 "Segoe UI", Arial, sans-serif; color: #222; background: #fff; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .box { border: 1.5px solid #555; border-radius: 6px; background: #f3f3f3; padding: 8px; display: flex; align-items: center; justify-content: center; text-align: center; color: #444; min-height: 36px; }
+  .box.light { background: #fff; }
+  .box.dark { background: #ddd; }
+  .row { display: flex; gap: 8px; align-items: stretch; }
+  .col { display: flex; flex-direction: column; gap: 8px; }
+  .grow { flex: 1; }
+  .label { font-size: 11px; color: #777; margin: 4px 0; text-transform: uppercase; letter-spacing: .04em; }
+  header.app { height: 56px; border-bottom: 1.5px solid #555; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
+  header.app .logo { font-weight: 700; font-size: 16px; }
+  header.app nav { display: flex; gap: 6px; }
+  header.app nav span { border: 1.5px solid #555; border-radius: 6px; padding: 6px 10px; }
+  header.app nav span.on { background: #555; color: #fff; }
+  header.app .menu { display: none; border: 1.5px solid #555; border-radius: 6px; padding: 6px 10px; }
+  main { max-width: 1280px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  footer.app { border-top: 1.5px solid #555; padding: 12px 16px; display: flex; justify-content: space-between; color: #555; }
+  h1 { font-size: 20px; margin: 0; }
+  .grid { display: grid; gap: 8px; }
+  .g6 { grid-template-columns: repeat(6, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g18 { grid-template-columns: 70px repeat(18, 1fr); font-size: 10px; }
+  .g18 .box { min-height: 26px; padding: 2px; border-radius: 3px; }
+  .card { height: 150px; flex-direction: column; gap: 4px; }
+  .sprite { width: 64px; height: 64px; border: 1.5px dashed #777; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+  .chips { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
+  .chip { border: 1.5px solid #555; border-radius: 999px; padding: 1px 8px; font-size: 11px; background: #fff; }
+  .side { width: 256px; flex: none; }
+  .tall { min-height: 260px; }
+  .radar { min-height: 240px; border-radius: 50%; aspect-ratio: 1; margin: 0 auto; width: 240px; }
+  .stat { display: flex; align-items: center; gap: 8px; }
+  .stat .bar { flex: 1; height: 12px; border: 1.5px solid #555; border-radius: 3px; background: linear-gradient(90deg, #999 60%, #fff 60%); }
+  .scroll-x { overflow: hidden; position: relative; }
+  .scroll-x::after { content: "cuộn ngang trong khung"; position: absolute; right: 6px; bottom: 6px; font-size: 10px; background: #fff; border: 1px solid #777; padding: 1px 6px; }
+  .only-m { display: none; }
+  html.m body { width: 375px; overflow: hidden; }
+  html.m header.app nav { display: none; }
+  html.m header.app .menu { display: block; }
+  html.m main { padding: 12px 16px; }
+  html.m .only-d { display: none !important; }
+  html.m .only-m { display: flex; }
+  html.m .stack-m { flex-direction: column; }
+  html.m .g6 { grid-template-columns: repeat(2, 1fr); }
+  html.m .defense { grid-template-columns: repeat(3, 1fr); }
+  html.m .g18 { grid-template-columns: 70px repeat(18, 44px); }
+  html.m .side { width: auto; }
+  html.m footer.app { flex-direction: column; gap: 6px; }
+</style>
+</head>
+<body>
+<header class="app">
+  <span class="logo">[Logo] PokeNexus</span>
+  <nav><span data-nav="dex">Pokédex</span><span data-nav="types">Tương khắc</span><span data-nav="compare">So sánh</span><span data-nav="team">Xây đội</span></nav>
+  <span class="menu">Menu</span>
+</header>
+
+<section class="page" id="dex">
+<main>
+  <div class="row"><h1 class="grow">Pokédex</h1><span class="only-d label">1.025 kết quả</span></div>
+  <div class="row only-m"><div class="box light grow">Bộ lọc (2)</div><div class="box light grow">Sắp xếp: ID tăng dần</div></div>
+  <div class="row stack-m">
+    <div class="side col only-d">
+      <div class="box light">Tìm theo tên</div>
+      <div class="label">Hệ (tối đa 2)</div>
+      <div class="box tall">18 nút hệ, mỗi nút ghi tên hệ</div>
+      <div class="label">Thế hệ</div><div class="box light">1 - 9</div>
+      <div class="label">Tổng chỉ số (BST)</div><div class="box light">min - max</div>
+      <div class="label">Tốc độ tối thiểu</div><div class="box light">0 - 255</div>
+      <div class="label">Dạng</div><div class="box light">Mặc định, Vùng miền, Mega, Gmax, Khác</div>
+      <div class="box dark">Xóa bộ lọc</div>
+    </div>
+    <div class="col grow">
+      <div class="row only-d"><div class="grow"></div><div class="box light" style="width:220px">Sắp xếp: ID tăng dần</div></div>
+      <div class="grid g6">
+        <div class="box card"><div class="sprite">sprite 96</div><b>#0006 Charizard</b><div class="chips"><span class="chip">Fire</span><span class="chip">Flying</span></div><span>BST 534 · Tốc độ 100</span></div>
+        <div class="box card"><div class="sprite">sprite 96</div><b>#0445 Garchomp</b><div class="chips"><span class="chip">Dragon</span><span class="chip">Ground</span></div><span>BST 600 · Tốc độ 102</span></div>
+        <div class="box card"><div class="sprite">sprite 96</div><b>Tên</b><div class="chips"><span class="chip">Hệ</span></div><span>BST · Tốc độ</span></div>
+        <div class="box card"><div class="sprite">sprite 96</div><b>Tên</b><div class="chips"><span class="chip">Hệ</span></div><span>BST · Tốc độ</span></div>
+        <div class="box card"><div class="sprite">sprite 96</div><b>Tên</b><div class="chips"><span class="chip">Hệ</span></div><span>BST · Tốc độ</span></div>
+        <div class="box card"><div class="sprite">sprite 96</div><b>Tên</b><div class="chips"><span class="chip">Hệ</span></div><span>BST · Tốc độ</span></div>
+        <div class="box card"><div class="sprite">sprite 96</div><b>Tên</b><div class="chips"><span class="chip">Hệ</span></div><span>BST · Tốc độ</span></div>
+        <div class="box card"><div class="sprite">sprite 96</div><b>Tên</b><div class="chips"><span class="chip">Hệ</span></div><span>BST · Tốc độ</span></div>
+        <div class="box card only-d"><div class="sprite">sprite 96</div><b>Tên</b></div>
+        <div class="box card only-d"><div class="sprite">sprite 96</div><b>Tên</b></div>
+        <div class="box card only-d"><div class="sprite">sprite 96</div><b>Tên</b></div>
+        <div class="box card only-d"><div class="sprite">sprite 96</div><b>Tên</b></div>
+      </div>
+      <div class="row" style="justify-content:center"><div class="box light">Trước</div><div class="box dark">Trang 1 / 43</div><div class="box light">Sau</div></div>
+      <div class="box light">Trạng thái rỗng: "Không có Pokémon khớp bộ lọc" + nút Xóa bộ lọc. Đang tải: lưới skeleton. Lỗi: thông báo + Thử lại</div>
+    </div>
+  </div>
+</main>
+</section>
+
+<section class="page" id="pokemon-detail">
+<main>
+  <div class="label">Pokédex / Charizard</div>
+  <div class="row stack-m">
+    <div class="col grow">
+      <div class="box" style="min-height:280px">Artwork 320 px (mobile 240 px), fallback sang sprite</div>
+      <h1>#0006 Charizard</h1>
+      <div class="chips" style="justify-content:flex-start"><span class="chip">Fire</span><span class="chip">Flying</span><span class="chip">Thế hệ 1</span></div>
+      <div class="box light">Cao 1,7 m · Nặng 90,5 kg · Huyền thoại: Không · Tiến hóa cuối: Có</div>
+      <div class="label">Các dạng</div>
+      <div class="row"><div class="box light grow">Charizard</div><div class="box light grow">Mega X</div><div class="box light grow">Mega Y</div><div class="box light grow">Gmax</div></div>
+    </div>
+    <div class="col grow">
+      <div class="label">Chỉ số gốc</div>
+      <div class="box light col" style="align-items:stretch">
+        <div class="stat"><span style="width:90px">HP 78</span><span class="bar"></span></div>
+        <div class="stat"><span style="width:90px">Tấn công 84</span><span class="bar"></span></div>
+        <div class="stat"><span style="width:90px">Phòng thủ 78</span><span class="bar"></span></div>
+        <div class="stat"><span style="width:90px">Tấn công ĐB 109</span><span class="bar"></span></div>
+        <div class="stat"><span style="width:90px">Phòng thủ ĐB 85</span><span class="bar"></span></div>
+        <div class="stat"><span style="width:90px">Tốc độ 100</span><span class="bar"></span></div>
+        <b>Tổng 534</b>
+      </div>
+      <div class="label">Phòng thủ trước 18 hệ (desktop 6 cột, mobile 3 cột)</div>
+      <div class="grid g6 defense">
+        <div class="box">Rock x4</div><div class="box">Water x2</div><div class="box">Electric x2</div><div class="box">Fire x½</div><div class="box">Grass x¼</div><div class="box">Ground x0</div>
+        <div class="box light">... x1</div><div class="box light">... x1</div><div class="box light">... x1</div><div class="box light">... x1</div><div class="box light">... x1</div><div class="box light">... x1</div>
+        <div class="box light">... x1</div><div class="box light">... x1</div><div class="box light">... x1</div><div class="box light">... x1</div><div class="box light">... x1</div><div class="box light">... x1</div>
+      </div>
+      <div class="row"><div class="box dark grow">So sánh với...</div><div class="box dark grow">Thêm vào đội</div></div>
+    </div>
+  </div>
+</main>
+</section>
+
+<section class="page" id="type-chart">
+<main>
+  <h1>Bảng tương khắc</h1>
+  <div class="row stack-m"><div class="box light grow">Hệ phòng thủ 1: [chọn hệ]</div><div class="box light grow">Hệ phòng thủ 2 (tùy chọn): [chọn hệ]</div><div class="box dark">Xóa</div></div>
+  <div class="box light">Kết quả hệ kép Fire / Flying: x4 Rock · x2 Water, Electric · x½ Fire, Fighting, Bug, Steel, Fairy · x¼ Grass · x0 Ground</div>
+  <div class="label">Ma trận 18 x 18: hàng là hệ tấn công, cột là hệ phòng thủ; mỗi ô ghi hệ số</div>
+  <div class="scroll-x">
+    <div class="grid g18" id="matrix"></div>
+  </div>
+</main>
+</section>
+
+<section class="page" id="compare">
+<main>
+  <h1>Bàn Cân Sức Mạnh</h1>
+  <div class="row stack-m">
+    <div class="col grow"><div class="box light">Tìm Pokémon bên trái: "Garchomp"</div><div class="box" style="min-height:160px">Artwork + tên + hệ</div></div>
+    <div class="col grow only-d"><div class="box radar">Radar 6 chỉ số chồng lớp</div></div>
+    <div class="col grow"><div class="box light">Tìm Pokémon bên phải: "Salamence"</div><div class="box" style="min-height:160px">Artwork + tên + hệ</div></div>
+  </div>
+  <div class="box radar only-m">Radar 6 chỉ số chồng lớp</div>
+  <div class="label">Kết luận</div>
+  <div class="col">
+    <div class="box light">Ưu thế hệ: Garchomp gây x2 lên Salamence, Salamence gây x2 lên Garchomp (hòa)</div>
+    <div class="box light">Tổng chỉ số: hòa (600 so với 600)</div>
+    <div class="box light">Tốc độ: Garchomp nhanh hơn (102 so với 100)</div>
+  </div>
+</main>
+</section>
+
+<section class="page" id="team-builder">
+<main>
+  <div class="row"><h1 class="grow">Xây đội</h1><div class="box dark">Lưu và chia sẻ</div></div>
+  <div class="row stack-m">
+    <div class="col" style="flex:1">
+      <div class="label">Đội (5 slot + 1 slot đề xuất)</div>
+      <div class="grid g3">
+        <div class="box card" style="height:90px">Slot 1<br>Charizard</div><div class="box card" style="height:90px">Slot 2<br>Garchomp</div><div class="box card" style="height:90px">Slot 3<br>+ Thêm</div>
+        <div class="box card" style="height:90px">Slot 4<br>+ Thêm</div><div class="box card" style="height:90px">Slot 5<br>+ Thêm</div><div class="box card dark" style="height:90px">Slot 6<br>chờ đề xuất</div>
+      </div>
+      <div class="box" style="min-height:90px">Điểm đội 72 / 100 + radar trung bình chỉ số</div>
+    </div>
+    <div class="col" style="flex:1.4">
+      <div class="label">Heatmap phòng thủ: hàng là thành viên, cột là 18 hệ tấn công</div>
+      <div class="box scroll-x" style="min-height:240px">Cột tên thành viên cố định; ô ghi x4, x2, x½, x0; hàng cuối "Mức hở" cảnh báo hệ Rock</div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="label">3 đề xuất cho slot 6</div>
+      <div class="box card" style="height:110px">#1 Tên + hệ + điểm +8<br>Lý do: chặn Rock, Ice</div>
+      <div class="box card" style="height:110px">#2 Tên + hệ + điểm +6</div>
+      <div class="box card" style="height:110px">#3 Tên + hệ + điểm +5</div>
+    </div>
+  </div>
+</main>
+</section>
+
+<section class="page" id="shared-team">
+<main>
+  <div class="row stack-m"><h1 class="grow">Đội "Rain Team" (mã a1B2c3D4)</h1><div class="box dark">Mở trong Team Builder</div></div>
+  <div class="grid g6">
+    <div class="box card" style="height:110px">Slot 1<br>sprite + tên + hệ</div><div class="box card" style="height:110px">Slot 2</div><div class="box card" style="height:110px">Slot 3</div>
+    <div class="box card" style="height:110px">Slot 4</div><div class="box card" style="height:110px">Slot 5</div><div class="box card" style="height:110px">Slot 6</div>
+  </div>
+  <div class="box light">Điểm đội lúc lưu: 81 / 100 · Tạo lúc 06/11/2026</div>
+  <div class="box scroll-x" style="min-height:220px">Heatmap phòng thủ chỉ đọc (như Team Builder)</div>
+  <div class="box light">Mã không tồn tại: trang "Không tìm thấy đội" + nút về Team Builder</div>
+</main>
+</section>
+
+<footer class="app"><span>Nguồn dữ liệu PokéAPI · Miễn trừ bản quyền Nintendo, Game Freak, The Pokémon Company</span><span>GitHub</span></footer>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const page = params.get('page') || 'dex';
+  if (params.get('device') === 'mobile' || innerWidth < 768) document.documentElement.classList.add('m');
+  document.getElementById(page).classList.add('active');
+  const navOf = { dex: 'dex', 'pokemon-detail': 'dex', 'type-chart': 'types', compare: 'compare', 'team-builder': 'team', 'shared-team': 'team' };
+  document.querySelector(`[data-nav="${navOf[page]}"]`).classList.add('on');
+  const types = ['Nor','Fig','Fly','Poi','Gro','Roc','Bug','Gho','Ste','Fir','Wat','Gra','Ele','Psy','Ice','Dra','Dar','Fai'];
+  const m = document.getElementById('matrix');
+  const cell = (t, cls) => { const d = document.createElement('div'); d.className = 'box ' + (cls || 'light'); d.textContent = t; m.appendChild(d); };
+  cell('Tấn công \\ Thủ', 'dark');
+  types.forEach(t => cell(t, 'dark'));
+  types.forEach((a, i) => { cell(a, 'dark'); types.forEach((_, j) => cell('', '')); });
+</script>
+</body>
+</html>
