@@ -23,8 +23,8 @@
 |---|---|---|---|---|
 | T101 | 19/10 | Bộ tài liệu kế hoạch v0.2 | Xong | Commit `2b97191` trên nhánh `docs/planning-and-ai-guides`, đã merge vào `main` qua PR #4 |
 | T102 | 20/10 | Khảo sát bộ CSV PokéAPI | Xong | Làm ngày 21/10; kết quả ở [data/README.md](data/README.md), Phần 4 |
-| T103 | 21-22/10 | Wireframe 6 trang | Chưa làm | |
-| T104 | 23/10 | Nhãn, milestone, board, Issue W2-W3 | Chưa làm | `gh` đã cài, chưa đăng nhập (`gh auth login`); hoặc làm trên web |
+| T103 | 21-22/10 | Wireframe 6 trang | Xong | Làm ngày 23/10; 12 ảnh trong [docs/wireframes/](docs/wireframes/README.md), Issue #9 |
+| T104 | 23/10 | Nhãn, milestone, board, Issue W2-W3 | Xong một phần | 14 nhãn, 4 milestone, Issue #9-#26; còn Project board (cần quyền `project`), Issue #10 |
 | T105 | 24/10 | Trình bày ý tưởng | Chưa làm | Trình bày miệng, không cần slide hay tài liệu riêng |
 | T106 | 25/10 | Buffer, tổng kết tuần | Chưa làm | |
 
