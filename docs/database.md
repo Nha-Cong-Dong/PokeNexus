@@ -303,9 +303,10 @@ erDiagram
 | 4 | `evolution_chains` | `evolution_chains.csv` | Chỉ lấy `id` |
 | 5 | `species` | `pokemon_species.csv` | Tính `is_fully_evolved` |
 | 6 | `pokemon` | `pokemon.csv`, `pokemon_types.csv`, `pokemon_stats.csv`, `stats.csv` | Gom hệ theo `slot`, gom 6 chỉ số; tính `form_category` |
-| 7 | `evolution_links` | `pokemon_evolution.csv`, `evolution_triggers.csv`, `pokemon_species.csv` | Lấy loài gốc từ `evolves_from_species_id`; mỗi loài một dòng: chọn dòng `is_default = 1` có `id` nhỏ nhất (48 loài có nhiều dòng mặc định) |
+| 7 | `evolution_links` | `pokemon_evolution.csv`, `evolution_triggers.csv`, `pokemon_species.csv` | Lấy loài gốc từ `evolves_from_species_id`; mỗi loài một dòng: chọn dòng `is_default = 1` có `id` nhỏ nhất (48 loài có nhiều dòng mặc định); `item_name` để NULL trong MVP |
 
 - Chi tiết cột và lưu ý của từng file: [data/README.md](../data/README.md).
+- `evolution_links.item_name` để NULL trong MVP: bộ 12 file CSV không có `items.csv` để tra tên vật phẩm từ `trigger_item_id`, và chưa trang nào hiển thị vật phẩm tiến hóa (quyết định 2026-10-23, T205).
 - Toàn bộ quá trình nạp chạy trong một transaction. Lỗi ở bất kỳ bước nào thì rollback và dừng ứng dụng với log nêu rõ file, dòng.
 - Idempotent: chỉ nạp khi bảng `pokemon` rỗng. Bật tắt bằng thuộc tính `app.ingestion.enabled` (mặc định `true` ở profile `dev`).
 - Sau khi nạp thành công lần đầu, xuất `mysqldump` vào `data/dumps/` (không commit) để dựng lại DB nhanh.

@@ -32,6 +32,7 @@
 | Spring Boot DevTools | `spring-boot-devtools` | Tự khởi động lại khi phát triển |
 | Testcontainers | `spring-boot-testcontainers`, `testcontainers-mysql`, `testcontainers-junit-jupiter` | MySQL tạm cho test tích hợp |
 | (thêm thủ công) | `springdoc-openapi-starter-webmvc-ui` 3.1.1 | Swagger UI; bản 3.x build trên Spring Boot 4.1 |
+| (thêm thủ công, T205) | `commons-csv` 1.14.1 | Đọc CSV PokéAPI theo tên cột |
 
 - Boot 4 tách starter test theo module (`spring-boot-starter-webmvc-test`, `...-data-jpa-test`...). `@WebMvcTest`, `@AutoConfigureMockMvc` nằm ở package `org.springframework.boot.webmvc.test.autoconfigure`.
 
