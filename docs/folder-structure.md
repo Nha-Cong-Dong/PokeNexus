@@ -91,7 +91,7 @@ backend/
 | `common` | `config` | `AppProperties`, `CorsConfig`, `OpenApiConfig` | T202 |
 | | `exception` | `GlobalExceptionHandler`, `ErrorCode`, `ApiException`, `NotFoundException` | T202 |
 | | `domain` | `PokemonType` (enum 18 hệ), `StatType`, `FormCategory`, `PokemonTypeConverter` (JPA, ID hệ <-> `PokemonType`) | T202, T204 |
-| | `web` | `HealthController`, `HealthService`, `HealthResponse`, `PageResponse` | T202, T206 |
+| | `web` | `HealthController`, `HealthService`, `HealthResponse`, `PageResponse`, `PageRequestFactory` (kiểm tra `page`, `size`, `sort` theo whitelist) | T202, T206 |
 | `ingestion` | | `IngestionRunner`, `CsvReader`, `FormCategoryResolver`; cấu hình đọc từ `AppProperties.Ingestion` | T205 |
 | | `loader` | `TypeLoader`, `GenerationLoader`, `SpeciesLoader`, `PokemonLoader`, `EvolutionLoader` | T205 |
 | `typechart` | `controller` | `TypeController` | T304 |

@@ -32,6 +32,14 @@ class PokeNexusApplicationIT {
     }
 
     @Test
+    void pokemonListIsUnavailableBeforeDataIsLoaded() {
+        assertThat(mvc.get().uri("/api/v1/pokemon"))
+                .hasStatus(503)
+                .bodyJson()
+                .extractingPath("$.code").isEqualTo("DATA_NOT_READY");
+    }
+
+    @Test
     void exposesOpenApiDocumentForApiPaths() {
         assertThat(mvc.get().uri("/v3/api-docs"))
                 .hasStatusOk()
