@@ -65,7 +65,10 @@
 
 ## Phần 4. Quy trình tải sprite (T207)
 
-### I. Các bước của script `scripts/download-sprites`
+### I. Các bước của script `scripts/download-sprites.sh`
+
+- Chạy trong Git Bash từ thư mục gốc: `bash scripts/download-sprites.sh`. Lần chạy ngày 2026-10-23: 1342 file tải mới, 9 ID thiếu, 1,5 MB, khoảng 3,5 phút.
+
 
 - Đọc danh sách ID từ cột `id` của `data/csv/pokemon.csv` (cần tải CSV trước).
 - Với mỗi ID, tải `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{id}.png` vào `frontend/public/sprites/pokemon/{id}.png`.
