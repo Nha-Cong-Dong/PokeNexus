@@ -1,6 +1,6 @@
 # PokeNexus - Cấu trúc thư mục
 
-- Phiên bản: 0.2 (cập nhật 2026-10-19)
+- Phiên bản: 0.2 (cập nhật 2026-10-25)
 - Đây là cấu trúc **đích** khi xong MVP. Thư mục, file nào chưa tồn tại thì được tạo ở task ghi trong cột "Tạo ở" (mã task theo [roadmap.md](roadmap.md)).
 - Thêm hoặc đổi tên package, thư mục cấp 1-2 thì cập nhật tài liệu này trong cùng PR.
 
@@ -143,6 +143,7 @@ frontend/
 ├── public/
 │   ├── favicon.svg
 │   ├── og-image.png               Ảnh xem trước khi chia sẻ link
+│   ├── scenes/                    {scene}-1600.webp, {scene}-800.webp, SOURCES.md (T301)
 │   └── sprites/
 │       ├── placeholder.svg
 │       └── pokemon/{id}.png       Sprite 96 x 96 tải bằng script (T207)
@@ -156,19 +157,22 @@ frontend/
     ├── pages/                     DexPage, PokemonDetailPage, TypeChartPage, ComparePage,
     │                              TeamBuilderPage, SharedTeamPage, NotFoundPage (.tsx)
     ├── features/
-    │   ├── dex/                   api.ts, hooks.ts, useDexSearchParams.ts, components/
+    │   ├── dex/                   api.ts, hooks.ts, useDexSearchParams.ts, emptyMessage.ts, components/
     │   ├── pokemon-detail/        api.ts, hooks.ts, components/
     │   ├── typechart/             api.ts, hooks.ts, components/
     │   ├── compare/               api.ts, hooks.ts, components/
     │   └── team-builder/          api.ts, hooks.ts, useTeamDraft.ts, components/
     ├── components/
-    │   ├── ui/                    Button, Card, Dialog, Skeleton, EmptyState, ErrorState, Toast, Pagination
-    │   └── pokemon/               TypeBadge, StatBar, MultiplierCell, PokemonSprite, PokemonCard,
-    │                              PokemonSearchBox
+    │   ├── ui/                    buttonStyles.ts, Panel, GameDialog, Card, Dialog, Skeleton, EmptyState,
+    │   │                          ErrorState, Toast, Pagination, pageItems.ts
+    │   ├── scene/                 SceneBackdrop, PageHero (kèm PageBody), SceneLabel
+    │   └── pokemon/               TypeBadge, TypeGlyph, DexNumber, StatBar, MultiplierCell, PokemonSprite,
+    │                              PokemonCard, PokemonSearchBox
     ├── lib/
     │   ├── http.ts                fetch wrapper, chuyển ProblemDetail thành ApiError
     │   ├── queryClient.ts
-    │   ├── assets.ts              getSpriteUrl, getArtworkUrl
+    │   ├── assets.ts              getSpriteUrl, getArtworkUrl, sceneUrl
+    │   ├── scenes.ts              15 scene (tên, màu dự phòng, cờ photo), sceneForTypes
     │   ├── pokemonTypes.ts        Danh sách 18 hệ, ánh xạ hệ sang class token
     │   ├── errorMessages.ts       Ánh xạ code lỗi sang thông điệp tiếng Việt
     │   └── formatters.ts          Tên, chiều cao, cân nặng, hệ số
@@ -177,7 +181,7 @@ frontend/
     ├── assets/
     │   └── logo.svg
     ├── test/
-    │   ├── setup.ts               Nạp matcher jest-dom cho Vitest, dọn DOM sau mỗi test
+    │   ├── setup.ts               Nạp matcher jest-dom, polyfill showModal/close cho <dialog> của jsdom, dọn DOM
     │   └── renderRoute.tsx        Render route với QueryClient và MemoryRouter; giả lập fetch
     └── types/
         └── api.ts                 Kiểu DTO khớp docs/api.md Phần 3
@@ -190,7 +194,7 @@ frontend/
 
 | Trang | Feature folder | Component chính | Tạo ở |
 |---|---|---|---|
-| `DexPage` | `dex` | `PokemonGrid`, `DexFilters`, `Pagination` | T301 |
+| `DexPage` | `dex` | `DexFilters`, `StatRangeFields`, `DexToolbar`, `ViewToggle`, `FilterSheet`, `PokemonGrid`, `PokemonList`, `Pagination` | T301 |
 | `PokemonDetailPage` | `pokemon-detail` | `StatPanel`, `DefenseGrid`, `FormSwitcher` | T303 |
 | `TypeChartPage` | `typechart` | `TypeMatrixTable`, `DualTypePicker` | T304 |
 | `ComparePage` | `compare` | `CompareRadar`, `VerdictPanel` | T308 |
