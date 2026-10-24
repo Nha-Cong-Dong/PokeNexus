@@ -12,13 +12,20 @@ export const FORM_CATEGORIES: readonly FormCategory[] = [
   'OTHER',
 ]
 export const SORT_OPTIONS = ['id,asc', 'name,asc', 'baseStatTotal,desc', 'speed,desc'] as const
+export const DEX_VIEWS = ['cards', 'list'] as const
 export const MAX_GENERATION = 9
+export const MAX_BST = 1530
+export const MAX_SPEED = 255
 
 export type DexSort = (typeof SORT_OPTIONS)[number]
+export type DexView = (typeof DEX_VIEWS)[number]
 
 export interface DexFilter {
   types: TypeName[]
   gen?: number
+  minBst?: number
+  maxBst?: number
+  minSpeed?: number
   forms: FormCategory[]
   sort: DexSort
   page: number
@@ -39,46 +46,89 @@ function toPositiveInt(value: string | null): number | undefined {
   return Number(value)
 }
 
+function toBoundedInt(value: string | null, max: number): number | undefined {
+  const parsed = toPositiveInt(value)
+  return parsed !== undefined && parsed <= max ? parsed : undefined
+}
+
 export function parseDexFilter(params: URLSearchParams): DexFilter {
   const types = [...new Set(params.getAll('type').filter(isTypeName))].slice(0, 2)
   const gen = toPositiveInt(params.get('gen'))
+  const minBst = toBoundedInt(params.get('minBst'), MAX_BST)
+  const maxBst = toBoundedInt(params.get('maxBst'), MAX_BST)
+  const bstInOrder = minBst === undefined || maxBst === undefined || minBst <= maxBst
   const sort = params.get('sort')
   const page = toPositiveInt(params.get('page'))
   return {
     types,
     gen: gen !== undefined && gen >= 1 && gen <= MAX_GENERATION ? gen : undefined,
+    minBst: bstInOrder ? minBst : undefined,
+    maxBst: bstInOrder ? maxBst : undefined,
+    minSpeed: toBoundedInt(params.get('minSpeed'), MAX_SPEED),
     forms: [...new Set(params.getAll('form').filter(isFormCategory))],
     sort: isSort(sort) ? sort : 'id,asc',
     page: page !== undefined && page > 0 ? page - 1 : 0,
   }
 }
 
-export function toSearchParams(filter: DexFilter): URLSearchParams {
+export function parseDexView(params: URLSearchParams): DexView {
+  return params.get('view') === 'list' ? 'list' : 'cards'
+}
+
+export function toSearchParams(filter: DexFilter, view: DexView = 'cards'): URLSearchParams {
   const params = new URLSearchParams()
   filter.types.forEach((type) => params.append('type', type))
   if (filter.gen !== undefined) params.set('gen', String(filter.gen))
+  if (filter.minBst !== undefined) params.set('minBst', String(filter.minBst))
+  if (filter.maxBst !== undefined) params.set('maxBst', String(filter.maxBst))
+  if (filter.minSpeed !== undefined) params.set('minSpeed', String(filter.minSpeed))
   filter.forms.forEach((form) => params.append('form', form))
   if (filter.sort !== 'id,asc') params.set('sort', filter.sort)
   if (filter.page > 0) params.set('page', String(filter.page + 1))
+  if (view !== 'cards') params.set('view', view)
   return params
+}
+
+export function countActiveFilters(filter: DexFilter): number {
+  return (
+    filter.types.length +
+    (filter.gen !== undefined ? 1 : 0) +
+    (filter.minBst !== undefined || filter.maxBst !== undefined ? 1 : 0) +
+    (filter.minSpeed !== undefined ? 1 : 0) +
+    (filter.forms.length > 0 ? 1 : 0)
+  )
 }
 
 export function useDexSearchParams() {
   const [searchParams, setSearchParams] = useSearchParams()
   const filter = useMemo(() => parseDexFilter(searchParams), [searchParams])
+  const view = parseDexView(searchParams)
 
   const updateFilter = useCallback(
-    (change: DexFilterChange) => setSearchParams(toSearchParams({ ...filter, ...change, page: 0 })),
-    [filter, setSearchParams],
+    (change: DexFilterChange) =>
+      setSearchParams(toSearchParams({ ...filter, ...change, page: 0 }, view)),
+    [filter, view, setSearchParams],
   )
   const setPage = useCallback(
-    (page: number) => setSearchParams(toSearchParams({ ...filter, page })),
+    (page: number) => setSearchParams(toSearchParams({ ...filter, page }, view)),
+    [filter, view, setSearchParams],
+  )
+  const setView = useCallback(
+    (next: DexView) => setSearchParams(toSearchParams(filter, next)),
     [filter, setSearchParams],
   )
-  const clearFilter = useCallback(() => setSearchParams(new URLSearchParams()), [setSearchParams])
+  const clearFilter = useCallback(
+    () => setSearchParams(toSearchParams(parseDexFilter(new URLSearchParams()), view)),
+    [view, setSearchParams],
+  )
 
-  const activeCount =
-    filter.types.length + (filter.gen !== undefined ? 1 : 0) + (filter.forms.length > 0 ? 1 : 0)
-
-  return { filter, updateFilter, setPage, clearFilter, activeCount }
+  return {
+    filter,
+    view,
+    updateFilter,
+    setPage,
+    setView,
+    clearFilter,
+    activeCount: countActiveFilters(filter),
+  }
 }

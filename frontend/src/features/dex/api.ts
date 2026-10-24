@@ -13,6 +13,9 @@ export function fetchPokemonList(
     {
       type: filter.types,
       gen: filter.gen,
+      minBst: filter.minBst,
+      maxBst: filter.maxBst,
+      minSpeed: filter.minSpeed,
       form: filter.forms,
       sort: filter.sort,
       page: filter.page,

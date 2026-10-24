@@ -1,3 +1,6 @@
+import { buttonClassName } from './buttonStyles'
+import { GameDialog } from './GameDialog'
+
 type ErrorStateProps = {
   message: string
   onRetry: () => void
@@ -5,18 +8,11 @@ type ErrorStateProps = {
 
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
-    <div
-      role="alert"
-      className="flex flex-col items-center gap-3 rounded-lg border border-danger p-8 text-center"
-    >
-      <p>{message}</p>
-      <button
-        type="button"
-        onClick={onRetry}
-        className="min-h-10 rounded-md bg-primary px-4 text-sm font-medium text-on-primary hover:bg-primary-hover"
-      >
+    <GameDialog role="alert" speaker="Pokédex" className="mx-auto my-6 max-w-155">
+      <p className="text-lg font-bold">{message}</p>
+      <button type="button" onClick={onRetry} className={`mt-4 ${buttonClassName('primary')}`}>
         Thử lại
       </button>
-    </div>
+    </GameDialog>
   )
 }

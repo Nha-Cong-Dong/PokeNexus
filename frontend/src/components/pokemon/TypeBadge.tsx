@@ -1,16 +1,22 @@
-import { typeClassName } from '../../lib/pokemonTypes'
+import { typeClassName, typeLabel } from '../../lib/pokemonTypes'
 import type { TypeName } from '../../types/api'
 
 type TypeBadgeProps = {
   type: TypeName
+  size?: 'sm' | 'md'
 }
 
-export function TypeBadge({ type }: TypeBadgeProps) {
+const SIZE_CLASSES = {
+  sm: 'h-6 px-2.5 text-xs',
+  md: 'h-8 px-3.5 text-sm',
+}
+
+export function TypeBadge({ type, size = 'sm' }: TypeBadgeProps) {
   return (
     <span
-      className={`inline-flex min-w-16 justify-center rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${typeClassName(type)}`}
+      className={`inline-flex items-center rounded-full font-extrabold ${SIZE_CLASSES[size]} ${typeClassName(type)}`}
     >
-      {type}
+      {typeLabel(type)}
     </span>
   )
 }

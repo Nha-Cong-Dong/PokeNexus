@@ -15,7 +15,7 @@
 | Tailwind CSS (`@tailwindcss/vite`) | 4.3 | Styling, token qua `@theme` |
 | React Router | 8.5 | Định tuyến, đồng bộ bộ lọc lên URL |
 | TanStack Query | 5.104 | Gọi API, cache, trạng thái tải và lỗi |
-| `@fontsource/be-vietnam-pro` | 5.3 | Font đóng gói, chạy offline |
+| `@fontsource/dela-gothic-one`, `@fontsource-variable/nunito`, `@fontsource-variable/pixelify-sans` | 5.3 | Font Display, Text, Pixel đóng gói, chạy offline ([design-system.md](../docs/design-system.md), Phần 2, mục V) |
 | Recharts | Chưa cài | Biểu đồ Radar, cột; cài ở T306 khi có biểu đồ đầu tiên |
 | Vitest + React Testing Library + jsdom | Vitest 5.0, RTL 16.3 | Kiểm thử component |
 | ESLint + typescript-eslint + Prettier | ESLint 10, Prettier 3.9 | Kiểm tra và định dạng mã |

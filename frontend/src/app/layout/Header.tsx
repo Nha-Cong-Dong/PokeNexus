@@ -4,29 +4,41 @@ import { Link, NavLink } from 'react-router'
 import { NAV_ITEMS } from './navItems'
 
 const MOBILE_NAV_ID = 'mobile-nav'
+const ON_RED_FOCUS =
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white'
 
-function navLinkClass({ isActive }: { isActive: boolean }): string {
-  const base = 'flex min-h-10 items-center rounded-md px-3 text-sm font-medium'
-  return isActive
-    ? `${base} bg-primary text-on-primary`
-    : `${base} text-text-muted hover:bg-surface-muted hover:text-text`
+function desktopLinkClass({ isActive }: { isActive: boolean }): string {
+  const base = `flex h-15 items-center border-b-3 px-3.5 text-base font-bold text-white hover:bg-dex-red-hover ${ON_RED_FOCUS}`
+  return isActive ? `${base} border-dex-yellow font-extrabold` : `${base} border-transparent`
+}
+
+function mobileLinkClass({ isActive }: { isActive: boolean }): string {
+  const base = `flex min-h-11 items-center rounded-[10px] border-l-4 px-3 text-base font-bold text-white hover:bg-dex-red ${ON_RED_FOCUS}`
+  return isActive ? `${base} border-dex-yellow bg-dex-red` : `${base} border-transparent`
 }
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-10 border-b border-border bg-surface">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4">
-        <Link to="/" className="text-lg font-bold text-text">
-          PokeNexus
+    <header className="sticky top-0 z-40 bg-dex-red text-white shadow-header">
+      <div className="mx-auto flex h-14 max-w-7xl items-center gap-5 px-4 md:h-15 md:px-6">
+        <Link
+          to="/"
+          className={`flex flex-none items-center gap-2.5 rounded-[10px] text-white ${ON_RED_FOCUS}`}
+        >
+          <span
+            aria-hidden="true"
+            className="size-6.5 rounded-full border-3 border-white bg-radial-[at_35%_30%] from-white from-10% via-primary via-40% to-primary-hover shadow-[0_0_0_2px_var(--color-scrim)]"
+          />
+          <span className="font-display text-2xl">PokeNexus</span>
         </Link>
 
-        <nav aria-label="Điều hướng chính" className="hidden md:block">
-          <ul className="flex items-center gap-1">
+        <nav aria-label="Điều hướng chính" className="ml-3 hidden self-stretch md:block">
+          <ul className="flex h-full items-stretch gap-0.5">
             {NAV_ITEMS.map((item) => (
-              <li key={item.to}>
-                <NavLink to={item.to} end={item.to === '/'} className={navLinkClass}>
+              <li key={item.to} className="flex">
+                <NavLink to={item.to} end={item.to === '/'} className={desktopLinkClass}>
                   {item.label}
                 </NavLink>
               </li>
@@ -36,11 +48,22 @@ export function Header() {
 
         <button
           type="button"
-          className="flex min-h-10 items-center rounded-md border border-border px-3 text-sm font-medium text-text md:hidden"
+          className={`ml-auto flex h-11 items-center gap-2 rounded-xl bg-dex-red-hover px-3.5 text-base font-extrabold text-white md:hidden ${ON_RED_FOCUS}`}
           aria-expanded={menuOpen}
           aria-controls={MOBILE_NAV_ID}
           onClick={() => setMenuOpen((open) => !open)}
         >
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            className="size-5.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+          >
+            <path d="M4 7h16 M4 12h16 M4 17h16" />
+          </svg>
           Menu
         </button>
       </div>
@@ -49,15 +72,15 @@ export function Header() {
         <nav
           id={MOBILE_NAV_ID}
           aria-label="Điều hướng di động"
-          className="border-t border-border bg-surface md:hidden"
+          className="border-t border-dex-red bg-dex-red-hover md:hidden"
         >
-          <ul className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-2">
+          <ul className="mx-auto flex max-w-7xl flex-col gap-1 px-3 py-3">
             {NAV_ITEMS.map((item) => (
               <li key={item.to}>
                 <NavLink
                   to={item.to}
                   end={item.to === '/'}
-                  className={navLinkClass}
+                  className={mobileLinkClass}
                   onClick={() => setMenuOpen(false)}
                 >
                   {item.label}

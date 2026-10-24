@@ -18,8 +18,9 @@
 | `data/csv/` | CSV PokéAPI (không commit) | Tải trên từng máy; kết quả khảo sát ở `data/README.md`, Phần 4 | T102 |
 | `data/dumps/` | File `mysqldump` (không commit) | Xuất sau lần nạp đầu trên từng máy | T205 |
 | `backend/` | Spring Boot API | Khung: `common/{config, domain, exception, web}`, `/health`, Swagger; migration V1-V3, Entity `typechart` và `pokedex`; `ingestion` nạp CSV khi khởi động; `GET /api/v1/pokemon` | T202, T204, T205, T206 |
-| `frontend/` | React SPA | Khung: `AppLayout`, router 7 route, token Tailwind; `DexPage` gọi `GET /pokemon` (bộ lọc trên URL, phân trang); các trang khác giữ chỗ | T203, T301 |
+| `frontend/` | React SPA | Khung: `AppLayout` (header đỏ, footer), router 7 route, token và font theo design-system 0.3; `PageHero` khung cảnh ở mọi trang; `DexPage` gọi `GET /pokemon` (lọc hệ, thế hệ, BST, tốc độ, dạng trên URL; thẻ hoặc danh sách; ngăn kéo lọc mobile); các trang khác giữ chỗ | T203, T301 |
 | `frontend/public/sprites/` | Sprite tự host (được commit) | 1342 sprite, `missing.txt` (9 ID), `placeholder.svg` | T207 |
+| `frontend/public/scenes/` | Ảnh khung cảnh tự host (được commit) | 2/15 scene có ảnh (`grassland`, `stadium`), nguồn ở `SOURCES.md`; scene còn lại dùng gradient | T301 |
 | `scripts/` | Script tải CSV, sprite, dump DB, đo hiệu năng | `download-sprites.sh` (Git Bash) | T205, T207, T305 |
 | `.github/` | Mẫu Issue, PR, CI, Dependabot | Có | T101 |
 | `.claude/` | Cấu hình Claude Code dùng chung: quyền, slash command | Có | 2026-10-20 |

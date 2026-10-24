@@ -7,6 +7,7 @@ type PokemonSpriteProps = {
   alt: string
   size?: number
   variant?: 'sprite' | 'artwork'
+  className?: string
 }
 
 function sourcesFor(id: number, variant: 'sprite' | 'artwork'): string[] {
@@ -14,11 +15,18 @@ function sourcesFor(id: number, variant: 'sprite' | 'artwork'): string[] {
   return variant === 'artwork' ? [getArtworkUrl(id), ...chain] : chain
 }
 
-export function PokemonSprite({ id, alt, size = 96, variant = 'sprite' }: PokemonSpriteProps) {
+export function PokemonSprite({
+  id,
+  alt,
+  size = 96,
+  variant = 'sprite',
+  className = '',
+}: PokemonSpriteProps) {
   const [failure, setFailure] = useState({ id, level: 0 })
   const level = failure.id === id ? failure.level : 0
   const sources = sourcesFor(id, variant)
   const src = sources[Math.min(level, sources.length - 1)]
+  const rendering = variant === 'sprite' ? '[image-rendering:pixelated]' : ''
 
   return (
     <img
@@ -27,7 +35,7 @@ export function PokemonSprite({ id, alt, size = 96, variant = 'sprite' }: Pokemo
       width={size}
       height={size}
       loading="lazy"
-      className={variant === 'sprite' ? '[image-rendering:pixelated]' : undefined}
+      className={`${rendering} ${className}`.trim() || undefined}
       onError={() => {
         if (level < sources.length - 1) setFailure({ id, level: level + 1 })
       }}
