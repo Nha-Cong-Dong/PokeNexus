@@ -17,7 +17,7 @@
 | `docs/images/` | Ảnh chụp màn hình, sơ đồ cho README | Chưa có | T405 |
 | `data/csv/` | CSV PokéAPI (không commit) | Tải trên từng máy; kết quả khảo sát ở `data/README.md`, Phần 4 | T102 |
 | `data/dumps/` | File `mysqldump` (không commit) | Chưa có | T205 |
-| `backend/` | Spring Boot API | Khung: `common/{config, domain, exception, web}`, `/health`, Swagger; chưa có migration | T202 |
+| `backend/` | Spring Boot API | Khung: `common/{config, domain, exception, web}`, `/health`, Swagger; migration V1-V3, Entity `typechart` và `pokedex` | T202, T204 |
 | `frontend/` | React SPA | Khung: `AppLayout`, router 7 route, token Tailwind; trang giữ chỗ | T203 |
 | `frontend/public/sprites/` | Sprite tự host (được commit) | Chưa có | T207 |
 | `scripts/` | Script tải CSV, sprite, dump DB, đo hiệu năng | Chưa có | T205, T207, T305 |
