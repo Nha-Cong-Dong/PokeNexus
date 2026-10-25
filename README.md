@@ -152,7 +152,7 @@ pokenexus/
 
 | Mốc    | Nội dung                                                 | Trạng thái                        |
 | ------ | -------------------------------------------------------- | --------------------------------- |
-| Tuần 1 | Nghiên cứu, ý tưởng, khởi tạo repo và tài liệu           | Xong một phần (còn Project board) |
+| Tuần 1 | Nghiên cứu, ý tưởng, khởi tạo repo và tài liệu           | Hoàn thành (chờ xác nhận T105)    |
 | Tuần 2 | Chốt đặc tả, dựng khung backend, frontend, cơ sở dữ liệu | Hoàn thành, tag `v0.1.0`          |
 | Tuần 3 | Xây dựng MVP                                             | Đang thực hiện (Omni-Dex đã xong) |
 | Tuần 4 | Hoàn thiện, triển khai, demo                             | Kế hoạch                          |

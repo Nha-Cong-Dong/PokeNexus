@@ -126,6 +126,8 @@ gh api repos/{owner}/{repo}/milestones -f title="W4 - Hoàn thiện và demo" -f
 - Các cột: `Backlog`, `To Do`, `In Progress`, `In Review`, `Done`.
 - Thêm trường `Milestone` và `Labels` vào chế độ xem; lọc theo milestone tuần hiện tại.
 - Giới hạn cột `In Progress` tối đa 2 thẻ.
+- Đã tạo ngày 2026-10-25: [PokeNexus](https://github.com/orgs/Nha-Cong-Dong/projects/1) (riêng tư, liên kết repo). View `Board` lọc milestone tuần đang làm; view `Tất cả` dạng bảng hiện Status, Milestone, Labels, PR liên kết.
+- Ba thiết lập chỉ làm được trên giao diện web, không có trong API: giới hạn cột (Board > menu cột `In Progress` > Set limit), workflow **Auto-add to project** cho Issue mới của repo, và đổi bộ lọc milestone của view `Board` khi sang tuần mới.
 
 ### II. Issue khởi đầu gợi ý cho Tuần 1-2
 
