@@ -1,16 +1,21 @@
 import { Link } from 'react-router'
 
+import { PageBody, PageHero } from '../components/scene/PageHero'
+import { buttonClassName } from '../components/ui/buttonStyles'
+import { Panel } from '../components/ui/Panel'
+
 export function NotFoundPage() {
   return (
-    <section>
-      <h1 className="text-2xl font-bold">Không tìm thấy trang</h1>
-      <p className="mt-2 text-text-muted">Đường dẫn không tồn tại hoặc đã bị thay đổi.</p>
-      <Link
-        to="/"
-        className="mt-4 inline-flex min-h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-on-primary hover:bg-primary-hover"
-      >
-        Về Pokédex
-      </Link>
-    </section>
+    <>
+      <PageHero scene="lab" title="Không tìm thấy trang" />
+      <PageBody>
+        <Panel aria-label="Hướng dẫn" className="flex flex-col items-start gap-4">
+          <p className="text-ink-muted">Đường dẫn không tồn tại hoặc đã bị thay đổi.</p>
+          <Link to="/" className={buttonClassName('primary')}>
+            Về Pokédex
+          </Link>
+        </Panel>
+      </PageBody>
+    </>
   )
 }

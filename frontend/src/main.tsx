@@ -1,7 +1,8 @@
-import '@fontsource/be-vietnam-pro/400.css'
-import '@fontsource/be-vietnam-pro/500.css'
-import '@fontsource/be-vietnam-pro/600.css'
-import '@fontsource/be-vietnam-pro/700.css'
+import '@fontsource/dela-gothic-one/latin-400.css'
+import '@fontsource/dela-gothic-one/latin-ext-400.css'
+import '@fontsource/dela-gothic-one/vietnamese-400.css'
+import '@fontsource-variable/nunito/wght.css'
+import '@fontsource-variable/pixelify-sans/wght.css'
 import './styles/index.css'
 
 import { StrictMode } from 'react'

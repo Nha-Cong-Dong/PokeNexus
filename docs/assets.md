@@ -1,6 +1,6 @@
 # PokeNexus - Kế hoạch quản lý Assets
 
-- Phiên bản: 0.2 (cập nhật 2026-10-19)
+- Phiên bản: 0.3 (cập nhật 2026-10-25)
 - Chiến lược ảnh Pokémon: **Hybrid**. Sprite nhỏ được tự host; artwork lớn lấy từ đường dẫn công khai, có fallback ([ADR 0005](adr/0005-hybrid-image-assets.md)).
 - Dữ liệu CSV không thuộc phạm vi tài liệu này: xem [data/README.md](../data/README.md).
 
@@ -15,7 +15,8 @@
 | Sprite Pokémon | `PokeAPI/sprites`, `sprites/pokemon/{id}.png` | PNG 96 x 96, 0,5-1,7 KB mỗi file | `frontend/public/sprites/pokemon/` | Có | T207 |
 | Artwork Pokémon | `PokeAPI/sprites`, `sprites/pokemon/other/official-artwork/{id}.png` | PNG 475 x 475, 120-145 KB mỗi file | Không lưu, tải lúc hiển thị | Không | T303 |
 | Ảnh dự phòng | Tự vẽ | SVG, dưới 2 KB | `frontend/public/sprites/placeholder.svg` | Có | T207 |
-| Font | Be Vietnam Pro qua npm `@fontsource/be-vietnam-pro` | WOFF2, weight 400/500/600/700 | `node_modules`, Vite đóng gói vào `dist/assets` | Không (chỉ `package.json`) | T203 |
+| Ảnh khung cảnh (scene) | Ảnh chụp từ game Pokémon 3D, tìm trên Bulbagarden Archives ([design-system.md](design-system.md), Phần 4) | WebP 1600 x 900 (tối đa 220 KB) và 800 x 450 (tối đa 70 KB) | `frontend/public/scenes/`, nguồn từng ảnh ở `SOURCES.md` | Có | T301 |
+| Font | Dela Gothic One (`@fontsource/dela-gothic-one`), Nunito và Pixelify Sans (`@fontsource-variable/...`) | WOFF2; Dela Gothic One weight 400, hai font còn lại dạng variable | `node_modules`, Vite đóng gói vào `dist/assets` | Không (chỉ `package.json`) | T203, T301 |
 | Logo, favicon | Tự thiết kế | SVG | `frontend/src/assets/logo.svg`, `frontend/public/favicon.svg` | Có | T203 |
 | Ảnh xem trước link (Open Graph) | Chụp và thiết kế | PNG 1200 x 630, dưới 300 KB | `frontend/public/og-image.png` | Có | T405 |
 | Ảnh chụp màn hình cho README | Chụp từ bản production | PNG hoặc WebP, rộng tối đa 1600 px, dưới 500 KB | `docs/images/` | Có | T405 |
@@ -37,6 +38,7 @@
 | Loại | Quy tắc | Ví dụ |
 |---|---|---|
 | Sprite | ID PokéAPI, không thêm số 0 ở đầu | `sprites/pokemon/6.png`, `sprites/pokemon/10034.png` |
+| Ảnh khung cảnh | `{scene}-{rộng}.webp`, `scene` là mã trong `src/lib/scenes.ts` | `scenes/grassland-1600.webp`, `scenes/grassland-800.webp` |
 | Ảnh trong `docs/images/` | `<trang>-<thiết bị>.<đuôi>`, chữ thường, gạch nối | `dex-desktop.png`, `team-builder-mobile.png` |
 | Sơ đồ | `diagram-<tên>.<đuôi>` | `diagram-container.svg` |
 | Wireframe | `<trang>-<thiết bị>.png` | `pokemon-detail-mobile.png` |
@@ -53,9 +55,10 @@
 | Hạng mục | Giới hạn | Hành động khi vượt |
 |---|---|---|
 | Thư mục sprite | 15 MB | Chuyển sang tải sprite bằng script lúc build, không commit |
+| Thư mục ảnh khung cảnh | 5 MB (15 scene x 2 cỡ) | Giảm chất lượng WebP trước, không bớt scene |
 | Một ảnh trong `docs/images/` | 500 KB | Giảm kích thước hoặc chuyển sang WebP |
 | Một file bất kỳ trong repo | 10 MB | Không commit; đặt ở nơi lưu trữ ngoài và dẫn link |
-| Font tải về khi mở trang | 4 weight, chỉ WOFF2 | Bỏ weight ít dùng |
+| Font tải về khi mở trang | 3 họ font, chỉ WOFF2; chỉ import subset `latin`, `latin-ext`, `vietnamese` của Dela Gothic One | Bỏ subset không dùng |
 | JS bundle ban đầu | 300 KB sau gzip | Tách code theo route bằng `lazy()` |
 
 - GitHub cảnh báo khi đẩy file trên 50 MB và chặn file trên 100 MB; dự án không dùng Git LFS vì mọi asset đều nằm dưới các giới hạn trên.
@@ -65,7 +68,10 @@
 
 ## Phần 4. Quy trình tải sprite (T207)
 
-### I. Các bước của script `scripts/download-sprites`
+### I. Các bước của script `scripts/download-sprites.sh`
+
+- Chạy trong Git Bash từ thư mục gốc: `bash scripts/download-sprites.sh`. Lần chạy ngày 2026-10-23: 1342 file tải mới, 9 ID thiếu, 1,5 MB, khoảng 3,5 phút.
+
 
 - Đọc danh sách ID từ cột `id` của `data/csv/pokemon.csv` (cần tải CSV trước).
 - Với mỗi ID, tải `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{id}.png` vào `frontend/public/sprites/pokemon/{id}.png`.
@@ -95,6 +101,7 @@
 | `getSpriteUrl(id)` | `/sprites/pokemon/{id}.png` |
 | `getArtworkUrl(id)` | `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{id}.png` |
 | `PLACEHOLDER_URL` | `/sprites/placeholder.svg` |
+| `sceneUrl(scene, width)` | `/scenes/{scene}-{width}.webp`, `width` thuộc `SCENE_WIDTHS` (800, 1600) |
 
 - Đây là nơi duy nhất trong code chứa đường dẫn ảnh. Khi đổi nguồn ảnh thì chỉ sửa file này.
 
@@ -104,6 +111,7 @@
 |---|---|---|
 | Lưới Omni-Dex, kết quả tìm kiếm, slot đội, thẻ đề xuất, trang đội chia sẻ | Sprite | 96 px (lưới), 48 px (tìm kiếm) |
 | Trang chi tiết, Bàn Cân | Artwork | 240 px mobile, 320 px desktop |
+| `PageHero` của mọi trang | Ảnh khung cảnh qua `SceneBackdrop` (`srcset` 800w, 1600w) | Tràn ngang, cao 192 px mobile, 320 px desktop |
 
 ### III. Chuỗi fallback trong `PokemonSprite`
 
@@ -142,7 +150,8 @@ flowchart LR
 |---|---|---|
 | Repo `PokeAPI/sprites` | CC0 1.0 cho repo; file `LICENCE.txt` ghi rõ nội dung hình ảnh thuộc bản quyền The Pokémon Company | Ghi nguồn PokéAPI; nêu rõ bản quyền hình ảnh; chỉ dùng phi thương mại |
 | Dữ liệu `PokeAPI/pokeapi` | Giấy phép dạng BSD trong `LICENSE.md` của repo; tên Pokémon là thương hiệu của Nintendo | Giữ thông báo bản quyền khi phân phối lại dữ liệu |
-| Be Vietnam Pro | SIL Open Font License 1.1 | Được đóng gói và phân phối cùng ứng dụng |
+| Dela Gothic One, Nunito, Pixelify Sans | SIL Open Font License 1.1 | Được đóng gói và phân phối cùng ứng dụng |
+| Ảnh khung cảnh chụp từ game | Bản quyền Nintendo, Game Freak, The Pokémon Company | Chỉ dùng phi thương mại; ghi nguồn từng ảnh trong `frontend/public/scenes/SOURCES.md` |
 | Logo, placeholder, ảnh chụp | Tự tạo, theo giấy phép MIT của dự án | |
 
 - Không dùng logo Pokémon chính thức, hình Poké Ball hay font thương hiệu trong logo PokeNexus.

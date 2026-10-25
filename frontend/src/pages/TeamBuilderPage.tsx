@@ -1,8 +1,19 @@
+import { PageBody, PageHero } from '../components/scene/PageHero'
+import { Panel } from '../components/ui/Panel'
+
 export function TeamBuilderPage() {
   return (
-    <section>
-      <h1 className="text-2xl font-bold">Xây đội</h1>
-      <p className="mt-2 text-text-muted">Trang đang được xây dựng (T306).</p>
-    </section>
+    <>
+      <PageHero
+        scene="stadium"
+        title="Xây đội"
+        subtitle="Chọn 5 Pokémon, đọc bản đồ điểm yếu, để PokeNexus đề xuất slot thứ 6."
+      />
+      <PageBody>
+        <Panel aria-label="Trạng thái trang">
+          <p className="text-ink-muted">Trang đang được xây dựng (T306).</p>
+        </Panel>
+      </PageBody>
+    </>
   )
 }

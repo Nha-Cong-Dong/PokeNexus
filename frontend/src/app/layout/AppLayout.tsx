@@ -10,12 +10,12 @@ export function AppLayout() {
     <div className="flex min-h-screen flex-col">
       <a
         href={`#${MAIN_CONTENT_ID}`}
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:z-20 focus:rounded-md focus:bg-surface focus:px-3 focus:py-2"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-4 focus:z-50 focus:rounded-[10px] focus:bg-surface focus:px-3 focus:py-2 focus:font-bold"
       >
         Bỏ qua đến nội dung
       </a>
       <Header />
-      <main id={MAIN_CONTENT_ID} className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
+      <main id={MAIN_CONTENT_ID} className="w-full flex-1 pb-20">
         <Outlet />
       </main>
       <Footer />

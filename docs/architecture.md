@@ -1,6 +1,6 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 0.2 (cập nhật 2026-10-19)
+- Phiên bản: 0.2 (cập nhật 2026-10-25)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
 
@@ -62,7 +62,7 @@ flowchart LR
 | Định tuyến | React Router | Đồng bộ bộ lọc lên URL |
 | Gọi API | TanStack Query 5.x | Cache, trạng thái tải và lỗi |
 | Biểu đồ | Recharts 3.x | Radar, cột |
-| Font | Be Vietnam Pro qua `@fontsource` | Đóng gói cùng build, chạy offline ([assets.md](assets.md)) |
+| Font | Dela Gothic One, Nunito, Pixelify Sans qua `@fontsource` và `@fontsource-variable` | Đóng gói cùng build, chạy offline ([assets.md](assets.md), [design-system.md](design-system.md), Phần 2, mục V) |
 | Kiểm thử frontend | Vitest, React Testing Library | |
 | CI | GitHub Actions | Xem `.github/workflows/ci.yml` |
 
