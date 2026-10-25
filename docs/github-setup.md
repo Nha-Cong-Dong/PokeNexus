@@ -114,7 +114,7 @@ gh api repos/{owner}/{repo}/milestones -f title="W4 - Hoàn thiện và demo" -f
 ### I. Các mục cần bật
 
 - **Settings > Code security** (tên mục có thể là *Advanced Security* tùy giao diện): bật Dependabot alerts, Dependabot security updates, Secret scanning và Push protection nếu có.
-- Dependabot version updates đã cấu hình trong `.github/dependabot.yml` (hiện cho GitHub Actions). Khi có `backend/pom.xml` và `frontend/package.json` ở Tuần 2, thêm hai mục `maven` và `npm`.
+- Dependabot version updates cấu hình trong `.github/dependabot.yml` cho GitHub Actions (`/`), Maven (`/backend`) và npm (`/frontend`), chạy thứ Hai hằng tuần. Với Maven và npm, bản minor và patch gộp thành một PR mỗi ecosystem; bản major tách PR riêng (cách xử lý: [git-workflow.md](git-workflow.md), Phần 8).
 
 ---
 

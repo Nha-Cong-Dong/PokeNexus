@@ -27,6 +27,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - `GET /api/v1/pokemon`: lọc theo hệ (tối đa 2), thế hệ, BST, tốc độ, dạng; sắp xếp whitelist có khóa phụ `id`; `PageResponse`; 503 `DATA_NOT_READY` khi chưa nạp dữ liệu.
 - Script `scripts/download-sprites.sh` và 1342 sprite tự host trong `frontend/public/sprites/pokemon/`, `placeholder.svg`.
 - Omni-Dex bản cơ bản: lưới thẻ Pokémon từ API, bộ lọc hệ, thế hệ, dạng, sắp xếp đồng bộ trên URL, phân trang, trạng thái tải, rỗng, lỗi; `http.ts`, `assets.ts`, `pokemonTypes.ts`, `errorMessages.ts`, `formatters.ts`, `TypeBadge`, `PokemonSprite`, `PokemonCard`.
+- Dependabot cho Maven (`/backend`) và npm (`/frontend`), gộp bản minor và patch thành một PR mỗi ecosystem.
 
 ### Changed
 
