@@ -1,6 +1,6 @@
 # PokeNexus - Bản đồ dự án
 
-- Phiên bản: 0.1 (cập nhật 2026-10-20)
+- Phiên bản: 0.2 (cập nhật 2026-10-25)
 - Mục đích: trả lời nhanh "muốn làm việc X thì đọc file nào, sửa ở đâu". Không chép nội dung chi tiết; chi tiết nằm ở file được trỏ tới.
 - Cây thư mục đích và tên class: [docs/folder-structure.md](docs/folder-structure.md). Mục lục tài liệu: [docs/README.md](docs/README.md).
 
@@ -13,7 +13,7 @@
 | Đường dẫn | Nội dung | Trạng thái | Tạo ở |
 |---|---|---|---|
 | `docs/` | Tài liệu sản phẩm, kỹ thuật, quy trình, ADR | Có | T101 |
-| `docs/wireframes/` | Wireframe 6 trang | Thư mục rỗng | T103 |
+| `docs/wireframes/` | Wireframe 6 trang | 12 ảnh PNG (375 px và 1440 px), mã nguồn trong `src/`, mô tả ở `README.md` | T103 |
 | `docs/images/` | Ảnh chụp màn hình, sơ đồ cho README | Chưa có | T405 |
 | `data/csv/` | CSV PokéAPI (không commit) | Tải trên từng máy; kết quả khảo sát ở `data/README.md`, Phần 4 | T102 |
 | `data/dumps/` | File `mysqldump` (không commit) | Xuất sau lần nạp đầu trên từng máy | T205 |
@@ -22,7 +22,7 @@
 | `frontend/public/sprites/` | Sprite tự host (được commit) | 1342 sprite, `missing.txt` (9 ID), `placeholder.svg` | T207 |
 | `frontend/public/scenes/` | Ảnh khung cảnh tự host (được commit) | 2/15 scene có ảnh (`grassland`, `stadium`), nguồn ở `SOURCES.md`; scene còn lại dùng gradient | T301 |
 | `scripts/` | Script tải CSV, sprite, dump DB, đo hiệu năng | `download-sprites.sh` (Git Bash) | T205, T207, T305 |
-| `.github/` | Mẫu Issue, PR, CI, Dependabot | Có | T101 |
+| `.github/` | Mẫu Issue, PR, CI, Dependabot | CI chạy `verify` backend (gồm IT Testcontainers) và lint, test, build frontend cho PR vào `main`; Dependabot cho GitHub Actions, Maven, npm | T101, T208 |
 | `.claude/` | Cấu hình Claude Code dùng chung: quyền, slash command | Có | 2026-10-20 |
 
 - Cập nhật cột Trạng thái khi task trong cột "Tạo ở" hoàn thành.

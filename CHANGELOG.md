@@ -7,6 +7,8 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-25
+
 ### Added
 
 - Khởi tạo repo: README, LICENSE, CONTRIBUTING, CHANGELOG.
@@ -27,6 +29,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - `GET /api/v1/pokemon`: lọc theo hệ (tối đa 2), thế hệ, BST, tốc độ, dạng; sắp xếp whitelist có khóa phụ `id`; `PageResponse`; 503 `DATA_NOT_READY` khi chưa nạp dữ liệu.
 - Script `scripts/download-sprites.sh` và 1342 sprite tự host trong `frontend/public/sprites/pokemon/`, `placeholder.svg`.
 - Omni-Dex bản cơ bản: lưới thẻ Pokémon từ API, bộ lọc hệ, thế hệ, dạng, sắp xếp đồng bộ trên URL, phân trang, trạng thái tải, rỗng, lỗi; `http.ts`, `assets.ts`, `pokemonTypes.ts`, `errorMessages.ts`, `formatters.ts`, `TypeBadge`, `PokemonSprite`, `PokemonCard`.
+- Omni-Dex theo design-system 0.3: header đỏ, footer, `PageHero` với 15 khung cảnh (ảnh thật cho `grassland`, `stadium`), thẻ nhuộm màu hệ, chip lọc hệ và thế hệ, lọc BST và tốc độ tối thiểu, ngăn kéo bộ lọc trên mobile, chế độ danh sách.
 - Dependabot cho Maven (`/backend`) và npm (`/frontend`), gộp bản minor và patch thành một PR mỗi ecosystem.
 
 ### Changed
@@ -38,3 +41,6 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - API dự kiến: bỏ `spriteUrl`; response đề xuất đổi sang object `{ candidateCount, items }`; thêm mã lỗi `code`, mã 429 và 503.
 - `CONTRIBUTING.md` rút gọn phần quy ước Git, chi tiết chuyển sang `docs/git-workflow.md`.
 - `.gitignore`: commit `CLAUDE.md` và `.claude/`; chỉ bỏ qua `CLAUDE.local.md`, `.claude/settings.local.json`, `.mcp.json`.
+
+[Unreleased]: https://github.com/Nha-Cong-Dong/PokeNexus/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Nha-Cong-Dong/PokeNexus/releases/tag/v0.1.0

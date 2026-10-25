@@ -95,7 +95,7 @@ backend/
 | `ingestion` | | `IngestionRunner`, `CsvReader`, `FormCategoryResolver`; cấu hình đọc từ `AppProperties.Ingestion` | T205 |
 | | `loader` | `TypeLoader`, `GenerationLoader`, `SpeciesLoader`, `PokemonLoader`, `EvolutionLoader` | T205 |
 | `typechart` | `controller` | `TypeController` | T304 |
-| | `service` | `TypeChartService` (cache 18 x 18, tính hệ số hệ kép) | T205, T304 |
+| | `service` | `TypeChartService` (cache 18 x 18, tính hệ số hệ kép) | T303, T304 |
 | | `repository` | `TypeRepository`, `TypeEfficacyRepository` | T204 |
 | | `entity` | `Type`, `TypeEfficacy`, `TypeEfficacyId` | T204 |
 | | `dto` | `TypeResponse`, `TypeMatrixResponse`, `DefenseEntry` | T304 |

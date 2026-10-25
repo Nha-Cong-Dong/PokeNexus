@@ -150,12 +150,12 @@ pokenexus/
 
 ## Phần 7. Lộ trình
 
-| Mốc    | Nội dung                                                 | Trạng thái     |
-| ------ | -------------------------------------------------------- | -------------- |
-| Tuần 1 | Nghiên cứu, ý tưởng, khởi tạo repo và tài liệu           | Đang thực hiện |
-| Tuần 2 | Chốt đặc tả, dựng khung backend, frontend, cơ sở dữ liệu | Kế hoạch       |
-| Tuần 3 | Xây dựng MVP                                             | Kế hoạch       |
-| Tuần 4 | Hoàn thiện, triển khai, demo                             | Kế hoạch       |
+| Mốc    | Nội dung                                                 | Trạng thái                        |
+| ------ | -------------------------------------------------------- | --------------------------------- |
+| Tuần 1 | Nghiên cứu, ý tưởng, khởi tạo repo và tài liệu           | Xong một phần (còn Project board) |
+| Tuần 2 | Chốt đặc tả, dựng khung backend, frontend, cơ sở dữ liệu | Hoàn thành, tag `v0.1.0`          |
+| Tuần 3 | Xây dựng MVP                                             | Đang thực hiện (Omni-Dex đã xong) |
+| Tuần 4 | Hoàn thiện, triển khai, demo                             | Kế hoạch                          |
 
 - Chi tiết: [docs/roadmap.md](docs/roadmap.md).
 

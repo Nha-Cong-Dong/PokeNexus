@@ -1,6 +1,6 @@
 # PokeNexus - Bảng truy vết đặc tả
 
-- Phiên bản: 0.2 (cập nhật 2026-10-21), khớp [docs/spec.md](docs/spec.md) bản 1.0.
+- Phiên bản: 0.3 (cập nhật 2026-10-25), khớp [docs/spec.md](docs/spec.md) bản 1.0.
 - Nguồn chuẩn của yêu cầu và tiêu chí chấp nhận là [docs/spec.md](docs/spec.md). File này chỉ nối mỗi tính năng với user story, endpoint, trang, package, task và test; không chép tiêu chí.
 - Yêu cầu thay đổi thì sửa `docs/spec.md` trước, sau đó cập nhật bảng ở đây.
 
@@ -43,7 +43,7 @@
 |---|---|---|---|
 | [spec](docs/spec.md) Phần 2, mục V.4, ví dụ 1 và 4 | Unit | `SynergyAnalyzerTest` | T305 |
 | [spec](docs/spec.md) Phần 2, mục V.4, ví dụ 2 | Unit | `RecommendationEngineTest` | T305 |
-| [spec](docs/spec.md) Phần 2, mục V.4, ví dụ 3 | Unit | `TypeChartServiceTest` | T205, T304 |
+| [spec](docs/spec.md) Phần 2, mục V.4, ví dụ 3 | Unit | `TypeChartServiceTest` | T303, T304 |
 | [roadmap](docs/roadmap.md) T205, cột Kiểm tra | Tích hợp | `IngestionRunnerIT` | T205 |
 | [roadmap](docs/roadmap.md) T206, cột Kiểm tra | Tích hợp | `PokemonControllerIT` | T206 |
 | [roadmap](docs/roadmap.md) T307, cột Kiểm tra | Tích hợp | `TeamControllerIT` | T307 |
