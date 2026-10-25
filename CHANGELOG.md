@@ -24,6 +24,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - Wireframe low-fi 6 trang, bản 375 px và 1440 px (`docs/wireframes/`).
 - Flyway migration V1-V3 tạo 10 bảng MVP; Entity và Repository cho `typechart`, `pokedex`; `FormCategory`, `PokemonTypeConverter`.
 - Nạp CSV PokéAPI vào MySQL khi khởi động (`IngestionRunner`, 5 loader JDBC batch, một transaction, bỏ qua khi đã có dữ liệu); CSV mẫu 23 loài cho test; dependency `commons-csv` 1.14.1.
+- `GET /api/v1/pokemon`: lọc theo hệ (tối đa 2), thế hệ, BST, tốc độ, dạng; sắp xếp whitelist có khóa phụ `id`; `PageResponse`; 503 `DATA_NOT_READY` khi chưa nạp dữ liệu.
 
 ### Changed
 
