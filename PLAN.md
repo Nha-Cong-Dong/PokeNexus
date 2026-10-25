@@ -24,7 +24,7 @@
 | T101 | 19/10 | Bộ tài liệu kế hoạch v0.2 | Xong | Commit `2b97191` trên nhánh `docs/planning-and-ai-guides`, đã merge vào `main` qua PR #4 |
 | T102 | 20/10 | Khảo sát bộ CSV PokéAPI | Xong | Làm ngày 21/10; kết quả ở [data/README.md](data/README.md), Phần 4 |
 | T103 | 21-22/10 | Wireframe 6 trang | Xong | Làm ngày 23/10; 12 ảnh trong [docs/wireframes/](docs/wireframes/README.md), Issue #9 |
-| T104 | 23/10 | Nhãn, milestone, board, Issue W2-W3 | Xong một phần | 14 nhãn, 4 milestone, Issue #9-#26; còn Project board (cần quyền `project`), Issue #10 chuyển sang W2 |
+| T104 | 23/10 | Nhãn, milestone, board, Issue W2-W3 | Xong | 14 nhãn, 4 milestone, Issue #9-#26; Project board [PokeNexus](https://github.com/orgs/Nha-Cong-Dong/projects/1) tạo ngày 25/10 (Issue #10) |
 | T105 | 24/10 | Trình bày ý tưởng | Chưa làm | Trình bày miệng, không cần slide hay tài liệu riêng; chờ xác nhận đã trình bày |
 | T106 | 25/10 | Buffer, tổng kết tuần | Xong | Rà soát tiến độ, merge PR #28-#32, đồng bộ `PLAN.md`, `MAP.md`, README Phần 7, đóng milestone W1 |
 
@@ -73,7 +73,7 @@
 | Node trên máy là 25, `.nvmrc` là 24 | Lệch phiên bản với CI | Tạm dùng Node 25; cài Node 24 (nvm-windows) khi có thời gian | Mở |
 | PR `docs/planning-and-ai-guides` chưa merge | Nhánh `docs/spec-1-0`, `chore/init-*` tách nối tiếp từ nhánh này | Merge PR tài liệu trước, sau đó lần lượt các nhánh nối tiếp | Đã xử lý: PR #4-#7 đã merge vào `main` |
 | PR #29-#31 xếp chồng, không có CI vì `ci.yml` chỉ chạy với PR vào `main` | Chưa đạt Definition of Done "CI xanh" | Merge lần lượt; sau mỗi lần squash, `git rebase --onto main <tip cũ>` rồi push `--force-with-lease` | Đã xử lý: PR #28-#31 merge ngày 25/10, CI xanh từng PR. Từ nay mỗi PR tách từ `main` |
-| `gh` thiếu quyền `project`, `read:project` | Chưa tạo được Project board (T104, Issue #10) | Chạy `gh auth refresh -s project,read:project` rồi tạo board theo [docs/github-setup.md](docs/github-setup.md), Phần 6 | Mở |
+| `gh` thiếu quyền `project`, `read:project` | Chưa tạo được Project board (T104, Issue #10) | Chạy `gh auth refresh -s project,read:project` rồi tạo board theo [docs/github-setup.md](docs/github-setup.md), Phần 6 | Đã xử lý: cấp quyền ngày 25/10, board đã tạo |
 | Ruleset `NgKhanh` có danh sách nhánh đích rỗng | `main` chưa được chặn xóa và force push như [docs/git-workflow.md](docs/git-workflow.md), Phần 1 mô tả | Settings > Rules > Rulesets > `NgKhanh` > Target branches > Add target > Include default branch (chỉ `main`, để nhánh làm việc vẫn force push được) | Mở |
 
 ---
@@ -95,3 +95,4 @@
 | 2026-10-23 | T207 sprite; T301 bản cơ bản: `DexPage` gọi API thật, bộ lọc trên URL, phân trang | Frontend: lint sạch, 23 test pass, build pass; chạy thật: trang `/` hiện 1.083 kết quả có sprite, `?type=dragon&gen=4` hiện 6 kết quả có Garchomp |
 | 2026-10-25 | T301 theo bản thiết kế: 3 font mới, token v0.3 (`ink`, `dex-red`, màu hệ đậm), header đỏ, footer, `PageHero` và 15 scene (ảnh thật cho `grassland`, `stadium`), card nhuộm màu hệ, chip lọc, BST và tốc độ, ngăn kéo lọc mobile, chế độ danh sách; cập nhật `design-system.md`, `assets.md`, `folder-structure.md`, `architecture.md` | Frontend: lint sạch, 64 test pass, build pass, Prettier sạch; chụp Edge headless với API giả: 1440 px (thẻ, danh sách, rỗng), 375 px không cuộn ngang. Chưa chạy với backend thật vì Docker Desktop đang tắt |
 | 2026-10-25 | Rà soát tiến độ (22/32 task chưa xong trước phiên); T301 chạy với backend thật; merge PR #28-#31 (rebase chuỗi PR xếp chồng); T208 Dependabot Maven, npm (PR #32); T209 CHANGELOG 0.1.0, tag `v0.1.0`; T106 đồng bộ tài liệu, đóng milestone W1 | `verify` với Docker: 48 unit test, 31 IT pass, 0 Skipped; frontend lint sạch, 64 test, build pass; CI PR #29-#32 xanh (41 unit, 24 IT trên CI); cây file `main` sau merge trùng nhánh đã kiểm tra; 375 px `scrollWidth` 375 |
+| 2026-10-25 | T104: cấp quyền `project` cho `gh`; tạo Project `PokeNexus` (riêng tư), liên kết repo; cột Status `Backlog`, `To Do`, `In Progress`, `In Review`, `Done`; view `Board` lọc milestone W2, W3 và view `Tất cả` dạng bảng; thêm Issue #9-#26 | Board có 18 thẻ: 9 `Done`, 9 `To Do`; workflow "Item closed" và "Pull request merged" đang bật |
