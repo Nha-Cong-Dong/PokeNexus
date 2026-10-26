@@ -1,5 +1,5 @@
 import { getJson } from '../../lib/http'
-import type { PageResponse, PokemonSummary } from '../../types/api'
+import type { PageResponse, PokemonRef, PokemonSummary } from '../../types/api'
 import type { DexFilter } from './useDexSearchParams'
 
 export const DEX_PAGE_SIZE = 24
@@ -23,4 +23,11 @@ export function fetchPokemonList(
     },
     signal,
   )
+}
+
+export const SEARCH_MIN_LENGTH = 2
+export const SEARCH_LIMIT = 8
+
+export function searchPokemon(query: string, signal?: AbortSignal): Promise<PokemonRef[]> {
+  return getJson<PokemonRef[]>('/pokemon/search', { q: query.trim(), limit: SEARCH_LIMIT }, signal)
 }

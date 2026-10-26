@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -15,8 +15,8 @@ afterEach(() => {
 })
 
 describe('app routes', () => {
-  it('renders the layout with header navigation and footer on the home page', () => {
-    renderAt('/')
+  it('renders the layout with header navigation and footer on the Pokédex page', () => {
+    renderAt('/pokedex')
 
     const nav = screen.getByRole('navigation', { name: 'Điều hướng chính' })
     const links = within(nav).getAllByRole('link')
@@ -47,10 +47,17 @@ describe('app routes', () => {
     expect(screen.getByRole('heading', { level: 1, name: heading })).toBeInTheDocument()
   })
 
-  it('passes the route parameter to the detail page', () => {
+  it('passes the route parameter to the detail page', async () => {
+    const fetchMock = stubFetch()
     renderAt('/pokemon/rotom-wash')
 
-    expect(screen.getByText('rotom-wash')).toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        fetchMock.mock.calls.some(([input]) =>
+          String(input).endsWith('/api/v1/pokemon/rotom-wash'),
+        ),
+      ).toBe(true),
+    )
   })
 
   it('shows the not found page with a link home for unknown routes', async () => {
@@ -61,6 +68,6 @@ describe('app routes', () => {
     ).toBeInTheDocument()
 
     await userEvent.click(screen.getByRole('link', { name: 'Về Pokédex' }))
-    expect(memoryRouter.state.location.pathname).toBe('/')
+    expect(memoryRouter.state.location.pathname).toBe('/pokedex')
   })
 })

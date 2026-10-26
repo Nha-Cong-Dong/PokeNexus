@@ -49,6 +49,26 @@ export async function getJson<T>(
   return (await response.json()) as T
 }
 
+export async function postJson<T>(path: string, body: unknown, signal?: AbortSignal): Promise<T> {
+  let response: Response
+  try {
+    response = await fetch(buildUrl(path), {
+      method: 'POST',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal,
+    })
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') throw error
+    throw new ApiError(0, 'NETWORK_ERROR')
+  }
+  if (!response.ok) {
+    const problem = await readProblem(response)
+    throw new ApiError(response.status, problem?.code ?? 'INTERNAL_ERROR', problem?.detail)
+  }
+  return (await response.json()) as T
+}
+
 async function readProblem(response: Response): Promise<ProblemDetail | undefined> {
   try {
     return (await response.json()) as ProblemDetail
