@@ -1,13 +1,4 @@
-import type { FormCategory, PokemonDetail, Stats } from '../../types/api'
-
-export const STAT_ROWS: readonly { key: keyof Stats; label: string }[] = [
-  { key: 'hp', label: 'HP' },
-  { key: 'attack', label: 'Tấn công' },
-  { key: 'defense', label: 'Phòng thủ' },
-  { key: 'specialAttack', label: 'Tấn công đặc biệt' },
-  { key: 'specialDefense', label: 'Phòng thủ đặc biệt' },
-  { key: 'speed', label: 'Tốc độ' },
-]
+import type { FormCategory, PokemonDetail } from '../../types/api'
 
 export const FORM_LABELS: Record<FormCategory, string> = {
   DEFAULT: 'Mặc định',

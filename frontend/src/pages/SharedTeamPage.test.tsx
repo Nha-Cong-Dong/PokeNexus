@@ -81,7 +81,7 @@ describe('SharedTeamPage', () => {
     ])
     expect(screen.getByRole('link', { name: 'Mở trong Team Builder' })).toHaveAttribute(
       'href',
-      '/team-builder?ids=6,130,149,663,637',
+      '/team-builder?ids=6,130,149,663,637&six=248',
     )
   })
 

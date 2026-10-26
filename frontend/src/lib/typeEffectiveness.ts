@@ -35,13 +35,3 @@ export function attackProfile(matrix: TypeMatrix, attacking: TypeName): AttackPr
   }
   return profile
 }
-
-export function weaknessesOf(
-  matrix: TypeMatrix,
-  defending: readonly TypeName[],
-): { type: TypeName; multiplier: number }[] {
-  return matrix.types
-    .map((type) => ({ type, multiplier: multiplierAgainst(matrix, type, defending) }))
-    .filter((entry) => entry.multiplier > 1)
-    .sort((a, b) => b.multiplier - a.multiplier)
-}

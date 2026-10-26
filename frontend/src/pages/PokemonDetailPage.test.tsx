@@ -157,7 +157,7 @@ describe('PokemonDetailPage', () => {
     )
     expect(within(stats).getByRole('link', { name: 'Thêm vào đội' })).toHaveAttribute(
       'href',
-      '/team-builder?ids=6',
+      '/team-builder?add=6',
     )
 
     const defense = screen.getByRole('region', { name: 'Phòng thủ' })

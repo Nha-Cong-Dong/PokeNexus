@@ -1,6 +1,9 @@
+import { act, renderHook } from '@testing-library/react'
+import { createElement, type ReactNode } from 'react'
+import { MemoryRouter, useLocation } from 'react-router'
 import { describe, expect, it } from 'vitest'
 
-import { parseDefendingTypes, withDefendingTypes } from './useDefendingTypes'
+import { parseDefendingTypes, useDefendingTypes, withDefendingTypes } from './useDefendingTypes'
 
 describe('parseDefendingTypes', () => {
   it('reads up to two defending types from repeated def parameters', () => {
@@ -26,5 +29,35 @@ describe('withDefendingTypes', () => {
     const next = withDefendingTypes(new URLSearchParams('def=banana&foo=bar'), ['water', 'ground'])
 
     expect(next.toString()).toBe('foo=bar&def=water&def=ground')
+  })
+})
+
+describe('useDefendingTypes', () => {
+  function renderTypes(path: string) {
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      createElement(MemoryRouter, { initialEntries: [path] }, children)
+    return renderHook(() => ({ types: useDefendingTypes(), location: useLocation() }), { wrapper })
+  }
+
+  it('keeps both types when two toggles happen before a re-render', () => {
+    const { result } = renderTypes('/types')
+
+    act(() => {
+      result.current.types.toggle('fire')
+      result.current.types.toggle('flying')
+    })
+
+    expect(result.current.types.selected).toEqual(['fire', 'flying'])
+    expect(result.current.location.search).toBe('?def=fire&def=flying')
+  })
+
+  it('removes a selected type and clears the rest', () => {
+    const { result } = renderTypes('/types?def=fire&def=flying')
+
+    act(() => result.current.types.toggle('fire'))
+    expect(result.current.types.selected).toEqual(['flying'])
+
+    act(() => result.current.types.clear())
+    expect(result.current.location.search).toBe('')
   })
 })

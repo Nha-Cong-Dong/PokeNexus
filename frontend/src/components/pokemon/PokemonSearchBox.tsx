@@ -49,6 +49,7 @@ export function PokemonSearchBox({
   const { data, error } = usePokemonSearch(query)
 
   const typed = text.trim()
+  const settled = query.trim().toLowerCase() === typed.toLowerCase()
   const options = (data ?? []).filter((pokemon) => !excludeIds.includes(pokemon.id))
   const popupOpen = open && typed.length >= SEARCH_MIN_LENGTH
   const expanded = popupOpen && options.length > 0
@@ -58,7 +59,7 @@ export function PokemonSearchBox({
     ? ''
     : error
       ? errorMessageFor(error instanceof ApiError ? error.code : undefined)
-      : data === undefined
+      : data === undefined || !settled
         ? 'Đang tìm…'
         : options.length === 0
           ? `Không tìm thấy Pokémon nào khớp "${query.trim()}".`
@@ -90,10 +91,8 @@ export function PokemonSearchBox({
         break
       case 'Enter': {
         const pokemon = options[active]
-        if (expanded && pokemon) {
-          event.preventDefault()
-          choose(pokemon)
-        }
+        if (expanded) event.preventDefault()
+        if (expanded && pokemon && settled) choose(pokemon)
         break
       }
       case 'Escape':

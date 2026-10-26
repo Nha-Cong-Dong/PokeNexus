@@ -171,4 +171,22 @@ describe('LandingPage', () => {
     await userEvent.click(next)
     expect(within(quiz).getByText('Câu')).toHaveTextContent('Câu 2/5')
   })
+
+  it('shows per-block errors with the API reason when data is not ready', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn<typeof fetch>(async () => jsonResponse({ status: 503, code: 'DATA_NOT_READY' }, 503)),
+    )
+    renderRoute('/')
+
+    const hero = screen.getByRole('region', { name: 'PokeNexus' })
+    expect(await within(hero).findByText('Chưa tải được')).toBeInTheDocument()
+    expect(within(hero).getByRole('button', { name: 'Thử lại' })).toBeInTheDocument()
+
+    const chart = screen.getByRole('region', { name: '1.025 loài qua 9 thế hệ' })
+    expect(
+      await within(chart).findByText('Dữ liệu Pokémon đang được nạp. Hãy thử lại sau ít phút.'),
+    ).toBeInTheDocument()
+    expect(within(hero).getByRole('link', { name: 'Mở Pokédex' })).toBeInTheDocument()
+  })
 })

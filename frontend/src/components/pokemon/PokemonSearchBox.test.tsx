@@ -37,6 +37,28 @@ function wait(ms: number) {
 }
 
 describe('PokemonSearchBox', () => {
+  it('does not select a suggestion from an older query while typing continues', async () => {
+    const gastly: PokemonRef = { id: 92, name: 'gastly', types: ['ghost', 'poison'] }
+    const garchomp: PokemonRef = { id: 445, name: 'garchomp', types: ['dragon', 'ground'] }
+    const fetchMock = vi.fn<typeof fetch>((input) =>
+      Promise.resolve(
+        jsonResponse(new URL(String(input)).searchParams.get('q') === 'ga' ? [gastly] : [garchomp]),
+      ),
+    )
+    vi.stubGlobal('fetch', fetchMock)
+    const { onSelect, input } = renderSearchBox()
+
+    await userEvent.type(input, 'ga')
+    expect(await screen.findByRole('option', { name: /Gastly/ })).toBeInTheDocument()
+    await userEvent.type(input, 'rchomp{Enter}')
+
+    expect(onSelect).not.toHaveBeenCalled()
+
+    expect(await screen.findByRole('option', { name: /Garchomp/ })).toBeInTheDocument()
+    await userEvent.keyboard('{Enter}')
+    expect(onSelect).toHaveBeenCalledWith(garchomp)
+  })
+
   it('lists matches with sprite, number and types, then selects the active option on Enter', async () => {
     const fetchMock = stubSearch([CHARMANDER, CHARMELEON, CHARIZARD])
     const { onSelect, input } = renderSearchBox()

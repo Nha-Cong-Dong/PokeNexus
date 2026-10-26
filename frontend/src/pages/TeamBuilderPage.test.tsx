@@ -162,6 +162,18 @@ describe('TeamBuilderPage', () => {
     })
   })
 
+  it('restores the sixth member passed by a shared team link', async () => {
+    routeFetch({
+      'POST /synergy/analyze': analyzeById({ [SPEC_IDS]: 41 }),
+      'POST /synergy/recommendations': () => jsonResponse(recommendationsOf([EMPOLEON, 80])),
+      'GET /pokemon/248': () => jsonResponse(TYRANITAR),
+    })
+    renderTeamRoute(`/team-builder?ids=${SPEC_IDS}&six=248`)
+
+    expect(await screen.findByText('Slot 6 · đề xuất')).toBeInTheDocument()
+    expect(screen.getByText('6 / 6')).toBeInTheDocument()
+  })
+
   it('copies the share link with the Clipboard API', async () => {
     routeFetch({
       'POST /synergy/analyze': analyzeById({}),
@@ -200,6 +212,29 @@ describe('TeamBuilderPage', () => {
       'Bạn lưu đội quá nhanh. Hãy đợi một phút rồi thử lại.',
     )
     expect(screen.queryByText('developer detail')).not.toBeInTheDocument()
+  })
+
+  it('tells how many seconds to wait when the server sends Retry-After', async () => {
+    routeFetch({
+      'POST /synergy/analyze': analyzeById({}),
+      'POST /synergy/recommendations': () => jsonResponse(recommendationsOf()),
+      'POST /teams': () =>
+        new Response(JSON.stringify({ status: 429, code: 'RATE_LIMITED' }), {
+          status: 429,
+          headers: { 'Content-Type': 'application/problem+json', 'Retry-After': '42' },
+        }),
+    })
+    renderTeamRoute('/team-builder?ids=6')
+
+    await screen.findByText('50')
+    await userEvent.click(screen.getByRole('button', { name: 'Lưu đội' }))
+    const dialog = within(screen.getByRole('dialog', { name: 'Lưu đội' }))
+    await userEvent.type(dialog.getByLabelText('Tên đội'), 'Rain Team')
+    await userEvent.click(dialog.getByRole('button', { name: 'Lưu đội' }))
+
+    expect(await dialog.findByRole('alert')).toHaveTextContent(
+      'Bạn lưu đội quá nhanh. Hãy thử lại sau 42 giây.',
+    )
   })
 
   it('rejects a blank team name without calling the API', async () => {

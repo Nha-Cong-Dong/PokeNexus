@@ -3,6 +3,8 @@ import { useSearchParams } from 'react-router'
 
 export const MAX_DRAFT_SIZE = 5
 export const DRAFT_PARAM = 'ids'
+export const ADD_PARAM = 'add'
+export const SIXTH_PARAM = 'six'
 export const DRAFT_STORAGE_KEY = 'pokenexus.teamDraft'
 
 export interface TeamDraftState {
@@ -73,7 +75,11 @@ function writeStoredIds(serialized: string) {
 
 function initialDraft(params: URLSearchParams): TeamDraftState {
   const fromUrl = parseDraftIds(params.get(DRAFT_PARAM))
-  return { ids: fromUrl.length > 0 ? fromUrl : readStoredIds() }
+  const base = fromUrl.length > 0 ? fromUrl : readStoredIds()
+  const [added] = parseDraftIds(params.get(ADD_PARAM))
+  return added === undefined
+    ? { ids: base }
+    : teamDraftReducer({ ids: base }, { type: 'add', id: added })
 }
 
 export function useTeamDraft() {
@@ -81,6 +87,7 @@ export function useTeamDraft() {
   const [state, dispatch] = useReducer(teamDraftReducer, searchParams, initialDraft)
   const syncedRef = useRef(serializeDraftIds(state.ids))
   const rawUrlIds = searchParams.get(DRAFT_PARAM)
+  const hasAddParam = searchParams.has(ADD_PARAM)
 
   useEffect(() => {
     const fromState = serializeDraftIds(state.ids)
@@ -91,6 +98,7 @@ export function useTeamDraft() {
           const next = new URLSearchParams(previous)
           if (value) next.set(DRAFT_PARAM, value)
           else next.delete(DRAFT_PARAM)
+          next.delete(ADD_PARAM)
           return next
         },
         { replace: true },
@@ -99,17 +107,17 @@ export function useTeamDraft() {
     if (fromState !== syncedRef.current) {
       syncedRef.current = fromState
       writeStoredIds(fromState)
-      if ((rawUrlIds ?? '') !== fromState) writeUrl(fromState)
+      if ((rawUrlIds ?? '') !== fromState || hasAddParam) writeUrl(fromState)
       return
     }
-    if (fromUrl !== '' && fromUrl !== fromState) {
+    if (fromUrl !== '' && fromUrl !== fromState && !hasAddParam) {
       syncedRef.current = fromUrl
       dispatch({ type: 'replace', ids: parseDraftIds(fromUrl) })
       return
     }
     writeStoredIds(fromState)
-    if ((rawUrlIds ?? '') !== fromState) writeUrl(fromState)
-  }, [state.ids, rawUrlIds, setSearchParams])
+    if ((rawUrlIds ?? '') !== fromState || hasAddParam) writeUrl(fromState)
+  }, [state.ids, rawUrlIds, hasAddParam, setSearchParams])
 
   const add = useCallback((id: number) => dispatch({ type: 'add', id }), [])
   const remove = useCallback((id: number) => dispatch({ type: 'remove', id }), [])

@@ -16,6 +16,9 @@ const ERROR_MESSAGES: Record<string, string> = {
 
 const FALLBACK_MESSAGE = 'Đã có lỗi xảy ra.'
 
-export function errorMessageFor(code: string | undefined): string {
+export function errorMessageFor(code: string | undefined, retryAfterSeconds?: number): string {
+  if (code === 'RATE_LIMITED' && retryAfterSeconds !== undefined) {
+    return `Bạn lưu đội quá nhanh. Hãy thử lại sau ${retryAfterSeconds} giây.`
+  }
   return (code && ERROR_MESSAGES[code]) || FALLBACK_MESSAGE
 }

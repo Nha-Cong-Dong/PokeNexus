@@ -5,7 +5,8 @@ import { buttonClassName } from '../../../components/ui/buttonStyles'
 import { Panel } from '../../../components/ui/Panel'
 import { formatHeight, formatWeight } from '../../../lib/formatters'
 import type { PokemonDetail } from '../../../types/api'
-import { FORM_LABELS, rarityLabel, STAT_ROWS } from '../labels'
+import { STAT_AXES } from '../../../components/pokemon/statAxes'
+import { FORM_LABELS, rarityLabel } from '../labels'
 
 type StatPanelProps = {
   detail: PokemonDetail
@@ -40,7 +41,7 @@ export function StatPanel({ detail }: StatPanelProps) {
       </div>
 
       <dl className="flex flex-col gap-3">
-        {STAT_ROWS.map((row) => (
+        {STAT_AXES.map((row) => (
           <StatBar key={row.key} label={row.label} value={detail.stats[row.key]} />
         ))}
       </dl>
@@ -62,7 +63,7 @@ export function StatPanel({ detail }: StatPanelProps) {
           So sánh
         </Link>
         <Link
-          to={`/team-builder?ids=${detail.id}`}
+          to={`/team-builder?add=${detail.id}`}
           className={`flex-[1.3] ${buttonClassName('primary')}`}
         >
           Thêm vào đội

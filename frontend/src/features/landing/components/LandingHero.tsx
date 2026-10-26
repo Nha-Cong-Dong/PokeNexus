@@ -25,8 +25,8 @@ type FeaturedPokemonProps = {
 }
 
 function FeaturedPokemon({ region }: FeaturedPokemonProps) {
-  const { data } = usePokemonDetail(region.pokemonId)
-  const name = data ? formatPokemonName(data.name) : 'Đang tải'
+  const { data, isError, refetch } = usePokemonDetail(region.pokemonId)
+  const name = data ? formatPokemonName(data.name) : isError ? 'Chưa tải được' : 'Đang tải'
 
   return (
     <figure className="relative mx-auto flex w-full max-w-90 flex-col items-center pt-2 md:mx-0">
@@ -45,6 +45,15 @@ function FeaturedPokemon({ region }: FeaturedPokemonProps) {
       <figcaption className="relative mt-5 flex w-full flex-col items-center gap-2 rounded-2xl border-2 border-white/40 bg-scrim/80 px-5 py-4 text-center text-white">
         <DexNumber id={region.pokemonId} className="text-pixel-lg text-dex-yellow" />
         <span className="text-2xl font-extrabold">{name}</span>
+        {isError && (
+          <button
+            type="button"
+            onClick={() => void refetch()}
+            className={buttonClassName('secondary', 'sm')}
+          >
+            Thử lại
+          </button>
+        )}
         {data && (
           <span className="flex flex-wrap justify-center gap-1.5">
             {data.types.map((type) => (

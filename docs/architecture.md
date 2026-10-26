@@ -277,7 +277,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | `/pokemon/:idOrName` | `PokemonDetailPage` | |
 | `/types` | `TypeChartPage` | `def` (1-2 hệ phòng thủ đang chọn) |
 | `/compare` | `ComparePage` | `left`, `right` |
-| `/team-builder` | `TeamBuilderPage` | `ids` (đội nháp, ví dụ `ids=6,130,149`) |
+| `/team-builder` | `TeamBuilderPage` | `ids` (đội nháp, ví dụ `ids=6,130,149`); `add` (thêm một Pokémon vào đội nháp đang có rồi tự xóa khỏi URL, dùng cho nút "Thêm vào đội"); `six` (thành viên slot 6 khi mở đội chia sẻ 6 thành viên) |
 | `/team/:shareCode` | `SharedTeamPage` | |
 | `*` | `NotFoundPage` | |
 

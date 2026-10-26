@@ -89,7 +89,7 @@ export function DailyPokemon({ date = new Date() }: { date?: Date }) {
                 <Link to={`/pokemon/${data.name}`} className={buttonClassName('primary')}>
                   Xem chi tiết
                 </Link>
-                <Link to={`/team-builder?ids=${data.id}`} className={buttonClassName('secondary')}>
+                <Link to={`/team-builder?add=${data.id}`} className={buttonClassName('secondary')}>
                   Thêm vào đội
                 </Link>
               </div>

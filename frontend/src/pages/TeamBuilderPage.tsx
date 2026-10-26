@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router'
 
 import { PokemonSearchBox } from '../components/pokemon/PokemonSearchBox'
 import { PageBody, PageHero } from '../components/scene/PageHero'
@@ -6,6 +7,7 @@ import { buttonClassName } from '../components/ui/buttonStyles'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Panel } from '../components/ui/Panel'
 import { MAX_TEAM_SIZE } from '../features/team-builder/api'
+import { usePokemonDetail } from '../features/pokemon-detail/hooks'
 import { CoverageAndStats } from '../features/team-builder/components/CoverageAndStats'
 import { RecommendationList } from '../features/team-builder/components/RecommendationList'
 import { SaveTeamDialog } from '../features/team-builder/components/SaveTeamDialog'
@@ -14,7 +16,12 @@ import { TeamSlots } from '../features/team-builder/components/TeamSlots'
 import { AnalysisHeatmap } from '../features/team-builder/components/WeaknessHeatmap'
 import { useRecommendations, useTeamAnalysis } from '../features/team-builder/hooks'
 import { analysisSummary, buildTeamMembers } from '../features/team-builder/teamAnalysis'
-import { MAX_DRAFT_SIZE, useTeamDraft } from '../features/team-builder/useTeamDraft'
+import {
+  MAX_DRAFT_SIZE,
+  parseDraftIds,
+  SIXTH_PARAM,
+  useTeamDraft,
+} from '../features/team-builder/useTeamDraft'
 import { formatPokemonName } from '../lib/formatters'
 import type { PokemonRef, Recommendation } from '../types/api'
 
@@ -35,7 +42,12 @@ export function TeamBuilderPage() {
   const analysis = useTeamAnalysis(draft.ids)
   const recommendations = useRecommendations(draft.ids)
   const [knownRefs, setKnownRefs] = useState<Record<number, PokemonRef>>({})
-  const [sixth, setSixth] = useState<PokemonRef | null>(null)
+  const [searchParams] = useSearchParams()
+  const [sixthChoice, setSixth] = useState<PokemonRef | null | undefined>(undefined)
+  const sixthFromUrlId = parseDraftIds(searchParams.get(SIXTH_PARAM))[0]
+  const sixthFromUrl = usePokemonDetail(sixthChoice === undefined ? sixthFromUrlId : undefined).data
+  const sixth =
+    sixthChoice === undefined ? (sixthFromUrl ? toRef(sixthFromUrl) : null) : sixthChoice
   const [saveOpen, setSaveOpen] = useState(false)
 
   const hasMembers = draft.ids.length > 0

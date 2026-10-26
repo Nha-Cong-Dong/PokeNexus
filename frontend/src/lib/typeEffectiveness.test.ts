@@ -1,12 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import type { TypeMatrix, TypeName } from '../types/api'
-import {
-  attackProfile,
-  multiplierAgainst,
-  singleMultiplier,
-  weaknessesOf,
-} from './typeEffectiveness'
+import { attackProfile, multiplierAgainst, singleMultiplier } from './typeEffectiveness'
 
 const TYPES: TypeName[] = ['fire', 'water', 'grass', 'ground', 'flying', 'rock']
 
@@ -44,12 +39,5 @@ describe('typeEffectiveness', () => {
       notVeryEffective: ['grass'],
       noEffect: ['flying'],
     })
-  })
-
-  it('lists weaknesses strongest first', () => {
-    expect(weaknessesOf(MATRIX, ['fire', 'flying'])).toEqual([
-      { type: 'rock', multiplier: 4 },
-      { type: 'water', multiplier: 2 },
-    ])
   })
 })

@@ -1,14 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { fetchTypeMatrix, fetchTypes } from './api'
-
-export function useTypes() {
-  return useQuery({
-    queryKey: ['types'],
-    queryFn: ({ signal }) => fetchTypes(signal),
-    staleTime: Infinity,
-  })
-}
+import { fetchTypeMatrix } from './api'
 
 export function useTypeMatrix() {
   return useQuery({

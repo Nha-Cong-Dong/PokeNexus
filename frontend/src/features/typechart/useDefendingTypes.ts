@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useSearchParams } from 'react-router'
 
 import { isTypeName } from '../../lib/pokemonTypes'
@@ -25,24 +25,33 @@ export function withDefendingTypes(
 export function useDefendingTypes() {
   const [searchParams, setSearchParams] = useSearchParams()
   const selected = useMemo(() => parseDefendingTypes(searchParams), [searchParams])
+  const latestRef = useRef(searchParams)
 
-  const write = useCallback(
-    (types: TypeName[]) =>
-      setSearchParams(withDefendingTypes(searchParams, types), { replace: true }),
-    [searchParams, setSearchParams],
+  useEffect(() => {
+    latestRef.current = searchParams
+  }, [searchParams])
+
+  const update = useCallback(
+    (next: (current: TypeName[]) => TypeName[]) => {
+      const base = latestRef.current
+      const updated = withDefendingTypes(base, next(parseDefendingTypes(base)))
+      latestRef.current = updated
+      setSearchParams(updated, { replace: true })
+    },
+    [setSearchParams],
   )
 
   const toggle = useCallback(
     (type: TypeName) =>
-      write(
-        selected.includes(type)
-          ? selected.filter((item) => item !== type)
-          : [...selected, type].slice(0, MAX_DEFENDING_TYPES),
+      update((current) =>
+        current.includes(type)
+          ? current.filter((item) => item !== type)
+          : [...current, type].slice(0, MAX_DEFENDING_TYPES),
       ),
-    [selected, write],
+    [update],
   )
 
-  const clear = useCallback(() => write([]), [write])
+  const clear = useCallback(() => update(() => []), [update])
 
   return { selected, toggle, clear }
 }

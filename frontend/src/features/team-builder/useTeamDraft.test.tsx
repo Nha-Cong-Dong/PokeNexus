@@ -113,6 +113,34 @@ describe('useTeamDraft', () => {
     expect(result.current.draft.ids).toEqual([25])
   })
 
+  it('appends ?add= to the stored draft instead of replacing it', async () => {
+    window.localStorage.setItem(DRAFT_STORAGE_KEY, '6,130,149,663')
+
+    const { result } = renderDraft('/team-builder?add=445')
+
+    expect(result.current.draft.ids).toEqual([6, 130, 149, 663, 445])
+    await waitFor(() => expect(urlIds(result.current.location.search)).toBe('6,130,149,663,445'))
+    expect(new URLSearchParams(result.current.location.search).has('add')).toBe(false)
+    expect(window.localStorage.getItem(DRAFT_STORAGE_KEY)).toBe('6,130,149,663,445')
+  })
+
+  it('keeps the draft unchanged when ?add= repeats a member or the team is full', async () => {
+    window.localStorage.setItem(DRAFT_STORAGE_KEY, '6,130,149,663,637')
+
+    const { result } = renderDraft('/team-builder?add=445')
+
+    expect(result.current.draft.ids).toEqual([6, 130, 149, 663, 637])
+    await waitFor(() => expect(urlIds(result.current.location.search)).toBe('6,130,149,663,637'))
+    expect(new URLSearchParams(result.current.location.search).has('add')).toBe(false)
+  })
+
+  it('appends ?add= to ids given in the same URL', async () => {
+    const { result } = renderDraft('/team-builder?ids=6,130&add=6&add=149')
+
+    expect(result.current.draft.ids).toEqual([6, 130])
+    await waitFor(() => expect(urlIds(result.current.location.search)).toBe('6,130'))
+  })
+
   it('follows a later navigation that carries new ids and keeps the draft on a bare URL', async () => {
     const { result, navigate } = renderDraft('/team-builder?ids=6')
 

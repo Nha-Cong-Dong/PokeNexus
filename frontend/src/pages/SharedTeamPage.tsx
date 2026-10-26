@@ -147,7 +147,7 @@ export function SharedTeamPage() {
                   đổi.
                 </p>
                 <Link
-                  to={`/team-builder?ids=${analysisIds.join(',')}`}
+                  to={`/team-builder?ids=${analysisIds.join(',')}${members[MAX_DRAFT_SIZE] ? `&six=${members[MAX_DRAFT_SIZE].id}` : ''}`}
                   className={buttonClassName('primary')}
                 >
                   Mở trong Team Builder

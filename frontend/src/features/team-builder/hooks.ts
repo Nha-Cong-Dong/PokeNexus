@@ -1,6 +1,5 @@
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
 
-import { ApiError } from '../../lib/http'
 import {
   analyzeTeam,
   createTeam,
@@ -10,11 +9,6 @@ import {
   RECOMMENDATION_LIMIT,
 } from './api'
 
-function retryUnlessClientError(failureCount: number, error: Error): boolean {
-  if (error instanceof ApiError && error.status >= 400 && error.status < 500) return false
-  return failureCount < 1
-}
-
 export function useTeamAnalysis(ids: readonly number[]) {
   return useQuery({
     queryKey: ['synergy', 'analyze', ids],
@@ -22,7 +16,6 @@ export function useTeamAnalysis(ids: readonly number[]) {
     enabled: ids.length > 0,
     staleTime: Infinity,
     placeholderData: keepPreviousData,
-    retry: retryUnlessClientError,
   })
 }
 
@@ -33,7 +26,6 @@ export function useRecommendations(ids: readonly number[], limit = RECOMMENDATIO
     enabled: ids.length > 0,
     staleTime: Infinity,
     placeholderData: keepPreviousData,
-    retry: retryUnlessClientError,
   })
 }
 
@@ -47,6 +39,5 @@ export function useSharedTeam(shareCode: string) {
     queryFn: ({ signal }) => fetchSharedTeam(shareCode, signal),
     enabled: isValidShareCode(shareCode),
     staleTime: Infinity,
-    retry: retryUnlessClientError,
   })
 }

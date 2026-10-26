@@ -159,7 +159,8 @@ frontend/
     ├── pages/                     LandingPage, DexPage, PokemonDetailPage, TypeChartPage, ComparePage,
     │                              TeamBuilderPage, SharedTeamPage, NotFoundPage (.tsx)
     ├── features/
-    │   ├── landing/               dailyPokemon.ts, quiz.ts, components/ (T311, T312)
+    │   ├── landing/               api.ts, hooks.ts, regions.ts (vùng đất, Pokémon hôm nay), quiz.ts,
+    │   │                          generations.ts, describeDefense.ts, components/ (T311, T312)
     │   ├── dex/                   api.ts, hooks.ts, useDexSearchParams.ts, emptyMessage.ts, components/
     │   ├── pokemon-detail/        api.ts, hooks.ts, components/
     │   ├── typechart/             api.ts, hooks.ts, components/
@@ -172,8 +173,9 @@ frontend/
     │   └── pokemon/               TypeBadge, TypeGlyph, DexNumber, StatBar, MultiplierCell, PokemonSprite,
     │                              PokemonCard, PokemonSearchBox, StatRadar, statAxes.ts, multiplierStyles.ts
     ├── lib/
-    │   ├── http.ts                fetch wrapper, chuyển ProblemDetail thành ApiError
-    │   ├── queryClient.ts
+    │   ├── http.ts                fetch wrapper, chuyển ProblemDetail thành ApiError (kèm Retry-After)
+    │   ├── queryClient.ts         Không thử lại khi lỗi 4xx, thử lại 1 lần với lỗi khác
+    │   ├── typeEffectiveness.ts   Tra hệ số từ TypeMatrix, hệ số hệ kép, nhóm x2/x½/x0 của một hệ tấn công
     │   ├── assets.ts              getSpriteUrl, getArtworkUrl, sceneUrl
     │   ├── scenes.ts              15 scene (tên, màu dự phòng, cờ photo), sceneForTypes
     │   ├── pokemonTypes.ts        Danh sách 18 hệ, ánh xạ hệ sang class token

@@ -94,6 +94,7 @@ function SaveTeamContent({ titleId, members, memberNames, onClose }: SaveTeamCon
   }
 
   const errorCode = save.error instanceof ApiError ? save.error.code : undefined
+  const retryAfter = save.error instanceof ApiError ? save.error.retryAfterSeconds : undefined
 
   return (
     <form onSubmit={submit} noValidate className="flex flex-col gap-4 px-6 pt-7 pb-6 md:px-7">
@@ -131,7 +132,7 @@ function SaveTeamContent({ titleId, members, memberNames, onClose }: SaveTeamCon
           role="alert"
           className="rounded-[10px] border-2 border-danger px-3 py-2 text-sm font-bold text-danger"
         >
-          {errorMessageFor(errorCode)}
+          {errorMessageFor(errorCode, retryAfter)}
         </p>
       )}
       <div className="flex flex-wrap justify-end gap-2">

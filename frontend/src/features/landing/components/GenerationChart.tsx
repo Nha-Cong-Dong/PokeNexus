@@ -9,7 +9,7 @@ import { SPECIES_COUNT } from '../regions'
 import { SectionTitle } from './SectionTitle'
 
 export function GenerationChart() {
-  const { counts, isPending, isError, retry } = useGenerationCounts()
+  const { counts, isPending, isError, errorCode, retry } = useGenerationCounts()
   const total = counts ? counts.reduce((sum, count) => sum + count, 0) : SPECIES_COUNT
   const max = counts ? Math.max(...counts, 1) : 1
 
@@ -28,7 +28,7 @@ export function GenerationChart() {
 
         <div className="mt-10 overflow-x-auto rounded-3xl border-2 border-ink bg-surface p-4 shadow-block-lg md:p-6">
           {isError ? (
-            <ErrorState message={errorMessageFor('NETWORK_ERROR')} onRetry={retry} />
+            <ErrorState message={errorMessageFor(errorCode)} onRetry={retry} />
           ) : (
             <ol className="grid min-w-160 grid-cols-9 gap-3">
               {GENERATIONS.map((generation, index) => {
