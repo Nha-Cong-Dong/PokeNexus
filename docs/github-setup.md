@@ -34,26 +34,9 @@ gh repo edit --enable-wiki=false --delete-branch-on-merge
 
 ## Phần 2. Nhãn (Labels)
 
-### I. Bộ nhãn
+### I. Bộ nhãn và lệnh tạo
 
-| Nhãn | Màu | Ý nghĩa |
-|---|---|---|
-| `type: feature` | `1D76DB` | Tính năng mới |
-| `type: bug` | `D73A4A` | Lỗi |
-| `type: docs` | `0075CA` | Tài liệu |
-| `type: chore` | `C5DEF5` | Cấu hình, công cụ, phụ thuộc |
-| `type: test` | `BFD4F2` | Kiểm thử |
-| `area: backend` | `5319E7` | Spring Boot |
-| `area: frontend` | `FBCA04` | React |
-| `area: database` | `0E8A16` | Schema, migration |
-| `area: ingestion` | `006B75` | Nạp dữ liệu PokéAPI |
-| `area: ci` | `BFDADC` | GitHub Actions |
-| `priority: mvp` | `B60205` | Bắt buộc cho MVP |
-| `priority: extended` | `FF9F1C` | Mở rộng sau MVP |
-| `priority: future` | `EDEDED` | Hướng phát triển |
-| `status: blocked` | `000000` | Đang bị chặn |
-
-### II. Lệnh tạo
+- 14 nhãn chia 4 nhóm: `type:` (loại việc), `area:` (phần của hệ thống), `priority:` (MVP, mở rộng, tương lai), `status: blocked`. Tên, màu, ý nghĩa nằm trong lệnh dưới đây.
 
 ```bash
 gh label create "type: feature" --color 1D76DB --description "Tính năng mới" --force
@@ -128,17 +111,4 @@ gh api repos/{owner}/{repo}/milestones -f title="W4 - Hoàn thiện và demo" -f
 - Giới hạn cột `In Progress` tối đa 2 thẻ.
 - Đã tạo ngày 2026-10-25: [PokeNexus](https://github.com/orgs/Nha-Cong-Dong/projects/1) (riêng tư, liên kết repo). View `Board` lọc milestone tuần đang làm; view `Tất cả` dạng bảng hiện Status, Milestone, Labels, PR liên kết.
 - Ba thiết lập chỉ làm được trên giao diện web, không có trong API: giới hạn cột (Board > menu cột `In Progress` > Set limit), workflow **Auto-add to project** cho Issue mới của repo, và đổi bộ lọc milestone của view `Board` khi sang tuần mới.
-
-### II. Issue khởi đầu gợi ý cho Tuần 1-2
-
-| Issue | Nhãn | Milestone |
-|---|---|---|
-| Viết tài liệu sản phẩm và wireframe | `type: docs` | W1 |
-| Khảo sát bộ CSV PokéAPI | `area: ingestion` | W1 |
-| Chốt đặc tả MVP 1.0 | `type: docs`, `priority: mvp` | W2 |
-| Khởi tạo backend Spring Boot với `/health` | `area: backend`, `priority: mvp` | W2 |
-| Khởi tạo frontend Vite + React + TypeScript | `area: frontend`, `priority: mvp` | W2 |
-| Migration Flyway cho bảng tĩnh | `area: database`, `priority: mvp` | W2 |
-| Nạp dữ liệu CSV vào MySQL | `area: ingestion`, `priority: mvp` | W2 |
-| API `GET /api/v1/pokemon` có lọc, phân trang | `area: backend`, `priority: mvp` | W2 |
-| Thêm Dependabot cho Maven và npm | `area: ci`, `type: chore` | W2 |
+- Mỗi task trong [roadmap.md](roadmap.md), Phần 3 là một Issue (Issue #9-#26 tạo ở T104).

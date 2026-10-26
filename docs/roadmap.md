@@ -1,6 +1,7 @@
 # PokeNexus - Lộ trình 4 tuần
 
-- Phiên bản: 0.2 (cập nhật 2026-10-19)
+- Phiên bản: 0.3 (cập nhật 2026-10-26)
+- Thay đổi so với 0.2: thêm trang Tổng quan (T311, T312) và chuyển Omni-Dex sang `/pokedex` theo [spec.md](spec.md) 1.2; thêm thứ tự cắt cho trang Tổng quan ở Phần 4.
 - Thời gian: 2026-10-18 đến 2026-11-15, một người phát triển (Full-stack).
 - Mỗi tuần tương ứng một **Milestone** trên GitHub, mỗi task là một Issue ([github-setup.md](github-setup.md)).
 - Quy trình nhánh, PR, tag: [git-workflow.md](git-workflow.md).
@@ -56,6 +57,8 @@ gantt
     Team Builder UI              :crit, t306, 2026-11-05, 1d
     So sánh, Lưu và chia sẻ      :crit, t307, 2026-11-06, 1d
     Trạng thái UI, responsive    :t309, 2026-11-07, 1d
+    Tổng quan: hero, vùng đất    :t311, 2026-11-07, 1d
+    Tổng quan: biểu đồ, câu đố   :t312, 2026-11-08, 1d
     Buffer, E2E, v0.2.0          :t310, 2026-11-08, 1d
     section W4 Hoàn thiện
     Mở rộng (Should)             :t401, 2026-11-09, 1d
@@ -94,7 +97,7 @@ gantt
 | E4 | So sánh | F04 Bàn Cân Sức Mạnh | Should (cắt được kết luận tự động) |
 | E5 | Synergy | F05 Phân tích, đề xuất, Team Builder UI | Must |
 | E6 | Đội hình | F06 Lưu và chia sẻ | Must |
-| E7 | Giao diện nền | Design token, layout, trạng thái tải/rỗng/lỗi, responsive | Must |
+| E7 | Giao diện nền | Design token, layout, trạng thái tải/rỗng/lỗi, responsive; F07 Trang Tổng quan | Must (F07: Should) |
 | E8 | Phát hành | Triển khai, README, slide, video | Must |
 | E9 | Mở rộng | Xem bảng mục II | Should / Could |
 
@@ -126,6 +129,8 @@ gantt
 | T105 | 24/10 | Trình bày ý tưởng | E8 | Must | `product.md` | Slide ý tưởng | Trình bày trong thời gian quy định |
 | T106 | 25/10 | Buffer, tổng kết tuần | E0 | | | Cập nhật bảng trạng thái ở Phần 5 | |
 
+- T105: cắt giảm ngày 2026-10-26 vì dự án không có buổi trình bày hay pitching ý tưởng nào. Không ảnh hưởng tiêu chí W1 ở mục V; slide trình bày chỉ còn ở T406.
+
 ### II. Tuần 2 - Đặc tả và khung dự án (26/10 - 01/11)
 
 | Mã | Ngày | Task | Epic | MoSCoW | Đầu vào | Đầu ra | Kiểm tra |
@@ -156,6 +161,10 @@ gantt
 | T308 | 06/11 | Bàn Cân Sức Mạnh (API và UI) | E4 | Should | [api.md](api.md) | `ComparePage`: radar chồng lớp, 3 ý kết luận | Garchomp và Salamence: kết luận "Garchomp nhanh hơn" (102 so với 100) |
 | T309 | 07/11 | Trạng thái tải, rỗng, lỗi; responsive; accessibility | E7 | Must | [design-system.md](design-system.md), Phần 5, 7 | Skeleton, `EmptyState`, `ErrorState` trên mọi trang | Kiểm 6 trang ở 375 px và 1440 px; tab qua toàn trang có focus rõ |
 | T310 | 08/11 | Buffer, chạy kịch bản E2E, tag `v0.2.0` | E0 | | Spec Phần 4 | CHANGELOG mục 0.2.0 | Kịch bản demo chạy trọn vẹn 2 lần liên tiếp |
+| T311 | 07/11 | Trang Tổng quan phần 1: hero, dải hệ, Bốn vùng đất, Vòng tương khắc, Pokémon hôm nay; chuyển Omni-Dex sang `/pokedex` | E7 | Should | [spec.md](spec.md), Phần 2, mục VII; [design-system.md](design-system.md), Phần 7, mục II.1; T304 | `LandingPage`, `features/landing/`, route `/` và `/pokedex` | 4 thẻ dẫn đúng route; chọn Fire ở vòng tương khắc hiện x2 Grass, Ice, Bug, Steel; reload cùng ngày ra cùng Pokémon hôm nay |
+| T312 | 08/11 | Trang Tổng quan phần 2: Xây đội trong 3 bước, biểu đồ số loài 9 thế hệ, Thử tài Trainer, kêu gọi cuối trang | E7 | Could | T311, T206 | Các khối còn lại của `LandingPage` | Cột thế hệ 1 ghi 151, bấm cột mở `/pokedex?gen=1`; trả lời đủ 5 câu thì hiện điểm và làm lại được |
+
+- T311, T312: thêm ngày 2026-10-26 theo bản thiết kế giao diện ngày 2026-10-24. Ngày trong bảng là ngày dự kiến theo lộ trình; làm sớm thì ghi ngày thực tế ở `PLAN.md`.
 
 ### IV. Tuần 4 - Hoàn thiện và demo (09/11 - 15/11)
 
@@ -193,9 +202,10 @@ gantt
 | Thứ tự | Cắt | Không ảnh hưởng |
 |---|---|---|
 | 1 | Toàn bộ E9 (tính năng mở rộng) | MVP |
-| 2 | Kết luận tự động của Bàn Cân, chỉ giữ radar | F04 vẫn dùng được |
-| 3 | Chọn hệ kép ở Bảng tương khắc, chỉ giữ ma trận | Lưới phòng thủ ở trang chi tiết vẫn tính hệ kép |
-| 4 | Radar chỉ số trung bình ở Team Builder | Heatmap và đề xuất |
+| 2 | Trang Tổng quan phần 2 (T312) | Hero và 4 lối vào công cụ vẫn còn |
+| 3 | Kết luận tự động của Bàn Cân, chỉ giữ radar | F04 vẫn dùng được |
+| 4 | Chọn hệ kép ở Bảng tương khắc, chỉ giữ ma trận | Lưới phòng thủ ở trang chi tiết vẫn tính hệ kép |
+| 5 | Radar chỉ số trung bình ở Team Builder | Heatmap và đề xuất |
 | Không cắt | Synergy Analyzer, đề xuất, Lưu và chia sẻ đội | Đây là giá trị khác biệt của sản phẩm |
 
 ---

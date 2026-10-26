@@ -1,10 +1,11 @@
 # PokeNexus - Design System và UI Guidelines
 
-- Phiên bản: 0.3 (cập nhật 2026-10-25)
+- Phiên bản: 0.4 (cập nhật 2026-10-26)
 - Phạm vi: định hướng thẩm mỹ, token, font, ảnh khung cảnh, component, pattern, bố cục trang và accessibility cho frontend.
 - Theme: **light là mặc định và bắt buộc ở MVP**. Token đã định nghĩa sẵn cặp light/dark; dark mode là mức Could ở Tuần 4 ([roadmap.md](roadmap.md), Phần 2).
 - Mọi giá trị màu dùng cho chữ và thành phần giao diện đã được kiểm tra tỷ lệ tương phản theo công thức WCAG 2.x bằng script ngày 2026-10-24.
 - Thay đổi so với 0.2: bỏ font Be Vietnam Pro, đổi bảng màu thương hiệu, thêm trang Tổng quan, thêm nền khung cảnh theo vùng đất. Các mục cần đồng bộ sang tài liệu khác liệt kê ở Phần 11.
+- Thay đổi so với 0.3: Phần 3 trỏ thẳng tới `src/styles/index.css` và `src/main.tsx`, không chép lại mã nguồn.
 
 ---
 
@@ -255,185 +256,22 @@
 
 ### I. File `src/styles/index.css`
 
-```css
-@import "tailwindcss";
-
-@custom-variant dark (&:where(.dark, .dark *));
-
-:root {
-  --pn-bg: #EEF3F9;
-  --pn-surface: #FFFFFF;
-  --pn-surface-muted: #E3EAF3;
-  --pn-border: #D3DCE8;
-  --pn-border-strong: #5E6C8A;
-  --pn-ink: #16213E;
-  --pn-ink-muted: #4A5672;
-  --pn-primary: #1F57B8;
-  --pn-primary-hover: #17448F;
-  --pn-on-primary: #FFFFFF;
-  --pn-accent: #C2410C;
-  --pn-success: #15803D;
-  --pn-warning: #B45309;
-  --pn-danger: #B42318;
-  --pn-focus-ring: #1F57B8;
-}
-
-.dark {
-  --pn-bg: #0D1424;
-  --pn-surface: #141C2F;
-  --pn-surface-muted: #1D2840;
-  --pn-border: #2C3A57;
-  --pn-border-strong: #7D8BA8;
-  --pn-ink: #EAF0F8;
-  --pn-ink-muted: #A7B3CA;
-  --pn-primary: #7FA8F0;
-  --pn-primary-hover: #A5C2F5;
-  --pn-on-primary: #0D1424;
-  --pn-accent: #FB923C;
-  --pn-success: #4ADE80;
-  --pn-warning: #FBBF24;
-  --pn-danger: #F87171;
-  --pn-focus-ring: #A5C2F5;
-}
-
-@theme inline {
-  --color-bg: var(--pn-bg);
-  --color-surface: var(--pn-surface);
-  --color-surface-muted: var(--pn-surface-muted);
-  --color-border: var(--pn-border);
-  --color-border-strong: var(--pn-border-strong);
-  --color-ink: var(--pn-ink);
-  --color-ink-muted: var(--pn-ink-muted);
-  --color-primary: var(--pn-primary);
-  --color-primary-hover: var(--pn-primary-hover);
-  --color-on-primary: var(--pn-on-primary);
-  --color-accent: var(--pn-accent);
-  --color-success: var(--pn-success);
-  --color-warning: var(--pn-warning);
-  --color-danger: var(--pn-danger);
-  --color-focus-ring: var(--pn-focus-ring);
-}
-
-@theme {
-  --font-display: "Dela Gothic One", ui-rounded, ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Nunito Variable", ui-rounded, ui-sans-serif, system-ui, sans-serif;
-  --font-pixel: "Pixelify Sans Variable", ui-monospace, monospace;
-
-  --text-display-xl: 2.25rem;
-  --text-display-xl--line-height: 2.5rem;
-  --text-display: 1.75rem;
-  --text-display--line-height: 2.125rem;
-  --text-pixel-lg: 2rem;
-  --text-pixel-lg--line-height: 2rem;
-  --text-pixel: 1rem;
-  --text-pixel--line-height: 1rem;
-
-  --color-dex-red: #C8102E;
-  --color-dex-red-hover: #A50D26;
-  --color-dex-yellow: #FFD23F;
-
-  --shadow-block: 0 4px 0 rgb(22 33 62 / 0.16);
-  --shadow-block-lg: 0 6px 0 rgb(22 33 62 / 0.22);
-  --shadow-block-hover: 0 6px 0 rgb(22 33 62 / 0.24);
-  --shadow-blob: 4px 5px 0 rgb(22 33 62 / 0.28);
-  --shadow-header: 0 3px 0 #A50D26;
-
-  --color-type-normal: #A8A77A;
-  --color-type-fire: #EE8130;
-  --color-type-water: #6390F0;
-  --color-type-electric: #F7D02C;
-  --color-type-grass: #7AC74C;
-  --color-type-ice: #96D9D6;
-  --color-type-fighting: #C22E28;
-  --color-type-poison: #A33EA1;
-  --color-type-ground: #E2BF65;
-  --color-type-flying: #A98FF3;
-  --color-type-psychic: #F95587;
-  --color-type-bug: #A6B91A;
-  --color-type-rock: #B6A136;
-  --color-type-ghost: #735797;
-  --color-type-dragon: #6F35FC;
-  --color-type-dark: #705746;
-  --color-type-steel: #B7B7CE;
-  --color-type-fairy: #D685AD;
-
-  --color-type-normal-deep: #777643;
-  --color-type-fire-deep: #BF5202;
-  --color-type-water-deep: #2468FA;
-  --color-type-electric-deep: #8A6F00;
-  --color-type-grass-deep: #43811E;
-  --color-type-ice-deep: #23807B;
-  --color-type-fighting-deep: #C22E28;
-  --color-type-poison-deep: #A33EA1;
-  --color-type-ground-deep: #926D10;
-  --color-type-flying-deep: #7D52F9;
-  --color-type-psychic-deep: #E60046;
-  --color-type-bug-deep: #6C7A08;
-  --color-type-rock-deep: #84731C;
-  --color-type-ghost-deep: #735797;
-  --color-type-dragon-deep: #6F35FC;
-  --color-type-dark-deep: #705746;
-  --color-type-steel-deep: #6D6DA9;
-  --color-type-fairy-deep: #CC3781;
-
-  --color-mult-0: #1E293B;
-  --color-mult-025: #1D4ED8;
-  --color-mult-05: #93C5FD;
-  --color-mult-1: #F1F5F9;
-  --color-mult-2: #FDBA74;
-  --color-mult-4: #C2410C;
-
-  --color-pressure-safe: #F1F5F9;
-  --color-pressure-low: #FED7AA;
-  --color-pressure-mid: #FB923C;
-  --color-pressure-high: #B91C1C;
-
-  --color-scrim: #16213E;
-
-  --animate-hop: hop 200ms ease-out 1;
-  --animate-sheet-in: sheet-in 200ms ease-out both;
-}
-
-@utility type-card {
-  background-color: var(--type-deep);
-  box-shadow: 0 4px 0 color-mix(in oklab, var(--type-deep) 55%, var(--pn-ink));
-}
-
-@utility type-tint {
-  background-color: color-mix(in oklab, var(--type-base) 22%, var(--color-surface));
-}
-
-body {
-  background-color: var(--color-bg);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-}
-```
-
+- Nguồn duy nhất của token là [frontend/src/styles/index.css](../frontend/src/styles/index.css); giá trị và mục đích từng token ghi ở Phần 2. Tài liệu không chép lại mã CSS để tránh lệch với code.
 - `@theme` sinh class tiện ích từ biến: `--color-type-fire` thành `bg-type-fire`; `--font-display` thành `font-display`; `--text-pixel` thành `text-pixel`; `--shadow-block` thành `shadow-block`.
 - `@theme inline` dùng cho token ngữ nghĩa vì giá trị của chúng là `var(...)` đổi theo class `.dark`.
 - `@custom-variant dark` cho phép bật dark mode bằng class `.dark` trên thẻ `<html>`, thay vì chỉ theo cài đặt hệ điều hành.
-- Token `text` và `text-muted` của bản 0.2 đổi tên thành `ink` và `ink-muted`, vì class sinh ra `text-text` dễ đọc nhầm. Khi cập nhật code, đổi `text-text` thành `text-ink`, `text-text-muted` thành `text-ink-muted`.
 - Cỡ display lớn hơn ở `lg` khai báo trong component bằng `lg:text-[3.5rem]/[3.75rem]` và `lg:text-[2.5rem]/[2.75rem]`, hoặc thêm token riêng nếu dùng từ 3 nơi trở lên.
 - `--color-scrim` là màu `ink` cố định (không đổi theo `.dark`), luôn dùng kèm độ mờ: `bg-scrim/80` (chip `SceneLabel`), `from-scrim/85 via-scrim/70` (gradient của `PageHero`), `bg-scrim/25` (nhãn hệ trên card), `backdrop:bg-scrim/55` (nền sau ngăn kéo bộ lọc).
 - Keyframe `hop` và `sheet-in` khai báo trong `@theme`, sinh class `animate-hop`, `animate-sheet-in`.
-- Màu dự phòng của 15 scene không khai báo ở đây; chúng nằm trong `src/lib/scenes.ts` cùng bảng ánh xạ để một nơi quản lý mọi thứ về scene.
+- Màu dự phòng của 15 scene không khai báo trong file này; chúng nằm trong `src/lib/scenes.ts` cùng bảng ánh xạ để một nơi quản lý mọi thứ về scene.
 - Cú pháp viết theo Tailwind 4.x; khi cập nhật cần đối chiếu lại tài liệu chính thức của bản đang cài.
 
 ### II. Import font trong `src/main.tsx`
 
-```ts
-import '@fontsource/dela-gothic-one/latin-400.css'
-import '@fontsource/dela-gothic-one/latin-ext-400.css'
-import '@fontsource/dela-gothic-one/vietnamese-400.css'
-import '@fontsource-variable/nunito/wght.css'
-import '@fontsource-variable/pixelify-sans/wght.css'
-```
-
-- Dela Gothic One chỉ import 3 subset Latin và tiếng Việt; import `400.css` sẽ kéo thêm hàng trăm file subset tiếng Nhật vào thư mục build.
+- [frontend/src/main.tsx](../frontend/src/main.tsx) import 3 subset `latin`, `latin-ext`, `vietnamese` của Dela Gothic One (`@fontsource/dela-gothic-one/<subset>-400.css`) và file `wght.css` bản variable của Nunito, Pixelify Sans.
+- Dela Gothic One không import `400.css` vì file này kéo thêm hàng trăm file subset tiếng Nhật vào thư mục build.
 - Nunito và Pixelify Sans dùng bản variable: một file mỗi subset cho mọi weight, nhẹ hơn import từng weight.
-- Gỡ `@fontsource/be-vietnam-pro` khỏi `package.json` trong cùng PR.
-- Tên file CSS theo cấu trúc gói Fontsource 5.x; kiểm tra lại trong `node_modules` sau khi cài.
+- Tên file CSS theo cấu trúc gói Fontsource 5.x; nâng cấp gói thì kiểm tra lại tên file trong `node_modules`.
 
 ---
 
@@ -509,7 +347,7 @@ import '@fontsource-variable/pixelify-sans/wght.css'
 |---|---|---|---|
 | `TypeBadge` | `type`, `size: sm \| md` | Viên thuốc màu hệ, chữ tên hệ | Màu chữ theo Phần 2, mục II; luôn có chữ |
 | `DexNumber` | `id` | `#0006` bằng font Pixel | Luôn 4 chữ số; không dùng trong cột bảng |
-| `StatBar` | `label`, `value`, `max = 255` | Nhãn, số (font Pixel), thanh ngang kiểu thanh HP có viền `ink` 2 px | Số luôn hiển thị; thanh chỉ là minh họa. Màu thanh: dưới 60 cam, 60-89 vàng, 90-119 xanh lục, từ 120 xanh dương |
+| `StatBar` | `label`, `value`, `max = 255` | Nhãn, số (font Pixel), thanh ngang kiểu thanh HP có viền `ink` 2 px | Số luôn hiển thị; thanh chỉ là minh họa. Màu thanh: dưới 60 cam (`stat-low` #FB923C), 60-89 vàng (`stat-mid` #FACC15), 90-119 xanh lục (`stat-good` #22C55E), từ 120 xanh dương (`stat-high` #3B82F6); token khai báo ở `src/styles/index.css` |
 | `MultiplierCell` | `multiplier` | Ô vuông 40 px có nhãn `x2` | Màu theo Phần 2, mục III; `title` mô tả đầy đủ, ví dụ "Rock gây x4" |
 | `PokemonSprite` | `id`, `name`, `variant: sprite \| artwork`, `size` | Ảnh Pokémon đứng trên đế bóng elip | Đặt sẵn `width`, `height`; `loading="lazy"`; `alt` là tên Pokémon; fallback theo [assets.md](assets.md), Phần 5 |
 | `PokemonCard` | `pokemon: PokemonSummary` | Nền màu hệ đậm của slot 1, chữ trắng (Phần 2, mục II, 1); `TypeGlyph` mờ ở góc trên phải; tên, `DexNumber`, nhãn hệ, BST font Pixel; sprite đứng trên đế trắng bo hữu cơ | Toàn card là link; hover: card nhấc 4 px, đế nghiêng, sprite nhảy 1 lần (4 px, 200 ms) |
@@ -533,7 +371,7 @@ import '@fontsource-variable/pixelify-sans/wght.css'
 | `DefenseGrid` | Chi tiết | 18 `MultiplierCell` nhóm theo mức: Yếu, Kháng, Miễn nhiễm, Trung tính |
 | `TypeMatrixTable` | Tương khắc | `<table>`, hàng là hệ tấn công, cột là hệ phòng thủ; hàng và cột tiêu đề cố định khi cuộn |
 | `VersusBanner` | So sánh | Khung cảnh của hai Pokémon ghép chéo theo đường xiên, artwork hai bên, chữ "VS" font Display ở giữa |
-| `CompareRadar` | So sánh | 6 trục; series trái `primary`, series phải `accent`; có chú thích tên hai Pokémon |
+| `CompareRadar` | So sánh | Lớp bọc của `StatRadar` (`components/pokemon`, SVG, dùng chung với Team Builder): 6 trục; series trái `primary`, series phải `accent`; có chú thích tên hai Pokémon |
 | `VerdictPanel` | So sánh | Bọc trong `GameDialog`; 3 dòng kết luận, mỗi dòng nêu bên thắng và con số |
 | `TeamSlots` | Team Builder | 5 slot chọn và 1 slot đề xuất; slot có thành viên hiển thị dải màu khung cảnh của Pokémon đó; slot trống có nút "Thêm Pokémon" |
 | `WeaknessHeatmap` | Team Builder | `<table>` 18 hàng; cột: hệ, từng thành viên, số yếu, số kháng, mức hở; hàng `criticalHole` có nhãn "Lỗ hổng" |
@@ -628,37 +466,41 @@ Desktop (1440 px)
 | Header                                                       |
 +--------------------------------------------------------------+
 |                                                              |
-|  KHUNG CẢNH TOÀN MÀN HÌNH (min-height 100svh - header)       |
-|                                                              |
-|  PokeNexus (display-xl)                   [ARTWORK POKÉMON]  |
-|  Bách khoa Pokémon và công cụ                 đứng trên      |
-|  phân tích đội hình VGC                       mặt đất        |
-|                                                              |
-|  +--------------------------------------------------------+  |
-|  | Giáo sư                                                |  |
-|  | Chào Trainer! Pokédex này ghi lại 1025 loài...         |  |
-|  | [Mở Pokédex]  [Xây đội ngay]                           |  |
-|  +--------------------------------------------------------+  |
+|  HERO: vỏ Pokédex đỏ ôm khung cảnh vùng đất                  |
+|  PokeNexus (display-xl), mô tả, 3 nhãn   [ARTWORK + số, hệ,  |
+|  [Giáo sư] Chào Trainer! ...              chiều cao, cân nặng]|
+|  [Mở Pokédex] [Xây đội ngay]                                  |
+|  Chọn vùng đất: 13 chip khung cảnh                            |
 +--------------------------------------------------------------+
-|  Bốn vùng đất (FeatureRegions)                               |
-|  +-----------------------------+  +-----------+-----------+  |
-|  | Pokédex (ô lớn, đồng cỏ)    |  | Tương khắc| So sánh   |  |
-|  |                             |  | (lab)     | (đấu trg) |  |
-|  |                             |  +-----------+-----------+  |
-|  |                             |  | Xây đội (đấu trường)  |  |
-|  +-----------------------------+  +-----------------------+  |
+|  Dải 18 nhãn hệ (TypeTicker)                                  |
 +--------------------------------------------------------------+
-|  Pokémon hôm nay (DailyPokemon): khung cảnh riêng, artwork,  |
-|  hệ, BST, 1 câu nhận xét, nút "Xem chi tiết"                 |
+|  Bốn vùng đất (FeatureRegions): 4 thẻ đảo Pokédex,            |
+|  Tương khắc, So sánh, Xây đội; nút "Khám phá"                 |
++--------------------------------------------------------------+
+|  Vòng tương khắc (TypeWheel, nền ink): bảng x2, x½, x0 bên    |
+|  trái; vòng 18 hệ bên phải, hệ đang chọn ở giữa               |
++--------------------------------------------------------------+
+|  Pokémon hôm nay (DailyPokemon): khung cảnh, artwork | số,    |
+|  tên, hệ, BST, câu nhận xét, "Xem chi tiết"                   |
++--------------------------------------------------------------+
+|  Xây đội trong 3 bước (TeamSteps): 3 thẻ có minh họa          |
++--------------------------------------------------------------+
+|  1025 loài qua 9 thế hệ (GenerationChart): 9 cột màu          |
++--------------------------------------------------------------+
+|  Thử tài Trainer (TrainerQuiz): 5 câu, 3 đáp án mỗi câu       |
++--------------------------------------------------------------+
+|  Kêu gọi cuối trang (ClosingCta) trên nền dex-red             |
 +--------------------------------------------------------------+
 |  Footer                                                      |
 +--------------------------------------------------------------+
 ```
 
-- Mobile (375 px): hero cao bằng màn hình, artwork nằm trên, hộp thoại nằm dưới; `FeatureRegions` xếp dọc, mỗi ô cao 160 px.
+- Nguồn thiết kế: bản thiết kế hi-fi "PokeNexus" (artboard "Tổng quan" và "Điện thoại · Tổng quan", 2026-10-24) trên [claude.ai](https://claude.ai/code/artifact/31b3214f-f6f7-4bc9-b7c5-8c89cca4d24a) (riêng tư của tác giả). Tiêu chí chấp nhận từng khối: [spec.md](spec.md), Phần 2, mục VII.
+- Mobile (375 px): các khối xếp dọc; artwork nằm trên hộp thoại; 4 thẻ vùng đất một cột; vòng tương khắc nằm dưới bảng hệ số; biểu đồ thế hệ cuộn ngang trong khung.
 - Nút chính "Mở Pokédex" dùng biến thể `cta`; nút phụ "Xây đội ngay" dùng `secondary`.
 - Artwork ở hero lấy từ đường dẫn artwork của PokéAPI; mất mạng thì dùng sprite phóng to theo [assets.md](assets.md), Phần 5.
-- Trang này không gọi API ngoài `GET /api/v1/pokemon/{idOrName}` cho Pokémon hôm nay và Pokémon đồng hành; số 1025 lấy từ hằng số tại build hoặc `totalElements` của `GET /api/v1/pokemon`.
+- API dùng: `GET /api/v1/pokemon/{idOrName}` (Pokémon nổi bật, Pokémon hôm nay), `GET /api/v1/types/matrix` (vòng tương khắc, câu đố), `GET /api/v1/pokemon?gen=<n>&form=DEFAULT&size=1` (`totalElements` cho biểu đồ thế hệ).
+- Chuyển động trong bản thiết kế (chữ hiện dần, dải hệ chạy ngang, đảo nổi, đường nối trên vòng tương khắc) không bắt buộc ở MVP.
 
 #### 2. Các trang dữ liệu
 
@@ -701,7 +543,7 @@ Desktop (1440 px)
 
 ### I. Các bước khi triển khai
 
-- Token đã có ở Phần 3; chỉ cần thêm nút chuyển theme ở header, lưu lựa chọn vào `localStorage`, mặc định theo `prefers-color-scheme`.
+- Token dark đã có trong `src/styles/index.css` (giá trị ở Phần 2); chỉ cần thêm nút chuyển theme ở header, lưu lựa chọn vào `localStorage`, mặc định theo `prefers-color-scheme`.
 - Áp class `.dark` lên `<html>` trước khi React render (script nhỏ trong `index.html`) để tránh nháy màu.
 - Kiểm tra lại: nhãn hệ, ô hệ số, heatmap, `dex-red`, `dex-yellow` giữ nguyên màu nên không cần đổi; radar dùng `accent` bản dark; ảnh khung cảnh giảm sáng bằng `filter: brightness(0.8)`.
 
@@ -726,10 +568,7 @@ Desktop (1440 px)
 
 | Tài liệu | Nội dung cần cập nhật |
 |---|---|
-| [spec.md](spec.md) | Thêm trang Tổng quan (yêu cầu, tiêu chí chấp nhận, MoSCoW); Pokémon đồng hành (Could) |
-| [architecture.md](architecture.md) | Phần 6: route `/` là `LandingPage`, Omni-Dex chuyển sang `/pokedex` |
-| [roadmap.md](roadmap.md) | Task: thu thập 15 ảnh khung cảnh, trang Tổng quan, cập nhật token và font, wireframe trang Tổng quan |
-| [folder-structure.md](folder-structure.md) | `LandingPage` |
-| [wireframes/README.md](wireframes/README.md) | Thêm wireframe trang Tổng quan; Omni-Dex đổi route sang `/pokedex` |
+| [roadmap.md](roadmap.md) | Task thu thập ảnh cho 13 khung cảnh còn thiếu (đang dùng gradient dự phòng); Pokémon đồng hành (Could, ngoài phạm vi [spec.md](spec.md) 1.2) |
 | `docs/adr/` | ADR mới về ảnh khung cảnh tự host và cách chọn khung cảnh theo hệ, bổ sung cho [ADR 0005](adr/0005-hybrid-image-assets.md) |
-| `frontend/` | Đổi route (`/` thành `LandingPage`, Omni-Dex sang `/pokedex`); test `DexPage.test.tsx` đang gọi `renderRoute('/')` |
+
+- Đã đồng bộ ngày 2026-10-26: trang Tổng quan vào [spec.md](spec.md) 1.2 và [roadmap.md](roadmap.md) 0.3 (T311, T312); route `/` và `/pokedex` ở [architecture.md](architecture.md), Phần 6; `LandingPage` ở [folder-structure.md](folder-structure.md); [wireframes/README.md](wireframes/README.md).

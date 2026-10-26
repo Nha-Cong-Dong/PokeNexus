@@ -6,9 +6,9 @@ disable-model-invocation: true
 
 Lập kế hoạch cho task $ARGUMENTS của dự án PokeNexus. Chưa sửa code ở bước này.
 
-1. Đọc `PLAN.md`, dòng $ARGUMENTS trong `docs/roadmap.md` (Phần 3) và mục liên quan trong `SPEC.md`.
+1. Đọc `PLAN.md`, dòng $ARGUMENTS trong `docs/roadmap.md` (Phần 3) và dòng tính năng liên quan trong `docs/spec.md`, Phần 6.
 2. Kiểm tra task phụ thuộc (cột Đầu vào) đã xong chưa. Chưa xong thì dừng và báo.
-3. Đọc các tài liệu mà `MAP.md` chỉ tới cho loại việc này, cùng `backend/CLAUDE.md` hoặc `frontend/CLAUDE.md` nếu liên quan.
+3. Đọc các tài liệu mà `docs/README.md`, Phần 2 chỉ tới cho loại việc này, cùng `backend/CLAUDE.md` hoặc `frontend/CLAUDE.md` nếu liên quan.
 4. Trình bày theo cấu trúc:
    - Goal: một câu.
    - Tiêu chí hoàn thành: lấy từ cột Kiểm tra của roadmap và tiêu chí trong `docs/spec.md`, đo được.

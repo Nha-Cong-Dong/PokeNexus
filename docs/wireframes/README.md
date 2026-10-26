@@ -1,7 +1,8 @@
 # PokeNexus - Wireframe
 
-- Phiên bản: 1.0 (task T103, cập nhật 2026-10-23)
-- Wireframe low-fi cho 6 trang MVP, mỗi trang có bản 375 px (mobile) và 1440 px (desktop). Bố cục đầu vào: [design-system.md](../design-system.md), Phần 6.
+- Phiên bản: 1.1 (task T103, cập nhật 2026-10-26)
+- Wireframe low-fi cho 6 trang MVP, mỗi trang có bản 375 px (mobile) và 1440 px (desktop). Bố cục đầu vào: [design-system.md](../design-system.md), Phần 7.
+- Trang Tổng quan không có wireframe low-fi; bố cục lấy trực tiếp từ bản thiết kế hi-fi ([design-system.md](../design-system.md), Phần 7, mục II.1). Omni-Dex chuyển sang `/pokedex` từ [spec.md](../spec.md) 1.2; ảnh bên dưới giữ nguyên.
 
 ---
 
@@ -11,7 +12,7 @@
 
 | Trang | Route | Mobile | Desktop |
 |---|---|---|---|
-| Omni-Dex | `/` | [dex-mobile.png](dex-mobile.png) | [dex-desktop.png](dex-desktop.png) |
+| Omni-Dex | `/pokedex` | [dex-mobile.png](dex-mobile.png) | [dex-desktop.png](dex-desktop.png) |
 | Chi tiết Pokémon | `/pokemon/:idOrName` | [pokemon-detail-mobile.png](pokemon-detail-mobile.png) | [pokemon-detail-desktop.png](pokemon-detail-desktop.png) |
 | Bảng tương khắc | `/types` | [type-chart-mobile.png](type-chart-mobile.png) | [type-chart-desktop.png](type-chart-desktop.png) |
 | Bàn Cân Sức Mạnh | `/compare` | [compare-mobile.png](compare-mobile.png) | [compare-desktop.png](compare-desktop.png) |

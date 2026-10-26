@@ -1,6 +1,6 @@
 # PokeNexus - Đặc tả REST API
 
-- Phiên bản: 0.2 (phạm vi MVP, cập nhật 2026-10-19)
+- Phiên bản: 0.3 (phạm vi MVP, cập nhật 2026-10-26; khớp code backend sau khi làm T303-T308)
 - Tài liệu tương tác (sau khi có backend): Swagger UI tại `http://localhost:8080/swagger-ui.html`. Khi Swagger và tài liệu này lệch nhau, sửa cho khớp trong cùng PR.
 - Thay đổi so với 0.1: thêm schema DTO (Phần 3), danh mục lỗi có `code` (Phần 4), mã 429 và 503; bỏ `spriteUrl` khỏi response ([ADR 0005](adr/0005-hybrid-image-assets.md)); response đề xuất đổi từ mảng sang object.
 
@@ -55,6 +55,7 @@
 | POST | `/api/v1/synergy/recommendations` | Đề xuất Pokémon cho vị trí tiếp theo | F05 |
 | POST | `/api/v1/teams` | Lưu đội, trả về `shareCode` | F06 |
 | GET | `/api/v1/teams/shared/{shareCode}` | Xem đội qua mã chia sẻ | F06 |
+| GET | `/api/v1/pokemon/{idOrName}/evolution` | Chuỗi tiến hóa của loài | F02 |
 
 - `/pokemon/search` và `/pokemon/compare` là đường dẫn cố định nên được Spring ưu tiên hơn mẫu `/pokemon/{idOrName}`; không có Pokémon nào tên `search` hay `compare`.
 - Synergy dùng POST vì đầu vào là danh sách có cấu trúc và có thể bổ sung tùy chọn sau này.
@@ -62,7 +63,7 @@
 ### II. `GET /api/v1/health`
 
 - Response 200: `{ "status": "UP", "dataLoaded": true, "pokemonCount": 1302 }` (số liệu minh họa).
-- `pokemonCount` là số dòng bảng `pokemon`; bảng chưa tồn tại hoặc rỗng thì trả `0`. Từ T202, `dataLoaded = pokemonCount > 0`; khi có cache ở T305, bổ sung điều kiện cache đã nạp.
+- `pokemonCount` là số dòng bảng `pokemon`; bảng chưa tồn tại hoặc rỗng thì trả `0`. `dataLoaded = pokemonCount > 0` và mọi cache trong bộ nhớ (`TypeChartService`, `PokemonProfileRegistry`) đã nạp; cache chưa nạp mà DB đã có dữ liệu thì health thử nạp lại.
 
 ### III. `GET /api/v1/pokemon`
 
@@ -99,6 +100,7 @@
 | `form` | Như `GET /pokemon` | Mặc định `DEFAULT` và `REGIONAL` |
 
 - Response 200: mảng `PokemonRef`, có thể rỗng.
+- Chuẩn hóa `q`: chữ thường, khoảng trắng bên trong đổi thành `-`; `q` chứa ký tự ngoài `[a-z0-9-]` trả mảng rỗng, không báo lỗi. Trong mỗi nhóm (khớp đầu tên, chứa `q`) xếp theo `id` tăng dần.
 
 ### VI. `GET /api/v1/pokemon/compare`
 
@@ -145,6 +147,7 @@
 | `members[].nickname` | chuỗi hoặc `null` | Tối đa 30 ký tự; chuỗi rỗng lưu thành `null` |
 
 - Response 201: `TeamResponse`, header `Location: /api/v1/teams/shared/{shareCode}`.
+- `name` và `nickname` được trim; `nickname` rỗng hoặc toàn khoảng trắng lưu thành `null`. Giới hạn lưu chỉ đếm request đã qua Bean Validation. Sinh trùng `shareCode` 3 lần liên tiếp thì trả 500.
 - 400 `VALIDATION_FAILED`, `DUPLICATE_POKEMON`, `DUPLICATE_SLOT`, `UNKNOWN_POKEMON`. 429 `RATE_LIMITED`.
 
 ### XI. `GET /api/v1/teams/shared/{shareCode}`
@@ -152,11 +155,15 @@
 - `shareCode` khớp `^[A-Za-z0-9]{8}$`, phân biệt hoa thường.
 - Response 200: `TeamResponse`. 400 `INVALID_PARAMETER`: sai định dạng. 404 `TEAM_NOT_FOUND`.
 
-### XII. Dự kiến sau MVP
+### XII. `GET /api/v1/pokemon/{idOrName}/evolution`
+
+- Chuỗi tiến hóa của loài chứa Pokémon đó (US-08, làm sớm ngày 2026-10-26 cho trang chi tiết). Response 200: `EvolutionResponse` (Phần 3, mục II). 404 `POKEMON_NOT_FOUND`.
+- `stages` là danh sách phẳng xếp theo `speciesId`; mỗi phần tử lấy `pokemonId`, `name`, `types` của dạng mặc định; loài không có dạng mặc định bị bỏ qua. Frontend dựng cây từ `evolvesFromSpeciesId`.
+
+### XIII. Dự kiến sau MVP
 
 | Method | Endpoint | Tính năng |
 |---|---|---|
-| GET | `/api/v1/pokemon/{idOrName}/evolution` | Cây tiến hóa (US-08) |
 | GET | `/api/v1/pokemon/speed-tiers` | Bảng tốc độ cấp 50 (US-09) |
 
 ---
@@ -241,10 +248,27 @@ interface TypeMatrix {
   types: TypeName[];
   multipliers: number[][];
 }
+
+interface EvolutionStage {
+  speciesId: number;
+  pokemonId: number;
+  name: string;
+  types: TypeName[];
+  evolvesFromSpeciesId: number | null;
+  trigger: string | null;
+  minLevel: number | null;
+  item: string | null;
+}
+
+interface EvolutionResponse {
+  chainId: number;
+  stages: EvolutionStage[];
+}
 ```
 
 - `defense` có đúng 18 phần tử. `forms` liệt kê mọi dạng cùng loài, kể cả dạng đang xem.
 - `typeAdvantage`: hệ số cao nhất mà đòn cùng hệ (theo hệ của Pokémon) của mỗi bên gây lên bên kia.
+- `difference` luôn `>= 0` (giá trị tuyệt đối); bên hơn xem ở `winner`. `summary` gồm 3 câu tiếng Việt về hệ, tổng chỉ số, tốc độ, ví dụ "Garchomp nhanh hơn (102 so với 100)."
 - `TypeMatrix.multipliers[i][j]`: hệ tấn công `types[i]` đánh hệ phòng thủ `types[j]`.
 
 ### III. Synergy
@@ -281,7 +305,8 @@ interface RecommendationResponse {
 ```
 
 - `typeMatrix` có 18 dòng; `multipliers` cùng thứ tự với `members` (thứ tự ID trong request).
-- `resistCount` gồm cả thành viên miễn nhiễm. `teamScore`, `score`, `statRadar` làm tròn 1 chữ số thập phân. `breakdown` là các giá trị đã chuẩn hóa 0-1, trước khi nhân trọng số.
+- `resistCount` gồm cả thành viên miễn nhiễm. `teamScore`, `score`, `statRadar` làm tròn 1 chữ số thập phân. `breakdown` là các giá trị đã chuẩn hóa 0-1 (làm tròn 3 chữ số), trước khi nhân trọng số.
+- `candidateCount` đếm ứng viên sau bộ lọc (`excludeLegendary`, `minBaseStatTotal`), trước khi loại trùng tổ hợp hệ. Lý do mặc định khi không có lý do phòng thủ, tấn công: "Tổng chỉ số BST {n}".
 
 ### IV. Đội hình
 
@@ -321,7 +346,7 @@ interface TeamResponse {
 | `TEAM_NOT_FOUND` | 404 | Mã chia sẻ không tồn tại |
 | `ROUTE_NOT_FOUND` | 404 | Đường dẫn API không tồn tại |
 | `RATE_LIMITED` | 429 | Vượt giới hạn lưu đội |
-| `DATA_NOT_READY` | 503 | Dữ liệu tĩnh chưa nạp |
+| `DATA_NOT_READY` | 503 | Dữ liệu tĩnh chưa nạp; áp dụng cho mọi endpoint đọc dữ liệu Pokémon, hệ, synergy |
 | `INTERNAL_ERROR` | 500 | Lỗi không lường trước |
 
 - Lỗi khung Spring không có mã riêng (ví dụ 405 sai method, 415 sai `Content-Type`) giữ mã HTTP gốc và dùng `code` `INVALID_PARAMETER`; lỗi 404 khác dùng `ROUTE_NOT_FOUND`; lỗi 5xx dùng `INTERNAL_ERROR`.

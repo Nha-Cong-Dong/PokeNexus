@@ -1,6 +1,6 @@
 # PokeNexus Backend
 
-- Trạng thái: **đã khởi tạo khung (T202, 2026-10-21).** Có `GET /api/v1/health`, `GlobalExceptionHandler` trả `ProblemDetail`, CORS, Swagger UI. Chưa có migration và dữ liệu (T204, T205).
+- Spring Boot API của PokeNexus: REST `/api/v1`, Flyway migration, nạp CSV PokéAPI vào MySQL khi khởi động, Swagger UI. Tiến độ: [PLAN.md](../PLAN.md).
 
 ---
 
@@ -58,4 +58,4 @@
 
 ### I. Package
 
-- Xem [docs/folder-structure.md](../docs/folder-structure.md), Phần 2. Hiện có `common/{config, domain, exception, web}`.
+- Xem [docs/folder-structure.md](../docs/folder-structure.md), Phần 2.

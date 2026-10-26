@@ -13,9 +13,9 @@
 | Bước | File | Mục đích |
 |---|---|---|
 | 1 | [PLAN.md](PLAN.md) | Tuần hiện tại, task đang làm, blocker |
-| 2 | [MAP.md](MAP.md) | Muốn làm việc X thì đọc và sửa ở đâu |
-| 3 | [SPEC.md](SPEC.md) | Task đang làm thuộc tính năng nào, endpoint, trang, test liên quan |
-| 4 | Tài liệu trong `docs/` mà MAP.md chỉ tới | Chi tiết để thực hiện |
+| 2 | [docs/README.md](docs/README.md) | Mục lục tài liệu; muốn làm việc X thì đọc và sửa ở đâu (Phần 2) |
+| 3 | [docs/spec.md](docs/spec.md), Phần 6 | Task đang làm thuộc tính năng nào, endpoint, trang, test liên quan |
+| 4 | Tài liệu trong `docs/` mà `docs/README.md` chỉ tới | Chi tiết để thực hiện |
 
 - Làm việc trong `backend/` hoặc `frontend/` thì đọc thêm `backend/CLAUDE.md` hoặc `frontend/CLAUDE.md`.
 
@@ -32,7 +32,7 @@
 | Token màu, component, pattern UI | `docs/design-system.md` |
 | Quyết định kiến trúc | `docs/adr/` |
 
-- `SPEC.md`, `PLAN.md`, `MAP.md` ở gốc chỉ tổng hợp và trỏ link. Khi lệch với `docs/`, `docs/` đúng; sửa file gốc cho khớp.
+- `PLAN.md` ở gốc chỉ theo dõi tiến độ và trỏ link. Khi lệch với `docs/`, `docs/` đúng; sửa `PLAN.md` cho khớp.
 - Không đoán tên class, endpoint, cột DB. Tên chưa có trong tài liệu thì hỏi hoặc đề xuất cập nhật tài liệu trước.
 
 ---
@@ -60,7 +60,6 @@ cd backend && ./mvnw -B verify
 cd frontend && npm run lint && npm run test && npm run build
 ```
 
-- Backend và frontend chưa được khởi tạo (task T202, T203). Thư mục chưa có `pom.xml` hoặc `package.json` thì không chạy lệnh build tương ứng, báo rõ "chưa có mã nguồn để build".
 - Lệnh chi tiết từng phần: `backend/CLAUDE.md`, `frontend/CLAUDE.md`.
 
 ---
@@ -90,7 +89,7 @@ cd frontend && npm run lint && npm run test && npm run build
 
 ### I. Các bước
 
-- Đọc dòng task trong `docs/roadmap.md` (cột Đầu vào, Đầu ra, Kiểm tra) và mục tương ứng trong `SPEC.md`.
+- Đọc dòng task trong `docs/roadmap.md` (cột Đầu vào, Đầu ra, Kiểm tra) và dòng tính năng tương ứng trong `docs/spec.md`, Phần 6.
 - Trình bày kế hoạch: Goal, tiêu chí hoàn thành, file sẽ tạo hoặc sửa, test sẽ viết. Chờ xác nhận nếu ảnh hưởng nhiều file.
 - Làm theo layer (Entity, Repository, Service, Controller, rồi UI). Sau mỗi layer chạy build hoặc test và báo kết quả thật.
 - Đổi API, schema, cấu trúc thư mục thì sửa `docs/api.md`, `docs/database.md`, `docs/folder-structure.md` trong cùng thay đổi.

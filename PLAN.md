@@ -1,6 +1,6 @@
 # PokeNexus - Kế hoạch đang thực hiện
 
-- Cập nhật: 2026-10-25
+- Cập nhật: 2026-10-26
 - File này theo dõi tiến độ hằng ngày. Kế hoạch gốc (task, ngày, tiêu chí) ở [docs/roadmap.md](docs/roadmap.md); không sửa kế hoạch gốc ở đây.
 - Cập nhật khi bắt đầu và kết thúc mỗi phiên làm việc. Chủ nhật đồng bộ trạng thái sang README Phần 7 và GitHub Milestone.
 
@@ -12,9 +12,9 @@
 
 | Mục | Giá trị |
 |---|---|
-| Tuần | W1 - Ý tưởng và khởi tạo (19/10 - 25/10) |
-| Task hôm nay | T106 tổng kết tuần; đóng T301, T208, T209 (làm sớm) |
-| Task kế tiếp | T303 chi tiết Pokémon (Issue #19), tạo `TypeChartService` dùng chung cho T304, T305 |
+| Tuần | W2 - Đặc tả và khung dự án (26/10 - 01/11) |
+| Task hôm nay | Cắt giảm T105; tinh gọn tài liệu; thêm trang Tổng quan vào kế hoạch (T311, T312); làm xong API và giao diện của T302-T308, T311, T312 |
+| Task kế tiếp | T309 rà soát trạng thái, responsive, accessibility trên 8 trang; T310 chạy kịch bản E2E, tag `v0.2.0`; chốt mâu thuẫn kịch bản demo (Phần 3) |
 | Mốc gần nhất | Tag `v0.2.0` ngày 08/11 (`v0.1.0` gắn sớm ngày 25/10) |
 
 ### II. Trạng thái task tuần W1
@@ -25,7 +25,7 @@
 | T102 | 20/10 | Khảo sát bộ CSV PokéAPI | Xong | Làm ngày 21/10; kết quả ở [data/README.md](data/README.md), Phần 4 |
 | T103 | 21-22/10 | Wireframe 6 trang | Xong | Làm ngày 23/10; 12 ảnh trong [docs/wireframes/](docs/wireframes/README.md), Issue #9 |
 | T104 | 23/10 | Nhãn, milestone, board, Issue W2-W3 | Xong | 14 nhãn, 4 milestone, Issue #9-#26; Project board [PokeNexus](https://github.com/orgs/Nha-Cong-Dong/projects/1) tạo ngày 25/10 (Issue #10) |
-| T105 | 24/10 | Trình bày ý tưởng | Chưa làm | Trình bày miệng, không cần slide hay tài liệu riêng; chờ xác nhận đã trình bày |
+| T105 | 24/10 | Trình bày ý tưởng | Cắt giảm | Quyết định ngày 26/10: dự án không có buổi trình bày hay pitching ý tưởng nào; không ảnh hưởng tiêu chí W1. Slide trình bày chỉ còn ở T406 |
 | T106 | 25/10 | Buffer, tổng kết tuần | Xong | Rà soát tiến độ, merge PR #28-#32, đồng bộ `PLAN.md`, `MAP.md`, README Phần 7, đóng milestone W1 |
 
 ### III. Task W2, W3 làm sớm
@@ -41,7 +41,16 @@
 | T207 | 30/10 | Script tải sprite | Xong | 1342 file, 9 ID thiếu (khớp T102), 1,5 MB; PR #31 |
 | T208 | 31/10 | CI đầy đủ, Dependabot | Xong | CI chạy `verify` gồm IT Testcontainers (41 unit, 24 IT trên CI); Dependabot thêm Maven, npm; PR #32 |
 | T209 | 01/11 | Buffer, review, tag `v0.1.0` | Xong | Tiêu chí W2 đạt; CHANGELOG mục 0.1.0; tag `v0.1.0` ngày 25/10 |
-| T301 | 02/11 | Omni-Dex UI | Xong | Theo design-system 0.3; chạy với backend thật 25/10: 1.083 kết quả, `?type=dragon&gen=4` có Garchomp, trạng thái rỗng có nút xóa lọc, reload giữ bộ lọc; 375 px không cuộn ngang; thẻ hiện sau 124-406 ms; PR #31 |
+| T301 | 02/11 | Omni-Dex UI | Xong | Theo design-system 0.3; chạy với backend thật 25/10: 1.083 kết quả, `?type=dragon&gen=4` có Garchomp, trạng thái rỗng có nút xóa lọc, reload giữ bộ lọc; 375 px không cuộn ngang; thẻ hiện sau 124-406 ms; PR #31. Từ 26/10 ở `/pokedex` |
+| T302 | 02/11 | Tìm kiếm tên, `PokemonSearchBox` | Xong | Làm 26/10. Gõ "char" ra Charmander, Charmeleon, Charizard đầu danh sách; combobox ARIA, mũi tên, `Enter`, `Esc`; có ở Omni-Dex, So sánh, Team Builder |
+| T303 | 03/11 | Chi tiết Pokémon | Xong | Làm 26/10. Charizard: Rock x4, Ground x0; `/pokemon/abc-xyz` hiện trang không tìm thấy; thêm chuỗi tiến hóa (endpoint `/evolution`, US-08 làm sớm) và các dạng |
+| T304 | 03/11 | Bảng tương khắc | Xong | Làm 26/10. Ma trận 324 ô; `?def=fire&def=flying` cho Rock x4; ma trận cuộn ngang trong khung ở 375 px |
+| T305 | 04/11 | Synergy backend | Xong | Làm 26/10. 4 ví dụ đáp án spec V.4 qua test; đề xuất số 1 Iron Treads, lý do "Chống chịu hệ Rock"; p95 analyze 6 ms, recommendations 10 ms (100 lần, local) |
+| T306 | 05/11 | Team Builder UI | Xong | Làm 26/10. Hàng Rock gắn "Lỗ hổng nghiêm trọng"; điểm đội 20/100 với đội mẫu; radar SVG; 3 thẻ đề xuất |
+| T307 | 06/11 | Lưu và chia sẻ | Xong | Làm 26/10. `POST /teams` 201 + `Location`, 10 lần mỗi phút mỗi IP (429 + `Retry-After`); trang Đội chia sẻ; `TeamControllerIT` qua |
+| T308 | 06/11 | Bàn Cân Sức Mạnh | Xong | Làm 26/10. Garchomp và Salamence: "Garchomp nhanh hơn (102 so với 100)."; radar chồng lớp, bảng từng chỉ số |
+| T311 | 07/11 | Trang Tổng quan phần 1 | Xong | Làm 26/10. Hero 13 vùng đất, dải hệ, Bốn vùng đất, Vòng tương khắc (Fire: x2 Grass, Ice, Bug, Steel), Pokémon hôm nay |
+| T312 | 08/11 | Trang Tổng quan phần 2 | Xong | Làm 26/10. Biểu đồ thế hệ (thế hệ 1 = 151, bấm mở `/pokedex?gen=1`), Thử tài Trainer 5 câu, kêu gọi cuối trang |
 
 - Giá trị cột Trạng thái: Chưa làm, Đang làm, Bị chặn, Xong, Cắt giảm.
 
@@ -49,13 +58,12 @@
 
 ## Phần 2. Checklist task đang làm
 
-### I. T303 - Chi tiết Pokémon (API và UI)
+### I. T309, T310 - Rà soát và kịch bản E2E
 
-- [ ] `TypeChartService` giữ ma trận 18 x 18 trong bộ nhớ, tính hệ số hệ kép; `TypeChartServiceTest` với ví dụ 3 ở [docs/spec.md](docs/spec.md), Phần 2, mục V.4 (Charizard: Rock 4, Ground 0, Water 2, Electric 2).
-- [ ] `GET /api/v1/pokemon/{idOrName}` theo [docs/api.md](docs/api.md), Phần 2, mục IV: 200 `PokemonDetail`, 400 `INVALID_PARAMETER`, 404 `POKEMON_NOT_FOUND`.
-- [ ] `PokemonDetailPage`: tên, sprite, hệ, 6 chỉ số dạng thanh, BST, chiều cao, cân nặng, lưới phòng thủ 18 hệ có ghi hệ số.
-- [ ] `/pokemon/abc-xyz` hiển thị trang không tìm thấy.
-- [ ] Kiểm tra 375 px và 1440 px; cập nhật `docs/api.md`, `docs/folder-structure.md` nếu đổi tên.
+- [ ] Chốt mâu thuẫn kịch bản demo (Phần 3) rồi sửa [docs/spec.md](docs/spec.md), Phần 4.
+- [ ] Tab qua 8 trang bằng bàn phím, focus nhìn thấy được; kiểm tra lại 375 px và 1440 px (đã đo `scrollWidth` bằng Chrome headless ngày 26/10, xem Nhật ký).
+- [ ] Chạy kịch bản demo ở spec Phần 4 hai lần liên tiếp trên local; ghi kết quả.
+- [ ] CHANGELOG mục 0.2.0, tag `v0.2.0`.
 
 ---
 
@@ -74,6 +82,9 @@
 | PR `docs/planning-and-ai-guides` chưa merge | Nhánh `docs/spec-1-0`, `chore/init-*` tách nối tiếp từ nhánh này | Merge PR tài liệu trước, sau đó lần lượt các nhánh nối tiếp | Đã xử lý: PR #4-#7 đã merge vào `main` |
 | PR #29-#31 xếp chồng, không có CI vì `ci.yml` chỉ chạy với PR vào `main` | Chưa đạt Definition of Done "CI xanh" | Merge lần lượt; sau mỗi lần squash, `git rebase --onto main <tip cũ>` rồi push `--force-with-lease` | Đã xử lý: PR #28-#31 merge ngày 25/10, CI xanh từng PR. Từ nay mỗi PR tách từ `main` |
 | `gh` thiếu quyền `project`, `read:project` | Chưa tạo được Project board (T104, Issue #10) | Chạy `gh auth refresh -s project,read:project` rồi tạo board theo [docs/github-setup.md](docs/github-setup.md), Phần 6 | Đã xử lý: cấp quyền ngày 25/10, board đã tạo |
+| Kịch bản demo spec Phần 4 ("thêm đề xuất số 1, xác nhận điểm đội tăng") dựng đội 6 thành viên, nhưng `analyze` chỉ nhận 1-5 (ví dụ 4 của spec: 6 Pokémon trả 400) | Bước demo này không kiểm chứng được với đội 5 thành viên; Team Builder hiện đặt đề xuất vào slot 6 và ghi rõ điểm chỉ tính 5 thành viên đầu | Đề xuất: sửa bước demo thành "bỏ một thành viên, thêm đề xuất số 1, điểm đội tăng" (giữ nguyên API và ví dụ 4). Phương án khác: cho `analyze` nhận 6 nhưng phải đổi ví dụ 4 | Mở, chờ quyết định |
+| `excludeLegendary=true` vẫn đề xuất Pokémon Paradox (Iron Treads, Sandy Shocks, Great Tusk) | Đề xuất có thể bị xem là "huyền thoại" với người chơi VGC | CSV PokéAPI không đánh dấu Paradox là huyền thoại; nếu cần, thêm danh sách loại trừ trong `RecommendationEngine` | Mở |
+| Slot 6 của Team Builder chỉ nằm trong state trang | Reload mất đề xuất đã chọn cho slot 6 | Lưu thêm vào URL hoặc `localStorage` khi làm T309 | Mở |
 | Ruleset `NgKhanh` có danh sách nhánh đích rỗng | `main` chưa được chặn xóa và force push như [docs/git-workflow.md](docs/git-workflow.md), Phần 1 mô tả | Settings > Rules > Rulesets > `NgKhanh` > Target branches > Add target > Include default branch (chỉ `main`, để nhánh làm việc vẫn force push được) | Mở |
 
 ---
@@ -96,3 +107,6 @@
 | 2026-10-25 | T301 theo bản thiết kế: 3 font mới, token v0.3 (`ink`, `dex-red`, màu hệ đậm), header đỏ, footer, `PageHero` và 15 scene (ảnh thật cho `grassland`, `stadium`), card nhuộm màu hệ, chip lọc, BST và tốc độ, ngăn kéo lọc mobile, chế độ danh sách; cập nhật `design-system.md`, `assets.md`, `folder-structure.md`, `architecture.md` | Frontend: lint sạch, 64 test pass, build pass, Prettier sạch; chụp Edge headless với API giả: 1440 px (thẻ, danh sách, rỗng), 375 px không cuộn ngang. Chưa chạy với backend thật vì Docker Desktop đang tắt |
 | 2026-10-25 | Rà soát tiến độ (22/32 task chưa xong trước phiên); T301 chạy với backend thật; merge PR #28-#31 (rebase chuỗi PR xếp chồng); T208 Dependabot Maven, npm (PR #32); T209 CHANGELOG 0.1.0, tag `v0.1.0`; T106 đồng bộ tài liệu, đóng milestone W1 | `verify` với Docker: 48 unit test, 31 IT pass, 0 Skipped; frontend lint sạch, 64 test, build pass; CI PR #29-#32 xanh (41 unit, 24 IT trên CI); cây file `main` sau merge trùng nhánh đã kiểm tra; 375 px `scrollWidth` 375 |
 | 2026-10-25 | T104: cấp quyền `project` cho `gh`; tạo Project `PokeNexus` (riêng tư), liên kết repo; cột Status `Backlog`, `To Do`, `In Progress`, `In Review`, `Done`; view `Board` lọc milestone W2, W3 và view `Tất cả` dạng bảng; thêm Issue #9-#26 | Board có 18 thẻ: 9 `Done`, 9 `To Do`; workflow "Item closed" và "Pull request merged" đang bật |
+| 2026-10-26 | Cắt giảm T105 vì không có buổi trình bày hay pitching; ghi chú ở `docs/roadmap.md`, Phần 3, mục I; bỏ T105 khỏi dòng "Slide trình bày" ở `docs/assets.md`; README Phần 7 ghi "T105 cắt giảm" | Không còn tham chiếu T105 ngoài `docs/roadmap.md` và `PLAN.md`; link nội bộ trong 4 file đã sửa không gãy |
+| 2026-10-26 | Tinh gọn tài liệu: gộp `SPEC.md` vào `docs/spec.md` Phần 6, `MAP.md` vào `docs/README.md` Phần 2; xóa `SPEC.md`, `MAP.md`, `AGENTS.md`; bỏ bản chép CSS trong `design-system.md` Phần 3; bỏ dòng trạng thái lỗi thời ở README và CLAUDE.md | Không còn tham chiếu tới 3 file đã xóa ngoài nhật ký và CHANGELOG 0.1.0; mọi link tương đối trong file `.md` trỏ tới file có thật |
+| 2026-10-26 | Thêm trang Tổng quan vào kế hoạch (spec 1.2 F07, roadmap 0.3 T311, T312; Omni-Dex sang `/pokedex`); làm API còn lại (tương khắc, chi tiết, tìm kiếm, so sánh, tiến hóa, synergy, lưu và chia sẻ đội) và 7 trang giao diện (T302-T308, T311, T312); radar vẽ bằng SVG thay Recharts; cập nhật `api.md`, `architecture.md`, `folder-structure.md`, `design-system.md` | `verify`: 98 unit test, 54 IT pass, 0 Skipped, `BUILD SUCCESS`; frontend lint sạch, Prettier sạch, 182 test pass, build pass (JS 149 KB gzip); chạy thật backend + MySQL Docker (1351 Pokémon) + Vite: 8 trang ở 1440 px và 375 px không cuộn ngang, mỗi trang đúng 1 `<h1>`, không lỗi console; đáp án spec V.4 đúng trên dữ liệu thật |

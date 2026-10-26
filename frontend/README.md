@@ -1,6 +1,6 @@
 # PokeNexus Frontend
 
-- Trạng thái: **đã khởi tạo khung (T203, 2026-10-21).** Có `AppLayout` (header, điều hướng, footer), 7 route với trang giữ chỗ, token giao diện Tailwind 4, TanStack Query. Chưa gọi API (bắt đầu từ T301).
+- SPA React + TypeScript (Vite) của PokeNexus, gọi REST API của backend qua TanStack Query. Tiến độ: [PLAN.md](../PLAN.md).
 
 ---
 
@@ -16,7 +16,7 @@
 | React Router | 8.5 | Định tuyến, đồng bộ bộ lọc lên URL |
 | TanStack Query | 5.104 | Gọi API, cache, trạng thái tải và lỗi |
 | `@fontsource/dela-gothic-one`, `@fontsource-variable/nunito`, `@fontsource-variable/pixelify-sans` | 5.3 | Font Display, Text, Pixel đóng gói, chạy offline ([design-system.md](../docs/design-system.md), Phần 2, mục V) |
-| Recharts | Chưa cài | Biểu đồ Radar, cột; cài ở T306 khi có biểu đồ đầu tiên |
+| Recharts | Không cài | Radar và biểu đồ cột vẽ bằng SVG (`StatRadar`); xem [architecture.md](../docs/architecture.md), Phần 2 |
 | Vitest + React Testing Library + jsdom | Vitest 5.0, RTL 16.3 | Kiểm thử component |
 | ESLint + typescript-eslint + Prettier | ESLint 10, Prettier 3.9 | Kiểm tra và định dạng mã |
 
@@ -49,4 +49,3 @@ npm run format
 ### I. Thư mục
 
 - Xem [docs/folder-structure.md](../docs/folder-structure.md), Phần 3. Token giao diện và component: [docs/design-system.md](../docs/design-system.md).
-- Hiện có `src/app/` (App, router, providers, layout), `src/pages/` (7 trang giữ chỗ), `src/lib/queryClient.ts`, `src/styles/index.css`, `src/test/setup.ts`.
