@@ -37,7 +37,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.debug("API error {} on {}: {}", errorCode, request.getRequestURI(), ex.getMessage());
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(errorCode.status(), ex.getMessage());
         problem.setProperty(CODE_PROPERTY, errorCode.name());
-        return ResponseEntity.status(errorCode.status()).body(problem);
+        ResponseEntity.BodyBuilder response = ResponseEntity.status(errorCode.status());
+        if (ex instanceof RateLimitedException rateLimited) {
+            response.header(HttpHeaders.RETRY_AFTER, Long.toString(rateLimited.retryAfterSeconds()));
+        }
+        return response.body(problem);
     }
 
     @ExceptionHandler(Exception.class)

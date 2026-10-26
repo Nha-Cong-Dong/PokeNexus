@@ -4,8 +4,6 @@
 
 https://github.com/Nha-Cong-Dong/PokeNexus
 
-> Trạng thái: **Tuần 1 - Khởi tạo dự án.** Repo hiện chứa tài liệu và cấu hình; mã nguồn backend và frontend được khởi tạo ở Tuần 2.
-
 ---
 
 ## Phần 1. Giới thiệu
@@ -35,14 +33,17 @@ https://github.com/Nha-Cong-Dong/PokeNexus
 
 ### I. Phạm vi MVP
 
-| Tính năng                        | Mô tả                                                                                 | Trạng thái |
-| -------------------------------- | ------------------------------------------------------------------------------------- | ---------- |
-| Omni-Dex                         | Tra cứu Pokémon, lọc theo Hệ, Thế hệ, Chỉ số; phân trang; trạng thái lọc lưu trên URL | Kế hoạch   |
-| Chi tiết Pokémon                 | Chỉ số gốc, hệ, bảng phòng thủ 18 hệ, các dạng (form)                                 | Kế hoạch   |
-| Bảng tương khắc                  | Ma trận 18 x 18 tương tác, hỗ trợ tra hệ kép                                          | Kế hoạch   |
-| Bàn Cân Sức Mạnh                 | So sánh 2 Pokémon bằng biểu đồ Radar và kết luận tự động                              | Kế hoạch   |
-| Team Builder và Synergy Analyzer | Chọn tối đa 5 Pokémon, xem ma trận điểm yếu, nhận 3 đề xuất cho vị trí thứ 6          | Kế hoạch   |
-| Lưu và chia sẻ đội hình          | Lưu đội không cần đăng nhập, chia sẻ bằng đường dẫn                                   | Kế hoạch   |
+| Tính năng                        | Mô tả                                                                                 |
+| -------------------------------- | ------------------------------------------------------------------------------------- |
+| Omni-Dex                         | Tra cứu Pokémon, lọc theo Hệ, Thế hệ, Chỉ số; phân trang; trạng thái lọc lưu trên URL |
+| Chi tiết Pokémon                 | Chỉ số gốc, hệ, bảng phòng thủ 18 hệ, các dạng (form)                                 |
+| Bảng tương khắc                  | Ma trận 18 x 18 tương tác, hỗ trợ tra hệ kép                                          |
+| Bàn Cân Sức Mạnh                 | So sánh 2 Pokémon bằng biểu đồ Radar và kết luận tự động                              |
+| Team Builder và Synergy Analyzer | Chọn tối đa 5 Pokémon, xem ma trận điểm yếu, nhận 3 đề xuất cho vị trí thứ 6          |
+| Lưu và chia sẻ đội hình          | Lưu đội không cần đăng nhập, chia sẻ bằng đường dẫn                                   |
+| Trang Tổng quan                  | Giới thiệu, lối vào 4 công cụ, vòng tương khắc, Pokémon hôm nay, câu đố hệ số         |
+
+- Tiến độ từng tính năng: Phần 7.
 
 ### II. Mở rộng (sau MVP)
 
@@ -120,7 +121,8 @@ docker compose ps
 
 ### IV. Backend và Frontend
 
-- Hướng dẫn chạy sẽ được bổ sung khi khởi tạo mã nguồn ở Tuần 2. Xem [backend/README.md](backend/README.md) và [frontend/README.md](frontend/README.md).
+- Backend: chạy trong `backend/` theo [backend/README.md](backend/README.md), Phần 2. Lần khởi động đầu tự nạp CSV vào MySQL; Swagger UI ở `http://localhost:8080/swagger-ui.html`.
+- Frontend: chạy trong `frontend/` theo [frontend/README.md](frontend/README.md), Phần 2; dev server ở `http://localhost:5173`.
 
 ---
 
@@ -132,16 +134,14 @@ pokenexus/
 ├── frontend/               React + TypeScript (Vite)
 ├── data/                   Dữ liệu nguồn (CSV PokéAPI, không commit file CSV)
 ├── docs/                   Tài liệu sản phẩm, đặc tả, kiến trúc, ADR
-├── scripts/                Script tải dữ liệu, sprite, sao lưu DB (tạo ở Tuần 2)
+├── scripts/                Script tải dữ liệu, sprite, sao lưu DB
 ├── .github/                Issue template, PR template, CI, Dependabot
 ├── docker-compose.yml      MySQL và công cụ phát triển
 ├── .env.example            Mẫu biến môi trường
 ├── CONTRIBUTING.md         Quy trình làm việc, quy ước commit và nhánh
 ├── CHANGELOG.md            Lịch sử thay đổi
-├── MAP.md                  Bản đồ: muốn làm gì thì đọc, sửa ở đâu
-├── SPEC.md                 Bảng truy vết tính năng, endpoint, trang, task, test
 ├── PLAN.md                 Tiến độ tuần hiện tại
-└── CLAUDE.md, AGENTS.md    Hướng dẫn cho AI agent (kèm .claude/)
+└── CLAUDE.md               Hướng dẫn cho Claude Code (kèm .claude/)
 ```
 
 - Chi tiết đến cấp package và file: [docs/folder-structure.md](docs/folder-structure.md).
@@ -152,9 +152,9 @@ pokenexus/
 
 | Mốc    | Nội dung                                                 | Trạng thái                        |
 | ------ | -------------------------------------------------------- | --------------------------------- |
-| Tuần 1 | Nghiên cứu, ý tưởng, khởi tạo repo và tài liệu           | Hoàn thành (chờ xác nhận T105)    |
+| Tuần 1 | Nghiên cứu, ý tưởng, khởi tạo repo và tài liệu           | Hoàn thành (T105 cắt giảm)        |
 | Tuần 2 | Chốt đặc tả, dựng khung backend, frontend, cơ sở dữ liệu | Hoàn thành, tag `v0.1.0`          |
-| Tuần 3 | Xây dựng MVP                                             | Đang thực hiện (Omni-Dex đã xong) |
+| Tuần 3 | Xây dựng MVP                                             | Đang thực hiện (8 trang đã chạy)  |
 | Tuần 4 | Hoàn thiện, triển khai, demo                             | Kế hoạch                          |
 
 - Chi tiết: [docs/roadmap.md](docs/roadmap.md).
@@ -163,20 +163,7 @@ pokenexus/
 
 ## Phần 8. Tài liệu
 
-| Tài liệu                                     | Nội dung                                      |
-| -------------------------------------------- | --------------------------------------------- |
-| [docs/product.md](docs/product.md)           | Tầm nhìn, người dùng, user story              |
-| [docs/spec.md](docs/spec.md)                 | Đặc tả MVP, tiêu chí chấp nhận                |
-| [docs/roadmap.md](docs/roadmap.md)           | Lộ trình 4 tuần, task theo ngày               |
-| [docs/architecture.md](docs/architecture.md) | Kiến trúc, luồng xử lý, thuật toán, triển khai |
-| [docs/database.md](docs/database.md)         | ERD, từ điển dữ liệu, migration               |
-| [docs/api.md](docs/api.md)                   | Đặc tả REST API, schema DTO, mã lỗi           |
-| [docs/folder-structure.md](docs/folder-structure.md) | Cấu trúc thư mục, quy tắc đặt tên     |
-| [docs/design-system.md](docs/design-system.md) | Design System, UI Guidelines                |
-| [docs/assets.md](docs/assets.md)             | Kế hoạch quản lý assets                       |
-| [docs/git-workflow.md](docs/git-workflow.md) | Quy trình nhánh, commit, PR, phát hành        |
-| [docs/github-setup.md](docs/github-setup.md) | Thiết lập repo, nhãn, milestone, bảo vệ nhánh |
-| [docs/adr](docs/adr)                         | Các quyết định kiến trúc                      |
+- Mục lục toàn bộ tài liệu (sản phẩm, đặc tả, kiến trúc, database, API, giao diện, quy trình, ADR) và bảng "muốn làm gì thì xem ở đâu": [docs/README.md](docs/README.md).
 
 ---
 

@@ -1,7 +1,7 @@
 # PokeNexus Backend - Hướng dẫn cho Claude
 
 - Nạp khi làm việc trong `backend/`. Bổ sung cho `CLAUDE.md` ở gốc, không lặp lại quy tắc chung.
-- Trạng thái: đã khởi tạo khung ở T202 (Spring Boot 4.1.1). Dependency và tên artifact thực tế: [README.md](README.md), Phần 1.
+- Dependency và tên artifact thực tế: [README.md](README.md), Phần 1.
 
 ---
 
@@ -88,7 +88,7 @@
 
 - Unit test: `<Class>Test`. Tích hợp: `<Class>IT` với `@SpringBootTest` và Testcontainers MySQL.
 - CSV mẫu khoảng 20 Pokémon ở `src/test/resources/csv/`; CI không dùng bộ CSV đầy đủ.
-- 4 ví dụ có đáp án ở [docs/spec.md](../docs/spec.md), Phần 2, mục V.4 là test bắt buộc. Danh sách test: [SPEC.md](../SPEC.md), Phần 2.
+- 4 ví dụ có đáp án ở [docs/spec.md](../docs/spec.md), Phần 2, mục V.4 là test bắt buộc. Danh sách test: [docs/spec.md](../docs/spec.md), Phần 6, mục II.
 - Mỗi logic mới có ít nhất 1 case thường và 1 case biên (rỗng, trùng, vượt giới hạn, ID không tồn tại).
 
 ### II. Logging

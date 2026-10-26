@@ -1,6 +1,6 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 0.2 (cập nhật 2026-10-25)
+- Phiên bản: 0.2 (cập nhật 2026-10-26; Phần 6: route `/` là trang Tổng quan, Omni-Dex ở `/pokedex`)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
 
@@ -61,7 +61,7 @@ flowchart LR
 | Giao diện | Tailwind CSS 4.x | Token định nghĩa bằng `@theme` trong CSS ([design-system.md](design-system.md)) |
 | Định tuyến | React Router | Đồng bộ bộ lọc lên URL |
 | Gọi API | TanStack Query 5.x | Cache, trạng thái tải và lỗi |
-| Biểu đồ | Recharts 3.x | Radar, cột |
+| Biểu đồ | SVG tự vẽ (`StatRadar`, cột thế hệ ở trang Tổng quan); Recharts 3.x để dự phòng | Quyết định 2026-10-26: MVP chỉ cần radar 6 trục và biểu đồ cột đơn giản, vẽ bằng SVG không thêm dependency và không cần cài gói khi máy không có người duyệt; chỉ cài Recharts khi cần tooltip, trục, chú giải phức tạp |
 | Font | Dela Gothic One, Nunito, Pixelify Sans qua `@fontsource` và `@fontsource-variable` | Đóng gói cùng build, chạy offline ([assets.md](assets.md), [design-system.md](design-system.md), Phần 2, mục V) |
 | Kiểm thử frontend | Vitest, React Testing Library | |
 | CI | GitHub Actions | Xem `.github/workflows/ci.yml` |
@@ -189,7 +189,7 @@ sequenceDiagram
     participant G as ShareCodeGenerator
     participant DB as MySQL
     UI->>C: POST /api/v1/teams
-    C->>L: tryAcquire(clientIp)
+    C->>L: acquire(clientIp)
     alt vượt giới hạn
         C-->>UI: 429 + Retry-After
     end
@@ -249,8 +249,8 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | Độ phủ tấn công | 25% | Số hệ đội chưa đánh siêu hiệu quả mà ứng viên đánh được bằng hệ của nó |
 | Chỉ số | 15% | Tổng chỉ số gốc của ứng viên |
 
-- Mỗi thành phần được chuẩn hóa min-max về 0-1 trên tập ứng viên, cộng trọng số rồi nhân 100 để ra `score`.
-- Sắp xếp giảm dần theo `score`; hòa điểm thì BST cao hơn đứng trước, tiếp theo là ID nhỏ hơn (để kết quả ổn định khi test).
+- Mỗi thành phần được chuẩn hóa min-max về 0-1 trên tập ứng viên (mọi ứng viên bằng nhau thì thành phần đó bằng 0), cộng trọng số rồi nhân 100 để ra `score`.
+- Sắp xếp giảm dần theo `score` đã làm tròn 1 chữ số; hòa điểm thì BST cao hơn đứng trước, tiếp theo là ID nhỏ hơn (để kết quả ổn định khi test).
 - Chỉ giữ ứng viên điểm cao nhất của mỗi tổ hợp hệ (không phân biệt thứ tự hệ), lấy `limit` phần tử đầu.
 - Độ phức tạp `O(N x 18 + N log N)` với `N` khoảng 1.300.
 - Trọng số là hằng số trong code (quyết định ở [spec.md](spec.md), Phần 5); được tinh chỉnh bằng các đội thử nghiệm ở spec, mục V.4.
@@ -272,11 +272,12 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 
 | Route | Trang | Trạng thái trên URL |
 |---|---|---|
-| `/` | `DexPage` | `type`, `gen`, `minBst`, `maxBst`, `minSpeed`, `form`, `sort`, `page` |
+| `/` | `LandingPage` | |
+| `/pokedex` | `DexPage` | `type`, `gen`, `minBst`, `maxBst`, `minSpeed`, `form`, `sort`, `page` |
 | `/pokemon/:idOrName` | `PokemonDetailPage` | |
 | `/types` | `TypeChartPage` | `def` (1-2 hệ phòng thủ đang chọn) |
 | `/compare` | `ComparePage` | `left`, `right` |
-| `/team-builder` | `TeamBuilderPage` | `ids` (đội nháp, ví dụ `ids=6,130,149`) |
+| `/team-builder` | `TeamBuilderPage` | `ids` (đội nháp, ví dụ `ids=6,130,149`); `add` (thêm một Pokémon vào đội nháp đang có rồi tự xóa khỏi URL, dùng cho nút "Thêm vào đội"); `six` (thành viên slot 6 khi mở đội chia sẻ 6 thành viên) |
 | `/team/:shareCode` | `SharedTeamPage` | |
 | `*` | `NotFoundPage` | |
 
@@ -295,6 +296,9 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | `['pokemon', id]` | `Infinity` | Dữ liệu tĩnh |
 | `['pokemon', 'list', filter]` | 5 phút | Tránh gọi lại khi quay lại trang |
 | `['synergy', 'analyze', ids]` | `Infinity` | Kết quả xác định theo đầu vào |
+| `['compare', left, right]` | `Infinity` | Kết quả xác định theo cặp; không thử lại khi lỗi 4xx |
+| `['pokemon', 'search', q]` | 5 phút | Gợi ý tên khi gõ |
+| `['pokemon', 'generation-count', n]` | `Infinity` | Số loài mỗi thế hệ ở trang Tổng quan |
 
 - Không thêm thư viện quản lý state toàn cục trong MVP; đội nháp là trạng thái toàn cục duy nhất.
 - Mỗi route bọc `ErrorBoundary`; lỗi API hiển thị `ErrorState` có nút thử lại ([design-system.md](design-system.md), Phần 5).

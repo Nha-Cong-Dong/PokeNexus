@@ -7,12 +7,14 @@ export type QueryValue = string | number | undefined | readonly (string | number
 export class ApiError extends Error {
   readonly status: number
   readonly code: string
+  readonly retryAfterSeconds: number | undefined
 
-  constructor(status: number, code: string, detail?: string) {
+  constructor(status: number, code: string, detail?: string, retryAfterSeconds?: number) {
     super(detail ?? `HTTP ${status}`)
     this.name = 'ApiError'
     this.status = status
     this.code = code
+    this.retryAfterSeconds = retryAfterSeconds
   }
 }
 
@@ -27,26 +29,47 @@ export function buildUrl(path: string, params: Record<string, QueryValue> = {}):
   return `${API_BASE_URL}${path}${query ? `?${query}` : ''}`
 }
 
-export async function getJson<T>(
+export function getJson<T>(
   path: string,
   params?: Record<string, QueryValue>,
   signal?: AbortSignal,
 ): Promise<T> {
+  return request<T>(buildUrl(path, params), { headers: { Accept: 'application/json' }, signal })
+}
+
+export function postJson<T>(path: string, body: unknown, signal?: AbortSignal): Promise<T> {
+  return request<T>(buildUrl(path), {
+    method: 'POST',
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal,
+  })
+}
+
+async function request<T>(url: string, init: RequestInit): Promise<T> {
   let response: Response
   try {
-    response = await fetch(buildUrl(path, params), {
-      headers: { Accept: 'application/json' },
-      signal,
-    })
+    response = await fetch(url, init)
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') throw error
     throw new ApiError(0, 'NETWORK_ERROR')
   }
   if (!response.ok) {
     const problem = await readProblem(response)
-    throw new ApiError(response.status, problem?.code ?? 'INTERNAL_ERROR', problem?.detail)
+    throw new ApiError(
+      response.status,
+      problem?.code ?? 'INTERNAL_ERROR',
+      problem?.detail,
+      readRetryAfter(response),
+    )
   }
   return (await response.json()) as T
+}
+
+function readRetryAfter(response: Response): number | undefined {
+  const value = response.headers.get('Retry-After')
+  if (value === null || !/^\d+$/.test(value.trim())) return undefined
+  return Number(value.trim())
 }
 
 async function readProblem(response: Response): Promise<ProblemDetail | undefined> {

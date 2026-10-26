@@ -5,6 +5,10 @@ public record HealthResponse(String status, boolean dataLoaded, long pokemonCoun
     public static final String STATUS_UP = "UP";
 
     public static HealthResponse up(long pokemonCount) {
-        return new HealthResponse(STATUS_UP, pokemonCount > 0, pokemonCount);
+        return of(pokemonCount, pokemonCount > 0);
+    }
+
+    public static HealthResponse of(long pokemonCount, boolean dataLoaded) {
+        return new HealthResponse(STATUS_UP, dataLoaded, pokemonCount);
     }
 }

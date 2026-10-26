@@ -1,6 +1,6 @@
 # PokeNexus - Cấu trúc thư mục
 
-- Phiên bản: 0.2 (cập nhật 2026-10-25)
+- Phiên bản: 0.2 (cập nhật 2026-10-26)
 - Đây là cấu trúc **đích** khi xong MVP. Thư mục, file nào chưa tồn tại thì được tạo ở task ghi trong cột "Tạo ở" (mã task theo [roadmap.md](roadmap.md)).
 - Thêm hoặc đổi tên package, thư mục cấp 1-2 thì cập nhật tài liệu này trong cùng PR.
 
@@ -24,6 +24,7 @@ pokenexus/
 │   ├── csv/                       CSV PokéAPI (không commit)
 │   └── dumps/                     File mysqldump (không commit)
 ├── docs/
+│   ├── README.md                  Mục lục và bản đồ tài liệu
 │   ├── adr/                       NNNN-ten-quyet-dinh.md
 │   ├── images/                    Ảnh chụp màn hình, sơ đồ dùng trong README
 │   ├── wireframes/                Wireframe các trang
@@ -36,8 +37,8 @@ pokenexus/
 ├── .env.example
 ├── .editorconfig, .gitattributes, .gitignore, .nvmrc
 ├── CHANGELOG.md, CONTRIBUTING.md, LICENSE, README.md
-├── CLAUDE.md, AGENTS.md           Hướng dẫn cho AI agent (thêm backend/CLAUDE.md, frontend/CLAUDE.md)
-├── MAP.md, SPEC.md, PLAN.md       Bản đồ điều hướng, bảng truy vết đặc tả, tiến độ hiện tại
+├── CLAUDE.md                      Quy tắc cho Claude Code (thêm backend/CLAUDE.md, frontend/CLAUDE.md)
+├── PLAN.md                        Tiến độ hiện tại
 └── CLAUDE.local.md                Cấu hình cá nhân (không commit)
 ```
 
@@ -89,9 +90,9 @@ backend/
 | Package | Sub-package | Class chính | Tạo ở |
 |---|---|---|---|
 | `common` | `config` | `AppProperties`, `CorsConfig`, `OpenApiConfig` | T202 |
-| | `exception` | `GlobalExceptionHandler`, `ErrorCode`, `ApiException`, `NotFoundException` | T202 |
+| | `exception` | `GlobalExceptionHandler`, `ErrorCode`, `ApiException`, `NotFoundException`, `RateLimitedException` (thêm header `Retry-After`) | T202, T307 |
 | | `domain` | `PokemonType` (enum 18 hệ), `StatType`, `FormCategory`, `PokemonTypeConverter` (JPA, ID hệ <-> `PokemonType`) | T202, T204 |
-| | `web` | `HealthController`, `HealthService`, `HealthResponse`, `PageResponse`, `PageRequestFactory` (kiểm tra `page`, `size`, `sort` theo whitelist) | T202, T206 |
+| | `web` | `HealthController`, `HealthService`, `HealthResponse`, `PageResponse`, `PageRequestFactory` (kiểm tra `page`, `size`, `sort` theo whitelist), `StaticDataCache` (interface của các cache nạp lúc khởi động) | T202, T206, T305 |
 | `ingestion` | | `IngestionRunner`, `CsvReader`, `FormCategoryResolver`; cấu hình đọc từ `AppProperties.Ingestion` | T205 |
 | | `loader` | `TypeLoader`, `GenerationLoader`, `SpeciesLoader`, `PokemonLoader`, `EvolutionLoader` | T205 |
 | `typechart` | `controller` | `TypeController` | T304 |
@@ -100,20 +101,21 @@ backend/
 | | `entity` | `Type`, `TypeEfficacy`, `TypeEfficacyId` | T204 |
 | | `dto` | `TypeResponse`, `TypeMatrixResponse`, `DefenseEntry` | T304 |
 | `pokedex` | `controller` | `PokemonController` | T206 |
-| | `service` | `PokemonQueryService`, `CompareService` | T206, T308 |
-| | `repository` | `PokemonRepository`, `SpeciesRepository`, `PokemonSpecifications` | T204, T206 |
+| | `service` | `PokemonQueryService`, `CompareService`, `EvolutionService` | T206, T308 |
+| | `repository` | `PokemonRepository`, `SpeciesRepository`, `PokemonSpecifications`, `EvolutionLinkRepository` | T204, T206 |
 | | `entity` | `Pokemon`, `Species`, `Generation`, `Region`, `EvolutionChain`, `EvolutionLink` | T204 |
-| | `dto` | `PokemonFilter`, `PokemonRef`, `PokemonSummary`, `PokemonDetail`, `CompareResponse` | T206, T303 |
+| | `dto` | `PokemonFilter`, `PokemonRef`, `PokemonSummary`, `PokemonDetail`, `Stats`, `PokemonCatalogEntry`, `CompareResponse`, `EvolutionResponse`, `EvolutionStage` | T206, T303 |
 | | `mapper` | `PokemonMapper` | T206 |
 | `synergy` | `controller` | `SynergyController` | T305 |
 | | `service` | `PokemonProfileRegistry`, `SynergyAnalyzer`, `RecommendationEngine`, `ReasonBuilder` | T305 |
-| | `model` | `PokemonProfile`, `DefenseScale` | T305 |
+| | `model` | `PokemonProfile`, `DefenseScale`, `TeamAnalysis` | T305 |
 | | `dto` | `AnalyzeRequest`, `AnalyzeResponse`, `RecommendationRequest`, `RecommendationResponse` | T305 |
 | `team` | `controller` | `TeamController` | T307 |
 | | `service` | `TeamService`, `ShareCodeGenerator`, `SaveRateLimiter` | T307 |
 | | `repository` | `TeamRepository` | T307 |
 | | `entity` | `Team`, `TeamMember`, `TeamMemberId` | T307 |
-| | `dto` | `CreateTeamRequest`, `TeamMemberRequest`, `TeamResponse` | T307 |
+| | `mapper` | `TeamMapper` | T307 |
+| | `dto` | `CreateTeamRequest`, `TeamMemberRequest`, `TeamResponse` (thành viên là `TeamResponse.Member` để không trùng tên entity `TeamMember`) | T307 |
 
 ### III. Quy tắc đặt tên backend
 
@@ -154,9 +156,11 @@ frontend/
     │   ├── router.tsx
     │   ├── providers.tsx          QueryClientProvider
     │   └── layout/                AppLayout.tsx, Header.tsx, Footer.tsx, navItems.ts
-    ├── pages/                     DexPage, PokemonDetailPage, TypeChartPage, ComparePage,
+    ├── pages/                     LandingPage, DexPage, PokemonDetailPage, TypeChartPage, ComparePage,
     │                              TeamBuilderPage, SharedTeamPage, NotFoundPage (.tsx)
     ├── features/
+    │   ├── landing/               api.ts, hooks.ts, regions.ts (vùng đất, Pokémon hôm nay), quiz.ts,
+    │   │                          generations.ts, describeDefense.ts, components/ (T311, T312)
     │   ├── dex/                   api.ts, hooks.ts, useDexSearchParams.ts, emptyMessage.ts, components/
     │   ├── pokemon-detail/        api.ts, hooks.ts, components/
     │   ├── typechart/             api.ts, hooks.ts, components/
@@ -167,10 +171,11 @@ frontend/
     │   │                          ErrorState, Toast, Pagination, pageItems.ts
     │   ├── scene/                 SceneBackdrop, PageHero (kèm PageBody), SceneLabel
     │   └── pokemon/               TypeBadge, TypeGlyph, DexNumber, StatBar, MultiplierCell, PokemonSprite,
-    │                              PokemonCard, PokemonSearchBox
+    │                              PokemonCard, PokemonSearchBox, StatRadar, statAxes.ts, multiplierStyles.ts
     ├── lib/
-    │   ├── http.ts                fetch wrapper, chuyển ProblemDetail thành ApiError
-    │   ├── queryClient.ts
+    │   ├── http.ts                fetch wrapper, chuyển ProblemDetail thành ApiError (kèm Retry-After)
+    │   ├── queryClient.ts         Không thử lại khi lỗi 4xx, thử lại 1 lần với lỗi khác
+    │   ├── typeEffectiveness.ts   Tra hệ số từ TypeMatrix, hệ số hệ kép, nhóm x2/x½/x0 của một hệ tấn công
     │   ├── assets.ts              getSpriteUrl, getArtworkUrl, sceneUrl
     │   ├── scenes.ts              15 scene (tên, màu dự phòng, cờ photo), sceneForTypes
     │   ├── pokemonTypes.ts        Danh sách 18 hệ, ánh xạ hệ sang class token
@@ -194,12 +199,13 @@ frontend/
 
 | Trang | Feature folder | Component chính | Tạo ở |
 |---|---|---|---|
+| `LandingPage` | `landing` | `LandingHero`, `TypeTicker`, `FeatureRegions`, `TypeWheel`, `DailyPokemon`, `TeamSteps`, `GenerationChart`, `TrainerQuiz`, `ClosingCta` | T311, T312 |
 | `DexPage` | `dex` | `DexFilters`, `StatRangeFields`, `DexToolbar`, `ViewToggle`, `FilterSheet`, `PokemonGrid`, `PokemonList`, `Pagination` | T301 |
-| `PokemonDetailPage` | `pokemon-detail` | `StatPanel`, `DefenseGrid`, `FormSwitcher` | T303 |
-| `TypeChartPage` | `typechart` | `TypeMatrixTable`, `DualTypePicker` | T304 |
-| `ComparePage` | `compare` | `CompareRadar`, `VerdictPanel` | T308 |
-| `TeamBuilderPage` | `team-builder` | `TeamSlots`, `WeaknessHeatmap`, `TeamScoreGauge`, `RecommendationCard`, `SaveTeamDialog` | T306, T307 |
-| `SharedTeamPage` | `team-builder` | `TeamSlots` (chế độ chỉ đọc), `WeaknessHeatmap` | T307 |
+| `PokemonDetailPage` | `pokemon-detail` | `PokemonHero`, `StatPanel`, `DefenseGrid`, `FormSwitcher`, `EvolutionChain`, `DetailStates`; `evolution.ts`, `labels.ts` | T303 |
+| `TypeChartPage` | `typechart` | `TypeMatrixTable`, `DualTypePicker`, `DefenseResult`, `MatrixLegend`; `defense.ts`, `useDefendingTypes.ts` | T304 |
+| `ComparePage` | `compare` | `CompareSlot`, `VersusBanner`, `CompareRadar`, `StatDuelTable`, `VerdictPanel`; `useCompareSearchParams.ts`, `scale.ts` | T308 |
+| `TeamBuilderPage` | `team-builder` | `TeamSlots`, `TeamMemberCard`, `WeaknessHeatmap`, `TeamScoreGauge`, `CoverageAndStats`, `RecommendationList`, `RecommendationCard`, `SaveTeamDialog`, `ShareLinkField`; `useTeamDraft.ts`, `teamAnalysis.ts` | T306, T307 |
+| `SharedTeamPage` | `team-builder` | `ReadOnlyTeamSlots`, `AnalysisHeatmap`, `ShareLinkField` | T307 |
 
 ### III. Quy tắc đặt tên frontend
 

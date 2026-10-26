@@ -4,7 +4,7 @@ export type NavItem = {
 }
 
 export const NAV_ITEMS: readonly NavItem[] = [
-  { to: '/', label: 'Pokédex' },
+  { to: '/pokedex', label: 'Pokédex' },
   { to: '/types', label: 'Tương khắc' },
   { to: '/compare', label: 'So sánh' },
   { to: '/team-builder', label: 'Xây đội' },

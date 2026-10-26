@@ -130,6 +130,11 @@
   --color-pressure-mid: #fb923c;
   --color-pressure-high: #b91c1c;
 
+  --color-stat-low: #fb923c;
+  --color-stat-mid: #facc15;
+  --color-stat-good: #22c55e;
+  --color-stat-high: #3b82f6;
+
   --color-scrim: #16213e;
 
   --animate-hop: hop 200ms ease-out 1;

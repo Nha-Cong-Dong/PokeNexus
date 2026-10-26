@@ -11,9 +11,14 @@ export function NotFoundPage() {
       <PageBody>
         <Panel aria-label="Hướng dẫn" className="flex flex-col items-start gap-4">
           <p className="text-ink-muted">Đường dẫn không tồn tại hoặc đã bị thay đổi.</p>
-          <Link to="/" className={buttonClassName('primary')}>
-            Về Pokédex
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/pokedex" className={buttonClassName('primary')}>
+              Về Pokédex
+            </Link>
+            <Link to="/" className={buttonClassName('secondary')}>
+              Về trang Tổng quan
+            </Link>
+          </div>
         </Panel>
       </PageBody>
     </>

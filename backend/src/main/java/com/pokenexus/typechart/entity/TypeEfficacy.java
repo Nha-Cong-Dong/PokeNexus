@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.Immutable;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Immutable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class TypeEfficacy {
 
     @EmbeddedId

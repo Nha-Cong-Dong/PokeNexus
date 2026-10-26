@@ -1,7 +1,7 @@
 # PokeNexus Frontend - Hướng dẫn cho Claude
 
 - Nạp khi làm việc trong `frontend/`. Bổ sung cho `CLAUDE.md` ở gốc, không lặp lại quy tắc chung.
-- Trạng thái: đã khởi tạo khung ở T203. Phiên bản thư viện và lý do giữ TypeScript 6.0: [README.md](README.md), Phần 1.
+- Phiên bản thư viện và lý do giữ TypeScript 6.0: [README.md](README.md), Phần 1.
 - Route khai báo trong `src/app/router.tsx` (mảng `routes`); test route dùng `createMemoryRouter(routes)`. `RouterProvider` cho trình duyệt import từ `react-router/dom`.
 
 ---
@@ -26,20 +26,9 @@ npx vitest run src/components/pokemon/TypeBadge.test.tsx
 
 ## Phần 2. Cấu trúc
 
-### I. Thư mục
+### I. Thư mục và đặt tên
 
-- Cây thư mục và ánh xạ trang, tính năng: [docs/folder-structure.md](../docs/folder-structure.md), Phần 3.
-- `features/<ten-kebab>/` chứa `api.ts`, `hooks.ts`, `components/` riêng của tính năng. Component dùng ở từ 2 tính năng trở lên chuyển lên `src/components/`.
-- File test đặt cạnh file được test: `TypeBadge.tsx`, `TypeBadge.test.tsx`.
-
-### II. Đặt tên
-
-| Loại | Quy tắc | Ví dụ |
-|---|---|---|
-| Component, trang | `PascalCase.tsx` | `PokemonCard.tsx` |
-| Hook | `useCamelCase.ts` | `useTeamDraft.ts` |
-| Tiện ích, API | `camelCase.ts` | `formatters.ts` |
-| Kiểu | `PascalCase`, không tiền tố `I` | `PokemonSummary` |
+- Cây thư mục, ánh xạ trang và tính năng, vị trí file test, quy tắc đặt tên: [docs/folder-structure.md](../docs/folder-structure.md), Phần 3.
 
 ---
 
@@ -59,8 +48,8 @@ npx vitest run src/components/pokemon/TypeBadge.test.tsx
 - Màu 18 hệ chỉ có một nguồn: `src/lib/pokemonTypes.ts` ánh xạ sang class token.
 - Màu luôn đi kèm chữ: nhãn hệ ghi tên hệ, ô hệ số ghi `x2`, `x½`.
 - URL ảnh chỉ sinh qua `src/lib/assets.ts`; ảnh dùng `PokemonSprite` có fallback ([docs/assets.md](../docs/assets.md), Phần 5).
-- Mọi trang có đủ trạng thái tải, rỗng, lỗi theo [docs/design-system.md](../docs/design-system.md), Phần 5.
-- Kiểm tra ở 375 px và 1440 px; điều khiển được bằng bàn phím, focus hiển thị rõ ([docs/design-system.md](../docs/design-system.md), Phần 7).
+- Mọi trang có đủ trạng thái tải, rỗng, lỗi theo [docs/design-system.md](../docs/design-system.md), Phần 6, mục I.
+- Kiểm tra ở 375 px và 1440 px; điều khiển được bằng bàn phím, focus hiển thị rõ ([docs/design-system.md](../docs/design-system.md), Phần 8).
 
 ### III. Lỗi và bảo mật
 
@@ -70,4 +59,4 @@ npx vitest run src/components/pokemon/TypeBadge.test.tsx
 
 ### IV. Ngôn ngữ hiển thị
 
-- Giao diện tiếng Việt; tên Pokémon và tên hệ giữ tiếng Anh. Định dạng số, đơn vị: [docs/design-system.md](../docs/design-system.md), Phần 5, mục III.
+- Giao diện tiếng Việt; tên Pokémon và tên hệ giữ tiếng Anh. Định dạng số, đơn vị: [docs/design-system.md](../docs/design-system.md), Phần 6, mục III.

@@ -5,15 +5,24 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pokenexus.common.web.PageRequestFactory;
 import com.pokenexus.common.web.PageResponse;
+import com.pokenexus.pokedex.dto.CompareResponse;
+import com.pokenexus.pokedex.dto.EvolutionResponse;
+import com.pokenexus.pokedex.dto.PokemonDetail;
 import com.pokenexus.pokedex.dto.PokemonFilter;
+import com.pokenexus.pokedex.dto.PokemonRef;
 import com.pokenexus.pokedex.dto.PokemonSummary;
+import com.pokenexus.pokedex.service.CompareService;
+import com.pokenexus.pokedex.service.EvolutionService;
 import com.pokenexus.pokedex.service.PokemonQueryService;
 
 @RestController
@@ -21,10 +30,17 @@ import com.pokenexus.pokedex.service.PokemonQueryService;
 @Tag(name = "Pokédex")
 public class PokemonController {
 
-    private final PokemonQueryService pokemonQueryService;
+    public static final String CACHE_ONE_HOUR = "public, max-age=3600";
 
-    public PokemonController(PokemonQueryService pokemonQueryService) {
+    private final PokemonQueryService pokemonQueryService;
+    private final CompareService compareService;
+    private final EvolutionService evolutionService;
+
+    public PokemonController(PokemonQueryService pokemonQueryService, CompareService compareService,
+                             EvolutionService evolutionService) {
         this.pokemonQueryService = pokemonQueryService;
+        this.compareService = compareService;
+        this.evolutionService = evolutionService;
     }
 
     @GetMapping
@@ -46,5 +62,39 @@ public class PokemonController {
         PokemonFilter filter = PokemonFilter.of(types, generation, minBst, maxBst, minSpeed, forms);
         return pokemonQueryService.search(filter,
                 PageRequestFactory.of(page, size, sort, PokemonQueryService.SORTABLE_PROPERTIES));
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "Name suggestions: prefix matches first, then names containing the query")
+    public List<PokemonRef> search(
+            @Parameter(description = "2-30 characters after trimming, case-insensitive")
+            @RequestParam String q,
+            @Parameter(description = "1-10, defaults to 10")
+            @RequestParam(required = false) Integer limit,
+            @Parameter(description = "DEFAULT, REGIONAL, MEGA, GMAX, OTHER; defaults to DEFAULT and REGIONAL")
+            @RequestParam(name = "form", required = false) List<String> forms) {
+        return pokemonQueryService.searchByName(q, limit, forms);
+    }
+
+    @GetMapping("/compare")
+    @Operation(summary = "Compare two Pokémon: type advantage, stat total and speed")
+    public CompareResponse compare(
+            @Parameter(description = "Numeric id or name") @RequestParam String left,
+            @Parameter(description = "Numeric id or name, different from left") @RequestParam String right) {
+        return compareService.compare(left, right);
+    }
+
+    @GetMapping("/{idOrName}")
+    @Operation(summary = "Pokémon detail with the 18-type defense grid and all forms of the species")
+    public ResponseEntity<PokemonDetail> detail(@PathVariable String idOrName) {
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, CACHE_ONE_HOUR)
+                .body(pokemonQueryService.findDetail(idOrName));
+    }
+
+    @GetMapping("/{idOrName}/evolution")
+    @Operation(summary = "Evolution chain of the Pokémon species as a flat list ordered by species id")
+    public EvolutionResponse evolution(@PathVariable String idOrName) {
+        return evolutionService.findChain(idOrName);
     }
 }

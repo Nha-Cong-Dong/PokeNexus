@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 
+import { PokemonSearchBox } from '../components/pokemon/PokemonSearchBox'
 import { PageBody, PageHero } from '../components/scene/PageHero'
 import { buttonClassName } from '../components/ui/buttonStyles'
 import { EmptyState } from '../components/ui/EmptyState'
@@ -17,15 +19,20 @@ import { useDexSearchParams } from '../features/dex/useDexSearchParams'
 import { errorMessageFor } from '../lib/errorMessages'
 import { formatNumber } from '../lib/formatters'
 import { ApiError } from '../lib/http'
+import type { PokemonRef } from '../types/api'
 
 const SPECIES_COUNT = 1025
 const RESULTS_TITLE_ID = 'results-title'
+const SEARCH_LABEL = 'Tìm Pokémon theo tên'
+const SEARCH_PLACEHOLDER = 'Ví dụ: garchomp'
 
 export function DexPage() {
   const { filter, view, updateFilter, setPage, setView, clearFilter, activeCount } =
     useDexSearchParams()
   const { data, error, isPending, isPlaceholderData, refetch } = usePokemonList(filter)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const navigate = useNavigate()
+  const openPokemon = (pokemon: PokemonRef) => void navigate(`/pokemon/${pokemon.name}`)
 
   const countLabel = !data
     ? 'Pokémon'
@@ -64,6 +71,11 @@ export function DexPage() {
               Xóa bộ lọc{activeCount > 0 ? ` (${activeCount})` : ''}
             </button>
           </div>
+          <PokemonSearchBox
+            label={SEARCH_LABEL}
+            placeholder={SEARCH_PLACEHOLDER}
+            onSelect={openPokemon}
+          />
           <DexFilters filter={filter} onChange={updateFilter} />
         </aside>
 
@@ -87,6 +99,13 @@ export function DexPage() {
               activeCount={activeCount}
               onSortChange={(sort) => updateFilter({ sort })}
               onOpenFilters={() => setFiltersOpen(true)}
+              search={
+                <PokemonSearchBox
+                  label={SEARCH_LABEL}
+                  placeholder={SEARCH_PLACEHOLDER}
+                  onSelect={openPokemon}
+                />
+              }
             />
           </div>
 
