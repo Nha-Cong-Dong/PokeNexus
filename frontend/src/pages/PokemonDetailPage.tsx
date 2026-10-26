@@ -1,21 +1,56 @@
 import { useParams } from 'react-router'
 
-import { PageBody, PageHero } from '../components/scene/PageHero'
-import { Panel } from '../components/ui/Panel'
+import { DefenseGrid } from '../features/pokemon-detail/components/DefenseGrid'
+import {
+  DetailError,
+  DetailSkeleton,
+  PokemonNotFound,
+} from '../features/pokemon-detail/components/DetailStates'
+import { EvolutionChain } from '../features/pokemon-detail/components/EvolutionChain'
+import { FormSwitcher } from '../features/pokemon-detail/components/FormSwitcher'
+import { PokemonHero } from '../features/pokemon-detail/components/PokemonHero'
+import { StatPanel } from '../features/pokemon-detail/components/StatPanel'
+import { usePokemonDetail } from '../features/pokemon-detail/hooks'
+import { formatPokemonName } from '../lib/formatters'
+import { ApiError } from '../lib/http'
+import type { PokemonDetail } from '../types/api'
+
+const NOT_FOUND_CODES = new Set(['POKEMON_NOT_FOUND', 'INVALID_PARAMETER'])
+
+function isNotFound(error: Error): boolean {
+  return error instanceof ApiError && (error.status === 404 || NOT_FOUND_CODES.has(error.code))
+}
 
 export function PokemonDetailPage() {
   const { idOrName = '' } = useParams()
+  const { data, error, isPending, refetch } = usePokemonDetail(idOrName)
+
+  if (error) {
+    if (isNotFound(error)) return <PokemonNotFound idOrName={idOrName} />
+    return (
+      <DetailError
+        code={error instanceof ApiError ? error.code : undefined}
+        onRetry={() => void refetch()}
+      />
+    )
+  }
+  if (isPending) return <DetailSkeleton />
+  return <PokemonDetailView detail={data} />
+}
+
+function PokemonDetailView({ detail }: { detail: PokemonDetail }) {
   return (
     <>
-      <PageHero scene="grassland" title="Chi tiết Pokémon" />
-      <PageBody>
-        <Panel aria-label="Trạng thái trang">
-          <p className="text-ink-muted">
-            Đang xem <span className="font-bold text-ink">{idOrName}</span>. Trang đang được xây
-            dựng (T303).
-          </p>
-        </Panel>
-      </PageBody>
+      <PokemonHero detail={detail}>
+        <StatPanel detail={detail} />
+      </PokemonHero>
+      <div className="mx-auto mt-6 flex max-w-7xl flex-col gap-6 px-3 md:px-6 lg:mt-8 xl:px-8">
+        <DefenseGrid name={formatPokemonName(detail.name)} defense={detail.defense} />
+        <div className="flex flex-wrap gap-6 empty:hidden">
+          <EvolutionChain detail={detail} />
+          {detail.forms.length > 1 && <FormSwitcher forms={detail.forms} currentId={detail.id} />}
+        </div>
+      </div>
     </>
   )
 }
