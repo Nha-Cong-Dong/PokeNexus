@@ -53,7 +53,7 @@ public record PokemonFilter(
         return Set.copyOf(types);
     }
 
-    private static Set<FormCategory> parseForms(List<String> values) {
+    public static Set<FormCategory> parseForms(List<String> values) {
         if (values == null || values.isEmpty()) {
             return FormCategory.SHOWN_BY_DEFAULT;
         }

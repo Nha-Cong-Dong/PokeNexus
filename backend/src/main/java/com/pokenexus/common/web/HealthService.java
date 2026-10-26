@@ -1,5 +1,7 @@
 package com.pokenexus.common.web;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -13,13 +15,34 @@ public class HealthService {
     private static final String COUNT_POKEMON_SQL = "SELECT COUNT(*) FROM pokemon";
 
     private final JdbcTemplate jdbcTemplate;
+    private final List<StaticDataCache> caches;
 
-    public HealthService(JdbcTemplate jdbcTemplate) {
+    public HealthService(JdbcTemplate jdbcTemplate, List<StaticDataCache> caches) {
         this.jdbcTemplate = jdbcTemplate;
+        this.caches = List.copyOf(caches);
     }
 
     public HealthResponse check() {
-        return HealthResponse.up(countPokemon());
+        long pokemonCount = countPokemon();
+        return HealthResponse.of(pokemonCount, pokemonCount > 0 && cachesLoaded());
+    }
+
+    private boolean cachesLoaded() {
+        for (StaticDataCache cache : caches) {
+            if (!isLoaded(cache)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isLoaded(StaticDataCache cache) {
+        try {
+            return cache.isLoaded() || cache.reload();
+        } catch (RuntimeException ex) {
+            log.warn("In-memory cache {} could not be loaded: {}", cache.getClass().getSimpleName(), ex.getMessage());
+            return false;
+        }
     }
 
     private long countPokemon() {
