@@ -41,7 +41,7 @@ describe('DexPage', () => {
   it('shows Pokémon cards from the API with sprite, number, types and BST', async () => {
     stubFetch(jsonResponse(pageOf([GARCHOMP, VULPIX_ALOLA])))
 
-    renderRoute('/')
+    renderRoute('/pokedex')
 
     const card = await screen.findByRole('link', { name: /Garchomp/ })
     expect(within(card).getByRole('img', { name: 'Garchomp' })).toHaveAttribute(
@@ -62,7 +62,7 @@ describe('DexPage', () => {
   it('sends filters from the URL to the API and reflects them in the controls', async () => {
     const fetchMock = stubFetch(jsonResponse(pageOf([GARCHOMP])))
 
-    renderRoute('/?type=dragon&gen=4&minBst=500&minSpeed=100&sort=speed,desc&page=2')
+    renderRoute('/pokedex?type=dragon&gen=4&minBst=500&minSpeed=100&sort=speed,desc&page=2')
 
     await screen.findByRole('link', { name: /Garchomp/ })
     const url = requestedUrl(fetchMock)
@@ -91,7 +91,7 @@ describe('DexPage', () => {
       jsonResponse(pageOf([GARCHOMP], 3)),
       jsonResponse(pageOf([GARCHOMP])),
     )
-    const memoryRouter = renderRoute('/?page=2')
+    const memoryRouter = renderRoute('/pokedex?page=2')
     await screen.findByRole('link', { name: /Garchomp/ })
 
     await userEvent.click(filterPanel().getByRole('button', { name: 'Dragon' }))
@@ -103,7 +103,7 @@ describe('DexPage', () => {
 
   it('disables the remaining type chips once two types are selected', async () => {
     stubFetch(jsonResponse(pageOf([GARCHOMP])))
-    const memoryRouter = renderRoute('/?type=dragon&type=ground')
+    const memoryRouter = renderRoute('/pokedex?type=dragon&type=ground')
     await screen.findByRole('link', { name: /Garchomp/ })
 
     const panel = filterPanel()
@@ -115,7 +115,7 @@ describe('DexPage', () => {
 
   it('applies the BST range when the field loses focus and rejects an inverted range', async () => {
     stubFetch(jsonResponse(pageOf([GARCHOMP])))
-    const memoryRouter = renderRoute('/')
+    const memoryRouter = renderRoute('/pokedex')
     await screen.findByRole('link', { name: /Garchomp/ })
     const panel = filterPanel()
 
@@ -131,7 +131,7 @@ describe('DexPage', () => {
 
   it('switches to the list view without refetching', async () => {
     const fetchMock = stubFetch(jsonResponse(pageOf([GARCHOMP])))
-    const memoryRouter = renderRoute('/')
+    const memoryRouter = renderRoute('/pokedex')
     await screen.findByRole('link', { name: /Garchomp/ })
 
     await userEvent.click(screen.getByRole('button', { name: 'Danh sách' }))
@@ -147,7 +147,7 @@ describe('DexPage', () => {
 
   it('opens the filter sheet and closes it from the results button', async () => {
     stubFetch(jsonResponse(pageOf([GARCHOMP, VULPIX_ALOLA])))
-    renderRoute('/')
+    renderRoute('/pokedex')
     await screen.findByRole('link', { name: /Garchomp/ })
 
     await userEvent.click(screen.getByRole('button', { name: 'Bộ lọc' }))
@@ -163,7 +163,7 @@ describe('DexPage', () => {
 
   it('explains an empty result and clears the filters from the dialog', async () => {
     stubFetch(jsonResponse(pageOf([])))
-    const memoryRouter = renderRoute('/?type=fairy&gen=1&view=list')
+    const memoryRouter = renderRoute('/pokedex?type=fairy&gen=1&view=list')
 
     const title = await screen.findByRole('heading', { name: 'Không có Pokémon nào khớp bộ lọc' })
     const dialog = within(title.parentElement!)
@@ -176,10 +176,32 @@ describe('DexPage', () => {
     expect(memoryRouter.state.location.search).toBe('?view=list')
   })
 
+  it('opens the detail page of the Pokémon picked in the search box', async () => {
+    const fetchMock = stubFetch(
+      jsonResponse(pageOf([GARCHOMP, VULPIX_ALOLA])),
+      jsonResponse([{ id: 445, name: 'garchomp', types: ['dragon', 'ground'] }]),
+    )
+    const memoryRouter = renderRoute('/pokedex?type=dragon')
+    await screen.findByRole('link', { name: /Garchomp/ })
+    expect(screen.getAllByRole('combobox', { name: 'Tìm Pokémon theo tên' })).toHaveLength(2)
+
+    await userEvent.type(
+      filterPanel().getByRole('combobox', { name: 'Tìm Pokémon theo tên' }),
+      'garch',
+    )
+    await screen.findByRole('option', { name: /Garchomp/ })
+    expect(requestedUrl(fetchMock, 1).pathname).toBe('/api/v1/pokemon/search')
+    expect(requestedUrl(fetchMock, 1).searchParams.get('q')).toBe('garch')
+
+    await userEvent.keyboard('{Enter}')
+
+    expect(memoryRouter.state.location.pathname).toBe('/pokemon/garchomp')
+  })
+
   it('shows a Vietnamese message from the error code instead of the API detail', async () => {
     stubFetch(jsonResponse({ status: 503, detail: 'not loaded', code: 'DATA_NOT_READY' }, 503))
 
-    renderRoute('/')
+    renderRoute('/pokedex')
 
     const alert = await screen.findByRole('alert')
     expect(alert).toHaveTextContent('Dữ liệu Pokémon đang được nạp')
