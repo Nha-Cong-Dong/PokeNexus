@@ -1,7 +1,9 @@
 package com.pokenexus.synergy.service;
 
 import static com.pokenexus.synergy.service.SynergyFixture.EXAMPLE_TEAM;
+import static com.pokenexus.synergy.service.SynergyFixture.EXAMPLE_TEAM_WITH_SIXTH;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import com.pokenexus.common.exception.ApiException;
+import com.pokenexus.common.exception.ErrorCode;
 import com.pokenexus.synergy.dto.RecommendationRequest;
 import com.pokenexus.synergy.dto.RecommendationResponse;
 import com.pokenexus.synergy.dto.RecommendationResponse.Recommendation;
@@ -90,6 +94,13 @@ class RecommendationEngineTest {
         assertThat(none.items()).isEmpty();
         assertThat(single.items()).allSatisfy(item -> assertThat(item.reasons()).isNotEmpty());
         assertThat(single.items()).extracting(Recommendation::id).doesNotContain(445);
+    }
+
+    @Test
+    void rejectsAFullTeamOfSixBecauseNoSlotIsLeft() {
+        assertThatThrownBy(() -> engine.recommend(new RecommendationRequest(EXAMPLE_TEAM_WITH_SIXTH, null, null, null)))
+                .isInstanceOfSatisfying(ApiException.class,
+                        ex -> assertThat(ex.errorCode()).isEqualTo(ErrorCode.VALIDATION_FAILED));
     }
 
     @Test

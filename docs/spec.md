@@ -1,9 +1,10 @@
 # PokeNexus - Đặc tả MVP
 
-- Phiên bản: 1.2 (yêu cầu chốt ở task T201 ngày 2026-10-21; cập nhật 2026-10-26)
+- Phiên bản: 1.3 (yêu cầu chốt ở task T201 ngày 2026-10-21; cập nhật 2026-10-27)
 - Tài liệu liên quan: [product.md](product.md), [architecture.md](architecture.md), [database.md](database.md), [api.md](api.md).
 - Thay đổi so với 1.0: thêm Phần 6 (truy vết và kiểm chứng, chuyển từ `SPEC.md` ở gốc repo); không đổi yêu cầu và tiêu chí chấp nhận.
 - Thay đổi so với 1.1: thêm F07 Trang Tổng quan (Phần 2, mục VII) theo bản thiết kế giao diện ngày 2026-10-24; Omni-Dex chuyển từ `/` sang `/pokedex`. Lý do: người dùng mới cần một trang giới thiệu dẫn tới 4 công cụ, thay vì vào thẳng lưới dữ liệu. Thay đổi yêu cầu từ đây phải tăng phiên bản và ghi lý do.
+- Thay đổi so với 1.2: phân tích đội nhận 1-6 Pokémon, đề xuất vẫn nhận 1-5 (Phần 2, mục V.1); ví dụ 4 đổi thành 7 Pokémon, thêm ví dụ 5 (mục V.4). Lý do: bước "thêm đề xuất số 1, xác nhận điểm đội tăng" của kịch bản demo (Phần 4) cần chấm điểm đội đủ 6; với giới hạn 5, điểm không đổi khi thêm đề xuất vào slot 6.
 
 ---
 
@@ -62,7 +63,8 @@
 
 #### 1. Đầu vào
 
-- Danh sách 1-5 ID Pokémon, không trùng nhau.
+- Phân tích: danh sách 1-6 ID Pokémon, không trùng nhau (5 thành viên người dùng chọn và Pokémon ở slot 6).
+- Đề xuất: danh sách 1-5 ID, vì đội phải còn ít nhất 1 vị trí trống.
 
 #### 2. Đầu ra phân tích
 
@@ -83,7 +85,8 @@
 | Charizard, Gyarados, Dragonite, Talonflame, Volcarona | Hệ Rock: 5/5 thành viên yếu (Charizard, Talonflame, Volcarona chịu 4x), 0 thành viên kháng, được đánh dấu lỗ hổng nghiêm trọng |
 | Cùng đội trên, yêu cầu đề xuất | Đề xuất số 1 có lý do liên quan tới hệ Rock |
 | Charizard | Hệ số: Rock 4, Ground 0, Water 2, Electric 2 |
-| 6 Pokémon | Lỗi 400 |
+| 7 Pokémon | Lỗi 400 |
+| Đội ở ví dụ 1 thêm Excadrill (Ground/Steel) | Điểm đội tăng từ 20 lên 48; hệ Rock có 1 thành viên kháng, không còn là lỗ hổng nghiêm trọng |
 
 #### 5. Thuật toán
 
@@ -166,6 +169,7 @@
 | Có hiển thị các dạng đặc biệt (Mega, Gigantamax) trong Omni-Dex không? | DB lưu mọi dạng kèm `form_category`. Omni-Dex mặc định hiện `DEFAULT` và `REGIONAL`, người dùng bật thêm được. Team Builder nhận mọi dạng; ứng viên đề xuất chỉ gồm `DEFAULT` và `REGIONAL` | [database.md](database.md), Phần 1, mục IV; [api.md](api.md) |
 | Trọng số chấm điểm đề xuất cố định hay cho người dùng chỉnh? | Cố định trong MVP (60/25/15), là hằng số trong code | [architecture.md](architecture.md), Phần 5 |
 | Giới hạn số đội được lưu từ một địa chỉ IP? | 10 lần lưu mỗi phút mỗi IP, bộ đếm trong bộ nhớ, vượt thì trả 429 | [architecture.md](architecture.md), Phần 8; [api.md](api.md) |
+| Phân tích đội có chấm điểm cả slot 6 không? (bổ sung 2026-10-27) | Có: `analyze` nhận 1-6, `recommendations` vẫn nhận 1-5; điểm đội đã lưu tính trên mọi thành viên. Phương án khác (sửa bước demo, giữ giới hạn 5) bị loại vì làm mất bước "điểm đội tăng" | [api.md](api.md), Phần 2; [architecture.md](architecture.md), Phần 5 |
 
 - Không còn câu hỏi mở. Hai quy tắc dữ liệu rút ra từ khảo sát T102 (dạng totem, cap xếp `OTHER`; chọn một dòng tiến hóa cho mỗi loài) ghi ở [database.md](database.md), Phần 1 mục IV và Phần 5 mục II; số liệu khảo sát ở [data/README.md](../data/README.md), Phần 4.
 
@@ -194,7 +198,7 @@
 
 | Nguồn đáp án | Loại test | Class test | Task |
 |---|---|---|---|
-| Phần 2, mục V.4, ví dụ 1 và 4 | Unit | `SynergyAnalyzerTest` | T305 |
+| Phần 2, mục V.4, ví dụ 1, 4 và 5 | Unit | `SynergyAnalyzerTest` | T305 |
 | Phần 2, mục V.4, ví dụ 2 | Unit | `RecommendationEngineTest` | T305 |
 | Phần 2, mục V.4, ví dụ 3 | Unit | `TypeChartServiceTest` | T303, T304 |
 | [roadmap.md](roadmap.md) T205, cột Kiểm tra | Tích hợp | `IngestionRunnerIT` | T205 |

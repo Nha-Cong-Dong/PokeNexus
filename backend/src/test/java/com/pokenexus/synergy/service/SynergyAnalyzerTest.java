@@ -2,6 +2,7 @@ package com.pokenexus.synergy.service;
 
 import static com.pokenexus.synergy.service.SynergyFixture.CHARIZARD;
 import static com.pokenexus.synergy.service.SynergyFixture.EXAMPLE_TEAM;
+import static com.pokenexus.synergy.service.SynergyFixture.EXAMPLE_TEAM_WITH_SIXTH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
@@ -85,8 +86,21 @@ class SynergyAnalyzerTest {
     }
 
     @Test
-    void rejectsSixPokemonFromSpecExampleFour() {
-        assertError(() -> analyzer.analyze(List.of(6, 130, 149, 663, 637, 445)), ErrorCode.VALIDATION_FAILED);
+    void raisesTheScoreWhenTheSixthMemberResistsRock() {
+        AnalyzeResponse response = analyzer.analyze(EXAMPLE_TEAM_WITH_SIXTH);
+
+        TypeMatrixRow rock = rows(response).get("rock");
+        assertThat(rock.multipliers()).containsExactly(4.0, 2.0, 2.0, 4.0, 4.0, 0.25);
+        assertThat(rock.resistCount()).isEqualTo(1);
+        assertThat(rock.pressure()).isEqualTo(7);
+        assertThat(rock.criticalHole()).isFalse();
+        assertThat(response.teamScore()).isEqualTo(48.0);
+        assertThat(response.members()).hasSize(6);
+    }
+
+    @Test
+    void rejectsSevenPokemonFromSpecExampleFour() {
+        assertError(() -> analyzer.analyze(List.of(6, 130, 149, 663, 637, 445, 530)), ErrorCode.VALIDATION_FAILED);
         assertThat(ErrorCode.VALIDATION_FAILED.status().value()).isEqualTo(400);
     }
 

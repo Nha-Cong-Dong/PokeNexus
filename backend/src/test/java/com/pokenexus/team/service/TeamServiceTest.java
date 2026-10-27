@@ -65,8 +65,8 @@ class TeamServiceTest {
     }
 
     @Test
-    void savesTeamOrderedBySlotAndScoresTheFirstFiveMembers() {
-        when(synergyAnalyzer.analyze(List.of(6, 130, 149, 663, 637))).thenReturn(analysisWithScore(20.0));
+    void savesTeamOrderedBySlotAndScoresAllSixMembers() {
+        when(synergyAnalyzer.analyze(List.of(6, 130, 149, 663, 637, 530))).thenReturn(analysisWithScore(48.0));
         CreateTeamRequest request = new CreateTeamRequest("  Rain Team  ", List.of(
                 new TeamMemberRequest(6, 530, "Drill"),
                 new TeamMemberRequest(2, 130, "Gyara"),
@@ -79,7 +79,7 @@ class TeamServiceTest {
 
         assertThat(response.shareCode()).isEqualTo("a1B2c3D4");
         assertThat(response.name()).isEqualTo("Rain Team");
-        assertThat(response.synergyScore()).isEqualTo(20.0);
+        assertThat(response.synergyScore()).isEqualTo(48.0);
         assertThat(response.createdAt()).isEqualTo(Instant.parse("2026-11-06T09:30:00Z"));
         assertThat(response.members()).extracting(TeamResponse.Member::slot).containsExactly(1, 2, 3, 4, 5, 6);
         assertThat(response.members()).extracting(TeamResponse.Member::name)
@@ -88,7 +88,7 @@ class TeamServiceTest {
                 .containsExactly(null, "Gyara", null, null, "Moth", "Drill");
         ArgumentCaptor<Team> saved = ArgumentCaptor.forClass(Team.class);
         verify(teamRepository).save(saved.capture());
-        assertThat(saved.getValue().getSynergyScore()).isEqualByComparingTo(new BigDecimal("20.00"));
+        assertThat(saved.getValue().getSynergyScore()).isEqualByComparingTo(new BigDecimal("48.00"));
         assertThat(saved.getValue().getMembers()).hasSize(6);
     }
 

@@ -37,10 +37,8 @@ export function SharedTeamPage() {
     () => [...(team.data?.members ?? [])].sort((a, b) => a.slot - b.slot),
     [team.data],
   )
-  const analysisIds = useMemo(
-    () => members.slice(0, MAX_DRAFT_SIZE).map((member) => member.id),
-    [members],
-  )
+  const analysisIds = useMemo(() => members.map((member) => member.id), [members])
+  const draftIds = analysisIds.slice(0, MAX_DRAFT_SIZE)
   const analysis = useTeamAnalysis(analysisIds)
 
   const notFound = !validCode || isNotFound(team.error)
@@ -121,11 +119,6 @@ export function SharedTeamPage() {
                 <h2 id={HEATMAP_TITLE_ID} className="text-xl font-extrabold">
                   Bản đồ điểm yếu
                 </h2>
-                {members.length > MAX_DRAFT_SIZE && (
-                  <p className="text-sm text-ink-muted">
-                    Phân tích 5 thành viên đầu theo thứ tự slot, giống cách tính điểm khi lưu.
-                  </p>
-                )}
                 {analysisIds.length > 0 ? (
                   <AnalysisHeatmap analysis={analysis} />
                 ) : (
@@ -147,7 +140,7 @@ export function SharedTeamPage() {
                   đổi.
                 </p>
                 <Link
-                  to={`/team-builder?ids=${analysisIds.join(',')}${members[MAX_DRAFT_SIZE] ? `&six=${members[MAX_DRAFT_SIZE].id}` : ''}`}
+                  to={`/team-builder?ids=${draftIds.join(',')}${members[MAX_DRAFT_SIZE] ? `&six=${members[MAX_DRAFT_SIZE].id}` : ''}`}
                   className={buttonClassName('primary')}
                 >
                   Mở trong Team Builder

@@ -41,11 +41,15 @@ afterEach(() => {
 })
 
 describe('SharedTeamPage', () => {
-  it('shows the team name, six read-only members and the heatmap of the first five', async () => {
+  it('shows the team name, six read-only members and the heatmap of all six', async () => {
     const fetchMock = routeFetch({
       'GET /teams/shared/a1B2c3D4': () => jsonResponse(SHARED_TEAM),
       'POST /synergy/analyze': () =>
-        jsonResponse(analysisFor(SPEC_TEAM, 41, { rock: SPEC_ROCK_ROW })),
+        jsonResponse(
+          analysisFor([...SPEC_TEAM, TYRANITAR], 41, {
+            rock: { ...SPEC_ROCK_ROW, multipliers: [4, 2, 2, 4, 4, 1] },
+          }),
+        ),
     })
 
     renderTeamRoute('/team/a1B2c3D4')
@@ -76,8 +80,9 @@ describe('SharedTeamPage', () => {
     expect(
       await screen.findByRole('row', { name: /^Rock.*Lỗ hổng nghiêm trọng/ }),
     ).toBeInTheDocument()
+    expect(screen.queryByText(/5 thành viên đầu/)).not.toBeInTheDocument()
     expect(bodiesSentTo(fetchMock, '/synergy/analyze')).toEqual([
-      { pokemonIds: [6, 130, 149, 663, 637] },
+      { pokemonIds: [6, 130, 149, 663, 637, 248] },
     ])
     expect(screen.getByRole('link', { name: 'Mở trong Team Builder' })).toHaveAttribute(
       'href',

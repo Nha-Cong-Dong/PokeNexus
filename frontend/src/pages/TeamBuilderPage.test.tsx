@@ -162,6 +162,29 @@ describe('TeamBuilderPage', () => {
     })
   })
 
+  it('scores all six members once recommendation number 1 fills slot 6', async () => {
+    const fetchMock = routeFetch({
+      'POST /synergy/analyze': analyzeById({ [SPEC_IDS]: 20, [`${SPEC_IDS},248`]: 48 }),
+      'POST /synergy/recommendations': () => jsonResponse(recommendationsOf([TYRANITAR, 92])),
+    })
+    renderTeamRoute(`/team-builder?ids=${SPEC_IDS}`)
+
+    await screen.findByText('20')
+    const card = await screen.findByRole('article', { name: 'Tyranitar' })
+    await userEvent.click(within(card).getByRole('button', { name: /Thêm vào đội/ }))
+
+    expect(await screen.findByText('48')).toBeInTheDocument()
+    expect(screen.getByText('+28 so với lần trước')).toBeInTheDocument()
+    expect(screen.queryByText(/5 thành viên đầu/)).not.toBeInTheDocument()
+    expect(bodiesSentTo(fetchMock, '/synergy/analyze')).toEqual([
+      { pokemonIds: [6, 130, 149, 663, 637] },
+      { pokemonIds: [6, 130, 149, 663, 637, 248] },
+    ])
+    expect(bodiesSentTo(fetchMock, '/synergy/recommendations')).toEqual([
+      { pokemonIds: [6, 130, 149, 663, 637], limit: 3 },
+    ])
+  })
+
   it('restores the sixth member passed by a shared team link', async () => {
     routeFetch({
       'POST /synergy/analyze': analyzeById({ [SPEC_IDS]: 41 }),

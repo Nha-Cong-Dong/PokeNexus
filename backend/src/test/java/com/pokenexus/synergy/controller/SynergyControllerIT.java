@@ -67,6 +67,10 @@ class SynergyControllerIT {
     @Test
     void rejectsTooManyDuplicateAndUnknownIds() {
         assertThat(post("/api/v1/synergy/analyze", "{\"pokemonIds\": [4, 5, 6, 25, 26, 445]}"))
+                .hasStatusOk()
+                .bodyJson()
+                .extractingPath("$.members").asArray().hasSize(6);
+        assertThat(post("/api/v1/synergy/analyze", "{\"pokemonIds\": [4, 5, 6, 25, 26, 445, 150]}"))
                 .hasStatus(400)
                 .bodyJson()
                 .extractingPath("$.code").isEqualTo("VALIDATION_FAILED");

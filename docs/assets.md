@@ -1,6 +1,6 @@
 # PokeNexus - Kế hoạch quản lý Assets
 
-- Phiên bản: 0.3 (cập nhật 2026-10-26)
+- Phiên bản: 0.4 (cập nhật 2026-10-27; bỏ video demo và slide theo [roadmap.md](roadmap.md) 0.4)
 - Chiến lược ảnh Pokémon: **Hybrid**. Sprite nhỏ được tự host; artwork lớn lấy từ đường dẫn công khai, có fallback ([ADR 0005](adr/0005-hybrid-image-assets.md)).
 - Dữ liệu CSV không thuộc phạm vi tài liệu này: xem [data/README.md](../data/README.md).
 
@@ -22,8 +22,6 @@
 | Ảnh chụp màn hình cho README | Chụp từ bản production | PNG hoặc WebP, rộng tối đa 1600 px, dưới 500 KB | `docs/images/` | Có | T405 |
 | Sơ đồ kiến trúc dạng ảnh | Xuất từ Mermaid trong `docs/` | PNG hoặc SVG | `docs/images/` | Có | T405 |
 | Wireframe | Công cụ vẽ (Excalidraw, Figma...) | PNG kèm file nguồn nếu có | `docs/wireframes/` | Có | T103 |
-| Video demo | Quay màn hình | MP4, dưới 3 phút | YouTube (không công khai) hoặc Google Drive; chỉ đặt link ở README | Không | T406 |
-| Slide trình bày | Công cụ trình chiếu | PDF | Link ở README; PDF dưới 10 MB được commit vào `docs/` | Tùy | T406 |
 | Icon hệ | | | Không dùng ở MVP; nhãn hệ chỉ dùng chữ | | |
 
 - Số liệu dung lượng sprite và artwork lấy từ kiểm tra thực tế 5 sprite và 2 artwork ngày 2026-10-19.
