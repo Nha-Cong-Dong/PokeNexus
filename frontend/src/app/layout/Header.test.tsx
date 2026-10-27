@@ -49,4 +49,18 @@ describe('Header', () => {
     expect(screen.queryByRole('navigation', { name: 'Điều hướng di động' })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Menu' })).toHaveAttribute('aria-expanded', 'false')
   })
+
+  it('closes the mobile menu with Escape and returns focus to the menu button', async () => {
+    renderHeader()
+    const menuButton = screen.getByRole('button', { name: 'Menu' })
+    await userEvent.click(menuButton)
+
+    const mobileNav = screen.getByRole('navigation', { name: 'Điều hướng di động' })
+    within(mobileNav).getByRole('link', { name: 'Pokédex' }).focus()
+    await userEvent.keyboard('{Escape}')
+
+    expect(screen.queryByRole('navigation', { name: 'Điều hướng di động' })).not.toBeInTheDocument()
+    expect(menuButton).toHaveAttribute('aria-expanded', 'false')
+    expect(menuButton).toHaveFocus()
+  })
 })

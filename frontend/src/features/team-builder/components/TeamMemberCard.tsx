@@ -10,6 +10,7 @@ import type { PokemonRef } from '../../../types/api'
 type TeamMemberCardProps = {
   id: number
   pokemon?: PokemonRef
+  unavailable?: boolean
   slotLabel: string
   nickname?: string | null
   onRemove?: () => void
@@ -19,6 +20,7 @@ type TeamMemberCardProps = {
 export function TeamMemberCard({
   id,
   pokemon,
+  unavailable = false,
   slotLabel,
   nickname,
   onRemove,
@@ -42,7 +44,11 @@ export function TeamMemberCard({
       <span className="flex flex-1 flex-col items-center gap-1 px-1.5 pt-8 pb-3 text-center">
         <span className="text-xs font-bold text-ink-muted">{slotLabel}</span>
         <span className="text-sm font-extrabold break-words">
-          {pokemon ? name : <span className="text-ink-muted">Đang tải…</span>}
+          {pokemon ? (
+            name
+          ) : (
+            <span className="text-ink-muted">{unavailable ? 'Chưa tải được' : 'Đang tải…'}</span>
+          )}
         </span>
         {nickname && (
           <span className="text-xs font-bold break-words text-ink-muted">“{nickname}”</span>

@@ -31,7 +31,7 @@ export function ViewToggle({ view, onChange }: ViewToggleProps) {
             aria-label={option.label}
             title={option.label}
             onClick={() => onChange(option.view)}
-            className={`flex h-9.5 w-10.5 cursor-pointer items-center justify-center rounded-[9px] transition-colors duration-150 ${selected ? 'bg-surface shadow-block' : ''}`}
+            className={`flex h-10 w-10.5 cursor-pointer items-center justify-center rounded-[9px] transition-colors duration-150 ${selected ? 'bg-surface shadow-block' : ''}`}
           >
             <svg
               aria-hidden="true"

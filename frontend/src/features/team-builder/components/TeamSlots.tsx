@@ -7,8 +7,9 @@ import { TeamMemberCard } from './TeamMemberCard'
 type TeamSlotsProps = {
   ids: readonly number[]
   refFor: (id: number) => PokemonRef | undefined
-  sixth: PokemonRef | null
+  sixthId: number | null
   suggestion: PokemonRef | null
+  unavailable?: boolean
   onRemove: (id: number) => void
   onRemoveSixth: () => void
   onAddSuggestion: () => void
@@ -35,8 +36,9 @@ const DASHED_SLOT =
 export function TeamSlots({
   ids,
   refFor,
-  sixth,
+  sixthId,
   suggestion,
+  unavailable = false,
   onRemove,
   onRemoveSixth,
   onAddSuggestion,
@@ -54,6 +56,7 @@ export function TeamSlots({
               <TeamMemberCard
                 id={id}
                 pokemon={refFor(id)}
+                unavailable={unavailable}
                 slotLabel={`Slot ${index + 1}`}
                 onRemove={() => onRemove(id)}
               />
@@ -72,10 +75,11 @@ export function TeamSlots({
         )
       })}
       <li className="flex">
-        {sixth ? (
+        {sixthId !== null ? (
           <TeamMemberCard
-            id={sixth.id}
-            pokemon={sixth}
+            id={sixthId}
+            pokemon={refFor(sixthId)}
+            unavailable={unavailable}
             slotLabel="Slot 6 · đề xuất"
             onRemove={onRemoveSixth}
           />

@@ -1,6 +1,6 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 0.3 (cập nhật 2026-10-27; Phần 5: phân tích đội nhận tới 6 thành viên, đề xuất vẫn cần đội 1-5)
+- Phiên bản: 0.3 (cập nhật 2026-10-28; Phần 5: phân tích đội nhận tới 6 thành viên, đề xuất vẫn cần đội 1-5; Phần 6: tham số `six` giữ slot 6 khi reload)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
 
@@ -278,7 +278,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | `/pokemon/:idOrName` | `PokemonDetailPage` | |
 | `/types` | `TypeChartPage` | `def` (1-2 hệ phòng thủ đang chọn) |
 | `/compare` | `ComparePage` | `left`, `right` |
-| `/team-builder` | `TeamBuilderPage` | `ids` (đội nháp, ví dụ `ids=6,130,149`); `add` (thêm một Pokémon vào đội nháp đang có rồi tự xóa khỏi URL, dùng cho nút "Thêm vào đội"); `six` (thành viên slot 6 khi mở đội chia sẻ 6 thành viên) |
+| `/team-builder` | `TeamBuilderPage` | `ids` (đội nháp, ví dụ `ids=6,130,149`); `add` (thêm một Pokémon vào đội nháp đang có rồi tự xóa khỏi URL, dùng cho nút "Thêm vào đội"); `six` (thành viên slot 6: đề xuất đã chọn hoặc thành viên thứ 6 của đội chia sẻ; chỉ có hiệu lực khi đội nháp đủ 5, reload vẫn giữ) |
 | `/team/:shareCode` | `SharedTeamPage` | |
 | `*` | `NotFoundPage` | |
 

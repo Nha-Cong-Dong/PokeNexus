@@ -16,7 +16,12 @@ export function Footer() {
           . Pokémon và các tên liên quan thuộc Nintendo, Game Freak và The Pokémon Company.
           PokeNexus là dự án phi thương mại.
         </p>
-        <a href={REPOSITORY_URL} className={FOOTER_LINK_CLASS} target="_blank" rel="noreferrer">
+        <a
+          href={REPOSITORY_URL}
+          className={`inline-flex min-h-10 items-center self-start md:self-auto ${FOOTER_LINK_CLASS}`}
+          target="_blank"
+          rel="noreferrer"
+        >
           GitHub
         </a>
       </div>

@@ -217,6 +217,19 @@ describe('ComparePage', () => {
     expect(memoryRouter.state.location.search).toBe('?left=garchomp')
   })
 
+  it('tells that a side could not be loaded instead of loading forever', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn<typeof fetch>(() =>
+        Promise.resolve(jsonResponse({ status: 400, code: 'INVALID_PARAMETER' }, 400)),
+      ),
+    )
+    renderRoute('/compare?left=garchomp&right=salamence')
+
+    expect(await screen.findAllByText('Chưa tải được Pokémon này.')).toHaveLength(2)
+    expect(screen.queryByText('Đang tải…')).not.toBeInTheDocument()
+  })
+
   it('shows a Vietnamese error with retry when the compare request fails', async () => {
     stubApi({
       compare: () =>
