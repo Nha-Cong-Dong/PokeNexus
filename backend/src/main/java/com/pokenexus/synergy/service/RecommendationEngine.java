@@ -28,6 +28,7 @@ public class RecommendationEngine {
     public static final double HIGH_BST_SHARE = 0.25;
     public static final int SCORE_SCALE = 100;
     public static final int BREAKDOWN_DECIMALS = 3;
+    public static final int MAX_TEAM_SIZE = SynergyAnalyzer.MAX_TEAM_SIZE - 1;
 
     private static final PokemonType[] TYPES = PokemonType.values();
 
@@ -43,7 +44,7 @@ public class RecommendationEngine {
     }
 
     public RecommendationResponse recommend(RecommendationRequest request) {
-        List<PokemonProfile> team = synergyAnalyzer.resolveTeam(request.pokemonIds());
+        List<PokemonProfile> team = synergyAnalyzer.resolveTeam(request.pokemonIds(), MAX_TEAM_SIZE);
         TeamAnalysis analysis = synergyAnalyzer.evaluate(team);
         Set<Integer> teamIds = team.stream().map(PokemonProfile::id).collect(Collectors.toSet());
         List<PokemonProfile> candidates = registry.all().stream()

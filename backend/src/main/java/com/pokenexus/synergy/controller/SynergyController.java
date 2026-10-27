@@ -29,7 +29,7 @@ public class SynergyController {
     }
 
     @PostMapping("/analyze")
-    @Operation(summary = "Analyze the defensive synergy of a team of 1-5 Pokémon")
+    @Operation(summary = "Analyze the defensive synergy of a team of 1-6 Pokémon")
     public AnalyzeResponse analyze(@Valid @RequestBody AnalyzeRequest request) {
         return synergyAnalyzer.analyze(request.pokemonIds());
     }

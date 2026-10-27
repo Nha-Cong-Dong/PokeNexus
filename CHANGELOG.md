@@ -19,6 +19,8 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 ### Changed
 
 - Omni-Dex chuyển từ `/` sang `/pokedex`; đặc tả lên 1.2 (F07 Trang Tổng quan), lộ trình lên 0.3 (T311, T312).
+- `POST /synergy/analyze` nhận 1-6 Pokémon (trước là 1-5), `POST /synergy/recommendations` vẫn nhận 1-5. Team Builder và trang Đội chia sẻ chấm điểm cả slot 6; điểm của đội đã lưu tính trên mọi thành viên. Đặc tả lên 1.3.
+- Lộ trình 0.4: bỏ slide và video demo (T406), ngày 14/11 thành buffer; demo chạy trực tiếp theo kịch bản ở `docs/spec.md`, Phần 4.
 
 - Tinh gọn tài liệu: bảng truy vết của `SPEC.md` chuyển vào `docs/spec.md`, Phần 6 (spec 1.1, không đổi yêu cầu); bảng "muốn làm gì thì xem ở đâu" của `MAP.md` chuyển vào `docs/README.md`, Phần 2.
 - `docs/design-system.md` 0.4: Phần 3 trỏ tới `src/styles/index.css` và `src/main.tsx` thay cho bản chép mã nguồn đã lệch.

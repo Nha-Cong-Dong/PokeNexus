@@ -1,6 +1,6 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 0.2 (cập nhật 2026-10-26; Phần 6: route `/` là trang Tổng quan, Omni-Dex ở `/pokedex`)
+- Phiên bản: 0.3 (cập nhật 2026-10-27; Phần 5: phân tích đội nhận tới 6 thành viên, đề xuất vẫn cần đội 1-5)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
 
@@ -232,12 +232,13 @@ offensiveCoverage = số hệ phòng thủ d (trong 18 hệ) mà tồn tại th�
 statRadar        = trung bình từng chỉ số gốc của các thành viên
 ```
 
-- Độ phức tạp `O(18 x n)` với `n <= 5`.
+- Độ phức tạp `O(18 x n)` với `n <= 6`. Đội đủ 6 (5 thành viên chọn và 1 đề xuất ở slot 6) vẫn được chấm điểm, để thấy điểm đội tăng khi thêm đề xuất.
 
 ### III. Đề xuất vị trí tiếp theo
 
 #### 1. Tập ứng viên
 
+- Đội đầu vào có 1-5 thành viên (`RecommendationEngine.MAX_TEAM_SIZE`); đội đủ 6 không còn vị trí để đề xuất.
 - `form_category` là `DEFAULT` hoặc `REGIONAL`; loài đã tiến hóa hoàn toàn; không có trong đội.
 - `excludeLegendary = true` thì loại cả huyền thoại và thần thoại; `minBaseStatTotal` lọc theo BST.
 

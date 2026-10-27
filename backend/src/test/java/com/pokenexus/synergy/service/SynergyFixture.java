@@ -20,7 +20,10 @@ final class SynergyFixture {
     static final int DRAGONITE = 149;
     static final int TALONFLAME = 663;
     static final int VOLCARONA = 637;
+    static final int EXCADRILL = 530;
     static final List<Integer> EXAMPLE_TEAM = List.of(CHARIZARD, GYARADOS, DRAGONITE, TALONFLAME, VOLCARONA);
+    static final List<Integer> EXAMPLE_TEAM_WITH_SIXTH =
+            List.of(CHARIZARD, GYARADOS, DRAGONITE, TALONFLAME, VOLCARONA, EXCADRILL);
 
     static final List<PokemonCatalogEntry> CATALOG = List.of(
             entry(4, "charmander", List.of(PokemonType.FIRE), FormCategory.DEFAULT, false,

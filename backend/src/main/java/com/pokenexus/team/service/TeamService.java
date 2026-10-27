@@ -32,7 +32,6 @@ import com.pokenexus.team.repository.TeamRepository;
 public class TeamService {
 
     public static final int MAX_SHARE_CODE_ATTEMPTS = 3;
-    public static final int SCORED_MEMBERS = SynergyAnalyzer.MAX_TEAM_SIZE;
 
     private static final int SCORE_SCALE = 2;
 
@@ -76,8 +75,7 @@ public class TeamService {
             throw new ApiException(ErrorCode.UNKNOWN_POKEMON, "Unknown Pokémon id(s): " + unknown);
         }
 
-        double teamScore = synergyAnalyzer.analyze(pokemonIds.subList(0, Math.min(SCORED_MEMBERS, pokemonIds.size())))
-                .teamScore();
+        double teamScore = synergyAnalyzer.analyze(pokemonIds).teamScore();
         Team team = new Team(request.name(), nextFreeShareCode(),
                 BigDecimal.valueOf(teamScore).setScale(SCORE_SCALE, RoundingMode.HALF_UP),
                 LocalDateTime.now(clock).truncatedTo(ChronoUnit.SECONDS));

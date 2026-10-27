@@ -63,14 +63,27 @@ class SynergyControllerTest {
     }
 
     @Test
-    void rejectsSixPokemonWithValidationErrors() {
-        assertThat(post("/api/v1/synergy/analyze", "{\"pokemonIds\": [6, 130, 149, 663, 637, 445]}"))
+    void acceptsAFullTeamOfSix() {
+        List<Integer> six = List.of(6, 130, 149, 663, 637, 530);
+        when(synergyAnalyzer.analyze(six)).thenReturn(new AnalyzeResponse(List.of(), 48.0, List.of(),
+                new AnalyzeResponse.OffensiveCoverage(0, List.of()),
+                new AnalyzeResponse.StatRadar(0, 0, 0, 0, 0, 0)));
+
+        assertThat(post("/api/v1/synergy/analyze", "{\"pokemonIds\": [6, 130, 149, 663, 637, 530]}"))
+                .hasStatusOk()
+                .bodyJson()
+                .extractingPath("$.teamScore").isEqualTo(48.0);
+    }
+
+    @Test
+    void rejectsSevenPokemonWithValidationErrors() {
+        assertThat(post("/api/v1/synergy/analyze", "{\"pokemonIds\": [6, 130, 149, 663, 637, 445, 530]}"))
                 .hasStatus(400)
                 .bodyJson()
                 .isLenientlyEqualTo("""
                         {
                           "code": "VALIDATION_FAILED",
-                          "errors": [ { "field": "pokemonIds", "message": "size must be between 1 and 5" } ]
+                          "errors": [ { "field": "pokemonIds", "message": "size must be between 1 and 6" } ]
                         }
                         """);
         verifyNoInteractions(synergyAnalyzer);

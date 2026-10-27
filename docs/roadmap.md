@@ -1,7 +1,8 @@
 # PokeNexus - Lộ trình 4 tuần
 
-- Phiên bản: 0.3 (cập nhật 2026-10-26)
+- Phiên bản: 0.4 (cập nhật 2026-10-27)
 - Thay đổi so với 0.2: thêm trang Tổng quan (T311, T312) và chuyển Omni-Dex sang `/pokedex` theo [spec.md](spec.md) 1.2; thêm thứ tự cắt cho trang Tổng quan ở Phần 4.
+- Thay đổi so với 0.3: bỏ T406 (slide, video demo); ngày 14/11 thành buffer. Kịch bản demo ở [spec.md](spec.md), Phần 4 vẫn giữ và chạy trực tiếp ở T310, T403, T407.
 - Thời gian: 2026-10-18 đến 2026-11-15, một người phát triển (Full-stack).
 - Mỗi tuần tương ứng một **Milestone** trên GitHub, mỗi task là một Issue ([github-setup.md](github-setup.md)).
 - Quy trình nhánh, PR, tag: [git-workflow.md](git-workflow.md).
@@ -66,7 +67,7 @@ gantt
     Đóng băng, triển khai        :crit, t403, 2026-11-11, 1d
     Bug bash, hiệu năng          :t404, 2026-11-12, 1d
     Tài liệu, ảnh chụp           :t405, 2026-11-13, 1d
-    Slide, video demo            :t406, 2026-11-14, 1d
+    Buffer W4                    :buf4, 2026-11-14, 1d
     Tổng duyệt, v1.0.0           :crit, t407, 2026-11-15, 1d
 ```
 
@@ -98,7 +99,7 @@ gantt
 | E5 | Synergy | F05 Phân tích, đề xuất, Team Builder UI | Must |
 | E6 | Đội hình | F06 Lưu và chia sẻ | Must |
 | E7 | Giao diện nền | Design token, layout, trạng thái tải/rỗng/lỗi, responsive; F07 Trang Tổng quan | Must (F07: Should) |
-| E8 | Phát hành | Triển khai, README, slide, video | Must |
+| E8 | Phát hành | Triển khai, README, tổng duyệt kịch bản demo | Must |
 | E9 | Mở rộng | Xem bảng mục II | Should / Could |
 
 ### II. MoSCoW cho phần mở rộng
@@ -129,7 +130,7 @@ gantt
 | T105 | 24/10 | Trình bày ý tưởng | E8 | Must | `product.md` | Slide ý tưởng | Trình bày trong thời gian quy định |
 | T106 | 25/10 | Buffer, tổng kết tuần | E0 | | | Cập nhật bảng trạng thái ở Phần 5 | |
 
-- T105: cắt giảm ngày 2026-10-26 vì dự án không có buổi trình bày hay pitching ý tưởng nào. Không ảnh hưởng tiêu chí W1 ở mục V; slide trình bày chỉ còn ở T406.
+- T105: cắt giảm ngày 2026-10-26 vì dự án không có buổi trình bày hay pitching ý tưởng nào. Không ảnh hưởng tiêu chí W1 ở mục V. Slide và video demo bỏ khỏi kế hoạch ngày 2026-10-27 (mục IV).
 
 ### II. Tuần 2 - Đặc tả và khung dự án (26/10 - 01/11)
 
@@ -175,8 +176,9 @@ gantt
 | T403 | 11/11 | Đóng băng tính năng, triển khai production | E8 | Must | [architecture.md](architecture.md), Phần 11 | Frontend, backend, DB chạy trên hosting | Kịch bản demo chạy trên link thật; mở được trên điện thoại |
 | T404 | 12/11 | Bug bash, đo hiệu năng | E8 | Must | Danh sách lỗi | Lỗi mức cao đã sửa | p95 analyze dưới 50 ms; không còn Issue `type: bug` mức cao |
 | T405 | 13/11 | README (ảnh chụp, link demo), sơ đồ, CHANGELOG | E8 | Must | [assets.md](assets.md), Phần 1 | README hoàn chỉnh | Người mới làm theo README chạy được bản local |
-| T406 | 14/11 | Slide, video demo | E8 | Must | Kịch bản demo | Slide, video dưới 3 phút | Video quay trên bản production |
 | T407 | 15/11 | Tổng duyệt, tag `v1.0.0` | E8 | Must | | GitHub Release `v1.0.0` | Tổng duyệt 2 lần, mỗi lần đúng thời gian quy định |
+
+- T406 (slide, video demo, ngày 14/11): bỏ ngày 2026-10-27 vì không cần slide và video; demo chạy trực tiếp theo kịch bản ở [spec.md](spec.md), Phần 4. Ngày 14/11 thành buffer.
 
 ### V. Tiêu chí hoàn thành từng tuần
 

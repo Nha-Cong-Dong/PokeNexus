@@ -27,7 +27,7 @@ import com.pokenexus.typechart.service.TypeChartService;
 public class SynergyAnalyzer {
 
     public static final int MIN_TEAM_SIZE = 1;
-    public static final int MAX_TEAM_SIZE = 5;
+    public static final int MAX_TEAM_SIZE = 6;
 
     private static final double SUPER_EFFECTIVE = 2.0;
     private static final PokemonType[] TYPES = PokemonType.values();
@@ -41,13 +41,13 @@ public class SynergyAnalyzer {
     }
 
     public AnalyzeResponse analyze(List<Integer> pokemonIds) {
-        return toResponse(evaluate(resolveTeam(pokemonIds)));
+        return toResponse(evaluate(resolveTeam(pokemonIds, MAX_TEAM_SIZE)));
     }
 
-    public List<PokemonProfile> resolveTeam(List<Integer> pokemonIds) {
-        if (pokemonIds == null || pokemonIds.size() < MIN_TEAM_SIZE || pokemonIds.size() > MAX_TEAM_SIZE) {
+    public List<PokemonProfile> resolveTeam(List<Integer> pokemonIds, int maxTeamSize) {
+        if (pokemonIds == null || pokemonIds.size() < MIN_TEAM_SIZE || pokemonIds.size() > maxTeamSize) {
             throw new ApiException(ErrorCode.VALIDATION_FAILED,
-                    "pokemonIds must contain between " + MIN_TEAM_SIZE + " and " + MAX_TEAM_SIZE + " Pokémon");
+                    "pokemonIds must contain between " + MIN_TEAM_SIZE + " and " + maxTeamSize + " Pokémon");
         }
         if (pokemonIds.stream().anyMatch(Objects::isNull)) {
             throw new ApiException(ErrorCode.VALIDATION_FAILED, "pokemonIds must not contain null");

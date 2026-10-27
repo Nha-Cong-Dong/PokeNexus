@@ -1,6 +1,6 @@
 # PokeNexus - Kế hoạch đang thực hiện
 
-- Cập nhật: 2026-10-26
+- Cập nhật: 2026-10-27
 - File này theo dõi tiến độ hằng ngày. Kế hoạch gốc (task, ngày, tiêu chí) ở [docs/roadmap.md](docs/roadmap.md); không sửa kế hoạch gốc ở đây.
 - Cập nhật khi bắt đầu và kết thúc mỗi phiên làm việc. Chủ nhật đồng bộ trạng thái sang README Phần 7 và GitHub Milestone.
 
@@ -13,8 +13,8 @@
 | Mục | Giá trị |
 |---|---|
 | Tuần | W2 - Đặc tả và khung dự án (26/10 - 01/11) |
-| Task hôm nay | Cắt giảm T105; tinh gọn tài liệu; thêm trang Tổng quan vào kế hoạch (T311, T312); làm xong API và giao diện của T302-T308, T311, T312 |
-| Task kế tiếp | T309 rà soát trạng thái, responsive, accessibility trên 8 trang; T310 chạy kịch bản E2E, tag `v0.2.0`; chốt mâu thuẫn kịch bản demo (Phần 3) |
+| Task hôm nay | Bỏ slide, video demo (T406) khỏi kế hoạch; chốt mâu thuẫn kịch bản demo bằng phương án B (`analyze` nhận 1-6, Team Builder chấm điểm cả slot 6) |
+| Task kế tiếp | T309 rà soát trạng thái, responsive, accessibility trên 8 trang; T310 chạy kịch bản E2E, tag `v0.2.0`; tạo Issue cho T311, T312 và T401-T407 |
 | Mốc gần nhất | Tag `v0.2.0` ngày 08/11 (`v0.1.0` gắn sớm ngày 25/10) |
 
 ### II. Trạng thái task tuần W1
@@ -25,7 +25,7 @@
 | T102 | 20/10 | Khảo sát bộ CSV PokéAPI | Xong | Làm ngày 21/10; kết quả ở [data/README.md](data/README.md), Phần 4 |
 | T103 | 21-22/10 | Wireframe 6 trang | Xong | Làm ngày 23/10; 12 ảnh trong [docs/wireframes/](docs/wireframes/README.md), Issue #9 |
 | T104 | 23/10 | Nhãn, milestone, board, Issue W2-W3 | Xong | 14 nhãn, 4 milestone, Issue #9-#26; Project board [PokeNexus](https://github.com/orgs/Nha-Cong-Dong/projects/1) tạo ngày 25/10 (Issue #10) |
-| T105 | 24/10 | Trình bày ý tưởng | Cắt giảm | Quyết định ngày 26/10: dự án không có buổi trình bày hay pitching ý tưởng nào; không ảnh hưởng tiêu chí W1. Slide trình bày chỉ còn ở T406 |
+| T105 | 24/10 | Trình bày ý tưởng | Cắt giảm | Quyết định ngày 26/10: dự án không có buổi trình bày hay pitching ý tưởng nào; không ảnh hưởng tiêu chí W1. Slide và video demo (T406) bỏ khỏi kế hoạch ngày 27/10 |
 | T106 | 25/10 | Buffer, tổng kết tuần | Xong | Rà soát tiến độ, merge PR #28-#32, đồng bộ `PLAN.md`, `MAP.md`, README Phần 7, đóng milestone W1 |
 
 ### III. Task W2, W3 làm sớm
@@ -46,7 +46,7 @@
 | T303 | 03/11 | Chi tiết Pokémon | Xong | Làm 26/10. Charizard: Rock x4, Ground x0; `/pokemon/abc-xyz` hiện trang không tìm thấy; thêm chuỗi tiến hóa (endpoint `/evolution`, US-08 làm sớm) và các dạng |
 | T304 | 03/11 | Bảng tương khắc | Xong | Làm 26/10. Ma trận 324 ô; `?def=fire&def=flying` cho Rock x4; ma trận cuộn ngang trong khung ở 375 px |
 | T305 | 04/11 | Synergy backend | Xong | Làm 26/10. 4 ví dụ đáp án spec V.4 qua test; đề xuất số 1 Iron Treads, lý do "Chống chịu hệ Rock"; p95 analyze 6 ms, recommendations 10 ms (100 lần, local) |
-| T306 | 05/11 | Team Builder UI | Xong | Làm 26/10. Hàng Rock gắn "Lỗ hổng nghiêm trọng"; điểm đội 20/100 với đội mẫu; radar SVG; 3 thẻ đề xuất |
+| T306 | 05/11 | Team Builder UI | Xong | Làm 26/10. Hàng Rock gắn "Lỗ hổng nghiêm trọng"; điểm đội 20/100 với đội mẫu; radar SVG; 3 thẻ đề xuất. 27/10: thêm đề xuất số 1 (Iron Treads) vào slot 6 thì điểm lên 48, đạt đủ cột Kiểm tra |
 | T307 | 06/11 | Lưu và chia sẻ | Xong | Làm 26/10. `POST /teams` 201 + `Location`, 10 lần mỗi phút mỗi IP (429 + `Retry-After`); trang Đội chia sẻ; `TeamControllerIT` qua |
 | T308 | 06/11 | Bàn Cân Sức Mạnh | Xong | Làm 26/10. Garchomp và Salamence: "Garchomp nhanh hơn (102 so với 100)."; radar chồng lớp, bảng từng chỉ số |
 | T311 | 07/11 | Trang Tổng quan phần 1 | Xong | Làm 26/10. Hero 13 vùng đất, dải hệ, Bốn vùng đất, Vòng tương khắc (Fire: x2 Grass, Ice, Bug, Steel), Pokémon hôm nay |
@@ -60,7 +60,7 @@
 
 ### I. T309, T310 - Rà soát và kịch bản E2E
 
-- [ ] Chốt mâu thuẫn kịch bản demo (Phần 3) rồi sửa [docs/spec.md](docs/spec.md), Phần 4.
+- [x] Chốt mâu thuẫn kịch bản demo (Phần 3): phương án B ngày 27/10, spec 1.3; kịch bản ở [docs/spec.md](docs/spec.md), Phần 4 giữ nguyên.
 - [ ] Tab qua 8 trang bằng bàn phím, focus nhìn thấy được; kiểm tra lại 375 px và 1440 px (đã đo `scrollWidth` bằng Chrome headless ngày 26/10, xem Nhật ký).
 - [ ] Chạy kịch bản demo ở spec Phần 4 hai lần liên tiếp trên local; ghi kết quả.
 - [ ] CHANGELOG mục 0.2.0, tag `v0.2.0`.
@@ -82,7 +82,7 @@
 | PR `docs/planning-and-ai-guides` chưa merge | Nhánh `docs/spec-1-0`, `chore/init-*` tách nối tiếp từ nhánh này | Merge PR tài liệu trước, sau đó lần lượt các nhánh nối tiếp | Đã xử lý: PR #4-#7 đã merge vào `main` |
 | PR #29-#31 xếp chồng, không có CI vì `ci.yml` chỉ chạy với PR vào `main` | Chưa đạt Definition of Done "CI xanh" | Merge lần lượt; sau mỗi lần squash, `git rebase --onto main <tip cũ>` rồi push `--force-with-lease` | Đã xử lý: PR #28-#31 merge ngày 25/10, CI xanh từng PR. Từ nay mỗi PR tách từ `main` |
 | `gh` thiếu quyền `project`, `read:project` | Chưa tạo được Project board (T104, Issue #10) | Chạy `gh auth refresh -s project,read:project` rồi tạo board theo [docs/github-setup.md](docs/github-setup.md), Phần 6 | Đã xử lý: cấp quyền ngày 25/10, board đã tạo |
-| Kịch bản demo spec Phần 4 ("thêm đề xuất số 1, xác nhận điểm đội tăng") dựng đội 6 thành viên, nhưng `analyze` chỉ nhận 1-5 (ví dụ 4 của spec: 6 Pokémon trả 400) | Bước demo này không kiểm chứng được với đội 5 thành viên; Team Builder hiện đặt đề xuất vào slot 6 và ghi rõ điểm chỉ tính 5 thành viên đầu | Đề xuất: sửa bước demo thành "bỏ một thành viên, thêm đề xuất số 1, điểm đội tăng" (giữ nguyên API và ví dụ 4). Phương án khác: cho `analyze` nhận 6 nhưng phải đổi ví dụ 4 | Mở, chờ quyết định |
+| Kịch bản demo spec Phần 4 ("thêm đề xuất số 1, xác nhận điểm đội tăng") dựng đội 6 thành viên, nhưng `analyze` chỉ nhận 1-5 (ví dụ 4 của spec: 6 Pokémon trả 400) | Bước demo này không kiểm chứng được với đội 5 thành viên; Team Builder hiện đặt đề xuất vào slot 6 và ghi rõ điểm chỉ tính 5 thành viên đầu | Đề xuất: sửa bước demo thành "bỏ một thành viên, thêm đề xuất số 1, điểm đội tăng" (giữ nguyên API và ví dụ 4). Phương án khác: cho `analyze` nhận 6 nhưng phải đổi ví dụ 4 | Đã xử lý 27/10: chọn phương án B (`analyze` nhận 1-6, `recommendations` vẫn 1-5, ví dụ 4 đổi thành 7 Pokémon); spec 1.3, api.md 0.4 |
 | `excludeLegendary=true` vẫn đề xuất Pokémon Paradox (Iron Treads, Sandy Shocks, Great Tusk) | Đề xuất có thể bị xem là "huyền thoại" với người chơi VGC | CSV PokéAPI không đánh dấu Paradox là huyền thoại; nếu cần, thêm danh sách loại trừ trong `RecommendationEngine` | Mở |
 | Slot 6 của Team Builder chỉ nằm trong state trang | Reload mất đề xuất đã chọn cho slot 6 | Đã thêm tham số `six` để link từ trang Đội chia sẻ mang theo slot 6; slot 6 chọn tay vẫn mất khi reload, xử lý ở T309 | Một phần |
 | Giới hạn lưu đội tính theo `getRemoteAddr()`; profile `prod` bật `forward-headers-strategy: framework` nên lấy giá trị đầu của `X-Forwarded-For` do client tự đặt; `SaveRateLimiter` chỉ dọn cửa sổ hết hạn nên map có thể lớn trong 1 phút | Ở production, script đổi `X-Forwarded-For` mỗi request sẽ vượt giới hạn 10 lần/phút | Khi chọn hosting (T403): chỉ tin header do proxy của nền tảng thêm vào, giới hạn cứng số IP theo dõi | Mở (review PR #39) |
@@ -113,3 +113,4 @@
 | 2026-10-26 | Tinh gọn tài liệu: gộp `SPEC.md` vào `docs/spec.md` Phần 6, `MAP.md` vào `docs/README.md` Phần 2; xóa `SPEC.md`, `MAP.md`, `AGENTS.md`; bỏ bản chép CSS trong `design-system.md` Phần 3; bỏ dòng trạng thái lỗi thời ở README và CLAUDE.md | Không còn tham chiếu tới 3 file đã xóa ngoài nhật ký và CHANGELOG 0.1.0; mọi link tương đối trong file `.md` trỏ tới file có thật |
 | 2026-10-26 | Review PR #39 (15 điểm), sửa 8: nút "Thêm vào đội" dùng `?add=` không xóa đội nháp; link đội chia sẻ mang slot 6 (`six`); Enter ở ô tìm kiếm không chọn gợi ý cũ; hero và biểu đồ thế hệ hiện lỗi đúng; chọn nhanh 2 hệ ở Bảng tương khắc không mất lựa chọn; báo số giây chờ khi bị giới hạn lưu; gộp `getJson`/`postJson` và chính sách thử lại; bỏ code không dùng. Còn lại ghi ở Phần 3 | Mỗi lỗi có test hồi quy (test tìm kiếm và test chọn hệ đã đỏ khi chưa sửa); frontend lint sạch, toàn bộ test pass, build pass |
 | 2026-10-26 | Thêm trang Tổng quan vào kế hoạch (spec 1.2 F07, roadmap 0.3 T311, T312; Omni-Dex sang `/pokedex`); làm API còn lại (tương khắc, chi tiết, tìm kiếm, so sánh, tiến hóa, synergy, lưu và chia sẻ đội) và 7 trang giao diện (T302-T308, T311, T312); radar vẽ bằng SVG thay Recharts; cập nhật `api.md`, `architecture.md`, `folder-structure.md`, `design-system.md` | `verify`: 98 unit test, 54 IT pass, 0 Skipped, `BUILD SUCCESS`; frontend lint sạch, Prettier sạch, 182 test pass, build pass (JS 149 KB gzip); chạy thật backend + MySQL Docker (1351 Pokémon) + Vite: 8 trang ở 1440 px và 375 px không cuộn ngang, mỗi trang đúng 1 `<h1>`, không lỗi console; đáp án spec V.4 đúng trên dữ liệu thật |
+| 2026-10-27 | Rà soát tiến độ; bỏ slide, video demo (T406) khỏi `docs/roadmap.md` 0.4 và `docs/assets.md` 0.4; phương án B: `analyze` nhận 1-6 (`AnalyzeRequest`, `SynergyAnalyzer.MAX_TEAM_SIZE`), `RecommendationEngine.MAX_TEAM_SIZE` giữ 5, `TeamService` chấm điểm mọi thành viên; Team Builder và trang Đội chia sẻ gửi cả slot 6; spec 1.3, api.md 0.4, architecture.md 0.3 | `verify`: 101 unit test, 54 IT pass, 0 Skipped, `BUILD SUCCESS`; frontend lint sạch, 191 test pass, build pass; API thật (1351 Pokémon): đội mẫu 20 điểm, đề xuất số 1 Iron Treads ("Chống chịu hệ Rock"), thêm vào slot 6 thì 48 điểm và Rock hết lỗ hổng; 7 Pokémon trả 400; đề xuất cho đội 6 trả 400 |

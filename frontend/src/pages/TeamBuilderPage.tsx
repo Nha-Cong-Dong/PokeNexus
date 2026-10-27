@@ -39,7 +39,6 @@ function toRef({ id, name, types }: PokemonRef): PokemonRef {
 
 export function TeamBuilderPage() {
   const draft = useTeamDraft()
-  const analysis = useTeamAnalysis(draft.ids)
   const recommendations = useRecommendations(draft.ids)
   const [knownRefs, setKnownRefs] = useState<Record<number, PokemonRef>>({})
   const [searchParams] = useSearchParams()
@@ -50,11 +49,16 @@ export function TeamBuilderPage() {
     sixthChoice === undefined ? (sixthFromUrl ? toRef(sixthFromUrl) : null) : sixthChoice
   const [saveOpen, setSaveOpen] = useState(false)
 
+  const activeSixth =
+    draft.ids.length === MAX_DRAFT_SIZE && sixth && !draft.ids.includes(sixth.id) ? sixth : null
+  const teamIds = useMemo(
+    () => (activeSixth ? [...draft.ids, activeSixth.id] : draft.ids),
+    [draft.ids, activeSixth],
+  )
+  const analysis = useTeamAnalysis(teamIds)
   const hasMembers = draft.ids.length > 0
   const analysisData = hasMembers ? analysis.data : undefined
   const freshAnalysis = analysis.isPlaceholderData ? undefined : analysisData
-  const activeSixth =
-    draft.ids.length === MAX_DRAFT_SIZE && sixth && !draft.ids.includes(sixth.id) ? sixth : null
   const suggestion =
     draft.isFull && !recommendations.isPlaceholderData
       ? (recommendations.data?.items[0] ?? null)
@@ -95,10 +99,6 @@ export function TeamBuilderPage() {
     setSixth(null)
   }
 
-  const excludeIds = useMemo(
-    () => (activeSixth ? [...draft.ids, activeSixth.id] : draft.ids),
-    [draft.ids, activeSixth],
-  )
   const saveMembers = buildTeamMembers(draft.ids, activeSixth?.id ?? null)
   const memberNames = saveMembers.map(({ pokemonId }) => {
     const pokemon = pokemonId === activeSixth?.id ? activeSixth : refFor(pokemonId)
@@ -126,14 +126,15 @@ export function TeamBuilderPage() {
             </div>
             {draft.isFull ? (
               <p className="text-sm text-ink-muted">
-                Đã đủ 5 thành viên để phân tích. Bỏ bớt một thành viên để thêm Pokémon khác.
+                Đã đủ 5 thành viên. Slot 6 dành cho đề xuất; bỏ bớt một thành viên để thêm Pokémon
+                khác.
               </p>
             ) : (
               <PokemonSearchBox
                 id={SEARCH_INPUT_ID}
                 label="Thêm Pokémon"
                 placeholder="Tìm theo tên, ví dụ Garchomp"
-                excludeIds={excludeIds}
+                excludeIds={teamIds}
                 onSelect={handleSelect}
               />
             )}
@@ -173,11 +174,6 @@ export function TeamBuilderPage() {
                 {freshAnalysis ? analysisSummary(freshAnalysis) : ''}
               </p>
             </div>
-            {activeSixth && (
-              <p className="text-sm text-ink-muted">
-                Điểm và bản đồ điểm yếu tính trên 5 thành viên đầu; slot 6 được lưu cùng đội.
-              </p>
-            )}
             <div className="flex flex-wrap gap-2.5">
               <button
                 type="button"

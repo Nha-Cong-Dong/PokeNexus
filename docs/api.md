@@ -1,8 +1,9 @@
 # PokeNexus - Đặc tả REST API
 
-- Phiên bản: 0.3 (phạm vi MVP, cập nhật 2026-10-26; khớp code backend sau khi làm T303-T308)
+- Phiên bản: 0.4 (phạm vi MVP, cập nhật 2026-10-27; khớp code backend sau khi làm T303-T308)
 - Tài liệu tương tác (sau khi có backend): Swagger UI tại `http://localhost:8080/swagger-ui.html`. Khi Swagger và tài liệu này lệch nhau, sửa cho khớp trong cùng PR.
 - Thay đổi so với 0.1: thêm schema DTO (Phần 3), danh mục lỗi có `code` (Phần 4), mã 429 và 503; bỏ `spriteUrl` khỏi response ([ADR 0005](adr/0005-hybrid-image-assets.md)); response đề xuất đổi từ mảng sang object.
+- Thay đổi so với 0.3: `analyze` nhận 1-6 Pokémon để chấm điểm cả đội đủ 6; `recommendations` vẫn nhận 1-5; `synergyScore` của đội đã lưu tính trên mọi thành viên ([spec.md](spec.md) 1.3).
 
 ---
 
@@ -51,7 +52,7 @@
 | GET | `/api/v1/pokemon/compare` | Bàn Cân Sức Mạnh | F04 |
 | GET | `/api/v1/types` | Danh sách 18 hệ | F03 |
 | GET | `/api/v1/types/matrix` | Ma trận tương khắc 18 x 18 | F03 |
-| POST | `/api/v1/synergy/analyze` | Phân tích đội 1-5 Pokémon | F05 |
+| POST | `/api/v1/synergy/analyze` | Phân tích đội 1-6 Pokémon | F05 |
 | POST | `/api/v1/synergy/recommendations` | Đề xuất Pokémon cho vị trí tiếp theo | F05 |
 | POST | `/api/v1/teams` | Lưu đội, trả về `shareCode` | F06 |
 | GET | `/api/v1/teams/shared/{shareCode}` | Xem đội qua mã chia sẻ | F06 |
@@ -120,16 +121,16 @@
 
 | Trường | Kiểu | Ràng buộc |
 |---|---|---|
-| `pokemonIds` | mảng số | 1-5 phần tử, không trùng, mỗi ID tồn tại |
+| `pokemonIds` | mảng số | 1-6 phần tử, không trùng, mỗi ID tồn tại |
 
 - Response 200: `AnalyzeResponse`.
-- 400 `VALIDATION_FAILED` (rỗng, quá 5), `DUPLICATE_POKEMON`, `UNKNOWN_POKEMON`.
+- 400 `VALIDATION_FAILED` (rỗng, quá 6), `DUPLICATE_POKEMON`, `UNKNOWN_POKEMON`.
 
 ### IX. `POST /api/v1/synergy/recommendations`
 
 | Trường | Kiểu | Ràng buộc | Mặc định |
 |---|---|---|---|
-| `pokemonIds` | mảng số | Như `analyze` | |
+| `pokemonIds` | mảng số | 1-5 phần tử (đội phải còn ít nhất 1 vị trí trống), không trùng, mỗi ID tồn tại | |
 | `limit` | số | 1-10 | 3 |
 | `excludeLegendary` | boolean | | `false` |
 | `minBaseStatTotal` | số hoặc `null` | 0-1530 | `null` |
@@ -326,7 +327,7 @@ interface TeamResponse {
 ```
 
 - Response đội trả kèm `name`, `types` của từng thành viên để `SharedTeamPage` hiển thị mà không cần gọi thêm API.
-- `synergyScore` là `teamScore` của 5 thành viên đầu tiên (theo `slot`) tại thời điểm lưu; đội 1 thành viên vẫn có điểm.
+- `synergyScore` là `teamScore` của mọi thành viên (1-6) tại thời điểm lưu; đội 1 thành viên vẫn có điểm.
 
 ---
 
@@ -363,7 +364,7 @@ interface TeamResponse {
   "instance": "/api/v1/synergy/analyze",
   "code": "VALIDATION_FAILED",
   "errors": [
-    { "field": "pokemonIds", "message": "size must be between 1 and 5" }
+    { "field": "pokemonIds", "message": "size must be between 1 and 6" }
   ]
 }
 ```

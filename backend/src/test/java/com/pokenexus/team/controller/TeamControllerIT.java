@@ -50,7 +50,7 @@ class TeamControllerIT {
 
     @Test
     void savesTeamAndOpensItByShareCode() throws Exception {
-        double expectedScore = firstFiveTeamScore();
+        double expectedScore = fullTeamScore();
         MvcTestResult created = save(SIX_MEMBER_TEAM, nextClient());
 
         assertThat(created).hasStatus(201);
@@ -164,10 +164,10 @@ class TeamControllerIT {
         assertThat(save(body, nextClient())).hasStatus(201);
     }
 
-    private double firstFiveTeamScore() throws Exception {
+    private double fullTeamScore() throws Exception {
         MvcTestResult analysis = mvc.post().uri("/api/v1/synergy/analyze")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"pokemonIds\": [6, 445, 373, 134, 135]}")
+                .content("{\"pokemonIds\": [6, 445, 373, 134, 135, 150]}")
                 .exchange();
         assertThat(analysis).hasStatusOk();
         Number teamScore = JsonPath.read(analysis.getResponse().getContentAsString(), "$.teamScore");
