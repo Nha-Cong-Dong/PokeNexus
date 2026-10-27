@@ -96,7 +96,10 @@ export function TypeWheel() {
                 <EffectRow multiplier={0} types={profile.noEffect} />
               </dl>
             )}
-            <Link to="/types" className="mt-4 inline-block font-extrabold text-primary underline">
+            <Link
+              to="/types"
+              className="mt-4 inline-flex min-h-10 items-center font-extrabold text-primary underline"
+            >
               Mở bảng tương khắc đầy đủ
             </Link>
           </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState, type KeyboardEvent } from 'react'
 import { Link, NavLink } from 'react-router'
 
 import { NAV_ITEMS } from './navItems'
@@ -19,13 +19,23 @@ function mobileLinkClass({ isActive }: { isActive: boolean }): string {
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key !== 'Escape' || !menuOpen) return
+    setMenuOpen(false)
+    menuButtonRef.current?.focus()
+  }
 
   return (
-    <header className="sticky top-0 z-40 bg-dex-red text-white shadow-header">
+    <header
+      className="sticky top-0 z-40 bg-dex-red text-white shadow-header"
+      onKeyDown={handleKeyDown}
+    >
       <div className="mx-auto flex h-14 max-w-7xl items-center gap-5 px-4 md:h-15 md:px-6">
         <Link
           to="/"
-          className={`flex flex-none items-center gap-2.5 rounded-[10px] text-white ${ON_RED_FOCUS}`}
+          className={`flex min-h-10 flex-none items-center gap-2.5 rounded-[10px] text-white ${ON_RED_FOCUS}`}
         >
           <span
             aria-hidden="true"
@@ -47,6 +57,7 @@ export function Header() {
         </nav>
 
         <button
+          ref={menuButtonRef}
           type="button"
           className={`ml-auto flex h-11 items-center gap-2 rounded-xl bg-dex-red-hover px-3.5 text-base font-extrabold text-white md:hidden ${ON_RED_FOCUS}`}
           aria-expanded={menuOpen}

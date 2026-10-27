@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router'
 
 import { PokemonSearchBox } from '../components/pokemon/PokemonSearchBox'
 import { PageBody, PageHero } from '../components/scene/PageHero'
@@ -7,7 +6,6 @@ import { buttonClassName } from '../components/ui/buttonStyles'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Panel } from '../components/ui/Panel'
 import { MAX_TEAM_SIZE } from '../features/team-builder/api'
-import { usePokemonDetail } from '../features/pokemon-detail/hooks'
 import { CoverageAndStats } from '../features/team-builder/components/CoverageAndStats'
 import { RecommendationList } from '../features/team-builder/components/RecommendationList'
 import { SaveTeamDialog } from '../features/team-builder/components/SaveTeamDialog'
@@ -16,12 +14,7 @@ import { TeamSlots } from '../features/team-builder/components/TeamSlots'
 import { AnalysisHeatmap } from '../features/team-builder/components/WeaknessHeatmap'
 import { useRecommendations, useTeamAnalysis } from '../features/team-builder/hooks'
 import { analysisSummary, buildTeamMembers } from '../features/team-builder/teamAnalysis'
-import {
-  MAX_DRAFT_SIZE,
-  parseDraftIds,
-  SIXTH_PARAM,
-  useTeamDraft,
-} from '../features/team-builder/useTeamDraft'
+import { useTeamDraft } from '../features/team-builder/useTeamDraft'
 import { formatPokemonName } from '../lib/formatters'
 import type { PokemonRef, Recommendation } from '../types/api'
 
@@ -41,19 +34,13 @@ export function TeamBuilderPage() {
   const draft = useTeamDraft()
   const recommendations = useRecommendations(draft.ids)
   const [knownRefs, setKnownRefs] = useState<Record<number, PokemonRef>>({})
-  const [searchParams] = useSearchParams()
-  const [sixthChoice, setSixth] = useState<PokemonRef | null | undefined>(undefined)
-  const sixthFromUrlId = parseDraftIds(searchParams.get(SIXTH_PARAM))[0]
-  const sixthFromUrl = usePokemonDetail(sixthChoice === undefined ? sixthFromUrlId : undefined).data
-  const sixth =
-    sixthChoice === undefined ? (sixthFromUrl ? toRef(sixthFromUrl) : null) : sixthChoice
   const [saveOpen, setSaveOpen] = useState(false)
 
-  const activeSixth =
-    draft.ids.length === MAX_DRAFT_SIZE && sixth && !draft.ids.includes(sixth.id) ? sixth : null
+  const activeSixthId =
+    draft.isFull && draft.sixth !== null && !draft.ids.includes(draft.sixth) ? draft.sixth : null
   const teamIds = useMemo(
-    () => (activeSixth ? [...draft.ids, activeSixth.id] : draft.ids),
-    [draft.ids, activeSixth],
+    () => (activeSixthId !== null ? [...draft.ids, activeSixthId] : draft.ids),
+    [draft.ids, activeSixthId],
   )
   const analysis = useTeamAnalysis(teamIds)
   const hasMembers = draft.ids.length > 0
@@ -81,27 +68,21 @@ export function TeamBuilderPage() {
 
   const handleRemove = (id: number) => {
     draft.remove(id)
-    if (activeSixth) {
-      remember(activeSixth)
-      draft.add(activeSixth.id)
-      setSixth(null)
+    if (activeSixthId !== null) {
+      draft.add(activeSixthId)
+      draft.setSixth(null)
     }
   }
 
   const handleAddRecommendation = (recommendation: Recommendation) => {
     remember(recommendation)
-    if (draft.isFull) setSixth(toRef(recommendation))
+    if (draft.isFull) draft.setSixth(recommendation.id)
     else draft.add(recommendation.id)
   }
 
-  const handleReset = () => {
-    draft.clear()
-    setSixth(null)
-  }
-
-  const saveMembers = buildTeamMembers(draft.ids, activeSixth?.id ?? null)
+  const saveMembers = buildTeamMembers(draft.ids, activeSixthId)
   const memberNames = saveMembers.map(({ pokemonId }) => {
-    const pokemon = pokemonId === activeSixth?.id ? activeSixth : refFor(pokemonId)
+    const pokemon = refFor(pokemonId)
     return pokemon ? formatPokemonName(pokemon.name) : `#${pokemonId}`
   })
   const memberCount = saveMembers.length
@@ -141,10 +122,11 @@ export function TeamBuilderPage() {
             <TeamSlots
               ids={draft.ids}
               refFor={refFor}
-              sixth={activeSixth}
+              sixthId={activeSixthId}
               suggestion={suggestion}
+              unavailable={analysis.isError}
               onRemove={handleRemove}
-              onRemoveSixth={() => setSixth(null)}
+              onRemoveSixth={() => draft.setSixth(null)}
               onAddSuggestion={() => suggestion && handleAddRecommendation(suggestion)}
               onAddClick={() => document.getElementById(SEARCH_INPUT_ID)?.focus()}
             />
@@ -185,7 +167,7 @@ export function TeamBuilderPage() {
               </button>
               <button
                 type="button"
-                onClick={handleReset}
+                onClick={draft.clear}
                 disabled={!hasMembers}
                 className={buttonClassName('secondary')}
               >
@@ -253,7 +235,7 @@ export function TeamBuilderPage() {
             <RecommendationList
               recommendations={recommendations}
               teamIds={draft.ids}
-              sixthId={activeSixth?.id ?? null}
+              sixthId={activeSixthId}
               onAdd={handleAddRecommendation}
             />
           ) : (

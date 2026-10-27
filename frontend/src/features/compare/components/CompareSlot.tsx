@@ -12,6 +12,7 @@ type CompareSlotProps = {
   value: string | undefined
   pokemon: PokemonRef | undefined
   notFound: boolean
+  failed: boolean
   excludeIds: readonly number[]
   onSelect: (pokemon: PokemonRef) => void
   onClear: () => void
@@ -35,6 +36,7 @@ export function CompareSlot({
   value,
   pokemon,
   notFound,
+  failed,
   excludeIds,
   onSelect,
   onClear,
@@ -76,7 +78,9 @@ export function CompareSlot({
                 ? 'Chưa chọn Pokémon.'
                 : notFound
                   ? `Không tìm thấy Pokémon "${value}".`
-                  : 'Đang tải…'}
+                  : failed
+                    ? 'Chưa tải được Pokémon này.'
+                    : 'Đang tải…'}
             </p>
           )}
           {value !== undefined && (

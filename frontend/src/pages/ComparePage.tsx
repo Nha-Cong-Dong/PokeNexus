@@ -81,6 +81,7 @@ export function ComparePage() {
         value={keys[side]}
         pokemon={details[side].data}
         notFound={isNotFound(details[side].error)}
+        failed={details[side].isError}
         excludeIds={other ? [other.id] : []}
         onSelect={select(side)}
         onClear={() => clear(side)}

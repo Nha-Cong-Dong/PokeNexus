@@ -9,16 +9,22 @@ export const DRAFT_STORAGE_KEY = 'pokenexus.teamDraft'
 
 export interface TeamDraftState {
   ids: number[]
+  sixth?: number
 }
 
 export type TeamDraftAction =
   | { type: 'add'; id: number }
   | { type: 'remove'; id: number }
-  | { type: 'replace'; ids: readonly number[] }
+  | { type: 'replace'; ids: readonly number[]; sixth?: number | null }
+  | { type: 'setSixth'; id: number | null }
   | { type: 'clear' }
 
 function isValidId(id: number): boolean {
   return Number.isSafeInteger(id) && id > 0
+}
+
+function withSixth(ids: number[], sixth: number | null | undefined): TeamDraftState {
+  return sixth != null && isValidId(sixth) ? { ids, sixth } : { ids }
 }
 
 export function sanitizeIds(ids: readonly number[]): number[] {
@@ -44,15 +50,17 @@ export function teamDraftReducer(state: TeamDraftState, action: TeamDraftAction)
     case 'add':
       if (!isValidId(action.id) || state.ids.includes(action.id)) return state
       if (state.ids.length >= MAX_DRAFT_SIZE) return state
-      return { ids: [...state.ids, action.id] }
+      return { ...state, ids: [...state.ids, action.id] }
     case 'remove':
       return state.ids.includes(action.id)
-        ? { ids: state.ids.filter((id) => id !== action.id) }
+        ? { ...state, ids: state.ids.filter((id) => id !== action.id) }
         : state
     case 'replace':
-      return { ids: sanitizeIds(action.ids) }
+      return withSixth(sanitizeIds(action.ids), action.sixth)
+    case 'setSixth':
+      return withSixth(state.ids, action.id)
     case 'clear':
-      return state.ids.length === 0 ? state : { ids: [] }
+      return state.ids.length === 0 && state.sixth === undefined ? state : { ids: [] }
   }
 }
 
@@ -73,63 +81,82 @@ function writeStoredIds(serialized: string) {
   }
 }
 
+function parseSixth(raw: string | null | undefined): number | null {
+  return parseDraftIds(raw)[0] ?? null
+}
+
 function initialDraft(params: URLSearchParams): TeamDraftState {
   const fromUrl = parseDraftIds(params.get(DRAFT_PARAM))
   const base = fromUrl.length > 0 ? fromUrl : readStoredIds()
   const [added] = parseDraftIds(params.get(ADD_PARAM))
-  return added === undefined
-    ? { ids: base }
-    : teamDraftReducer({ ids: base }, { type: 'add', id: added })
+  const draft = withSixth(base, parseSixth(params.get(SIXTH_PARAM)))
+  return added === undefined ? draft : teamDraftReducer(draft, { type: 'add', id: added })
+}
+
+function syncKey(ids: string, sixth: string): string {
+  return `${ids}|${sixth}`
 }
 
 export function useTeamDraft() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [state, dispatch] = useReducer(teamDraftReducer, searchParams, initialDraft)
-  const syncedRef = useRef(serializeDraftIds(state.ids))
+  const stateSixth = state.sixth === undefined ? '' : String(state.sixth)
+  const syncedRef = useRef(syncKey(serializeDraftIds(state.ids), stateSixth))
   const rawUrlIds = searchParams.get(DRAFT_PARAM)
+  const rawUrlSixth = searchParams.get(SIXTH_PARAM)
   const hasAddParam = searchParams.has(ADD_PARAM)
 
   useEffect(() => {
     const fromState = serializeDraftIds(state.ids)
     const fromUrl = serializeDraftIds(parseDraftIds(rawUrlIds))
-    const writeUrl = (value: string) =>
+    const urlSixth = parseSixth(rawUrlSixth)
+    const sixthFromUrl = urlSixth === null ? '' : String(urlSixth)
+    const urlOutdated =
+      (rawUrlIds ?? '') !== fromState || (rawUrlSixth ?? '') !== stateSixth || hasAddParam
+    const writeUrl = () =>
       setSearchParams(
         (previous) => {
           const next = new URLSearchParams(previous)
-          if (value) next.set(DRAFT_PARAM, value)
+          if (fromState) next.set(DRAFT_PARAM, fromState)
           else next.delete(DRAFT_PARAM)
+          if (stateSixth) next.set(SIXTH_PARAM, stateSixth)
+          else next.delete(SIXTH_PARAM)
           next.delete(ADD_PARAM)
           return next
         },
         { replace: true },
       )
 
-    if (fromState !== syncedRef.current) {
-      syncedRef.current = fromState
+    const stateKey = syncKey(fromState, stateSixth)
+    if (stateKey !== syncedRef.current) {
+      syncedRef.current = stateKey
       writeStoredIds(fromState)
-      if ((rawUrlIds ?? '') !== fromState || hasAddParam) writeUrl(fromState)
+      if (urlOutdated) writeUrl()
       return
     }
-    if (fromUrl !== '' && fromUrl !== fromState && !hasAddParam) {
-      syncedRef.current = fromUrl
-      dispatch({ type: 'replace', ids: parseDraftIds(fromUrl) })
+    if (fromUrl !== '' && syncKey(fromUrl, sixthFromUrl) !== stateKey && !hasAddParam) {
+      syncedRef.current = syncKey(fromUrl, sixthFromUrl)
+      dispatch({ type: 'replace', ids: parseDraftIds(fromUrl), sixth: urlSixth })
       return
     }
     writeStoredIds(fromState)
-    if ((rawUrlIds ?? '') !== fromState || hasAddParam) writeUrl(fromState)
-  }, [state.ids, rawUrlIds, hasAddParam, setSearchParams])
+    if (urlOutdated) writeUrl()
+  }, [state.ids, stateSixth, rawUrlIds, rawUrlSixth, hasAddParam, setSearchParams])
 
   const add = useCallback((id: number) => dispatch({ type: 'add', id }), [])
   const remove = useCallback((id: number) => dispatch({ type: 'remove', id }), [])
   const replace = useCallback((ids: readonly number[]) => dispatch({ type: 'replace', ids }), [])
   const clear = useCallback(() => dispatch({ type: 'clear' }), [])
+  const setSixth = useCallback((id: number | null) => dispatch({ type: 'setSixth', id }), [])
 
   return {
     ids: state.ids,
+    sixth: state.sixth ?? null,
     isFull: state.ids.length >= MAX_DRAFT_SIZE,
     add,
     remove,
     replace,
     clear,
+    setSixth,
   }
 }

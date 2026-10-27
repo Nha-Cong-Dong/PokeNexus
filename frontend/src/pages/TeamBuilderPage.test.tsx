@@ -189,12 +189,34 @@ describe('TeamBuilderPage', () => {
     routeFetch({
       'POST /synergy/analyze': analyzeById({ [SPEC_IDS]: 41 }),
       'POST /synergy/recommendations': () => jsonResponse(recommendationsOf([EMPOLEON, 80])),
-      'GET /pokemon/248': () => jsonResponse(TYRANITAR),
     })
     renderTeamRoute(`/team-builder?ids=${SPEC_IDS}&six=248`)
 
     expect(await screen.findByText('Slot 6 · đề xuất')).toBeInTheDocument()
     expect(screen.getByText('6 / 6')).toBeInTheDocument()
+    const slots = screen.getByRole('region', { name: 'Đội của bạn' })
+    expect(await within(slots).findByText('Tyranitar')).toBeInTheDocument()
+  })
+
+  it('keeps a recommended sixth member in the URL so a reload restores it', async () => {
+    routeFetch({
+      'POST /synergy/analyze': analyzeById({ [SPEC_IDS]: 20, [`${SPEC_IDS},248`]: 48 }),
+      'POST /synergy/recommendations': () => jsonResponse(recommendationsOf([TYRANITAR, 92])),
+    })
+    const router = renderTeamRoute(`/team-builder?ids=${SPEC_IDS}`)
+
+    const card = await screen.findByRole('article', { name: 'Tyranitar' })
+    await userEvent.click(within(card).getByRole('button', { name: /Thêm vào đội/ }))
+
+    await waitFor(() =>
+      expect(new URLSearchParams(router.state.location.search).get('six')).toBe('248'),
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Bỏ Charizard khỏi đội' }))
+    await waitFor(() => {
+      const params = new URLSearchParams(router.state.location.search)
+      expect(params.get('ids')).toBe('130,149,663,637,248')
+      expect(params.has('six')).toBe(false)
+    })
   })
 
   it('copies the share link with the Clipboard API', async () => {
@@ -334,5 +356,7 @@ describe('TeamBuilderPage', () => {
       (await screen.findAllByText('Có Pokémon trong đội không còn tồn tại.')).length,
     ).toBeGreaterThan(0)
     expect(screen.getAllByRole('button', { name: 'Thử lại' }).length).toBeGreaterThan(0)
+    expect(screen.getByText('Chưa tải được')).toBeInTheDocument()
+    expect(screen.queryByText('Đang tải…')).not.toBeInTheDocument()
   })
 })

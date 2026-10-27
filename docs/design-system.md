@@ -1,6 +1,6 @@
 # PokeNexus - Design System và UI Guidelines
 
-- Phiên bản: 0.4 (cập nhật 2026-10-26)
+- Phiên bản: 0.4 (cập nhật 2026-10-28; Phần 5: nút cỡ `sm` cao 40 px trên mobile)
 - Phạm vi: định hướng thẩm mỹ, token, font, ảnh khung cảnh, component, pattern, bố cục trang và accessibility cho frontend.
 - Theme: **light là mặc định và bắt buộc ở MVP**. Token đã định nghĩa sẵn cặp light/dark; dark mode là mức Could ở Tuần 4 ([roadmap.md](roadmap.md), Phần 2).
 - Mọi giá trị màu dùng cho chữ và thành phần giao diện đã được kiểm tra tỷ lệ tương phản theo công thức WCAG 2.x bằng script ngày 2026-10-24.
@@ -321,7 +321,7 @@
 
 | Component | Biến thể | Trạng thái | Ghi chú accessibility |
 |---|---|---|---|
-| `Button` | `primary`, `secondary` (nền trắng, viền `ink` 2 px), `ghost`, `danger`, `cta` (nền `dex-yellow`, chữ `ink`, chỉ dùng ở trang Tổng quan); cỡ `sm` (36 px), `md` (44 px) | hover, focus, pressed, disabled, loading | `loading` giữ nguyên độ rộng, đặt `aria-busy`; nút chỉ có icon phải có `aria-label`. Hiện thực bằng hàm `buttonClassName(variant, size)` trong `buttonStyles.ts` để dùng chung cho `<button>` và `<Link>`; đã có `primary`, `secondary`, `ghost`, `cta`, còn `danger` và `loading` làm khi cần |
+| `Button` | `primary`, `secondary` (nền trắng, viền `ink` 2 px), `ghost`, `danger`, `cta` (nền `dex-yellow`, chữ `ink`, chỉ dùng ở trang Tổng quan); cỡ `sm` (40 px trên mobile, 36 px từ breakpoint `md`), `md` (44 px) | hover, focus, pressed, disabled, loading | `loading` giữ nguyên độ rộng, đặt `aria-busy`; nút chỉ có icon phải có `aria-label`. Hiện thực bằng hàm `buttonClassName(variant, size)` trong `buttonStyles.ts` để dùng chung cho `<button>` và `<Link>`; đã có `primary`, `secondary`, `ghost`, `cta`, còn `danger` và `loading` làm khi cần |
 | `Panel` | | | Khung nội dung đặt trên khung cảnh: nền `surface`, viền `ink` 2 px, bo 24 px, `shadow-block-lg`; là `<section>`, cần `aria-label` hoặc `aria-labelledby` |
 | `Card` | `default`, `interactive` (có hover, toàn card là link) | hover, focus | Card dạng link dùng thẻ `<a>`, không gắn `onClick` lên `<div>` |
 | `GameDialog` | `default`, `speaker` (có tên người nói ở góc trên trái) | | Hộp thoại kiểu game (Phần 2, mục VII). Dùng cho: lời chào trang Tổng quan, `VerdictPanel`, `EmptyState`, `ErrorState`. Không dùng cho nội dung khác |

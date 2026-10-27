@@ -27,6 +27,10 @@ function urlIds(search: string): string | null {
   return new URLSearchParams(search).get('ids')
 }
 
+function urlSixth(search: string): string | null {
+  return new URLSearchParams(search).get('six')
+}
+
 beforeEach(() => {
   window.localStorage.clear()
 })
@@ -56,6 +60,15 @@ describe('teamDraftReducer', () => {
         .ids,
     ).toEqual([6, 130, 149, 663, 637])
     expect(teamDraftReducer({ ids: [6] }, { type: 'clear' }).ids).toEqual([])
+  })
+
+  it('keeps a valid sixth member through edits and drops it on clear', () => {
+    const full = { ids: [6, 130, 149, 663, 637] }
+    const withSixth = teamDraftReducer(full, { type: 'setSixth', id: 248 })
+    expect(withSixth.sixth).toBe(248)
+    expect(teamDraftReducer(withSixth, { type: 'remove', id: 6 }).sixth).toBe(248)
+    expect(teamDraftReducer(full, { type: 'setSixth', id: -1 }).sixth).toBeUndefined()
+    expect(teamDraftReducer(withSixth, { type: 'clear' })).toEqual({ ids: [] })
   })
 })
 
@@ -150,6 +163,46 @@ describe('useTeamDraft', () => {
     await navigate('/team-builder')
     await waitFor(() => expect(urlIds(result.current.location.search)).toBe('130,149'))
     expect(result.current.draft.ids).toEqual([130, 149])
+  })
+
+  it('reads the sixth member from the URL and drops an invalid value', async () => {
+    const valid = renderDraft('/team-builder?ids=6,130,149,663,637&six=248')
+    expect(valid.result.current.draft.sixth).toBe(248)
+    valid.unmount()
+
+    const invalid = renderDraft('/team-builder?ids=6,130,149,663,637&six=abc')
+    expect(invalid.result.current.draft.sixth).toBeNull()
+    await waitFor(() => expect(urlSixth(invalid.result.current.location.search)).toBeNull())
+  })
+
+  it('writes the sixth member to the URL next to the ids and clears it with the draft', async () => {
+    const { result } = renderDraft('/team-builder?ids=6,130,149,663,637')
+
+    act(() => result.current.draft.setSixth(248))
+    await waitFor(() => expect(urlSixth(result.current.location.search)).toBe('248'))
+    expect(urlIds(result.current.location.search)).toBe('6,130,149,663,637')
+
+    act(() => {
+      result.current.draft.remove(6)
+      result.current.draft.add(248)
+      result.current.draft.setSixth(null)
+    })
+    await waitFor(() => expect(urlIds(result.current.location.search)).toBe('130,149,663,637,248'))
+    expect(urlSixth(result.current.location.search)).toBeNull()
+
+    act(() => result.current.draft.setSixth(445))
+    await waitFor(() => expect(urlSixth(result.current.location.search)).toBe('445'))
+    act(() => result.current.draft.clear())
+    await waitFor(() => expect(result.current.location.search).toBe(''))
+    expect(result.current.draft.sixth).toBeNull()
+  })
+
+  it('follows a navigation that only changes the sixth member', async () => {
+    const { result, navigate } = renderDraft('/team-builder?ids=6,130,149,663,637&six=248')
+
+    await navigate('/team-builder?ids=6,130,149,663,637&six=445')
+    await waitFor(() => expect(result.current.draft.sixth).toBe(445))
+    expect(result.current.draft.ids).toEqual([6, 130, 149, 663, 637])
   })
 
   it('keeps working when localStorage is unavailable', async () => {

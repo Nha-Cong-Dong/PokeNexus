@@ -67,7 +67,7 @@ export function DexFilters({ filter, onChange, layout = 'sidebar' }: DexFiltersP
                 aria-pressed={selected}
                 disabled={typesFull && !selected}
                 onClick={() => toggleType(type)}
-                className={`flex h-9 items-center gap-2 rounded-full px-2.5 text-left text-xs ${CHIP_BASE} ${selected ? `border-ink ${typeClassName(type)}` : CHIP_OFF}`}
+                className={`flex h-10 items-center gap-2 rounded-full px-2.5 text-left text-xs ${CHIP_BASE} ${selected ? `border-ink ${typeClassName(type)}` : CHIP_OFF}`}
               >
                 <span
                   aria-hidden="true"
@@ -121,7 +121,7 @@ export function DexFilters({ filter, onChange, layout = 'sidebar' }: DexFiltersP
                 type="button"
                 aria-pressed={selected}
                 onClick={() => toggleForm(form)}
-                className={`h-9 rounded-full px-3 text-xs ${CHIP_BASE} ${selected ? CHIP_ON_DARK : CHIP_OFF}`}
+                className={`h-10 rounded-full px-3 text-xs ${CHIP_BASE} ${selected ? CHIP_ON_DARK : CHIP_OFF}`}
               >
                 {FORM_LABELS[form]}
               </button>
