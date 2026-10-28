@@ -14,7 +14,7 @@
 |---|---|---|
 | [product.md](product.md) | Tầm nhìn, persona, user story, phạm vi | Thay đổi phạm vi sản phẩm |
 | [spec.md](spec.md) | Đặc tả MVP, tiêu chí chấp nhận, kịch bản kiểm chứng, truy vết tính năng và test | Chốt hoặc thay đổi yêu cầu; đổi tên endpoint, trang, class test |
-| [roadmap.md](roadmap.md) | Lộ trình 4 tuần: Epic, task theo ngày, MoSCoW, buffer, rủi ro | Cuối mỗi tuần |
+| [roadmap.md](roadmap.md) | Lộ trình 3 tuần theo lịch hackathon: Epic, task theo ngày, MoSCoW, buffer, rủi ro | Cuối mỗi tuần |
 | [architecture.md](architecture.md) | Kiến trúc C4, luồng xử lý, thuật toán, bảo mật, triển khai, chiến lược test | Thay đổi kiến trúc |
 | [database.md](database.md) | ERD, từ điển dữ liệu, index, migration, ingestion | Thêm hoặc sửa migration |
 | [api.md](api.md) | Quy ước, đặc tả từng endpoint, schema DTO, danh mục lỗi | Thêm hoặc sửa endpoint |

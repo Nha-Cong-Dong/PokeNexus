@@ -435,7 +435,7 @@ flowchart LR
 | Backend | Chạy Docker image tùy chỉnh (JDK 25), đặt được biến môi trường, có HTTPS |
 | Database | Tương thích MySQL 8, cho phép kết nối từ backend, import được file dump |
 | Frontend | Host file tĩnh, rewrite mọi route về `index.html` (SPA) |
-| Chi phí | Gói miễn phí hoặc credit đủ cho 4 tuần |
+| Chi phí | Gói miễn phí hoặc credit đủ tới ngày demo 08/11 |
 | Độ trễ | Region gần Việt Nam (ví dụ Singapore) |
 | Ngủ đông | Biết rõ thời gian cold start để làm nóng trước demo |
 

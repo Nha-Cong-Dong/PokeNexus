@@ -1,7 +1,7 @@
 # PokeNexus - Hướng dẫn cho Claude
 
 - Bách khoa Pokémon kiêm công cụ phân tích đội hình VGC. Monorepo: `backend/` (Spring Boot), `frontend/` (React), `docs/`, `data/`.
-- Một người phát triển, 4 tuần (2026-10-18 đến 2026-11-15). Deadline demo: 2026-11-15, tag `v1.0.0`.
+- Một người phát triển, 3 tuần (2026-10-18 đến 2026-11-08). Checkpoint 3 (01/11): MVP chạy end-to-end ở local. Checkpoint 4 (08/11): link sản phẩm chạy thật, demo, tag `v1.0.0`.
 - File này chỉ chứa quy tắc riêng của dự án. Tiến độ hiện tại xem [PLAN.md](PLAN.md); không ghi trạng thái vào file này.
 
 ---
@@ -76,7 +76,7 @@ cd frontend && npm run lint && npm run test && npm run build
 | Synergy tính trong bộ nhớ, không truy vấn DB khi phân tích | [ADR 0003](docs/adr/0003-in-memory-synergy.md) |
 | Không commit `.env`, CSV trong `data/csv/`, file dump, bí mật | `CONTRIBUTING.md`, Phần 4 |
 | Thêm dependency ngoài bảng ở `docs/architecture.md`, Phần 2 phải hỏi trước và ghi lý do trong PR | `docs/architecture.md`, Phần 2 |
-| Từ 2026-11-11 chỉ làm `fix`, `docs`, `chore`; không thêm tính năng | `docs/roadmap.md`, Phần 4 |
+| Từ 2026-11-05 chỉ làm `fix`, `docs`, `chore`; không thêm tính năng | `docs/roadmap.md`, Phần 4 |
 
 ### II. Phạm vi
 

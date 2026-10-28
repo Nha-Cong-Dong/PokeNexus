@@ -205,8 +205,8 @@ git push --force-with-lease
 | Tag | Thời điểm | Điều kiện |
 |---|---|---|
 | `v0.1.0` | 01/11 | Tiêu chí W2 ([roadmap.md](roadmap.md), Phần 3, mục V) |
-| `v0.2.0` | 08/11 | Kịch bản E2E chạy trọn vẹn trên local |
-| `v1.0.0` | 15/11 | Bản production chạy được, demo sẵn sàng |
+| `v0.2.0` | 01/11 (Checkpoint 3) | Kịch bản E2E chạy trọn vẹn trên local |
+| `v1.0.0` | 08/11 (Checkpoint 4) | Bản production chạy được, demo sẵn sàng |
 | `v1.0.x` | Khi cần | Sửa lỗi sau `v1.0.0` |
 
 ### II. Các bước gắn tag
@@ -226,7 +226,7 @@ gh release create v0.1.0 --title "v0.1.0" --notes-file release-notes.md
 ### III. Sửa lỗi gấp (hotfix)
 
 - Từ `main`, tạo `fix/<số>-<mo-ta>`, đi đủ quy trình PR (CI phải xanh), merge, gắn tag bản vá `v1.0.1`.
-- Trong tuần demo (từ 11/11), chỉ merge PR loại `fix`, `docs`, `chore` ([roadmap.md](roadmap.md), Phần 4).
+- Trong tuần demo (từ 05/11), chỉ merge PR loại `fix`, `docs`, `chore` ([roadmap.md](roadmap.md), Phần 4).
 
 ---
 
@@ -252,4 +252,4 @@ gh release create v0.1.0 --title "v0.1.0" --notes-file release-notes.md
 - Dependabot mở PR hằng tuần cho GitHub Actions, Maven, npm (`.github/dependabot.yml`).
 - Bản vá (patch) và bản nhỏ (minor): merge khi CI xanh.
 - Bản lớn (major): đọc release notes, chạy thử local, có thể để sau `v1.0.0`.
-- Từ 11/11 chỉ merge PR Dependabot vá lỗ hổng bảo mật.
+- Từ 05/11 chỉ merge PR Dependabot vá lỗ hổng bảo mật.
