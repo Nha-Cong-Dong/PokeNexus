@@ -1,11 +1,12 @@
 # PokeNexus - Design System và UI Guidelines
 
-- Phiên bản: 0.5 (cập nhật 2026-10-28; con số dùng Nunito `tabular-nums`; bảng 4 màu cho mỗi khung cảnh, nền thân trang nhuộm theo khung cảnh)
+- Phiên bản: 0.6 (cập nhật 2026-10-28; nền khung cảnh nhiều ảnh, chuyển ảnh và lớp hạt theo [ADR 0006](adr/0006-animated-scene-backdrops.md); hero Tổng quan vừa một màn hình)
 - Phạm vi: định hướng thẩm mỹ, token, font, ảnh khung cảnh, component, pattern, bố cục trang và accessibility cho frontend.
 - Theme: **light là mặc định và bắt buộc ở MVP**. Token đã định nghĩa sẵn cặp light/dark; dark mode là mức Could ở Tuần 4 ([roadmap.md](roadmap.md), Phần 2).
 - Mọi giá trị màu dùng cho chữ và thành phần giao diện đã được kiểm tra tỷ lệ tương phản theo công thức WCAG 2.x bằng script ngày 2026-10-24.
 - Thay đổi so với 0.2: bỏ font Be Vietnam Pro, đổi bảng màu thương hiệu, thêm trang Tổng quan, thêm nền khung cảnh theo vùng đất. Các mục cần đồng bộ sang tài liệu khác liệt kê ở Phần 11.
 - Thay đổi so với 0.3: Phần 3 trỏ thẳng tới `src/styles/index.css` và `src/main.tsx`, không chép lại mã nguồn.
+- Thay đổi so với 0.5: mỗi khung cảnh có bộ 1-5 ảnh 1920 px; nền hero chuyển ảnh mỗi 12 giây, phóng chậm và có lớp hạt CSS, tắt khi `prefers-reduced-motion`; nới quy tắc nội dung ảnh; tiêu đề trên ảnh đặt trong tấm nền `scrim` 75% thay cho lớp phủ rộng; cho phép xóa HUD, người, Pokémon thừa bằng công cụ kèm bước kiểm duyệt dấu vết AI (Phần 4, mục I); hero Tổng quan cao bằng màn hình; Team Builder rộng tối đa 100 rem.
 - Thay đổi so với 0.4: chữ số Pixelify Sans dễ đọc nhầm (5 và 8 giống S, 2 giống 8, 7 giống ⅂; chụp màn hình ngày 2026-10-28), nên mọi con số chuyển sang Nunito 800 `tabular-nums`, token `text-pixel*` đổi tên `text-num*`; Pixelify Sans chỉ còn cho nhãn "HP". Khung cảnh có bảng 4 màu và nền thân trang nhuộm theo khung cảnh (Phần 2, mục VI).
 
 ---
@@ -42,7 +43,7 @@
 | Lưới card giống hệt nhau, cùng bóng mờ xám | Card nhuộm theo màu hệ chính, đế bóng dưới sprite, bóng đặc lệch xuống (Phần 2, mục VII) |
 | Nhãn chữ in hoa giãn chữ trên mọi tiêu đề | Tiêu đề viết hoa chữ cái đầu; không dùng nhãn phụ phía trên tiêu đề nếu không mang thông tin |
 | Mỗi section trượt và mờ dần khi cuộn | Một khoảnh khắc chuyển động duy nhất mỗi trang (Phần 2, mục VII) |
-| Ảnh minh họa do AI tạo, icon emoji | Ảnh chụp từ game 3D, sprite và artwork chính thức qua PokéAPI, icon SVG nét đơn |
+| Ảnh minh họa do AI tạo, icon emoji | Ảnh chụp từ game 3D, sprite và artwork chính thức qua PokéAPI (được xóa HUD, người thừa theo Phần 4, mục I), icon SVG nét đơn |
 | Câu chữ chung chung ("Khám phá ngay hôm nay!") | Giọng của một Trainer, cụ thể: "Garchomp hở hệ Ice x4. Thêm một Pokémon hệ Steel để che lại." |
 | Số thống kê lớn kèm nhãn nhỏ xếp hàng ngang | Số liệu nằm trong câu của hộp thoại hoặc trong màn hình Pokédex |
 
@@ -238,7 +239,7 @@
 | Hộp thoại game | Viền `ink` 3 px, viền trong `border` 2 px cách 3 px (`outline` + `outline-offset: -8px`), nền `surface` |
 | Lớp (z-index) | Khung cảnh 0, nội dung 10, header 40, dropdown 45, dialog 50, toast 60 |
 | Chuyển động do người dùng | 150 ms `ease-out` cho hover, focus; 200 ms cho dialog, ngăn kéo |
-| Chuyển động tự chạy | Tối đa một khoảnh khắc mỗi trang, chạy một lần khi tải (Phần 7, mục II). Không lặp vô hạn, không parallax |
+| Chuyển động tự chạy | Tối đa một khoảnh khắc mỗi trang, chạy một lần khi tải (Phần 7, mục II). Không parallax. Ngoại lệ duy nhất được lặp: nền khung cảnh của hero (chuyển ảnh, phóng chậm, lớp hạt; Phần 4, mục III), tắt hoàn toàn khi `prefers-reduced-motion: reduce` |
 | Giảm chuyển động | Khi `prefers-reduced-motion: reduce`: tắt mọi chuyển động tự chạy, hiện ngay trạng thái cuối |
 
 ### VIII. Breakpoint và lưới
@@ -284,38 +285,63 @@
 ### I. Nguồn ảnh
 
 - Ảnh chụp từ các game Pokémon 3D (ví dụ Pokémon Scarlet/Violet, Pokémon Legends: Arceus, Pokémon Sword/Shield).
-- Yêu cầu nội dung mỗi ảnh:
-  - Không có giao diện game (HUD, hộp thoại, minimap), không có watermark.
-  - Không có Pokémon hoặc nhân vật ở vùng giữa khung hình, vì artwork sẽ đứng lên vị trí này.
+- Yêu cầu nội dung mỗi ảnh (áp dụng cho ảnh cuối cùng, sau khi xử lý):
+  - Ảnh gốc là ảnh chụp từ game 3D, sprite hoặc artwork chính thức. Không dùng ảnh tạo hoàn toàn bằng AI, ảnh anime hoặc fan art.
+  - Không có giao diện game (HUD, hộp thoại, minimap), không có chữ chèn thêm, không có watermark.
+  - Không có Pokémon hoặc nhân vật ở dải giữa khung hình (khoảng 30-70% chiều ngang), vì artwork sẽ đứng lên vị trí này. Nhân vật hoặc Pokémon nhỏ ở ngoài dải giữa được chấp nhận.
+  - Ảnh gốc có HUD, người hoặc Pokémon thừa thì cắt khung để bỏ đi; không cắt được thì được xóa bằng công cụ, kể cả công cụ dùng AI (mục 1), và bắt buộc qua bước kiểm duyệt (mục 2).
   - Đường chân trời nằm ở khoảng 55-65% chiều cao ảnh, để artwork có "mặt đất" để đứng.
-  - Không dùng ảnh do AI tạo hoặc ảnh fan art.
+  - Ảnh nguồn rộng từ 1920 px; không phóng to ảnh nhỏ hơn.
 - Bản quyền hình ảnh thuộc Nintendo, Game Freak, The Pokémon Company, giống sprite và artwork ([ADR 0005](adr/0005-hybrid-image-assets.md)). Dùng phi thương mại, ghi nguồn từng ảnh trong `frontend/public/scenes/SOURCES.md` (tên game, vị trí trong game, người chụp hoặc URL nguồn).
-- Nguồn đã dùng: Bulbagarden Archives (ảnh chụp game và ảnh bìa Nintendo Music). Tìm qua API MediaWiki của trang, xem từng ảnh trước khi chọn.
-- Trạng thái ngày 2026-10-28: 14/15 scene có ảnh, tổng 1,9 MB cho 28 file. `flower-garden` chưa có ảnh đạt yêu cầu (các ứng viên đều có nhân vật hoặc tượng Pokémon ở giữa khung, hoặc là ảnh anime; danh sách ở `SOURCES.md`, mục II) nên dùng gradient dự phòng. `lab` dùng ảnh trạm nghiên cứu Area Zero nhìn từ ngoài.
-- Ảnh gốc 1280 x 720 được phóng lên 1600 (giống `stadium`); ảnh có viền đen trên dưới được cắt viền trước khi cắt 16:9.
-- Mỗi scene có cờ `photo` trong `src/lib/scenes.ts`; `photo: false` thì `SceneBackdrop` chỉ vẽ gradient, không gửi request ảnh.
+- Nguồn đã dùng: Bulbagarden Archives (ảnh chụp game, ảnh bìa Nintendo Music, ảnh Wild Zone của Legends: Z-A). Tìm qua API MediaWiki của trang, tải chậm (3 giây mỗi request, trang trả 403 khi tải dồn), xem từng ảnh trước khi chọn. Ảnh trên trang chính thức của game quá nhỏ (tối đa 1367 px); nguồn đã loại ghi ở `SOURCES.md`, mục II.
+- Trạng thái ngày 2026-10-28: 15/15 scene có ảnh, 25 ảnh, 50 file, 5,8 MB. Số ảnh mỗi scene: `sea`, `lab` 3; `grassland`, `forest`, `power-plant`, `ruins`, `haunted`, `flower-garden` 2; còn lại 1. Mục tiêu 4-5 ảnh mỗi scene chưa đạt vì thiếu ảnh 1920 px đạt chuẩn; bổ sung bằng ảnh đã xóa HUD, nhân vật theo mục 1, 2.
+- Ngoại lệ tạm thời: scene chưa có ảnh 1920 px đạt chuẩn được giữ ảnh 1280 x 720 đang dùng, phóng lên 1920 và ghi "Ngoại lệ" trong `SOURCES.md` (`volcano`, `swamp`, `stadium`); thay ngay khi có ảnh đạt chuẩn. Ảnh có viền đen trên dưới được cắt viền trước khi cắt 16:9.
+- Mỗi scene có số ảnh `photos` trong `src/lib/scenes.ts`; `photos: 0` thì `SceneBackdrop` chỉ vẽ gradient, không gửi request ảnh.
+
+#### 1. Xóa HUD, người hoặc Pokémon thừa
+
+- Chỉ được xóa: HUD, minimap, chữ chèn, người hoặc Pokémon thừa. Không thêm vật thể mới, không đổi bố cục, bầu trời, mùa, ánh sáng.
+- Vùng phải vẽ lại nhỏ so với toàn ảnh. Ảnh mà phần lớn nội dung phải vẽ lại (ví dụ nhân vật chiếm giữa khung) thì loại, không sửa.
+- Công cụ được dùng: công cụ vá thường (Clone Stamp, Healing, GIMP Heal) hoặc công cụ sửa ảnh bằng AI, kể cả plugin MCP `nano-banana` (Gemini 2.5 Flash Image) trong Claude Code. Giữ file gốc chưa sửa ở thư mục làm việc (không commit) để đối chiếu.
+- Ghi vào cột "Xử lý" của `frontend/public/scenes/SOURCES.md`: đã xóa gì, bằng công cụ nào (ví dụ "Xóa minimap và nhân vật bằng GIMP Heal"). Ảnh sửa bằng công cụ có watermark ẩn ghi thêm tên watermark (ví dụ "Sửa bằng Gemini 2.5 Flash Image, có SynthID").
+
+#### 2. Kiểm duyệt dấu vết AI (bắt buộc với mọi ảnh đã sửa)
+
+- Kiểm tra trên file vừa sửa, trước khi chuyển sang WebP (bước chuyển đổi làm mất metadata).
+
+| Kiểm tra | Cách làm | Dấu hiệu phải loại |
+|---|---|---|
+| Watermark nhìn thấy | Xem ảnh ở 100%, soát 4 góc và các mép | Logo, chữ, biểu tượng của công cụ AI (chữ "AI", "Generated", biểu tượng ngôi sao...) |
+| Metadata nguồn gốc | `node scripts/check-image-provenance.mjs <file>`; kết quả `LOẠI` thì thoát mã 1 | Manifest C2PA (Content Credentials); IPTC `DigitalSourceType` là `trainedAlgorithmicMedia` hoặc `compositeWithTrainedAlgorithmicMedia`; tên công cụ AI trong EXIF, XMP, PNG text; tham số prompt |
+| Dấu vết vẽ lại | So với ảnh gốc ở 100% tại vùng đã xóa | Vân lặp, vật thể méo, chữ vô nghĩa, đường chân trời gãy |
+
+- Có bất kỳ dấu hiệu nào trong bảng: loại ảnh đã sửa, giữ ảnh đang dùng của scene đó; không thêm ảnh đã sửa vào bộ ảnh. Không xóa metadata hoặc che watermark để vượt qua bước này.
+- Watermark ẩn trong điểm ảnh (ví dụ SynthID, mà Google ghi là có trong mọi ảnh do Gemini API sinh ra) được chấp nhận từ ngày 2026-10-28, với điều kiện ghi rõ trong cột "Xử lý" của `SOURCES.md`. Script và mắt thường không phát hiện được loại watermark này, nên nguồn thông tin là tài liệu của công cụ đã dùng.
+- Nhiều công cụ AI tự gắn Content Credentials vào file xuất ra, nên ảnh sửa bằng các công cụ đó sẽ bị loại ở bước này. Công cụ vá không dùng AI tạo sinh (Clone Stamp, Healing, GIMP Heal) không gắn dấu này.
 
 ### II. Định dạng, thư mục, dung lượng
 
 | Mục | Quy định |
 |---|---|
 | Thư mục | `frontend/public/scenes/` |
-| Tên file | `{scene}-1600.webp` (desktop), `{scene}-800.webp` (mobile), ví dụ `volcano-1600.webp` |
-| Kích thước | 1600 x 900 và 800 x 450, tỷ lệ 16:9 |
+| Tên file | `{scene}-{n}-1920.webp` và `{scene}-{n}-960.webp`, `n` từ 1, ví dụ `volcano-2-1920.webp` |
+| Kích thước | 1920 x 1080 và 960 x 540, tỷ lệ 16:9 |
 | Định dạng | WebP, chất lượng 75-80 |
-| Dung lượng mỗi file | Tối đa 220 KB (1600) và 70 KB (800) |
-| Tổng ngân sách | 15 scene x 2 cỡ, tối đa 5 MB |
-| Sinh URL | `sceneUrl(scene, width)` trong `src/lib/assets.ts`, cạnh hàm sinh URL sprite |
+| Dung lượng mỗi file | Tối đa 260 KB (1920) và 80 KB (960) |
+| Tổng ngân sách | 15 scene x tối đa 5 ảnh x 2 cỡ, tối đa 25 MB ([ADR 0006](adr/0006-animated-scene-backdrops.md)) |
+| Sinh URL | `sceneUrl(scene, photo, width)` và `sceneSrcSet(scene, photo)` trong `src/lib/assets.ts`, cạnh hàm sinh URL sprite |
 
-- Ảnh tự host và commit vào repo để demo chạy offline ([ADR 0002](adr/0002-offline-data-from-csv.md)). Nếu tổng vượt 5 MB thì giảm chất lượng trước, không bớt scene.
+- Ảnh tự host và commit vào repo để demo chạy offline ([ADR 0002](adr/0002-offline-data-from-csv.md)). Nếu tổng vượt 25 MB thì giảm chất lượng trước, sau đó mới bớt ảnh; không bớt scene.
 - Backend không biết gì về scene: không thêm cột, không thêm trường API.
 
 ### III. Hiển thị
 
-- Component `SceneBackdrop` render `<img>` với `srcset` hai cỡ, `sizes="100vw"`, `alt=""` (ảnh trang trí), `object-fit: cover`, `object-position: center 60%`.
+- Component `SceneBackdrop` render `<img>` với `srcset` hai cỡ, `sizes="100vw"`, `alt=""` (ảnh trang trí), `object-fit: cover`, `object-position: center 60%`. Ảnh đầu tiên chọn ngẫu nhiên trong bộ ảnh của scene.
+- Prop `animated` (chỉ bật ở hero: `PageHero`, `LandingHero`, `PokemonHero`): sau mỗi 12 giây tải trước ảnh kế tiếp rồi chuyển mờ 1,2 giây; ảnh phóng chậm 2-10% trong 24 giây (`animate-scene-drift`, `animate-scene-enter`); thêm `SceneAmbience` với 18 hạt (9 hạt dưới `md`) theo `ambience` của scene. Tab bị ẩn thì không chuyển ảnh. Ảnh lỗi bị bỏ khỏi vòng.
+- `prefers-reduced-motion: reduce` (hook `useReducedMotion`): một ảnh tĩnh, không phóng chậm, không lớp hạt.
 - Ảnh scene ở trang Tổng quan và trang chi tiết đặt `fetchpriority="high"`; trang khác dùng `loading="lazy"` nếu nằm dưới màn hình đầu.
 - Khi đang tải hoặc lỗi: hiển thị gradient màu dự phòng (Phần 2, mục VI); không hiển thị icon ảnh vỡ.
-- Chữ trên ảnh luôn đặt trên lớp phủ màu `--color-scrim` với độ mờ tối thiểu 65% (`PageHero` dùng 85% ở mép dưới, 70% tại 70% chiều cao lớp phủ). Đo bằng script: chữ trắng trên scrim 65% đè lên điểm ảnh trắng tuyệt đối vẫn đạt 5.02:1. Không giảm độ đậm scrim dưới 65% ở vùng có chữ.
+- Chữ trên ảnh luôn đặt trên lớp phủ màu `--color-scrim` với độ mờ tối thiểu 65%. Từ bản 0.6, tiêu đề `PageHero` và khối tên ứng dụng ở `LandingHero` nằm trong tấm nền bo góc `bg-scrim/75` vừa khít chữ (chữ trắng trên scrim 75% đè lên điểm ảnh trắng đạt khoảng 7:1), phần còn lại của ảnh chỉ có dải tối 45-50% ở mép dưới. Đo bằng script: chữ trắng trên scrim 65% đè lên điểm ảnh trắng tuyệt đối vẫn đạt 5.02:1. Không giảm độ đậm scrim dưới 65% ở vùng có chữ.
 - Bảng dữ liệu không bao giờ đặt trực tiếp lên ảnh; luôn nằm trong panel `surface` đặc (không dùng nền mờ kiểu kính).
 
 ---
@@ -341,8 +367,8 @@
 
 | Component | Props chính | Hiển thị | Quy tắc |
 |---|---|---|---|
-| `SceneBackdrop` | `scene`, `priority?: boolean` | Ảnh scene tràn ngang, gradient dự phòng | Theo Phần 4, mục III |
-| `PageHero` | `scene`, `title`, `subtitle?` | Dải khung cảnh cao 192 px (mobile) và 320 px (từ `md`), tiêu đề `text-display` trên scrim ở mép dưới, `SceneLabel` từ `md` | Mỗi trang dùng đúng một `PageHero`; tiêu đề là `<h1>` duy nhất của trang |
+| `SceneBackdrop` | `scene`, `priority?: boolean`, `animated?: boolean` | Ảnh scene tràn ngang, gradient dự phòng; `animated` thêm chuyển ảnh và `SceneAmbience` | Theo Phần 4, mục III |
+| `PageHero` | `scene`, `title`, `subtitle?`, `wide?` | Dải khung cảnh cao 192 px (mobile) và 320 px (từ `md`), tiêu đề `text-display` trong tấm nền scrim 75%, `SceneLabel` từ `md`; `wide` dùng khung 100 rem cùng `PageBody wide` | Mỗi trang dùng đúng một `PageHero`; tiêu đề là `<h1>` duy nhất của trang |
 | `PageBody` | `scene?`, `className?` | Vùng nội dung `max-w-7xl` kéo lên đè mép dưới khung cảnh 24 px (mobile) và 48 px (từ `md`); có `scene` thì nền nhuộm `scene-tint` (Phần 2, mục VI) | Đặt ngay sau `PageHero`, truyền cùng `scene` với `PageHero` |
 | `SceneLabel` | `scene` | Chip nhỏ "Khung cảnh: Núi lửa" ở góc ảnh | Cho người dùng biết vì sao nền đổi; không phải link |
 
@@ -559,6 +585,7 @@ Desktop (1440 px)
 - Không có mã màu, cỡ chữ, họ font, URL ảnh viết trực tiếp ngoài token và `src/lib/assets.ts`.
 - Font Display không dưới 24 px và không bị gắn `font-bold`; con số dùng font Text `tabular-nums`, không dùng font Pixel.
 - Chữ trên ảnh khung cảnh có scrim; bảng dữ liệu nằm trên panel `surface` đặc.
+- Ảnh khung cảnh đã sửa có ghi công cụ trong `SOURCES.md` và đã qua kiểm duyệt dấu vết AI (Phần 4, mục I, 2).
 - Trang có đúng một điểm nhấn và tối đa một chuyển động tự chạy; đã thử với `prefers-reduced-motion: reduce`.
 - Đã xử lý đủ trạng thái tải, rỗng, lỗi; khung cảnh tải lỗi vẫn hiện gradient dự phòng.
 - Đã kiểm tra ở 375 px và 1440 px, trang không cuộn ngang.

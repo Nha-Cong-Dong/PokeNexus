@@ -19,13 +19,21 @@ export type SceneId =
   | 'stadium'
   | 'lab'
 
+export type AmbienceKind = 'motes' | 'fireflies' | 'snow' | 'embers' | 'petals' | 'sparks' | 'sand'
+
+export interface SceneAmbienceStyle {
+  kind: AmbienceKind
+  color: string
+}
+
 export interface Scene {
   name: string
   sky: string
   horizon: string
   ground: string
   accent: string
-  photo: boolean
+  photos: number
+  ambience: SceneAmbienceStyle
 }
 
 export const SCENES: Record<SceneId, Scene> = {
@@ -35,7 +43,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#d8efc6',
     ground: '#7fbf5a',
     accent: '#f2c94c',
-    photo: true,
+    photos: 2,
+    ambience: { kind: 'motes', color: '#fff6c2' },
   },
   forest: {
     name: 'Rừng rậm',
@@ -43,7 +52,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#5e9c6a',
     ground: '#2f6b3a',
     accent: '#a6b91a',
-    photo: true,
+    photos: 2,
+    ambience: { kind: 'fireflies', color: '#e6ff8a' },
   },
   sea: {
     name: 'Biển khơi',
@@ -51,7 +61,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#d6f0fb',
     ground: '#1f6fb2',
     accent: '#6390f0',
-    photo: true,
+    photos: 3,
+    ambience: { kind: 'motes', color: '#ffffff' },
   },
   volcano: {
     name: 'Núi lửa',
@@ -59,7 +70,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#f25c3b',
     ground: '#5a2219',
     accent: '#ee8130',
-    photo: true,
+    photos: 1,
+    ambience: { kind: 'embers', color: '#ffb347' },
   },
   'power-plant': {
     name: 'Nhà máy điện',
@@ -67,7 +79,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#f3e28a',
     ground: '#4f5967',
     accent: '#f7d02c',
-    photo: true,
+    photos: 2,
+    ambience: { kind: 'sparks', color: '#fff27a' },
   },
   snowfield: {
     name: 'Núi tuyết',
@@ -75,7 +88,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#f4fbff',
     ground: '#a9c9de',
     accent: '#96d9d6',
-    photo: true,
+    photos: 1,
+    ambience: { kind: 'snow', color: '#ffffff' },
   },
   mountain: {
     name: 'Vách núi đá',
@@ -83,7 +97,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#e2d6c2',
     ground: '#8a7357',
     accent: '#b6a136',
-    photo: true,
+    photos: 1,
+    ambience: { kind: 'motes', color: '#fdf3dc' },
   },
   desert: {
     name: 'Sa mạc',
@@ -91,7 +106,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#fbe7c0',
     ground: '#c8964f',
     accent: '#e2bf65',
-    photo: true,
+    photos: 1,
+    ambience: { kind: 'sand', color: '#f7e2b5' },
   },
   swamp: {
     name: 'Đầm lầy',
@@ -99,7 +115,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#7a6b8c',
     ground: '#3f354e',
     accent: '#a33ea1',
-    photo: true,
+    photos: 1,
+    ambience: { kind: 'fireflies', color: '#d7b3ff' },
   },
   sky: {
     name: 'Tầng mây',
@@ -107,7 +124,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#cfe3fb',
     ground: '#f3f8fe',
     accent: '#a98ff3',
-    photo: true,
+    photos: 1,
+    ambience: { kind: 'motes', color: '#ffffff' },
   },
   ruins: {
     name: 'Tàn tích cổ',
@@ -115,7 +133,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#f3e1c7',
     ground: '#8d7a86',
     accent: '#f95587',
-    photo: true,
+    photos: 2,
+    ambience: { kind: 'motes', color: '#ffe1f0' },
   },
   haunted: {
     name: 'Rừng đêm',
@@ -123,7 +142,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#4b3f72',
     ground: '#16131f',
     accent: '#735797',
-    photo: true,
+    photos: 2,
+    ambience: { kind: 'fireflies', color: '#8ef7ff' },
   },
   'flower-garden': {
     name: 'Vườn hoa',
@@ -131,7 +151,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#fde8f0',
     ground: '#7fb86a',
     accent: '#d685ad',
-    photo: false,
+    photos: 2,
+    ambience: { kind: 'petals', color: '#ffb3d1' },
   },
   stadium: {
     name: 'Đấu trường',
@@ -139,7 +160,8 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#9fb7d9',
     ground: '#2e4a2e',
     accent: '#ffd23f',
-    photo: true,
+    photos: 1,
+    ambience: { kind: 'sparks', color: '#ffe07a' },
   },
   lab: {
     name: 'Phòng nghiên cứu',
@@ -147,8 +169,21 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#ffffff',
     ground: '#b8c4d0',
     accent: '#1f57b8',
-    photo: true,
+    photos: 3,
+    ambience: { kind: 'motes', color: '#cfe3ff' },
   },
+}
+
+export function nextPhoto(
+  current: number | null,
+  count: number,
+  failed: readonly number[],
+): number | null {
+  for (let step = 1; step <= count; step += 1) {
+    const candidate = (((current ?? 0) - 1 + step) % count) + 1
+    if (!failed.includes(candidate)) return candidate
+  }
+  return null
 }
 
 export function sceneGradient(scene: SceneId): string {

@@ -1,6 +1,6 @@
 # PokeNexus - Kế hoạch quản lý Assets
 
-- Phiên bản: 0.5 (cập nhật 2026-10-28; 14/15 ảnh khung cảnh, 1,9 MB)
+- Phiên bản: 0.6 (cập nhật 2026-10-28; bộ nhiều ảnh cho mỗi khung cảnh, cỡ 1920 và 960, ngân sách 25 MB theo [ADR 0006](adr/0006-animated-scene-backdrops.md))
 - Chiến lược ảnh Pokémon: **Hybrid**. Sprite nhỏ được tự host; artwork lớn lấy từ đường dẫn công khai, có fallback ([ADR 0005](adr/0005-hybrid-image-assets.md)).
 - Dữ liệu CSV không thuộc phạm vi tài liệu này: xem [data/README.md](../data/README.md).
 
@@ -15,7 +15,7 @@
 | Sprite Pokémon | `PokeAPI/sprites`, `sprites/pokemon/{id}.png` | PNG 96 x 96, 0,5-1,7 KB mỗi file | `frontend/public/sprites/pokemon/` | Có | T207 |
 | Artwork Pokémon | `PokeAPI/sprites`, `sprites/pokemon/other/official-artwork/{id}.png` | PNG 475 x 475, 120-145 KB mỗi file | Không lưu, tải lúc hiển thị | Không | T303 |
 | Ảnh dự phòng | Tự vẽ | SVG, dưới 2 KB | `frontend/public/sprites/placeholder.svg` | Có | T207 |
-| Ảnh khung cảnh (scene) | Ảnh chụp từ game Pokémon 3D, tìm trên Bulbagarden Archives ([design-system.md](design-system.md), Phần 4) | WebP 1600 x 900 (tối đa 220 KB) và 800 x 450 (tối đa 70 KB); 14/15 scene có ảnh, 28 file, 1,9 MB (2026-10-28) | `frontend/public/scenes/`, nguồn từng ảnh ở `SOURCES.md` | Có | T301 |
+| Ảnh khung cảnh (scene) | Ảnh chụp từ game Pokémon 3D: Bulbagarden Archives và trang chính thức của game ([design-system.md](design-system.md), Phần 4) | WebP 1920 x 1080 (tối đa 260 KB) và 960 x 540 (tối đa 80 KB), 1-5 ảnh mỗi scene; số liệu hiện tại ở `SOURCES.md` | `frontend/public/scenes/`, nguồn từng ảnh ở `SOURCES.md` | Có | T301 |
 | Font | Dela Gothic One (`@fontsource/dela-gothic-one`), Nunito và Pixelify Sans (`@fontsource-variable/...`) | WOFF2; Dela Gothic One weight 400, hai font còn lại dạng variable | `node_modules`, Vite đóng gói vào `dist/assets` | Không (chỉ `package.json`) | T203, T301 |
 | Logo, favicon | Tự thiết kế | SVG | `frontend/src/assets/logo.svg`, `frontend/public/favicon.svg` | Có | T203 |
 | Ảnh xem trước link (Open Graph) | Chụp và thiết kế | PNG 1200 x 630, dưới 300 KB | `frontend/public/og-image.png` | Có | T405 |
@@ -36,7 +36,7 @@
 | Loại | Quy tắc | Ví dụ |
 |---|---|---|
 | Sprite | ID PokéAPI, không thêm số 0 ở đầu | `sprites/pokemon/6.png`, `sprites/pokemon/10034.png` |
-| Ảnh khung cảnh | `{scene}-{rộng}.webp`, `scene` là mã trong `src/lib/scenes.ts` | `scenes/grassland-1600.webp`, `scenes/grassland-800.webp` |
+| Ảnh khung cảnh | `{scene}-{n}-{rộng}.webp`, `scene` là mã trong `src/lib/scenes.ts`, `n` là số thứ tự ảnh từ 1 | `scenes/grassland-1-1920.webp`, `scenes/grassland-1-960.webp` |
 | Ảnh trong `docs/images/` | `<trang>-<thiết bị>.<đuôi>`, chữ thường, gạch nối | `dex-desktop.png`, `team-builder-mobile.png` |
 | Sơ đồ | `diagram-<tên>.<đuôi>` | `diagram-container.svg` |
 | Wireframe | `<trang>-<thiết bị>.png` | `pokemon-detail-mobile.png` |
@@ -53,7 +53,7 @@
 | Hạng mục | Giới hạn | Hành động khi vượt |
 |---|---|---|
 | Thư mục sprite | 15 MB | Chuyển sang tải sprite bằng script lúc build, không commit |
-| Thư mục ảnh khung cảnh | 5 MB (15 scene x 2 cỡ) | Giảm chất lượng WebP trước, không bớt scene |
+| Thư mục ảnh khung cảnh | 25 MB (15 scene x tối đa 5 ảnh x 2 cỡ) | Giảm chất lượng WebP trước, sau đó bớt ảnh; không bớt scene |
 | Một ảnh trong `docs/images/` | 500 KB | Giảm kích thước hoặc chuyển sang WebP |
 | Một file bất kỳ trong repo | 10 MB | Không commit; đặt ở nơi lưu trữ ngoài và dẫn link |
 | Font tải về khi mở trang | 3 họ font, chỉ WOFF2; chỉ import subset `latin`, `latin-ext`, `vietnamese` của Dela Gothic One | Bỏ subset không dùng |
@@ -99,7 +99,8 @@
 | `getSpriteUrl(id)` | `/sprites/pokemon/{id}.png` |
 | `getArtworkUrl(id)` | `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{id}.png` |
 | `PLACEHOLDER_URL` | `/sprites/placeholder.svg` |
-| `sceneUrl(scene, width)` | `/scenes/{scene}-{width}.webp`, `width` thuộc `SCENE_WIDTHS` (800, 1600) |
+| `sceneUrl(scene, photo, width)` | `/scenes/{scene}-{photo}-{width}.webp`, `width` thuộc `SCENE_WIDTHS` (960, 1920) |
+| `sceneSrcSet(scene, photo)` | Chuỗi `srcset` hai cỡ 960w, 1920w của một ảnh |
 
 - Đây là nơi duy nhất trong code chứa đường dẫn ảnh. Khi đổi nguồn ảnh thì chỉ sửa file này.
 
@@ -109,7 +110,7 @@
 |---|---|---|
 | Lưới Omni-Dex, kết quả tìm kiếm, slot đội, thẻ đề xuất, trang đội chia sẻ | Sprite | 96 px (lưới), 48 px (tìm kiếm) |
 | Trang chi tiết, Bàn Cân | Artwork | 240 px mobile, 320 px desktop |
-| `PageHero` của mọi trang | Ảnh khung cảnh qua `SceneBackdrop` (`srcset` 800w, 1600w) | Tràn ngang, cao 192 px mobile, 320 px desktop |
+| `PageHero` của mọi trang | Ảnh khung cảnh qua `SceneBackdrop` (`srcset` 960w, 1920w) | Tràn ngang, cao 192 px mobile, 320 px desktop |
 
 ### III. Chuỗi fallback trong `PokemonSprite`
 
@@ -164,3 +165,4 @@ flowchart LR
 - Tên file theo Phần 2; dung lượng trong giới hạn Phần 3.
 - Ảnh trong UI có `alt` phù hợp ([design-system.md](design-system.md), Phần 7).
 - Asset bên thứ ba đã kiểm tra giấy phép và ghi nguồn.
+- Ảnh khung cảnh đã xóa HUD hoặc người thừa: ghi công cụ trong `SOURCES.md` và đã chạy `node scripts/check-image-provenance.mjs` trên file sửa ([design-system.md](design-system.md), Phần 4, mục I).

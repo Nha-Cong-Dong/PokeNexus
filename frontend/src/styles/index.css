@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant short (@media (max-height: 50rem));
 
 :root {
   --pn-bg: #eef3f9;
@@ -139,6 +140,27 @@
 
   --animate-hop: hop 200ms ease-out 1;
   --animate-sheet-in: sheet-in 200ms ease-out both;
+  --animate-scene-drift: scene-drift 24s ease-in-out infinite alternate;
+  --animate-scene-enter:
+    scene-fade 1200ms ease-out both, scene-drift 24s ease-in-out infinite alternate;
+
+  @keyframes scene-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes scene-drift {
+    from {
+      transform: scale(1.02);
+    }
+    to {
+      transform: scale(1.1) translate3d(-1.5%, -1%, 0);
+    }
+  }
 
   @keyframes hop {
     0%,
@@ -176,6 +198,168 @@
 
 @utility type-tint {
   background-color: color-mix(in oklab, var(--type-base) 22%, var(--color-surface));
+}
+
+@layer components {
+  .scene-ambience {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    container-type: size;
+  }
+
+  .ambience-particle {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--size);
+    height: var(--size);
+    border-radius: 9999px;
+    background: var(--particle-color);
+    opacity: 0;
+    animation: ambience-glow var(--duration) ease-in-out var(--delay) infinite;
+    will-change: transform, opacity;
+  }
+
+  .ambience-snow .ambience-particle {
+    top: 0;
+    animation-name: ambience-fall;
+    animation-timing-function: linear;
+  }
+
+  .ambience-petals .ambience-particle {
+    top: 0;
+    width: calc(var(--size) * 2.2);
+    height: calc(var(--size) * 1.4);
+    border-radius: 80% 0;
+    animation-name: ambience-flutter;
+    animation-timing-function: linear;
+  }
+
+  .ambience-embers .ambience-particle,
+  .ambience-motes .ambience-particle {
+    top: 100%;
+    animation-name: ambience-rise;
+    animation-timing-function: linear;
+  }
+
+  .ambience-embers .ambience-particle {
+    box-shadow: 0 0 6px 2px var(--particle-color);
+  }
+
+  .ambience-motes .ambience-particle {
+    box-shadow: 0 0 4px 1px var(--particle-color);
+    animation-duration: calc(var(--duration) * 1.6);
+  }
+
+  .ambience-fireflies .ambience-particle {
+    box-shadow: 0 0 8px 3px var(--particle-color);
+  }
+
+  .ambience-sparks .ambience-particle {
+    box-shadow: 0 0 10px 3px var(--particle-color);
+    animation-name: ambience-spark;
+    animation-duration: calc(var(--duration) * 0.5);
+  }
+
+  .ambience-sand .ambience-particle {
+    left: 0;
+    width: calc(var(--size) * 3);
+    height: calc(var(--size) * 0.6);
+    animation-name: ambience-blow;
+    animation-timing-function: linear;
+    animation-duration: calc(var(--duration) * 0.6);
+  }
+}
+
+@keyframes ambience-fall {
+  0% {
+    transform: translate3d(0, -5cqh, 0);
+    opacity: 0;
+  }
+  10%,
+  85% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(var(--drift), 105cqh, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes ambience-flutter {
+  0% {
+    transform: translate3d(0, -5cqh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10%,
+  85% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(calc(var(--drift) * 2), 105cqh, 0) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ambience-rise {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  15%,
+  80% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(var(--drift), -105cqh, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes ambience-glow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.1;
+  }
+  50% {
+    transform: translate3d(var(--drift), calc(var(--drift) * -0.5), 0);
+    opacity: 1;
+  }
+}
+
+@keyframes ambience-spark {
+  0%,
+  72%,
+  100% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  78% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+  86% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+}
+
+@keyframes ambience-blow {
+  0% {
+    transform: translate3d(-5cqw, 0, 0);
+    opacity: 0;
+  }
+  10%,
+  85% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(105cqw, var(--drift), 0);
+    opacity: 0;
+  }
 }
 
 body {
