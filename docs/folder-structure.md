@@ -1,6 +1,6 @@
 # PokeNexus - Cấu trúc thư mục
 
-- Phiên bản: 0.2 (cập nhật 2026-10-26)
+- Phiên bản: 0.3 (cập nhật 2026-10-28; thêm `features/trainer/`, `features/terrain/`, `TerrainPage`)
 - Đây là cấu trúc **đích** khi xong MVP. Thư mục, file nào chưa tồn tại thì được tạo ở task ghi trong cột "Tạo ở" (mã task theo [roadmap.md](roadmap.md)).
 - Thêm hoặc đổi tên package, thư mục cấp 1-2 thì cập nhật tài liệu này trong cùng PR.
 
@@ -157,7 +157,7 @@ frontend/
     │   ├── providers.tsx          QueryClientProvider
     │   └── layout/                AppLayout.tsx, Header.tsx, Footer.tsx, navItems.ts
     ├── pages/                     LandingPage, DexPage, PokemonDetailPage, TypeChartPage, ComparePage,
-    │                              TeamBuilderPage, SharedTeamPage, NotFoundPage (.tsx)
+    │                              TeamBuilderPage, SharedTeamPage, TerrainPage, NotFoundPage (.tsx)
     ├── features/
     │   ├── landing/               api.ts, hooks.ts, regions.ts (vùng đất, Pokémon hôm nay), quiz.ts,
     │   │                          generations.ts, describeDefense.ts, components/ (T311, T312)
@@ -165,7 +165,9 @@ frontend/
     │   ├── pokemon-detail/        api.ts, hooks.ts, components/
     │   ├── typechart/             api.ts, hooks.ts, components/
     │   ├── compare/               api.ts, hooks.ts, components/
-    │   └── team-builder/          api.ts, hooks.ts, useTeamDraft.ts, components/
+    │   ├── team-builder/          api.ts, hooks.ts, useTeamDraft.ts, components/
+    │   ├── terrain/               terrains.ts, api.ts, hooks.ts, whosThat.ts, components/ (T314)
+    │   └── trainer/               progress.ts, useTrainerProgress.ts, components/ (BallIcon, TrainerCard; T313)
     ├── components/
     │   ├── ui/                    buttonStyles.ts, Panel, GameDialog, Card, Dialog, Skeleton, EmptyState,
     │   │                          ErrorState, Toast, Pagination, pageItems.ts
@@ -193,7 +195,7 @@ frontend/
 ```
 
 - File test đặt cạnh file được test: `TypeBadge.tsx` và `TypeBadge.test.tsx`.
-- `features/<tên>/components/` chứa component chỉ dùng trong tính năng đó. Component dùng ở từ 2 tính năng trở lên thì chuyển lên `components/`.
+- `features/<tên>/components/` chứa component chỉ dùng trong tính năng đó. Component dùng ở từ 2 tính năng trở lên thì chuyển lên `components/`. Ngoại lệ: `features/trainer/` là tính năng tiến độ Trainer (dữ liệu, hook và component đi cùng nhau), được Thử tài Trainer và trang Địa hình dùng chung.
 
 ### II. Ánh xạ trang và tính năng
 
@@ -206,6 +208,7 @@ frontend/
 | `ComparePage` | `compare` | `CompareSlot`, `VersusBanner`, `CompareRadar`, `StatDuelTable`, `VerdictPanel`; `useCompareSearchParams.ts`, `scale.ts` | T308 |
 | `TeamBuilderPage` | `team-builder` | `TeamSlots`, `TeamMemberCard`, `WeaknessHeatmap`, `TeamScoreGauge`, `CoverageAndStats`, `RecommendationList`, `RecommendationCard`, `SaveTeamDialog`, `ShareLinkField`; `useTeamDraft.ts`, `teamAnalysis.ts` | T306, T307 |
 | `SharedTeamPage` | `team-builder` | `ReadOnlyTeamSlots`, `AnalysisHeatmap`, `ShareLinkField` | T307 |
+| `TerrainPage` | `terrain`, `trainer` | `TerrainPicker`, `TerrainPokemon`, `WhosThatPokemon`, `TrainerCard`; `terrains.ts`, `whosThat.ts` | T314 |
 
 ### III. Quy tắc đặt tên frontend
 

@@ -1,11 +1,12 @@
 # PokeNexus - Design System và UI Guidelines
 
-- Phiên bản: 0.6 (cập nhật 2026-10-28; nền khung cảnh nhiều ảnh, chuyển ảnh và lớp hạt theo [ADR 0006](adr/0006-animated-scene-backdrops.md); hero Tổng quan vừa một màn hình)
+- Phiên bản: 0.7 (cập nhật 2026-10-28; trang Địa hình; nền khung cảnh nhiều ảnh, chuyển ảnh và lớp hạt theo [ADR 0006](adr/0006-animated-scene-backdrops.md); hero Tổng quan vừa một màn hình)
 - Phạm vi: định hướng thẩm mỹ, token, font, ảnh khung cảnh, component, pattern, bố cục trang và accessibility cho frontend.
 - Theme: **light là mặc định và bắt buộc ở MVP**. Token đã định nghĩa sẵn cặp light/dark; dark mode là mức Could ở Tuần 4 ([roadmap.md](roadmap.md), Phần 2).
 - Mọi giá trị màu dùng cho chữ và thành phần giao diện đã được kiểm tra tỷ lệ tương phản theo công thức WCAG 2.x bằng script ngày 2026-10-24.
 - Thay đổi so với 0.2: bỏ font Be Vietnam Pro, đổi bảng màu thương hiệu, thêm trang Tổng quan, thêm nền khung cảnh theo vùng đất. Các mục cần đồng bộ sang tài liệu khác liệt kê ở Phần 11.
 - Thay đổi so với 0.3: Phần 3 trỏ thẳng tới `src/styles/index.css` và `src/main.tsx`, không chép lại mã nguồn.
+- Thay đổi so với 0.6: thêm bố cục trang Địa hình (Phần 7, mục II.2) và quy tắc ghi đè màu nút bằng modifier `!`.
 - Thay đổi so với 0.5: mỗi khung cảnh có bộ 1-5 ảnh 1920 px; nền hero chuyển ảnh mỗi 12 giây, phóng chậm và có lớp hạt CSS, tắt khi `prefers-reduced-motion`; nới quy tắc nội dung ảnh; tiêu đề trên ảnh đặt trong tấm nền `scrim` 75% thay cho lớp phủ rộng; cho phép xóa HUD, người, Pokémon thừa bằng công cụ kèm bước kiểm duyệt dấu vết AI (Phần 4, mục I); hero Tổng quan cao bằng màn hình; Team Builder rộng tối đa 100 rem.
 - Thay đổi so với 0.4: chữ số Pixelify Sans dễ đọc nhầm (5 và 8 giống S, 2 giống 8, 7 giống ⅂; chụp màn hình ngày 2026-10-28), nên mọi con số chuyển sang Nunito 800 `tabular-nums`, token `text-pixel*` đổi tên `text-num*`; Pixelify Sans chỉ còn cho nhãn "HP". Khung cảnh có bảng 4 màu và nền thân trang nhuộm theo khung cảnh (Phần 2, mục VI).
 
@@ -543,9 +544,11 @@ Desktop (1440 px)
 | So sánh | Hai ô tìm kiếm xếp dọc; `VersusBanner` chia ngang trên, dưới; radar; kết luận | `VersusBanner` chia chéo trái, phải; radar ở giữa, kết luận bên dưới |
 | Team Builder | Slot dạng lưới 3 x 2; điểm đội; heatmap cuộn ngang, cột hệ cố định; đề xuất xếp dọc | Trái: slot và điểm; giữa: heatmap; phải: 3 thẻ đề xuất |
 | Đội chia sẻ | Tên đội, 6 slot chỉ đọc, heatmap, nút "Mở trong Team Builder" | Như mobile, rộng hơn |
+| Địa hình | `PageHero` theo địa hình đang chọn; 13 link địa hình lưới 2 cột; mô tả; trò chơi (bóng đen trên, 4 nút xếp dọc); lưới Pokémon 2 cột; Thẻ Trainer | Link địa hình 7 cột; mô tả và trò chơi chia 2:3; lưới Pokémon 6 cột; Thẻ Trainer |
 
 - Wireframe ở `docs/wireframes/` chốt bố cục và thứ tự thông tin của 6 trang dữ liệu; trang Tổng quan và lớp khung cảnh cần bổ sung wireframe (Phần 11).
 - Bảng rộng (heatmap, ma trận) chỉ cuộn ngang bên trong khung của bảng, trang không bao giờ cuộn ngang.
+- Đổi màu một nút đã có biến thể (ví dụ nút đáp án đúng, sai trên nền `secondary`) phải dùng modifier `!` của Tailwind 4 (`bg-success!`). Không có `!`, lớp `bg-surface` của biến thể được sinh sau và thắng, chữ trắng nằm trên nền trắng (lỗi phát hiện ngày 2026-10-28 ở Thử tài Trainer).
 
 ---
 
