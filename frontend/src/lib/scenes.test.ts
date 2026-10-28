@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
 import type { TypeName } from '../types/api'
-import { SCENES, sceneForTypes, sceneGradient, sceneTintStyle, type SceneId } from './scenes'
+import {
+  nextPhoto,
+  SCENES,
+  sceneForTypes,
+  sceneGradient,
+  sceneTintStyle,
+  type SceneId,
+} from './scenes'
 
 describe('sceneForTypes', () => {
   it.each<[TypeName, SceneId]>([
@@ -56,6 +63,25 @@ describe('sceneForTypes', () => {
     expect(gradient).toContain('#f7b267 0%')
     expect(gradient).toContain('#f25c3b 56%')
     expect(gradient).toContain('#5a2219 62%')
+  })
+
+  it('gives every scene a photo count and an ambience with a colour', () => {
+    const kinds = ['motes', 'fireflies', 'snow', 'embers', 'petals', 'sparks', 'sand']
+    Object.values(SCENES).forEach((scene) => {
+      expect(Number.isInteger(scene.photos)).toBe(true)
+      expect(scene.photos).toBeGreaterThanOrEqual(0)
+      expect(kinds).toContain(scene.ambience.kind)
+      expect(scene.ambience.color).toMatch(/^#[0-9a-f]{6}$/)
+    })
+  })
+
+  it('cycles to the next photo that has not failed', () => {
+    expect(nextPhoto(1, 4, [])).toBe(2)
+    expect(nextPhoto(4, 4, [])).toBe(1)
+    expect(nextPhoto(1, 4, [2, 3])).toBe(4)
+    expect(nextPhoto(null, 3, [1])).toBe(2)
+    expect(nextPhoto(2, 3, [1, 2, 3])).toBeNull()
+    expect(nextPhoto(null, 0, [])).toBeNull()
   })
 
   it('exposes the scene accent as a CSS variable for the page tint', () => {

@@ -91,12 +91,14 @@ export function TeamBuilderPage() {
     <>
       <PageHero
         scene="stadium"
+        wide
         title="Xây đội"
         subtitle="Chọn tối đa 5 Pokémon, đọc bản đồ điểm yếu, rồi để PokeNexus đề xuất slot thứ 6."
       />
       <PageBody
         scene="stadium"
-        className="grid items-start gap-4 md:gap-6 lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[19rem_minmax(0,1fr)_18rem]"
+        wide
+        className="grid items-start gap-4 md:gap-6 lg:grid-cols-[20rem_minmax(0,1fr)] min-[84rem]:grid-cols-[19rem_minmax(0,1fr)_18rem]"
       >
         <div className="flex min-w-0 flex-col gap-4 md:gap-6">
           <Panel aria-labelledby={SLOTS_TITLE_ID} className="flex flex-col gap-4">
@@ -226,7 +228,7 @@ export function TeamBuilderPage() {
 
         <section
           aria-labelledby={RECOMMENDATION_TITLE_ID}
-          className="flex min-w-0 flex-col gap-4 lg:col-span-2 xl:col-span-1"
+          className="flex min-w-0 flex-col gap-4 lg:col-span-2 min-[84rem]:col-span-1"
         >
           <h2
             id={RECOMMENDATION_TITLE_ID}
