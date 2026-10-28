@@ -25,6 +25,7 @@ describe('app routes', () => {
       'Tương khắc',
       'So sánh',
       'Xây đội',
+      'Địa hình',
     ])
     expect(within(nav).getByRole('link', { name: 'Pokédex' })).toHaveAttribute(
       'aria-current',
@@ -40,6 +41,8 @@ describe('app routes', () => {
     ['/team-builder', 'Xây đội'],
     ['/pokemon/charizard', 'Chi tiết Pokémon'],
     ['/team/Ab3dEf7h', 'Đội được chia sẻ'],
+    ['/terrain', 'Địa hình'],
+    ['/terrain/volcano', 'Địa hình'],
   ])('renders %s with heading "%s"', (path, heading) => {
     renderAt(path)
 

@@ -7,6 +7,7 @@ import { NotFoundPage } from '../pages/NotFoundPage'
 import { PokemonDetailPage } from '../pages/PokemonDetailPage'
 import { SharedTeamPage } from '../pages/SharedTeamPage'
 import { TeamBuilderPage } from '../pages/TeamBuilderPage'
+import { TerrainPage } from '../pages/TerrainPage'
 import { TypeChartPage } from '../pages/TypeChartPage'
 import { AppLayout } from './layout/AppLayout'
 
@@ -22,6 +23,7 @@ export const routes: RouteObject[] = [
       { path: 'compare', element: <ComparePage /> },
       { path: 'team-builder', element: <TeamBuilderPage /> },
       { path: 'team/:shareCode', element: <SharedTeamPage /> },
+      { path: 'terrain/:terrainId?', element: <TerrainPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

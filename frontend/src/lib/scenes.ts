@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 
 import type { TypeName } from '../types/api'
+import { TYPE_NAMES } from './pokemonTypes'
 
 export type SceneId =
   | 'grassland'
@@ -229,4 +230,8 @@ export function sceneForTypes(types: readonly TypeName[]): SceneId {
   if (first === undefined) return 'grassland'
   if (first === 'normal' && second !== undefined) return TYPE_SCENES[second]
   return TYPE_SCENES[first]
+}
+
+export function typesForScene(scene: SceneId): TypeName[] {
+  return TYPE_NAMES.filter((type) => TYPE_SCENES[type] === scene)
 }
