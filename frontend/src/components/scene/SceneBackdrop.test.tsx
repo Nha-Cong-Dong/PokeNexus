@@ -21,7 +21,7 @@ describe('SceneBackdrop', () => {
   })
 
   it('shows only the gradient for scenes without a photo', () => {
-    const { container } = render(<SceneBackdrop scene="lab" />)
+    const { container } = render(<SceneBackdrop scene="flower-garden" />)
 
     expect(container.querySelector('img')).toBeNull()
   })

@@ -12,6 +12,7 @@ import { PokemonHero } from '../features/pokemon-detail/components/PokemonHero'
 import { StatPanel } from '../features/pokemon-detail/components/StatPanel'
 import { usePokemonDetail } from '../features/pokemon-detail/hooks'
 import { formatPokemonName } from '../lib/formatters'
+import { sceneForTypes, sceneTintStyle } from '../lib/scenes'
 import { ApiError } from '../lib/http'
 import type { PokemonDetail } from '../types/api'
 
@@ -40,7 +41,10 @@ export function PokemonDetailPage() {
 
 function PokemonDetailView({ detail }: { detail: PokemonDetail }) {
   return (
-    <>
+    <div
+      className="scene-tint [--hero-overlap:17.5rem] lg:[--hero-overlap:26.25rem]"
+      style={sceneTintStyle(sceneForTypes(detail.types))}
+    >
       <PokemonHero detail={detail}>
         <StatPanel detail={detail} />
       </PokemonHero>
@@ -51,6 +55,6 @@ function PokemonDetailView({ detail }: { detail: PokemonDetail }) {
           {detail.forms.length > 1 && <FormSwitcher forms={detail.forms} currentId={detail.id} />}
         </div>
       </div>
-    </>
+    </div>
   )
 }

@@ -65,10 +65,10 @@
   --text-display-xl--line-height: 2.5rem;
   --text-display: 1.75rem;
   --text-display--line-height: 2.125rem;
-  --text-pixel-lg: 2rem;
-  --text-pixel-lg--line-height: 2rem;
-  --text-pixel: 1rem;
-  --text-pixel--line-height: 1rem;
+  --text-num-lg: 2rem;
+  --text-num-lg--line-height: 2rem;
+  --text-num: 1rem;
+  --text-num--line-height: 1rem;
 
   --color-dex-red: #c8102e;
   --color-dex-red-hover: #a50d26;
@@ -163,6 +163,15 @@
 @utility type-card {
   background-color: var(--type-deep);
   box-shadow: 0 4px 0 color-mix(in oklab, var(--type-deep) 55%, var(--pn-ink));
+}
+
+@utility scene-tint {
+  background-image: linear-gradient(
+    180deg,
+    transparent var(--hero-overlap, 0px),
+    color-mix(in oklab, var(--scene-accent) 18%, var(--color-bg)) var(--hero-overlap, 0px),
+    var(--color-bg) calc(var(--hero-overlap, 0px) + 32rem)
+  );
 }
 
 @utility type-tint {

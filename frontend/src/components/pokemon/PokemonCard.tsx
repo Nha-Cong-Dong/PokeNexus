@@ -41,7 +41,7 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
         ))}
       </span>
       <span className="relative mt-auto flex items-baseline gap-1.5 pt-3 text-xs font-bold">
-        BST <span className="font-pixel text-pixel font-semibold">{pokemon.baseStatTotal}</span>
+        BST <span className="tabular-nums text-num font-extrabold">{pokemon.baseStatTotal}</span>
       </span>
       <span className="absolute right-2 bottom-2 size-16 sm:right-2.5 sm:bottom-2.5 sm:size-20">
         <span

@@ -36,7 +36,7 @@ export function StatPanel({ detail }: StatPanelProps) {
         </h2>
         <p className="flex items-baseline gap-2.5">
           <span className="text-sm font-bold text-ink-muted">Tổng</span>
-          <span className="font-pixel text-pixel-lg font-bold">{detail.baseStatTotal}</span>
+          <span className="tabular-nums text-num-lg font-extrabold">{detail.baseStatTotal}</span>
         </p>
       </div>
 

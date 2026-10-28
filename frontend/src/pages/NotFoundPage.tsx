@@ -8,7 +8,7 @@ export function NotFoundPage() {
   return (
     <>
       <PageHero scene="lab" title="Không tìm thấy trang" />
-      <PageBody>
+      <PageBody scene="lab">
         <Panel aria-label="Hướng dẫn" className="flex flex-col items-start gap-4">
           <p className="text-ink-muted">Đường dẫn không tồn tại hoặc đã bị thay đổi.</p>
           <div className="flex flex-wrap gap-3">

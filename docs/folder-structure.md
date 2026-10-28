@@ -169,7 +169,7 @@ frontend/
     ├── components/
     │   ├── ui/                    buttonStyles.ts, Panel, GameDialog, Card, Dialog, Skeleton, EmptyState,
     │   │                          ErrorState, Toast, Pagination, pageItems.ts
-    │   ├── scene/                 SceneBackdrop, PageHero (kèm PageBody), SceneLabel
+    │   ├── scene/                 SceneBackdrop, PageHero (kèm PageBody nhuộm theo scene), SceneLabel
     │   └── pokemon/               TypeBadge, TypeGlyph, DexNumber, StatBar, MultiplierCell, PokemonSprite,
     │                              PokemonCard, PokemonSearchBox, StatRadar, statAxes.ts, multiplierStyles.ts
     ├── lib/
@@ -177,7 +177,7 @@ frontend/
     │   ├── queryClient.ts         Không thử lại khi lỗi 4xx, thử lại 1 lần với lỗi khác
     │   ├── typeEffectiveness.ts   Tra hệ số từ TypeMatrix, hệ số hệ kép, nhóm x2/x½/x0 của một hệ tấn công
     │   ├── assets.ts              getSpriteUrl, getArtworkUrl, sceneUrl
-    │   ├── scenes.ts              15 scene (tên, màu dự phòng, cờ photo), sceneForTypes
+    │   ├── scenes.ts              15 scene (tên, bảng 4 màu, cờ photo), sceneForTypes, sceneGradient, sceneSwatch, sceneTintStyle
     │   ├── pokemonTypes.ts        Danh sách 18 hệ, ánh xạ hệ sang class token
     │   ├── errorMessages.ts       Ánh xạ code lỗi sang thông điệp tiếng Việt
     │   └── formatters.ts          Tên, chiều cao, cân nặng, hệ số

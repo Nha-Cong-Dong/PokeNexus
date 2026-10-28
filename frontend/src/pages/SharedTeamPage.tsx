@@ -59,7 +59,7 @@ export function SharedTeamPage() {
   return (
     <>
       <PageHero scene="stadium" title={data?.name ?? DEFAULT_TITLE} subtitle={subtitle} />
-      <PageBody className="flex flex-col gap-4 md:gap-6">
+      <PageBody scene="stadium" className="flex flex-col gap-4 md:gap-6">
         {notFound ? (
           <Panel aria-label="Không tìm thấy đội">
             <GameDialog speaker="Pokédex" className="mx-auto my-4 max-w-155">

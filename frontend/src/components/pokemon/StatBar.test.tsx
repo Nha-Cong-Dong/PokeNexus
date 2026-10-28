@@ -33,6 +33,14 @@ describe('StatBar', () => {
     expect(renderBar(value)).toHaveClass(className)
   })
 
+  it('renders the value with tabular text digits instead of the pixel font', () => {
+    renderBar(534)
+    const value = screen.getAllByRole('definition')[0]
+
+    expect(value).toHaveClass('tabular-nums', 'text-num')
+    expect(value).not.toHaveClass('font-pixel')
+  })
+
   it('clamps values above the scale to a full bar', () => {
     expect(renderBar(300).style.width).toBe('100%')
   })

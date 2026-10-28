@@ -76,9 +76,9 @@ function ShareIllustration() {
           <span className="text-sm font-extrabold">Garchomp</span>
           <span className="text-xs font-bold text-ink-muted">Miễn nhiễm Electric</span>
         </span>
-        <span className="font-pixel text-lg font-bold">98</span>
+        <span className="tabular-nums text-lg font-extrabold">98</span>
       </span>
-      <span className="rounded-xl border-2 border-dashed border-border-strong bg-surface px-3 py-2 font-pixel text-sm text-ink-muted">
+      <span className="tabular-nums font-bold rounded-xl border-2 border-dashed border-border-strong bg-surface px-3 py-2 text-sm text-ink-muted">
         /team/K7Q2XM8a
       </span>
     </div>
@@ -120,7 +120,7 @@ export function TeamSteps() {
               className="flex min-w-0 flex-col gap-4 rounded-3xl border-2 border-ink bg-surface p-5 shadow-block-lg"
             >
               <div className="flex items-center gap-3">
-                <span className="flex size-10 flex-none items-center justify-center rounded-full border-2 border-ink bg-dex-yellow font-pixel text-lg font-bold">
+                <span className="tabular-nums flex size-10 flex-none items-center justify-center rounded-full border-2 border-ink bg-dex-yellow text-lg font-extrabold">
                   {index + 1}
                 </span>
                 <h3 className="text-xl font-extrabold md:text-2xl">{step.title}</h3>

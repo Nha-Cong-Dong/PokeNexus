@@ -61,7 +61,7 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
           ),
         )}
       </ul>
-      <span className="font-pixel text-lg font-bold sm:hidden">
+      <span className="tabular-nums text-lg font-extrabold sm:hidden">
         {page + 1} / {totalPages}
       </span>
       <button

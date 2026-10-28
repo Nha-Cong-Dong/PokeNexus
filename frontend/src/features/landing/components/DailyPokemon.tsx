@@ -82,7 +82,9 @@ export function DailyPokemon({ date = new Date() }: { date?: Date }) {
               </p>
               <p className="flex items-center gap-3">
                 <span className="text-sm font-bold text-ink-muted">Tổng chỉ số</span>
-                <span className="font-pixel text-pixel-lg font-bold">{data.baseStatTotal}</span>
+                <span className="tabular-nums text-num-lg font-extrabold">
+                  {data.baseStatTotal}
+                </span>
               </p>
               <p className="max-w-[54ch] text-lg/7">{describeDefense(data)}</p>
               <div className="mt-2 flex flex-wrap gap-3">

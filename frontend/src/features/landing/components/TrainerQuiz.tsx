@@ -80,7 +80,8 @@ export function TrainerQuiz() {
 
         <GameDialog speaker="Giáo sư" className="flex-1">
           <span className="absolute -top-4 right-5 rounded-full border-2 border-ink bg-dex-yellow px-3 py-0.5 text-sm font-extrabold">
-            Câu <span className="font-pixel">{`${state.index + 1}/${QUIZ_QUESTIONS.length}`}</span>
+            Câu{' '}
+            <span className="tabular-nums font-bold">{`${state.index + 1}/${QUIZ_QUESTIONS.length}`}</span>
           </span>
           {isError ? (
             <ErrorState
@@ -124,8 +125,9 @@ export function TrainerQuiz() {
               </p>
               <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-border pt-4">
                 <p className="text-sm font-bold text-ink-muted">
-                  Đúng <span className="font-pixel text-lg text-ink">{state.correct}</span> trên{' '}
-                  {state.answered} câu đã trả lời
+                  Đúng{' '}
+                  <span className="tabular-nums font-bold text-lg text-ink">{state.correct}</span>{' '}
+                  trên {state.answered} câu đã trả lời
                 </p>
                 <button
                   type="button"

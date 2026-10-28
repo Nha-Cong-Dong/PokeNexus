@@ -19,7 +19,7 @@ export function CoverageAndStats({ analysis }: CoverageAndStatsProps) {
       <div className="flex flex-col gap-3">
         <h3 className="text-lg font-extrabold">Độ phủ tấn công</h3>
         <p className="flex items-baseline gap-1.5">
-          <span className="font-pixel text-pixel-lg font-bold">{coveredTypeCount}</span>
+          <span className="tabular-nums text-num-lg font-extrabold">{coveredTypeCount}</span>
           <span className="text-sm font-bold text-ink-muted">/ {TYPE_NAMES.length} hệ</span>
         </p>
         <p className="text-sm text-ink-muted">
@@ -53,7 +53,7 @@ export function CoverageAndStats({ analysis }: CoverageAndStatsProps) {
           {STAT_AXES.map((axis) => (
             <div key={axis.key} className="flex items-baseline justify-between gap-2">
               <dt className="text-ink-muted">{axis.label}</dt>
-              <dd className="font-pixel text-pixel font-semibold">
+              <dd className="tabular-nums text-num font-extrabold">
                 {formatNumber(analysis.statRadar[axis.key])}
               </dd>
             </div>

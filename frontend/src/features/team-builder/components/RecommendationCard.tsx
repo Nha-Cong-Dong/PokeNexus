@@ -50,7 +50,7 @@ export function RecommendationCard({
           </span>
         </div>
         <p className="flex flex-none flex-col items-end">
-          <span className="font-pixel text-pixel-lg font-bold">
+          <span className="tabular-nums text-num-lg font-extrabold">
             {formatScore(recommendation.score)}
           </span>
           <span className="text-xs font-extrabold text-ink-muted">phù hợp</span>

@@ -9,7 +9,7 @@ import { SceneLabel } from '../../../components/scene/SceneLabel'
 import { buttonClassName } from '../../../components/ui/buttonStyles'
 import { GameDialog } from '../../../components/ui/GameDialog'
 import { formatHeight, formatPokemonName, formatWeight } from '../../../lib/formatters'
-import { SCENES } from '../../../lib/scenes'
+import { SCENES, sceneSwatch } from '../../../lib/scenes'
 import { usePokemonDetail } from '../../pokemon-detail/hooks'
 import { LANDING_REGIONS, type LandingRegion, regionForDate } from '../regions'
 
@@ -43,7 +43,7 @@ function FeaturedPokemon({ region }: FeaturedPokemonProps) {
         </span>
       </div>
       <figcaption className="relative mt-5 flex w-full flex-col items-center gap-2 rounded-2xl border-2 border-white/40 bg-scrim/80 px-5 py-4 text-center text-white">
-        <DexNumber id={region.pokemonId} className="text-pixel-lg text-dex-yellow" />
+        <DexNumber id={region.pokemonId} className="text-num-lg text-dex-yellow" />
         <span className="text-2xl font-extrabold">{name}</span>
         {isError && (
           <button
@@ -65,11 +65,11 @@ function FeaturedPokemon({ region }: FeaturedPokemonProps) {
           <dl className="mt-1 grid w-full grid-cols-2 gap-2 text-ink">
             <div className="rounded-lg border-2 border-ink bg-surface px-3 py-1.5">
               <dt className="text-xs font-bold text-ink-muted">Chiều cao</dt>
-              <dd className="font-pixel text-lg font-bold">{formatHeight(data.heightDm)}</dd>
+              <dd className="tabular-nums text-lg font-extrabold">{formatHeight(data.heightDm)}</dd>
             </div>
             <div className="rounded-lg border-2 border-ink bg-surface px-3 py-1.5">
               <dt className="text-xs font-bold text-ink-muted">Cân nặng</dt>
-              <dd className="font-pixel text-lg font-bold">{formatWeight(data.weightHg)}</dd>
+              <dd className="tabular-nums text-lg font-extrabold">{formatWeight(data.weightHg)}</dd>
             </div>
           </dl>
         )}
@@ -168,9 +168,7 @@ export function LandingHero() {
                   <span
                     aria-hidden="true"
                     className="size-7.5 flex-none rounded-full border-2 border-ink"
-                    style={{
-                      backgroundImage: `linear-gradient(180deg, ${scene.top} 0%, ${scene.bottom} 100%)`,
-                    }}
+                    style={{ backgroundImage: sceneSwatch(item.scene) }}
                   />
                   {scene.name}
                 </button>

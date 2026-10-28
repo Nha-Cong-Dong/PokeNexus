@@ -4,7 +4,7 @@ import { DexNumber } from '../../../components/pokemon/DexNumber'
 import { PokemonSprite } from '../../../components/pokemon/PokemonSprite'
 import { TypeBadge } from '../../../components/pokemon/TypeBadge'
 import { formatPokemonName } from '../../../lib/formatters'
-import { SCENES, sceneForTypes } from '../../../lib/scenes'
+import { sceneForTypes, sceneGradient } from '../../../lib/scenes'
 import type { PokemonRef } from '../../../types/api'
 
 type TeamMemberCardProps = {
@@ -27,16 +27,14 @@ export function TeamMemberCard({
   linkToDetail = false,
 }: TeamMemberCardProps) {
   const name = pokemon ? formatPokemonName(pokemon.name) : `Pokémon #${id}`
-  const scene = SCENES[sceneForTypes(pokemon?.types ?? [])]
+  const scene = sceneForTypes(pokemon?.types ?? [])
 
   const body = (
     <>
       <span
         aria-hidden="true"
         className="block h-12 rounded-t-[14px]"
-        style={{
-          backgroundImage: `linear-gradient(180deg, ${scene.top} 0%, ${scene.bottom} 100%)`,
-        }}
+        style={{ backgroundImage: sceneGradient(scene) }}
       />
       <span className="absolute top-3 left-1/2 flex size-16 -translate-x-1/2 items-center justify-center rounded-full border-2 border-ink bg-surface">
         <PokemonSprite id={id} alt={name} size={64} className="size-14" />

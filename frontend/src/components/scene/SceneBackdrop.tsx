@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { SCENE_WIDTHS, sceneUrl } from '../../lib/assets'
-import { SCENES, type SceneId } from '../../lib/scenes'
+import { SCENES, sceneGradient, type SceneId } from '../../lib/scenes'
 
 type SceneBackdropProps = {
   scene: SceneId
@@ -10,7 +10,7 @@ type SceneBackdropProps = {
 
 export function SceneBackdrop({ scene, priority = false }: SceneBackdropProps) {
   const [failedScene, setFailedScene] = useState<SceneId | null>(null)
-  const { top, bottom, photo } = SCENES[scene]
+  const { photo } = SCENES[scene]
   const showPhoto = photo && failedScene !== scene
 
   return (
@@ -18,7 +18,7 @@ export function SceneBackdrop({ scene, priority = false }: SceneBackdropProps) {
       aria-hidden="true"
       data-scene={scene}
       className="absolute inset-0 overflow-hidden"
-      style={{ backgroundImage: `linear-gradient(180deg, ${top} 0%, ${bottom} 100%)` }}
+      style={{ backgroundImage: sceneGradient(scene) }}
     >
       {showPhoto && (
         <img
