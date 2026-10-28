@@ -13,9 +13,9 @@
 | Mục | Giá trị |
 |---|---|
 | Tuần | W2 - Đặc tả và khung dự án (26/10 - 01/11) |
-| Task hôm nay | T309 rà soát trạng thái, responsive, accessibility trên 8 trang; T310 chạy kịch bản E2E 2 lần, CHANGELOG 0.2.0 |
-| Task kế tiếp | Merge nhánh `feature/22-analyze-six-members` rồi `feature/25-ui-states-a11y`, gắn tag `v0.2.0` trên `main`; tạo Issue cho T311, T312 và T401-T407 |
-| Mốc gần nhất | Tag `v0.2.0` ngày 08/11 (`v0.1.0` gắn sớm ngày 25/10) |
+| Task hôm nay | Đóng T310: merge PR #40, #41, tag `v0.2.0`; toàn bộ task W3 đã xong |
+| Task kế tiếp | Tạo Issue cho T311, T312 và T401-T405, T407 (milestone W4); T401 Cây tiến hóa hoặc Bảng tốc độ |
+| Mốc gần nhất | Tag `v1.0.0` ngày 15/11 (`v0.1.0` gắn sớm ngày 25/10, `v0.2.0` gắn sớm ngày 28/10) |
 
 ### II. Trạng thái task tuần W1
 
@@ -51,7 +51,7 @@
 | T308 | 06/11 | Bàn Cân Sức Mạnh | Xong | Làm 26/10. Garchomp và Salamence: "Garchomp nhanh hơn (102 so với 100)."; radar chồng lớp, bảng từng chỉ số |
 | T311 | 07/11 | Trang Tổng quan phần 1 | Xong | Làm 26/10. Hero 13 vùng đất, dải hệ, Bốn vùng đất, Vòng tương khắc (Fire: x2 Grass, Ice, Bug, Steel), Pokémon hôm nay |
 | T309 | 07/11 | Trạng thái, responsive, accessibility | Xong | Làm 28/10. 8 trang (10 route) ở 375 và 1440 px: không cuộn ngang, 1 `<h1>`, mọi điểm dừng Tab có vòng focus, đủ skeleton và `ErrorState`; Lighthouse Accessibility 100 cả mobile và desktop; sửa vùng chạm dưới 40 px, `Esc` đóng menu mobile, slot 6 giữ khi reload |
-| T310 | 08/11 | Buffer, E2E, tag `v0.2.0` | Đang làm | Làm 28/10. Kịch bản spec Phần 4 đạt 2 lần liên tiếp (8-11 s mỗi lần, script CDP); CHANGELOG mục 0.2.0. Còn gắn tag sau khi merge |
+| T310 | 08/11 | Buffer, E2E, tag `v0.2.0` | Xong | Làm 28/10. Kịch bản spec Phần 4 đạt 2 lần liên tiếp (8-11 s mỗi lần, script CDP); CHANGELOG mục 0.2.0; PR #40, #41; tag và GitHub Release `v0.2.0`; Issue #25, #26 đóng |
 | T312 | 08/11 | Trang Tổng quan phần 2 | Xong | Làm 26/10. Biểu đồ thế hệ (thế hệ 1 = 151, bấm mở `/pokedex?gen=1`), Thử tài Trainer 5 câu, kêu gọi cuối trang |
 
 - Giá trị cột Trạng thái: Chưa làm, Đang làm, Bị chặn, Xong, Cắt giảm.
@@ -66,7 +66,7 @@
 - [x] Tab qua 8 trang bằng bàn phím, focus nhìn thấy được; kiểm tra lại 375 px và 1440 px (28/10, xem Nhật ký).
 - [x] Chạy kịch bản demo ở spec Phần 4 hai lần liên tiếp trên local; ghi kết quả (28/10).
 - [x] CHANGELOG mục 0.2.0.
-- [ ] Tag `v0.2.0` trên `main` sau khi merge 2 nhánh ở Phần 1.
+- [x] Tag `v0.2.0` trên `main` sau khi merge PR #40, #41 (28/10).
 
 ---
 
@@ -118,3 +118,4 @@
 | 2026-10-26 | Thêm trang Tổng quan vào kế hoạch (spec 1.2 F07, roadmap 0.3 T311, T312; Omni-Dex sang `/pokedex`); làm API còn lại (tương khắc, chi tiết, tìm kiếm, so sánh, tiến hóa, synergy, lưu và chia sẻ đội) và 7 trang giao diện (T302-T308, T311, T312); radar vẽ bằng SVG thay Recharts; cập nhật `api.md`, `architecture.md`, `folder-structure.md`, `design-system.md` | `verify`: 98 unit test, 54 IT pass, 0 Skipped, `BUILD SUCCESS`; frontend lint sạch, Prettier sạch, 182 test pass, build pass (JS 149 KB gzip); chạy thật backend + MySQL Docker (1351 Pokémon) + Vite: 8 trang ở 1440 px và 375 px không cuộn ngang, mỗi trang đúng 1 `<h1>`, không lỗi console; đáp án spec V.4 đúng trên dữ liệu thật |
 | 2026-10-27 | Rà soát tiến độ; bỏ slide, video demo (T406) khỏi `docs/roadmap.md` 0.4 và `docs/assets.md` 0.4; phương án B: `analyze` nhận 1-6 (`AnalyzeRequest`, `SynergyAnalyzer.MAX_TEAM_SIZE`), `RecommendationEngine.MAX_TEAM_SIZE` giữ 5, `TeamService` chấm điểm mọi thành viên; Team Builder và trang Đội chia sẻ gửi cả slot 6; spec 1.3, api.md 0.4, architecture.md 0.3 | `verify`: 101 unit test, 54 IT pass, 0 Skipped, `BUILD SUCCESS`; frontend lint sạch, 191 test pass, build pass; API thật (1351 Pokémon): đội mẫu 20 điểm, đề xuất số 1 Iron Treads ("Chống chịu hệ Rock"), thêm vào slot 6 thì 48 điểm và Rock hết lỗ hổng; 7 Pokémon trả 400; đề xuất cho đội 6 trả 400 |
 | 2026-10-28 | T309: rà soát 8 trang bằng script Chrome headless (CDP) và Lighthouse 12; vùng chạm 40 px trên mobile (nút `sm`, `ViewToggle`, chip lọc, logo, link footer và vòng tương khắc); `Esc` đóng menu mobile; `useTeamDraft` giữ slot 6 trên URL (`six`); slot Team Builder và ô So sánh báo "Chưa tải được" khi API lỗi. T310: kịch bản demo spec Phần 4 chạy 2 lần; CHANGELOG 0.2.0; design-system 0.4 và architecture 0.3 cập nhật cỡ nút `sm`, tham số `six` | Frontend lint sạch, Prettier sạch, 198 test pass (8 test hồi quy đều đỏ khi chưa sửa), build pass. Trình duyệt thật (backend + MySQL Docker, 1351 Pokémon): 10 route ở 375/1440 px không cuộn ngang, 1 `<h1>`, 0 điểm dừng Tab thiếu focus; chặn backend thì mọi trang có `ErrorState`, trễ API 6 s thì có skeleton; Lighthouse Accessibility 100 ở 8 route x 2 cấu hình. E2E 2/2 đạt: Dragon gen 4 ra 6 kết quả có Garchomp; "Garchomp nhanh hơn (102 so với 100)"; Rock "Lỗ hổng nghiêm trọng"; Iron Treads vào slot 6, điểm 20 lên 48; reload giữ slot 6; link chia sẻ mở ở profile trống đủ 6 thành viên. Backend không đổi, không chạy lại `verify` |
+| 2026-10-28 | Merge PR #40 (`analyze` nhận 1-6) và PR #41 (T309, T310); rebase nhánh #41 lên `main` sau khi squash #40; tag `v0.2.0`, GitHub Release từ mục 0.2.0 của CHANGELOG; đóng Issue #25, #26 | CI PR #41 xanh cả 2 job (Backend Java 25, Frontend Node 24); `main` tại `b1517ce`; Release `v0.2.0` là Latest; tiêu chí W3 ở `docs/roadmap.md`, Phần 3, mục V đạt |
