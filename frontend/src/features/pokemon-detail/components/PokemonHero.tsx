@@ -24,8 +24,12 @@ export function PokemonHero({ detail, children }: PokemonHeroProps) {
 
   return (
     <div className="relative">
-      <div className="absolute inset-x-0 top-0 h-70 overflow-hidden bg-scrim lg:h-105">
+      <div className="absolute inset-x-0 top-0 h-70 overflow-hidden bg-scrim lg:h-136">
         <SceneBackdrop scene={scene} priority animated />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 scene-fade lg:h-1/2"
+        />
       </div>
       <div className="relative z-10 mx-auto grid max-w-7xl gap-6 px-3 md:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] xl:px-8">
         <section aria-labelledby={POKEMON_NAME_ID} className="relative min-w-0 lg:h-105">

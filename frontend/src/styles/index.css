@@ -546,11 +546,26 @@
 }
 
 @utility scene-tint {
+  --scene-surface: color-mix(in oklab, var(--scene-accent) 18%, var(--color-bg));
   background-image: linear-gradient(
     180deg,
     transparent var(--hero-overlap, 0px),
-    color-mix(in oklab, var(--scene-accent) 18%, var(--color-bg)) var(--hero-overlap, 0px),
+    var(--scene-surface) var(--hero-overlap, 0px),
     var(--color-bg) calc(var(--hero-overlap, 0px) + 32rem)
+  );
+}
+
+@utility scene-fade {
+  --scene-surface: color-mix(in oklab, var(--scene-accent) 18%, var(--color-bg));
+  background-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklab, var(--scene-surface) 8%, transparent) 22%,
+    color-mix(in oklab, var(--scene-surface) 26%, transparent) 42%,
+    color-mix(in oklab, var(--scene-surface) 56%, transparent) 62%,
+    color-mix(in oklab, var(--scene-surface) 84%, transparent) 80%,
+    color-mix(in oklab, var(--scene-surface) 97%, transparent) 92%,
+    var(--scene-surface) 100%
   );
 }
 

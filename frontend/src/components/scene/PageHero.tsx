@@ -30,7 +30,8 @@ export function PageHero({ scene, title, subtitle, wide = false }: PageHeroProps
   return (
     <section
       aria-labelledby={PAGE_TITLE_ID}
-      className="relative h-48 overflow-hidden bg-scrim md:h-80"
+      className="relative h-72 overflow-hidden bg-scrim md:h-120 lg:h-136"
+      style={sceneTintStyle(scene)}
     >
       <div
         key={scene}
@@ -40,10 +41,10 @@ export function PageHero({ scene, title, subtitle, wide = false }: PageHeroProps
       </div>
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-scrim/50 to-scrim/0 md:h-32"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 scene-fade md:h-1/2"
       />
       <SceneLabel scene={scene} />
-      <div className="absolute inset-x-0 bottom-9 md:bottom-17">
+      <div className="absolute inset-x-0 bottom-22 md:bottom-36 lg:bottom-42">
         <div className={`mx-auto px-3 md:px-6 xl:px-8 ${containerClassName(wide)}`}>
           <div className="w-fit max-w-full rounded-2xl bg-scrim/75 px-4 py-3 text-white md:px-6 md:py-4">
             <h1
@@ -67,7 +68,7 @@ export function PageHero({ scene, title, subtitle, wide = false }: PageHeroProps
 export function PageBody({ scene, wide = false, className = '', children }: PageBodyProps) {
   return (
     <div
-      className={`relative z-10 -mt-6 [--hero-overlap:1.5rem] md:-mt-12 md:[--hero-overlap:3rem] ${scene ? 'scene-tint' : ''}`}
+      className={`relative z-10 -mt-16 [--hero-overlap:4rem] md:-mt-28 md:[--hero-overlap:7rem] lg:-mt-32 lg:[--hero-overlap:8rem] ${scene ? 'scene-tint' : ''}`}
       style={scene ? sceneTintStyle(scene) : undefined}
     >
       <div className={`mx-auto px-3 md:px-6 xl:px-8 ${containerClassName(wide)} ${className}`}>
