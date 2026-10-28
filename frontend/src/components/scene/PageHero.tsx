@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 
 import { sceneTintStyle, type SceneId } from '../../lib/scenes'
 import { SceneBackdrop } from './SceneBackdrop'
@@ -25,12 +25,19 @@ function containerClassName(wide: boolean): string {
 }
 
 export function PageHero({ scene, title, subtitle, wide = false }: PageHeroProps) {
+  const [initialScene] = useState(scene)
+
   return (
     <section
       aria-labelledby={PAGE_TITLE_ID}
       className="relative h-48 overflow-hidden bg-scrim md:h-80"
     >
-      <SceneBackdrop scene={scene} priority animated />
+      <div
+        key={scene}
+        className={`absolute inset-0 ${scene === initialScene ? '' : 'animate-iris'}`}
+      >
+        <SceneBackdrop scene={scene} priority animated />
+      </div>
       <div
         aria-hidden="true"
         className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-scrim/50 to-scrim/0 md:h-32"

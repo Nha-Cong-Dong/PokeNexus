@@ -1,5 +1,7 @@
 import { Link } from 'react-router'
 
+import { Reveal } from '../../../components/motion/Reveal'
+
 import { multiplierClassName } from '../../../components/pokemon/multiplierStyles'
 import { TypeBadge } from '../../../components/pokemon/TypeBadge'
 import { TypeGlyph } from '../../../components/pokemon/TypeGlyph'
@@ -115,18 +117,21 @@ export function TeamSteps() {
         </div>
         <ol className="mt-10 grid gap-6 md:grid-cols-3">
           {STEPS.map((step, index) => (
-            <li
-              key={step.title}
-              className="flex min-w-0 flex-col gap-4 rounded-3xl border-2 border-ink bg-surface p-5 shadow-block-lg"
-            >
-              <div className="flex items-center gap-3">
-                <span className="tabular-nums flex size-10 flex-none items-center justify-center rounded-full border-2 border-ink bg-dex-yellow text-lg font-extrabold">
-                  {index + 1}
-                </span>
-                <h3 className="text-xl font-extrabold md:text-2xl">{step.title}</h3>
-              </div>
-              <p className="text-ink-muted">{step.description}</p>
-              <div className="mt-auto">{step.illustration}</div>
+            <li key={step.title} className="flex min-w-0">
+              <Reveal
+                variant="up"
+                delay={index * 140}
+                className="flex min-w-0 flex-1 flex-col gap-4 rounded-3xl border-2 border-ink bg-surface p-5 shadow-block-lg transition-[translate,rotate] duration-200 ease-out hover:-translate-y-1 hover:-rotate-[0.5deg]"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="tabular-nums flex size-10 flex-none items-center justify-center rounded-full border-2 border-ink bg-dex-yellow text-lg font-extrabold">
+                    {index + 1}
+                  </span>
+                  <h3 className="text-xl font-extrabold md:text-2xl">{step.title}</h3>
+                </div>
+                <p className="text-ink-muted">{step.description}</p>
+                <div className="mt-auto">{step.illustration}</div>
+              </Reveal>
             </li>
           ))}
         </ol>

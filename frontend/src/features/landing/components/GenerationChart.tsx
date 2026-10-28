@@ -1,5 +1,7 @@
 import { Link } from 'react-router'
 
+import { Reveal } from '../../../components/motion/Reveal'
+
 import { ErrorState } from '../../../components/ui/ErrorState'
 import { errorMessageFor } from '../../../lib/errorMessages'
 import { formatNumber } from '../../../lib/formatters'
@@ -26,7 +28,7 @@ export function GenerationChart() {
           </p>
         </div>
 
-        <div className="mt-10 overflow-x-auto rounded-3xl border-2 border-ink bg-surface p-4 shadow-block-lg md:p-6">
+        <Reveal className="mt-10 overflow-x-auto rounded-3xl border-2 border-ink bg-surface p-4 shadow-block-lg md:p-6">
           {isError ? (
             <ErrorState message={errorMessageFor(errorCode)} onRetry={retry} />
           ) : (
@@ -46,8 +48,8 @@ export function GenerationChart() {
                       </span>
                       <span className="flex h-56 items-end">
                         <span
-                          className={`block w-full rounded-t-xl border-2 border-ink transition-transform group-hover:-translate-y-1 ${count === undefined ? 'bg-surface-muted' : generation.barClassName}`}
-                          style={{ height: `${height}%` }}
+                          className={`reveal-grow-y block w-full rounded-t-xl border-2 border-ink transition-[translate] duration-150 group-hover:-translate-y-1 ${count === undefined ? 'bg-surface-muted' : generation.barClassName}`}
+                          style={{ height: `${height}%`, animationDelay: `${index * 70}ms` }}
                         />
                       </span>
                       <span className="tabular-nums font-bold text-center text-xs text-ink-muted">
@@ -65,7 +67,7 @@ export function GenerationChart() {
               })}
             </ol>
           )}
-        </div>
+        </Reveal>
       </div>
     </section>
   )

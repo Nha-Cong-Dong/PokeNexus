@@ -20,6 +20,7 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
       to={`/pokemon/${pokemon.name}`}
       className={`group type-card relative flex min-h-30.5 flex-col overflow-hidden rounded-[18px] px-3 pt-3 pb-2.5 text-white transition-transform duration-200 ease-out hover:-translate-y-1 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ink sm:min-h-33.5 sm:rounded-[20px] sm:px-4 sm:pt-3.5 sm:pb-3 ${typeScopeClassName(primaryType)}`}
     >
+      <span aria-hidden="true" className="shine-sweep" />
       <TypeGlyph
         type={primaryType}
         className="pointer-events-none absolute -top-6 -right-7 size-28 opacity-15 transition-transform duration-700 ease-out group-hover:scale-110 group-hover:rotate-[28deg] sm:-top-7.5 sm:-right-9 sm:size-37.5"

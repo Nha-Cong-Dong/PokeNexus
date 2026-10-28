@@ -7,6 +7,7 @@ import { ErrorState } from '../../../components/ui/ErrorState'
 import { errorMessageFor } from '../../../lib/errorMessages'
 import { formatMultiplier, formatPokemonName } from '../../../lib/formatters'
 import { ApiError } from '../../../lib/http'
+import { staggerDelay } from '../../../lib/motion'
 import { typeLabel } from '../../../lib/pokemonTypes'
 import type { AnalyzeResponse, PokemonRef, TypeMatrixRow } from '../../../types/api'
 import { pressureLevel, sortRowsByPressure } from '../teamAnalysis'
@@ -88,11 +89,16 @@ export function WeaknessHeatmap({ members, rows }: WeaknessHeatmapProps) {
                 </td>
               </tr>
             ) : (
-              visible.map((row) => {
+              visible.map((row, rowIndex) => {
                 const level = pressureLevel(row.pressure)
                 const attacker = typeLabel(row.attackingType)
                 return (
-                  <tr key={row.attackingType} data-critical={row.criticalHole || undefined}>
+                  <tr
+                    key={row.attackingType}
+                    data-critical={row.criticalHole || undefined}
+                    className="animate-slide-in-left"
+                    style={staggerDelay(rowIndex, 30)}
+                  >
                     <th
                       scope="row"
                       className={`sticky left-0 z-10 border-t border-l-4 border-t-border bg-surface py-1 pr-2 pl-2 text-left font-normal ${row.criticalHole ? 'border-l-danger' : 'border-l-transparent'}`}
@@ -100,7 +106,7 @@ export function WeaknessHeatmap({ members, rows }: WeaknessHeatmapProps) {
                       <span className="flex flex-wrap items-center gap-1.5">
                         <TypeBadge type={row.attackingType} />
                         {row.criticalHole && (
-                          <span className="inline-flex min-h-6 items-center rounded-md bg-danger px-2 py-0.5 text-xs font-extrabold text-white">
+                          <span className="inline-flex min-h-6 items-center rounded-md bg-danger px-2 py-0.5 text-xs font-extrabold text-white [animation:var(--animate-pop-in),var(--animate-pulse-ring)]">
                             Lỗ hổng nghiêm trọng
                           </span>
                         )}

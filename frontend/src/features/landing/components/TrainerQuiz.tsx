@@ -198,7 +198,7 @@ export function TrainerQuiz() {
               }}
             />
           ) : state.finished ? (
-            <div className="flex flex-col gap-4">
+            <div className="flex animate-pop-in flex-col gap-4">
               <p role="status" className="text-xl/8 font-bold">
                 Hoàn thành bộ {set.title}: đúng{' '}
                 <span className="tabular-nums">{`${state.correct}/${total}`}</span> câu.
@@ -244,7 +244,10 @@ export function TrainerQuiz() {
           ) : !evaluated ? (
             <p className="text-ink-muted">Đang chuẩn bị câu hỏi...</p>
           ) : (
-            <div className="flex flex-col gap-5">
+            <div
+              key={`${state.setIndex}-${state.index}`}
+              className="flex animate-slide-in-right flex-col gap-5"
+            >
               <p className="text-xl/8 font-bold">{evaluated.prompt}</p>
               <div role="group" aria-label="Các đáp án" className="grid gap-2.5 sm:grid-cols-3">
                 {evaluated.options.map((option, index) => (

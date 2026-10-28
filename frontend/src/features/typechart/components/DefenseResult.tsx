@@ -1,5 +1,6 @@
 import { MultiplierCell } from '../../../components/pokemon/MultiplierCell'
 import { TypeBadge } from '../../../components/pokemon/TypeBadge'
+import { staggerDelay } from '../../../lib/motion'
 import { typeLabel } from '../../../lib/pokemonTypes'
 import type { TypeMatrix, TypeName } from '../../../types/api'
 import { defendingEntries, defenseSummary, groupByMultiplier } from '../defense'
@@ -43,9 +44,17 @@ export function DefenseResult({ matrix, defending }: DefenseResultProps) {
         {summary}
       </p>
       {groups.length > 0 && (
-        <ul aria-label="Hệ số nhận từ 18 hệ tấn công" className="flex flex-col gap-2.5">
-          {groups.map((group) => (
-            <li key={group.multiplier} className="flex items-start gap-3">
+        <ul
+          key={defending.join('-')}
+          aria-label="Hệ số nhận từ 18 hệ tấn công"
+          className="flex flex-col gap-2.5"
+        >
+          {groups.map((group, index) => (
+            <li
+              key={group.multiplier}
+              className="flex animate-slide-in-left items-start gap-3"
+              style={staggerDelay(index, 60)}
+            >
               <MultiplierCell multiplier={group.multiplier} className="h-8 w-11 flex-none" />
               <ul className="flex flex-wrap gap-1.5 pt-1">
                 {group.types.map((type) => (

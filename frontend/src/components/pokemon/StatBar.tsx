@@ -2,6 +2,7 @@ type StatBarProps = {
   label: string
   value: number
   max?: number
+  delayMs?: number
 }
 
 function toneClassName(value: number): string {
@@ -11,7 +12,7 @@ function toneClassName(value: number): string {
   return 'bg-stat-high'
 }
 
-export function StatBar({ label, value, max = 255 }: StatBarProps) {
+export function StatBar({ label, value, max = 255, delayMs = 0 }: StatBarProps) {
   const percent = max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0
 
   return (
@@ -24,8 +25,8 @@ export function StatBar({ label, value, max = 255 }: StatBarProps) {
       >
         <span
           data-testid="stat-bar-fill"
-          className={`block h-full ${percent > 0 ? 'border-r-2 border-ink' : ''} ${toneClassName(value)}`}
-          style={{ width: `${percent}%` }}
+          className={`block h-full origin-left animate-grow-x ${percent > 0 ? 'border-r-2 border-ink' : ''} ${toneClassName(value)}`}
+          style={{ width: `${percent}%`, animationDelay: `${delayMs}ms` }}
         />
       </dd>
     </div>

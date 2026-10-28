@@ -5,6 +5,8 @@ import { singleMultiplier } from '../../../lib/typeEffectiveness'
 import type { TypeMatrix } from '../../../types/api'
 import { matrixTypes } from '../defense'
 
+const CELL_WAVE_STEP_MS = 18
+
 type TypeMatrixTableProps = {
   matrix: TypeMatrix
 }
@@ -51,7 +53,7 @@ export function TypeMatrixTable({ matrix }: TypeMatrixTableProps) {
           </tr>
         </thead>
         <tbody>
-          {types.map((attacking) => (
+          {types.map((attacking, row) => (
             <tr key={attacking}>
               <th
                 scope="row"
@@ -63,13 +65,14 @@ export function TypeMatrixTable({ matrix }: TypeMatrixTableProps) {
                   {typeLabel(attacking)}
                 </span>
               </th>
-              {types.map((defending) => {
+              {types.map((defending, column) => {
                 const multiplier = singleMultiplier(matrix, attacking, defending)
                 return (
                   <td
                     key={defending}
                     title={`${typeLabel(attacking)} tấn công ${typeLabel(defending)}: ${formatMultiplier(multiplier)}`}
-                    className="p-0.5"
+                    className="animate-cell-in p-0.5"
+                    style={{ animationDelay: `${(row + column) * CELL_WAVE_STEP_MS}ms` }}
                   >
                     {multiplier === 1 ? (
                       <span className="flex h-8 w-10 items-center justify-center font-extrabold text-ink-muted">

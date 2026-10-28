@@ -38,20 +38,24 @@ export function VersusBanner({ left, right }: VersusBannerProps) {
         className="absolute inset-0 bg-dex-yellow [clip-path:polygon(0_39%,100%_51%,100%_53.5%,0_41.5%)] md:[clip-path:polygon(56%_0,58%_0,44%_100%,42%_100%)]"
       />
 
-      <PokemonSprite
-        id={left.id}
-        alt={leftName}
-        variant="artwork"
-        size={240}
-        className="absolute top-3 right-2 size-40 object-contain md:top-auto md:right-auto md:bottom-3 md:left-[12%] md:size-52 lg:size-60"
-      />
-      <PokemonSprite
-        id={right.id}
-        alt={rightName}
-        variant="artwork"
-        size={240}
-        className="absolute bottom-3 left-2 size-40 object-contain md:right-[12%] md:left-auto md:size-52 lg:size-60"
-      />
+      <div className="absolute top-3 right-2 size-40 animate-fly-in-left md:top-auto md:right-auto md:bottom-3 md:left-[12%] md:size-52 lg:size-60">
+        <PokemonSprite
+          id={left.id}
+          alt={leftName}
+          variant="artwork"
+          size={240}
+          className="size-full animate-float object-contain"
+        />
+      </div>
+      <div className="absolute bottom-3 left-2 size-40 animate-fly-in-right md:right-[12%] md:left-auto md:size-52 lg:size-60">
+        <PokemonSprite
+          id={right.id}
+          alt={rightName}
+          variant="artwork"
+          size={240}
+          className="size-full animate-float object-contain [animation-delay:900ms]"
+        />
+      </div>
 
       <NamePlate pokemon={left} name={leftName} className="top-3 left-3 md:top-5 md:left-5" />
       <NamePlate
@@ -62,7 +66,7 @@ export function VersusBanner({ left, right }: VersusBannerProps) {
 
       <span
         aria-hidden="true"
-        className="absolute top-[46%] left-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-ink bg-dex-yellow font-display text-2xl text-ink shadow-[0_5px_0_var(--color-ink)] md:top-1/2 md:size-24 md:text-4xl"
+        className="absolute top-[46%] left-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 animate-vs-pop items-center justify-center rounded-full border-4 border-ink bg-dex-yellow font-display text-2xl text-ink shadow-[0_5px_0_var(--color-ink)] md:top-1/2 md:size-24 md:text-4xl"
       >
         VS
       </span>
@@ -79,7 +83,7 @@ type NamePlateProps = {
 function NamePlate({ pokemon, name, className }: NamePlateProps) {
   return (
     <div
-      className={`absolute flex max-w-[55%] flex-col gap-1.5 rounded-2xl bg-scrim/85 px-4 py-3 text-white md:max-w-[40%] ${className}`}
+      className={`absolute flex max-w-[55%] animate-fade-up flex-col gap-1.5 rounded-2xl bg-scrim/85 px-4 py-3 text-white [animation-delay:520ms] md:max-w-[40%] ${className}`}
     >
       <DexNumber id={pokemon.id} className="text-sm text-white/80" />
       <p className="font-display text-2xl leading-7 break-words md:text-3xl md:leading-9">{name}</p>

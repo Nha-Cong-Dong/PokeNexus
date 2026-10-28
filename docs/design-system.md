@@ -1,11 +1,12 @@
 # PokeNexus - Design System và UI Guidelines
 
-- Phiên bản: 0.7 (cập nhật 2026-10-28; trang Địa hình; nền khung cảnh nhiều ảnh, chuyển ảnh và lớp hạt theo [ADR 0006](adr/0006-animated-scene-backdrops.md); hero Tổng quan vừa một màn hình)
+- Phiên bản: 0.8 (cập nhật 2026-10-29; bộ chuyển động theo bản thiết kế ngày 2026-10-24: token `--animate-*`, `Reveal`, `staggerDelay`; trang Địa hình; nền khung cảnh nhiều ảnh theo [ADR 0006](adr/0006-animated-scene-backdrops.md))
 - Phạm vi: định hướng thẩm mỹ, token, font, ảnh khung cảnh, component, pattern, bố cục trang và accessibility cho frontend.
-- Theme: **light là mặc định và bắt buộc ở MVP**. Token đã định nghĩa sẵn cặp light/dark; dark mode là mức Could ở Tuần 4 ([roadmap.md](roadmap.md), Phần 2).
+- Theme: **light là mặc định và bắt buộc ở MVP**. Token đã định nghĩa sẵn cặp light/dark; dark mode là mức Could, chưa xếp lịch ([roadmap.md](roadmap.md), Phần 2).
 - Mọi giá trị màu dùng cho chữ và thành phần giao diện đã được kiểm tra tỷ lệ tương phản theo công thức WCAG 2.x bằng script ngày 2026-10-24.
 - Thay đổi so với 0.2: bỏ font Be Vietnam Pro, đổi bảng màu thương hiệu, thêm trang Tổng quan, thêm nền khung cảnh theo vùng đất. Các mục cần đồng bộ sang tài liệu khác liệt kê ở Phần 11.
 - Thay đổi so với 0.3: Phần 3 trỏ thẳng tới `src/styles/index.css` và `src/main.tsx`, không chép lại mã nguồn.
+- Thay đổi so với 0.7: bỏ giới hạn "một khoảnh khắc chuyển động mỗi trang"; dùng bộ chuyển động của bản thiết kế hi-fi ngày 2026-10-24 (vào trang, hiện khi cuộn tới, đổi dữ liệu) theo yêu cầu chủ dự án ngày 2026-10-29 (T315). Phần 2, mục VII và Phần 7, mục II cập nhật.
 - Thay đổi so với 0.6: thêm bố cục trang Địa hình (Phần 7, mục II.2) và quy tắc ghi đè màu nút bằng modifier `!`.
 - Thay đổi so với 0.5: mỗi khung cảnh có bộ 1-5 ảnh 1920 px; nền hero chuyển ảnh mỗi 12 giây, phóng chậm và có lớp hạt CSS, tắt khi `prefers-reduced-motion`; nới quy tắc nội dung ảnh; tiêu đề trên ảnh đặt trong tấm nền `scrim` 75% thay cho lớp phủ rộng; cho phép xóa HUD, người, Pokémon thừa bằng công cụ kèm bước kiểm duyệt dấu vết AI (Phần 4, mục I); hero Tổng quan cao bằng màn hình; Team Builder rộng tối đa 100 rem.
 - Thay đổi so với 0.4: chữ số Pixelify Sans dễ đọc nhầm (5 và 8 giống S, 2 giống 8, 7 giống ⅂; chụp màn hình ngày 2026-10-28), nên mọi con số chuyển sang Nunito 800 `tabular-nums`, token `text-pixel*` đổi tên `text-num*`; Pixelify Sans chỉ còn cho nhãn "HP". Khung cảnh có bảng 4 màu và nền thân trang nhuộm theo khung cảnh (Phần 2, mục VI).
@@ -43,7 +44,7 @@
 | Gradient tím, chàm làm nền trang trí | Ảnh khung cảnh thật từ game; màu phẳng của vỏ Pokédex |
 | Lưới card giống hệt nhau, cùng bóng mờ xám | Card nhuộm theo màu hệ chính, đế bóng dưới sprite, bóng đặc lệch xuống (Phần 2, mục VII) |
 | Nhãn chữ in hoa giãn chữ trên mọi tiêu đề | Tiêu đề viết hoa chữ cái đầu; không dùng nhãn phụ phía trên tiêu đề nếu không mang thông tin |
-| Mỗi section trượt và mờ dần khi cuộn | Một khoảnh khắc chuyển động duy nhất mỗi trang (Phần 2, mục VII) |
+| Hiệu ứng tùy hứng, mỗi chỗ một kiểu, chuyển động chặn thao tác | Một bộ chuyển động dùng chung theo bản thiết kế (Phần 2, mục VII): chạy một lần khi vào trang, khi cuộn tới hoặc khi dữ liệu đổi; không chặn bấm; tắt hết khi giảm chuyển động |
 | Ảnh minh họa do AI tạo, icon emoji | Ảnh chụp từ game 3D, sprite và artwork chính thức qua PokéAPI (được xóa HUD, người thừa theo Phần 4, mục I), icon SVG nét đơn |
 | Câu chữ chung chung ("Khám phá ngay hôm nay!") | Giọng của một Trainer, cụ thể: "Garchomp hở hệ Ice x4. Thêm một Pokémon hệ Steel để che lại." |
 | Số thống kê lớn kèm nhãn nhỏ xếp hàng ngang | Số liệu nằm trong câu của hộp thoại hoặc trong màn hình Pokédex |
@@ -240,8 +241,9 @@
 | Hộp thoại game | Viền `ink` 3 px, viền trong `border` 2 px cách 3 px (`outline` + `outline-offset: -8px`), nền `surface` |
 | Lớp (z-index) | Khung cảnh 0, nội dung 10, header 40, dropdown 45, dialog 50, toast 60 |
 | Chuyển động do người dùng | 150 ms `ease-out` cho hover, focus; 200 ms cho dialog, ngăn kéo |
-| Chuyển động tự chạy | Tối đa một khoảnh khắc mỗi trang, chạy một lần khi tải (Phần 7, mục II). Không parallax. Ngoại lệ duy nhất được lặp: nền khung cảnh của hero (chuyển ảnh, phóng chậm, lớp hạt; Phần 4, mục III), tắt hoàn toàn khi `prefers-reduced-motion: reduce` |
-| Giảm chuyển động | Khi `prefers-reduced-motion: reduce`: tắt mọi chuyển động tự chạy, hiện ngay trạng thái cuối |
+| Chuyển động tự chạy | Theo bản thiết kế hi-fi ngày 2026-10-24 (Phần 7, mục II). Chạy một lần khi vào trang (vào lần lượt, tối đa 640 ms chờ), khi khối được cuộn tới (`Reveal`) hoặc khi dữ liệu đổi (đổi `key` để chạy lại). Được lặp: nền khung cảnh hero (Phần 4, mục III), artwork lơ lửng 3,2 giây, đảo nổi ở trang Tổng quan, dải hệ chạy ngang (dừng khi hover). Không parallax theo cuộn |
+| Bộ chuyển động | Easing `--ease-emphasized` (0.2, 0.8, 0.2, 1), `--ease-spring`, `--ease-overshoot`; lớp `animate-*` sinh từ token `--animate-*` trong `src/styles/index.css` (card-in, fade-up, slide-in-left/right, pop-in, cell-in, grow-x/y, drop-in, float, fly-in-left/right, vs-pop, radar-in, pulse-ring, title-in, boot, iris, rise, marquee, bob); `Reveal` (`components/motion/`) cho khối hiện khi cuộn tới; `staggerDelay` (`lib/motion.ts`) cho danh sách; `chip-pop` cho chip bật khi `aria-pressed="true"`; `shine-sweep` cho vệt sáng khi hover. Chỉ dùng `transform`, `opacity`, `clip-path`, `filter` |
+| Giảm chuyển động | Khi `prefers-reduced-motion: reduce`: mọi animation còn 0,01 ms, chạy một lần và dừng ở trạng thái cuối (quy tắc trong `@layer base`); `Reveal` hiện ngay không chờ cuộn; dải hệ không chạy ngang mà xuống dòng |
 
 ### VIII. Breakpoint và lưới
 
@@ -482,13 +484,14 @@
 
 | Trang | Route | Khung cảnh | Điểm nhấn duy nhất | Chuyển động tự chạy |
 |---|---|---|---|---|
-| Tổng quan | `/` | Khung cảnh của Pokémon đồng hành; chưa có thì xoay theo ngày trong 13 khung cảnh vùng đất | Hero toàn màn hình: artwork đứng trên khung cảnh, `GameDialog` ở dưới | Chữ trong hộp thoại hiện dần như game (một lần, tối đa 1,2 giây, bấm vào hộp thoại thì hiện ngay toàn bộ) |
-| Omni-Dex | `/pokedex` | `grassland` | Lưới card nhuộm màu theo hệ | Không có |
-| Chi tiết | `/pokemon/:idOrName` | Theo hệ của Pokémon (Phần 2, mục VI) | Artwork cỡ lớn đứng trên khung cảnh vùng đất của nó, kèm `SceneLabel` | Artwork rơi xuống đế và nảy nhẹ (một lần, 300 ms) |
-| Tương khắc | `/types` | `lab` | Ma trận 18 x 18 với hàng, cột tiêu đề là nhãn hệ màu | Không có |
-| So sánh | `/compare` | `stadium`; khi đủ 2 Pokémon thì `VersusBanner` | Màn hình đối đầu chia đôi theo đường xiên | Hai nửa trượt vào giữa (một lần, 400 ms) khi chọn đủ 2 Pokémon |
-| Team Builder | `/team-builder` | `stadium` | Điểm đội `text-num-lg` trên thanh kiểu HP | Không có |
-| Đội chia sẻ | `/team/:shareCode` | `stadium` | Tên đội font Display trên khung cảnh | Không có |
+| Tổng quan | `/` | Khung cảnh của Pokémon đồng hành; chưa có thì xoay theo ngày trong 13 khung cảnh vùng đất | Hero toàn màn hình: artwork đứng trên khung cảnh, `GameDialog` ở dưới | Màn hình Pokédex mở kiểu CRT (`boot`), khối tiêu đề và hộp thoại trồi lên (`rise`), chữ "PokeNexus" hiện rõ dần (`title-in`), Pokémon nổi bật bật ra rồi lơ lửng; đổi vùng đất thì ảnh lộ theo vòng tròn (`iris`); dải hệ chạy ngang; các khối dưới hiện khi cuộn tới, đảo nổi nhấp nhô, cột thế hệ mọc lên |
+| Omni-Dex | `/pokedex` | `grassland` | Lưới card nhuộm màu theo hệ | Card vào lần lượt (`card-in`, 30 ms mỗi card); hover có vệt sáng quét; chip lọc bật khi chọn |
+| Chi tiết | `/pokemon/:idOrName` | Theo hệ của Pokémon (Phần 2, mục VI) | Artwork cỡ lớn đứng trên khung cảnh vùng đất của nó, kèm `SceneLabel` | Artwork rơi xuống đế, nảy nhẹ rồi lơ lửng; nhãn hệ bật ra; thanh chỉ số chạy dài lần lượt (300 ms + 90 ms mỗi thanh); ô phòng thủ và chuỗi tiến hóa vào lần lượt |
+| Tương khắc | `/types` | `lab` | Ma trận 18 x 18 với hàng, cột tiêu đề là nhãn hệ màu | Ô ma trận hiện theo đường chéo (18 ms mỗi bậc); kết quả hệ kép trượt vào mỗi lần đổi hệ; chip bật khi chọn |
+| So sánh | `/compare` | `stadium`; khi đủ 2 Pokémon thì `VersusBanner` | Màn hình đối đầu chia đôi theo đường xiên | Hai nửa trượt vào; artwork bay vào từ hai bên rồi lơ lửng; huy hiệu VS bật ra; bảng tên rơi xuống; radar phóng từ tâm; thanh chỉ số chạy từ giữa ra; 3 ý kết luận hiện lần lượt; đổi cặp thì chạy lại |
+| Team Builder | `/team-builder` | `stadium` | Điểm đội `text-num-lg` trên thanh kiểu HP | Slot bật lên khi thêm thành viên; hàng heatmap trượt vào; nhãn "Lỗ hổng nghiêm trọng" bật ra và nhấp nháy viền 3 lần; thanh điểm chạy dài và đổi độ dài mượt; thẻ đề xuất trượt từ phải |
+| Đội chia sẻ | `/team/:shareCode` | `stadium` | Tên đội font Display trên khung cảnh | Slot vào lần lượt; heatmap như Team Builder |
+| Địa hình | `/terrain/:terrainId?` | Theo địa hình đang chọn | Trò chơi "Who's that Pokémon?" với bóng đen artwork | Đổi địa hình thì ảnh hero lộ theo vòng tròn (`iris`); card Pokémon vào lần lượt; 4 lựa chọn bật ra mỗi lượt; vòng bóng đen lơ lửng |
 
 #### 1. Trang Tổng quan
 

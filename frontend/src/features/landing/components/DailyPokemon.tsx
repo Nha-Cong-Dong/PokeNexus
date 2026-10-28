@@ -1,5 +1,7 @@
 import { Link } from 'react-router'
 
+import { Reveal } from '../../../components/motion/Reveal'
+
 import { DexNumber } from '../../../components/pokemon/DexNumber'
 import { PokemonSprite } from '../../../components/pokemon/PokemonSprite'
 import { TypeBadge } from '../../../components/pokemon/TypeBadge'
@@ -31,7 +33,7 @@ export function DailyPokemon({ date = new Date() }: { date?: Date }) {
       aria-labelledby="daily-title"
       className="bg-linear-to-b from-surface-muted to-bg px-4 py-16 md:px-6 md:py-24"
     >
-      <div className="mx-auto grid max-w-6xl overflow-hidden rounded-3xl border-2 border-ink bg-surface shadow-block-lg md:grid-cols-[1.1fr_1fr]">
+      <Reveal className="mx-auto grid max-w-6xl overflow-hidden rounded-3xl border-2 border-ink bg-surface shadow-block-lg md:grid-cols-[1.1fr_1fr]">
         <div className="relative min-h-64 overflow-hidden border-b-2 border-ink md:min-h-96 md:border-r-2 md:border-b-0">
           <SceneBackdrop scene={scene} />
           <div className="absolute inset-0 flex items-center justify-center">
@@ -98,7 +100,7 @@ export function DailyPokemon({ date = new Date() }: { date?: Date }) {
             </>
           )}
         </div>
-      </div>
+      </Reveal>
     </section>
   )
 }

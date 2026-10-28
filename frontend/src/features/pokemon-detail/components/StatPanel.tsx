@@ -8,6 +8,9 @@ import type { PokemonDetail } from '../../../types/api'
 import { STAT_AXES } from '../../../components/pokemon/statAxes'
 import { FORM_LABELS, rarityLabel } from '../labels'
 
+const STAT_BAR_DELAY_MS = 300
+const STAT_BAR_STEP_MS = 90
+
 type StatPanelProps = {
   detail: PokemonDetail
 }
@@ -40,9 +43,14 @@ export function StatPanel({ detail }: StatPanelProps) {
         </p>
       </div>
 
-      <dl className="flex flex-col gap-3">
-        {STAT_AXES.map((row) => (
-          <StatBar key={row.key} label={row.label} value={detail.stats[row.key]} />
+      <dl key={detail.id} className="flex flex-col gap-3">
+        {STAT_AXES.map((row, index) => (
+          <StatBar
+            key={row.key}
+            label={row.label}
+            value={detail.stats[row.key]}
+            delayMs={STAT_BAR_DELAY_MS + index * STAT_BAR_STEP_MS}
+          />
         ))}
       </dl>
 

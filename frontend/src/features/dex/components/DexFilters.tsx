@@ -26,7 +26,7 @@ const MAX_TYPES = 2
 const GENERATIONS = Array.from({ length: MAX_GENERATION }, (_, index) => index + 1)
 const LEGEND_CLASS = 'mb-2.5 text-sm font-bold'
 const CHIP_BASE =
-  'border-2 font-extrabold transition-colors duration-150 ease-out not-disabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-45'
+  'chip-pop border-2 font-extrabold transition-colors duration-150 ease-out not-disabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-45'
 const CHIP_OFF = 'border-border bg-surface text-ink not-disabled:hover:border-border-strong'
 const CHIP_ON_DARK = 'border-ink bg-ink text-surface'
 

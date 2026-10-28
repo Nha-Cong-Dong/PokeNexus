@@ -1,5 +1,6 @@
 import { buttonClassName } from '../../../components/ui/buttonStyles'
 import { formatPokemonName } from '../../../lib/formatters'
+import { staggerDelay } from '../../../lib/motion'
 import type { PokemonRef, TeamMember } from '../../../types/api'
 import { MAX_DRAFT_SIZE } from '../useTeamDraft'
 import { TeamMemberCard } from './TeamMemberCard'
@@ -51,7 +52,10 @@ export function TeamSlots({
       {Array.from({ length: MAX_DRAFT_SIZE }, (_, index) => {
         const id = ids[index]
         return (
-          <li key={id ?? `empty-${index}`} className="flex">
+          <li
+            key={id ?? `empty-${index}`}
+            className={`flex ${id !== undefined ? 'animate-pop-in' : ''}`}
+          >
             {id !== undefined ? (
               <TeamMemberCard
                 id={id}
@@ -117,8 +121,8 @@ type ReadOnlyTeamSlotsProps = {
 export function ReadOnlyTeamSlots({ members }: ReadOnlyTeamSlotsProps) {
   return (
     <ul className="grid grid-cols-2 gap-x-3 gap-y-4 sm:grid-cols-3 lg:grid-cols-6">
-      {members.map((member) => (
-        <li key={member.slot} className="flex">
+      {members.map((member, index) => (
+        <li key={member.slot} className="flex animate-card-in" style={staggerDelay(index, 80)}>
           <TeamMemberCard
             id={member.id}
             pokemon={member}

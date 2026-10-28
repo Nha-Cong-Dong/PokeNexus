@@ -12,7 +12,7 @@ type DualTypePickerProps = {
 
 const HELP_ID = 'dual-type-picker-help'
 const CHIP_BASE =
-  'flex h-10 items-center gap-2 rounded-full border-2 px-2.5 text-left text-xs font-extrabold transition-colors duration-150 ease-out not-disabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-45'
+  'chip-pop flex h-10 items-center gap-2 rounded-full border-2 px-2.5 text-left text-xs font-extrabold transition-colors duration-150 ease-out not-disabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-45'
 const CHIP_OFF = 'border-border bg-surface text-ink not-disabled:hover:border-border-strong'
 
 export function DualTypePicker({ titleId, selected, onToggle, onClear }: DualTypePickerProps) {

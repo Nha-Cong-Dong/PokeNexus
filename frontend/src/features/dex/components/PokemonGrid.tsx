@@ -1,4 +1,5 @@
 import { PokemonCard } from '../../../components/pokemon/PokemonCard'
+import { staggerDelay } from '../../../lib/motion'
 import type { PokemonSummary } from '../../../types/api'
 
 type PokemonGridProps = {
@@ -12,8 +13,12 @@ const SKELETON_COUNT = 12
 export function PokemonGrid({ pokemon }: PokemonGridProps) {
   return (
     <ul className={GRID_CLASS}>
-      {pokemon.map((item) => (
-        <li key={item.id} className="flex [&>a]:flex-1">
+      {pokemon.map((item, index) => (
+        <li
+          key={item.id}
+          className="flex animate-card-in [&>a]:flex-1"
+          style={staggerDelay(index, 30)}
+        >
           <PokemonCard pokemon={item} />
         </li>
       ))}

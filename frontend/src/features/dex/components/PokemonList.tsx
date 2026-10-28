@@ -4,6 +4,7 @@ import { DexNumber } from '../../../components/pokemon/DexNumber'
 import { PokemonSprite } from '../../../components/pokemon/PokemonSprite'
 import { TypeBadge } from '../../../components/pokemon/TypeBadge'
 import { formatPokemonName } from '../../../lib/formatters'
+import { staggerDelay } from '../../../lib/motion'
 import { typeScopeClassName } from '../../../lib/pokemonTypes'
 import type { PokemonSummary } from '../../../types/api'
 
@@ -14,10 +15,10 @@ type PokemonListProps = {
 export function PokemonList({ pokemon }: PokemonListProps) {
   return (
     <ul className="flex flex-col gap-1.5">
-      {pokemon.map((item) => {
+      {pokemon.map((item, index) => {
         const displayName = formatPokemonName(item.name)
         return (
-          <li key={item.id}>
+          <li key={item.id} className="animate-slide-in-left" style={staggerDelay(index, 25)}>
             <Link
               to={`/pokemon/${item.name}`}
               className={`type-tint flex min-h-13.5 flex-wrap items-center gap-x-3.5 gap-y-2 rounded-[14px] py-1.5 pr-4 pl-2 text-ink transition-[transform,box-shadow] duration-150 ease-out hover:translate-x-1 hover:shadow-block ${typeScopeClassName(item.types[0] ?? 'normal')}`}
