@@ -32,10 +32,10 @@ export function Header() {
       className="sticky top-0 z-40 bg-dex-red text-white shadow-header"
       onKeyDown={handleKeyDown}
     >
-      <div className="mx-auto flex h-14 max-w-7xl items-center gap-5 px-4 md:h-15 md:px-6">
+      <div className="mx-auto flex h-14 max-w-7xl items-center gap-5 px-4 md:grid md:h-15 md:grid-cols-[1fr_auto_1fr] md:px-6">
         <Link
           to="/"
-          className={`flex min-h-10 flex-none items-center gap-2.5 rounded-[10px] text-white ${ON_RED_FOCUS}`}
+          className={`flex min-h-10 flex-none items-center gap-2.5 justify-self-start rounded-[10px] text-white ${ON_RED_FOCUS}`}
         >
           <span
             aria-hidden="true"
@@ -44,7 +44,10 @@ export function Header() {
           <span className="font-display text-2xl">PokeNexus</span>
         </Link>
 
-        <nav aria-label="Điều hướng chính" className="ml-3 hidden self-stretch md:block">
+        <nav
+          aria-label="Điều hướng chính"
+          className="hidden self-stretch md:block md:justify-self-center"
+        >
           <ul className="flex h-full items-stretch gap-0.5">
             {NAV_ITEMS.map((item) => (
               <li key={item.to} className="flex">

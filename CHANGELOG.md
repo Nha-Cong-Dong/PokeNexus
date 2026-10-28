@@ -19,6 +19,9 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ### Changed
 
+- Bảng chọn địa hình thành dải 13 cột xiên có ảnh nhỏ (`{scene}-thumb.webp`, 400 x 600, tổng 254 KB): cột đang chọn nở rộng với tên lớn và nhãn hệ, hover nở nhẹ; trên mobile cuộn ngang và tự cuộn tới địa hình đang chọn.
+- Thanh điều hướng header canh giữa trang; bỏ ống kính tròn xanh trên vỏ Pokédex ở hero vì trùng với logo.
+- Khung cảnh đầu các trang con cao hơn (288/480/544 px thay vì 192/320 px; trang Chi tiết 544 px từ `lg`) và đáy chuyển mượt sang màu nền trang (`scene-fade`), không còn đường cắt giữa ảnh và nền.
 - Lộ trình 0.6 theo lịch hackathon (review Checkpoint 2): Checkpoint 3 ngày 01/11, triển khai 30-31/10, đóng băng tính năng từ 05/11, demo và `v1.0.0` ngày 08/11 (trước là 15/11).
 - `data/README.md` tải CSV từ commit PokéAPI `e2710d3` thay vì nhánh `master`.
 - `design-system.md` 0.8: bỏ giới hạn một khoảnh khắc chuyển động mỗi trang; README Phần 7 không còn cột trạng thái (trạng thái chỉ ở `PLAN.md`).

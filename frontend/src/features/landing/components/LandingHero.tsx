@@ -106,7 +106,6 @@ export function LandingHero() {
           aria-hidden="true"
           className="flex flex-none items-center gap-3 px-1 pb-3 md:gap-4 md:short:pb-2"
         >
-          <span className="size-9 rounded-full border-4 border-white bg-radial-[at_34%_30%] from-white from-10% via-primary via-40% to-primary-hover shadow-[0_0_0_3px_var(--color-ink)] md:size-11 md:short:size-8" />
           <span className="flex gap-2">
             <span className="size-3 rounded-full border-2 border-ink bg-danger md:size-3.5" />
             <span className="size-3 rounded-full border-2 border-ink bg-dex-yellow md:size-3.5" />

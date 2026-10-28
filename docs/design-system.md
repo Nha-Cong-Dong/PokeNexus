@@ -6,6 +6,7 @@
 - Mọi giá trị màu dùng cho chữ và thành phần giao diện đã được kiểm tra tỷ lệ tương phản theo công thức WCAG 2.x bằng script ngày 2026-10-24.
 - Thay đổi so với 0.2: bỏ font Be Vietnam Pro, đổi bảng màu thương hiệu, thêm trang Tổng quan, thêm nền khung cảnh theo vùng đất. Các mục cần đồng bộ sang tài liệu khác liệt kê ở Phần 11.
 - Thay đổi so với 0.3: Phần 3 trỏ thẳng tới `src/styles/index.css` và `src/main.tsx`, không chép lại mã nguồn.
+- Bản 0.8, bổ sung ngày 2026-10-29: khung cảnh `PageHero` cao hơn (288/480/544 px), đáy chuyển mượt sang nền trang (`scene-fade`), theo phản hồi "ảnh nền quá bé, trang bị bó lại".
 - Thay đổi so với 0.7: bỏ giới hạn "một khoảnh khắc chuyển động mỗi trang"; dùng bộ chuyển động của bản thiết kế hi-fi ngày 2026-10-24 (vào trang, hiện khi cuộn tới, đổi dữ liệu) theo yêu cầu chủ dự án ngày 2026-10-29 (T315). Phần 2, mục VII và Phần 7, mục II cập nhật.
 - Thay đổi so với 0.6: thêm bố cục trang Địa hình (Phần 7, mục II.2) và quy tắc ghi đè màu nút bằng modifier `!`.
 - Thay đổi so với 0.5: mỗi khung cảnh có bộ 1-5 ảnh 1920 px; nền hero chuyển ảnh mỗi 12 giây, phóng chậm và có lớp hạt CSS, tắt khi `prefers-reduced-motion`; nới quy tắc nội dung ảnh; tiêu đề trên ảnh đặt trong tấm nền `scrim` 75% thay cho lớp phủ rộng; cho phép xóa HUD, người, Pokémon thừa bằng công cụ kèm bước kiểm duyệt dấu vết AI (Phần 4, mục I); hero Tổng quan cao bằng màn hình; Team Builder rộng tối đa 100 rem.
@@ -219,6 +220,7 @@
 - Gradient dự phòng (`sceneGradient`) vẽ phong cảnh giản lược: trời ở 0%, chân trời ở 56%, mặt đất từ 62% (khớp chân trời 55-65% của ảnh, Phần 4), đáy đậm hơn mặt đất 30%; thêm quầng sáng màu nhấn ở góc trên phải. Hiển thị khi scene chưa có ảnh, ảnh đang tải hoặc tải lỗi. Đây là màu trang trí, không đặt chữ trực tiếp lên.
 - `sceneSwatch` là bản hai nửa (trời trên, mặt đất dưới) cho chấm tròn ở bộ chọn vùng đất trang Tổng quan.
 - Nền thân trang (utility `scene-tint` trong `src/styles/index.css`): ngay dưới khung cảnh, nền trộn 18% màu nhấn vào `bg` rồi nhạt dần về `bg` trong 32 rem, để mỗi trang có sắc riêng. `PageBody` bật khi nhận `scene`; trang chi tiết nhuộm theo khung cảnh của Pokémon. Màu nhấn truyền qua biến `--scene-accent` (`sceneTintStyle`), trộn bằng `color-mix` nên tự theo dark mode.
+- Đoạn nối ảnh và nền (utility `scene-fade`): đáy khung cảnh của `PageHero` và `PokemonHero` phủ một dải chuyển 6 nấc từ trong suốt sang đúng màu bắt đầu của `scene-tint` (`--scene-surface`). Mép dưới khung cảnh trùng điểm bắt đầu nền nhuộm (`--hero-overlap` bằng độ đè của `PageBody`), nên không có đường cắt giữa ảnh và nền. Dải phủ 3/5 chiều cao ở mobile, 1/2 từ `md`.
 - Vùng nhuộm chỉ làm nền; chữ và bảng vẫn nằm trong panel `surface`.
 
 #### 2. Quy tắc chọn khung cảnh cho Pokémon
@@ -269,7 +271,7 @@
 - `@theme inline` dùng cho token ngữ nghĩa vì giá trị của chúng là `var(...)` đổi theo class `.dark`.
 - `@custom-variant dark` cho phép bật dark mode bằng class `.dark` trên thẻ `<html>`, thay vì chỉ theo cài đặt hệ điều hành.
 - Cỡ display lớn hơn ở `lg` khai báo trong component bằng `lg:text-[3.5rem]/[3.75rem]` và `lg:text-[2.5rem]/[2.75rem]`, hoặc thêm token riêng nếu dùng từ 3 nơi trở lên.
-- `--color-scrim` là màu `ink` cố định (không đổi theo `.dark`), luôn dùng kèm độ mờ: `bg-scrim/80` (chip `SceneLabel`), `from-scrim/85 via-scrim/70` (gradient của `PageHero`), `bg-scrim/25` (nhãn hệ trên card), `backdrop:bg-scrim/55` (nền sau ngăn kéo bộ lọc).
+- `--color-scrim` là màu `ink` cố định (không đổi theo `.dark`), luôn dùng kèm độ mờ: `bg-scrim/80` (chip `SceneLabel`), `bg-scrim/25` (nhãn hệ trên card), `backdrop:bg-scrim/55` (nền sau ngăn kéo bộ lọc).
 - Keyframe `hop` và `sheet-in` khai báo trong `@theme`, sinh class `animate-hop`, `animate-sheet-in`.
 - Màu dự phòng của 15 scene không khai báo trong file này; chúng nằm trong `src/lib/scenes.ts` cùng bảng ánh xạ để một nơi quản lý mọi thứ về scene.
 - Cú pháp viết theo Tailwind 4.x; khi cập nhật cần đối chiếu lại tài liệu chính thức của bản đang cài.
@@ -371,8 +373,8 @@
 | Component | Props chính | Hiển thị | Quy tắc |
 |---|---|---|---|
 | `SceneBackdrop` | `scene`, `priority?: boolean`, `animated?: boolean` | Ảnh scene tràn ngang, gradient dự phòng; `animated` thêm chuyển ảnh và `SceneAmbience` | Theo Phần 4, mục III |
-| `PageHero` | `scene`, `title`, `subtitle?`, `wide?` | Dải khung cảnh cao 192 px (mobile) và 320 px (từ `md`), tiêu đề `text-display` trong tấm nền scrim 75%, `SceneLabel` từ `md`; `wide` dùng khung 100 rem cùng `PageBody wide` | Mỗi trang dùng đúng một `PageHero`; tiêu đề là `<h1>` duy nhất của trang |
-| `PageBody` | `scene?`, `className?` | Vùng nội dung `max-w-7xl` kéo lên đè mép dưới khung cảnh 24 px (mobile) và 48 px (từ `md`); có `scene` thì nền nhuộm `scene-tint` (Phần 2, mục VI) | Đặt ngay sau `PageHero`, truyền cùng `scene` với `PageHero` |
+| `PageHero` | `scene`, `title`, `subtitle?`, `wide?` | Dải khung cảnh cao 288 px (mobile), 480 px (từ `md`), 544 px (từ `lg`), đáy chuyển mượt sang nền trang bằng `scene-fade`; tiêu đề `text-display` trong tấm nền scrim 75%, đặt trên vùng `PageBody` đè lên, `SceneLabel` từ `md`; `wide` dùng khung 100 rem cùng `PageBody wide` | Mỗi trang dùng đúng một `PageHero`; tiêu đề là `<h1>` duy nhất của trang |
+| `PageBody` | `scene?`, `className?` | Vùng nội dung `max-w-7xl` kéo lên đè mép dưới khung cảnh 64 px (mobile), 112 px (từ `md`), 128 px (từ `lg`); có `scene` thì nền nhuộm `scene-tint` (Phần 2, mục VI) | Đặt ngay sau `PageHero`, truyền cùng `scene` với `PageHero` |
 | `SceneLabel` | `scene` | Chip nhỏ "Khung cảnh: Núi lửa" ở góc ảnh | Cho người dùng biết vì sao nền đổi; không phải link |
 
 ### III. Component Pokémon (`components/pokemon`)
@@ -476,7 +478,7 @@
 +--------------------------------------------------------------+
 ```
 
-- Header: logo chữ PokeNexus font Display, chữ trắng trên `dex-red`. Mục đang chọn có gạch chân `dex-yellow` 3 px và `aria-current="page"`.
+- Header: logo chữ PokeNexus font Display, chữ trắng trên `dex-red`, nằm bên trái; từ `md`, thanh điều hướng canh giữa trang (lưới `1fr auto 1fr`). Mục đang chọn có gạch chân `dex-yellow` 3 px và `aria-current="page"`. Biểu tượng tròn xanh chỉ có ở logo; vỏ Pokédex ở hero trang Tổng quan chỉ giữ 3 đèn, không lặp lại hình tròn đó.
 - Mobile: menu điều hướng gom vào nút "Menu" mở ngăn kéo từ phải.
 - Panel nội dung đè lên mép dưới khung cảnh 48 px để khung cảnh và dữ liệu liền mạch, không thành hai khối tách rời.
 
@@ -542,12 +544,12 @@ Desktop (1440 px)
 | Trang | Mobile (375 px) | Desktop (1440 px) |
 |---|---|---|
 | Omni-Dex | `PageHero` thấp; thẻ công cụ (nút "Bộ lọc (2)" mở ngăn kéo, ô sắp xếp) đè lên khung cảnh; số kết quả và nút đổi kiểu hiển thị; lưới 2 cột; phân trang "Trước, 1 / 46, Sau" | Cột lọc trái 256 px; panel kết quả: số kết quả, nút đổi kiểu, sắp xếp; lưới tự chia (4 cột ở 1440 px); phân trang có số trang |
-| Chi tiết | Khung cảnh cao 280 px có artwork; panel: tên, nhãn hệ, chỉ số, lưới phòng thủ 3 cột, các dạng | Khung cảnh cao 420 px, artwork bên trái; panel bên phải chứa chỉ số; lưới phòng thủ 6 cột bên dưới |
+| Chi tiết | Khung cảnh cao 280 px có artwork, đáy chuyển mượt sang nền; panel: tên, nhãn hệ, chỉ số, lưới phòng thủ 3 cột, các dạng | Vùng artwork cao 420 px, ảnh nền kéo dài 544 px rồi chuyển mượt sang nền phía sau lưới phòng thủ; artwork bên trái; panel bên phải chứa chỉ số; lưới phòng thủ 6 cột bên dưới |
 | Tương khắc | Chọn 1-2 hệ phòng thủ, kết quả dạng danh sách; ma trận cuộn ngang trong khung | Ma trận 18 x 18 đầy đủ, bộ chọn hệ kép phía trên |
 | So sánh | Hai ô tìm kiếm xếp dọc; `VersusBanner` chia ngang trên, dưới; radar; kết luận | `VersusBanner` chia chéo trái, phải; radar ở giữa, kết luận bên dưới |
 | Team Builder | Slot dạng lưới 3 x 2; điểm đội; heatmap cuộn ngang, cột hệ cố định; ô "Loại huyền thoại, thần thoại và Paradox" rồi đề xuất xếp dọc | Trái: slot và điểm; giữa: heatmap; phải: ô loại huyền thoại và 3 thẻ đề xuất |
 | Đội chia sẻ | Tên đội, 6 slot chỉ đọc, heatmap, nút "Mở trong Team Builder" | Như mobile, rộng hơn |
-| Địa hình | `PageHero` theo địa hình đang chọn; 13 link địa hình lưới 2 cột; mô tả; trò chơi (bóng đen trên, 4 nút xếp dọc); lưới Pokémon 2 cột; Thẻ Trainer | Link địa hình 7 cột; mô tả và trò chơi chia 2:3; lưới Pokémon 6 cột; Thẻ Trainer |
+| Địa hình | `PageHero` theo địa hình đang chọn; bảng chọn là dải 13 cột xiên có ảnh nhỏ, cột 64 px, cột đang chọn 176 px, cuộn ngang trong khung và tự cuộn tới địa hình đang chọn; mô tả; trò chơi (bóng đen trên, 4 nút xếp dọc); lưới Pokémon 2 cột; Thẻ Trainer | Từ `lg`, 13 cột xiên trên một hàng cao 320 px: tên chạy dọc, biểu tượng hệ ở đầu cột, tam giác màu nhấn của địa hình; cột đang chọn nở rộng gấp 3,6 lần, có viền vàng, tên lớn và nhãn hệ; hover nở 1,6 lần và phóng ảnh; mô tả và trò chơi chia 2:3; lưới Pokémon 6 cột; Thẻ Trainer |
 
 - Wireframe ở `docs/wireframes/` chốt bố cục và thứ tự thông tin của 6 trang dữ liệu; trang Tổng quan và lớp khung cảnh cần bổ sung wireframe (Phần 11).
 - Bảng rộng (heatmap, ma trận) chỉ cuộn ngang bên trong khung của bảng, trang không bao giờ cuộn ngang.
