@@ -1,6 +1,6 @@
 # PokeNexus - Kế hoạch quản lý Assets
 
-- Phiên bản: 0.4 (cập nhật 2026-10-27; bỏ video demo và slide theo [roadmap.md](roadmap.md) 0.4)
+- Phiên bản: 0.5 (cập nhật 2026-10-28; 14/15 ảnh khung cảnh, 1,9 MB)
 - Chiến lược ảnh Pokémon: **Hybrid**. Sprite nhỏ được tự host; artwork lớn lấy từ đường dẫn công khai, có fallback ([ADR 0005](adr/0005-hybrid-image-assets.md)).
 - Dữ liệu CSV không thuộc phạm vi tài liệu này: xem [data/README.md](../data/README.md).
 
@@ -15,7 +15,7 @@
 | Sprite Pokémon | `PokeAPI/sprites`, `sprites/pokemon/{id}.png` | PNG 96 x 96, 0,5-1,7 KB mỗi file | `frontend/public/sprites/pokemon/` | Có | T207 |
 | Artwork Pokémon | `PokeAPI/sprites`, `sprites/pokemon/other/official-artwork/{id}.png` | PNG 475 x 475, 120-145 KB mỗi file | Không lưu, tải lúc hiển thị | Không | T303 |
 | Ảnh dự phòng | Tự vẽ | SVG, dưới 2 KB | `frontend/public/sprites/placeholder.svg` | Có | T207 |
-| Ảnh khung cảnh (scene) | Ảnh chụp từ game Pokémon 3D, tìm trên Bulbagarden Archives ([design-system.md](design-system.md), Phần 4) | WebP 1600 x 900 (tối đa 220 KB) và 800 x 450 (tối đa 70 KB) | `frontend/public/scenes/`, nguồn từng ảnh ở `SOURCES.md` | Có | T301 |
+| Ảnh khung cảnh (scene) | Ảnh chụp từ game Pokémon 3D, tìm trên Bulbagarden Archives ([design-system.md](design-system.md), Phần 4) | WebP 1600 x 900 (tối đa 220 KB) và 800 x 450 (tối đa 70 KB); 14/15 scene có ảnh, 28 file, 1,9 MB (2026-10-28) | `frontend/public/scenes/`, nguồn từng ảnh ở `SOURCES.md` | Có | T301 |
 | Font | Dela Gothic One (`@fontsource/dela-gothic-one`), Nunito và Pixelify Sans (`@fontsource-variable/...`) | WOFF2; Dela Gothic One weight 400, hai font còn lại dạng variable | `node_modules`, Vite đóng gói vào `dist/assets` | Không (chỉ `package.json`) | T203, T301 |
 | Logo, favicon | Tự thiết kế | SVG | `frontend/src/assets/logo.svg`, `frontend/public/favicon.svg` | Có | T203 |
 | Ảnh xem trước link (Open Graph) | Chụp và thiết kế | PNG 1200 x 630, dưới 300 KB | `frontend/public/og-image.png` | Có | T405 |

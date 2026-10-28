@@ -90,7 +90,7 @@ export function StatDuelTable({ left, right }: StatDuelTableProps) {
                   <span className="flex items-center gap-2">
                     <span className="flex min-w-14 items-baseline gap-1">
                       <span
-                        className={`font-pixel text-lg ${row.left > row.right ? 'font-bold' : 'font-medium'}`}
+                        className={`tabular-nums text-lg ${row.left > row.right ? 'font-extrabold' : 'font-semibold'}`}
                       >
                         {row.left}
                       </span>
@@ -127,7 +127,7 @@ export function StatDuelTable({ left, right }: StatDuelTableProps) {
                     <span className="flex min-w-14 items-baseline justify-end gap-1">
                       <span className="text-xs font-extrabold text-accent">{rightLead}</span>
                       <span
-                        className={`font-pixel text-lg ${row.right > row.left ? 'font-bold' : 'font-medium'}`}
+                        className={`tabular-nums text-lg ${row.right > row.left ? 'font-extrabold' : 'font-semibold'}`}
                       >
                         {row.right}
                       </span>

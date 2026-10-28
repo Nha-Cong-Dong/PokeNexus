@@ -26,7 +26,7 @@ export function TypeChartPage() {
         title="Bảng tương khắc"
         subtitle="18 hệ tấn công gặp 18 hệ phòng thủ. Ô có màu là nơi trận đấu được định đoạt."
       />
-      <PageBody className="flex flex-col gap-6">
+      <PageBody scene="lab" className="flex flex-col gap-6">
         {error ? (
           <ErrorState
             message={errorMessageFor(error instanceof ApiError ? error.code : undefined)}

@@ -24,7 +24,7 @@ export function DetailSkeleton() {
       <div className="relative h-70 overflow-hidden bg-scrim lg:h-105">
         <SceneBackdrop scene="lab" />
       </div>
-      <PageBody className="flex flex-col gap-6">
+      <PageBody scene="lab" className="flex flex-col gap-6">
         <h1 className="sr-only">{PAGE_TITLE}</h1>
         <p role="status" className="sr-only">
           Đang tải dữ liệu Pokémon
@@ -40,7 +40,7 @@ export function DetailError({ code, onRetry }: DetailErrorProps) {
   return (
     <>
       <PageHero scene="lab" title={PAGE_TITLE} />
-      <PageBody>
+      <PageBody scene="lab">
         <ErrorState message={errorMessageFor(code)} onRetry={onRetry} />
       </PageBody>
     </>
@@ -51,7 +51,7 @@ export function PokemonNotFound({ idOrName }: PokemonNotFoundProps) {
   return (
     <>
       <PageHero scene="lab" title="Không tìm thấy Pokémon" />
-      <PageBody>
+      <PageBody scene="lab">
         <Panel aria-label="Hướng dẫn" className="flex flex-col items-start gap-4">
           <p className="max-w-prose text-ink-muted">
             Pokédex chưa ghi nhận Pokémon nào có tên hoặc số{' '}

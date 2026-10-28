@@ -78,7 +78,7 @@ export function FeatureRegions() {
                   <span className="absolute top-3 right-3 flex size-12 items-center justify-center rounded-full border-3 border-ink bg-surface text-ink shadow-blob">
                     <TypeGlyph type={island.glyph} className="size-6" strokeWidth={2} />
                   </span>
-                  <span className="absolute bottom-3 left-3 flex size-9 items-center justify-center rounded-full border-2 border-ink bg-dex-yellow font-pixel text-sm font-bold text-ink">
+                  <span className="tabular-nums absolute bottom-3 left-3 flex size-9 items-center justify-center rounded-full border-2 border-ink bg-dex-yellow text-sm font-extrabold text-ink">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                 </div>

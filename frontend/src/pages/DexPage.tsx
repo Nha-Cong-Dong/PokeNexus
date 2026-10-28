@@ -55,7 +55,7 @@ export function DexPage() {
         title="Pokédex"
         subtitle={`${formatNumber(SPECIES_COUNT)} loài từ Thế hệ 1 đến 9. Lọc theo hệ, thế hệ và tổng chỉ số; chọn tối đa 2 hệ.`}
       />
-      <PageBody className="flex flex-col gap-6 lg:flex-row lg:items-start">
+      <PageBody scene="grassland" className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <aside
           aria-label="Bộ lọc"
           className="hidden flex-none flex-col gap-5.5 rounded-3xl border-2 border-ink bg-surface p-5 shadow-block-lg lg:flex lg:w-64"

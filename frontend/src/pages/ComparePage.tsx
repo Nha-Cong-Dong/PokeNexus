@@ -188,7 +188,7 @@ export function ComparePage() {
         title="Bàn Cân Sức Mạnh"
         subtitle="Đặt hai Pokémon lên bàn cân: chỉ số, tốc độ và lợi thế hệ."
       />
-      <PageBody className="flex flex-col gap-6">
+      <PageBody scene="stadium" className="flex flex-col gap-6">
         <Panel aria-label="Chọn Pokémon" className="flex flex-col gap-3">
           <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-center">
             {slot('left')}

@@ -94,7 +94,10 @@ export function TeamBuilderPage() {
         title="Xây đội"
         subtitle="Chọn tối đa 5 Pokémon, đọc bản đồ điểm yếu, rồi để PokeNexus đề xuất slot thứ 6."
       />
-      <PageBody className="grid items-start gap-4 md:gap-6 lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[19rem_minmax(0,1fr)_18rem]">
+      <PageBody
+        scene="stadium"
+        className="grid items-start gap-4 md:gap-6 lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[19rem_minmax(0,1fr)_18rem]"
+      >
         <div className="flex min-w-0 flex-col gap-4 md:gap-6">
           <Panel aria-labelledby={SLOTS_TITLE_ID} className="flex flex-col gap-4">
             <div className="flex items-baseline justify-between gap-3">

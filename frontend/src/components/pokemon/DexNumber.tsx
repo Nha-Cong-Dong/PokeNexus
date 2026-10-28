@@ -6,5 +6,5 @@ type DexNumberProps = {
 }
 
 export function DexNumber({ id, className = '' }: DexNumberProps) {
-  return <span className={`font-pixel font-semibold ${className}`}>{formatDexNumber(id)}</span>
+  return <span className={`tabular-nums font-extrabold ${className}`}>{formatDexNumber(id)}</span>
 }

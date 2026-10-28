@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-import type { SceneId } from '../../lib/scenes'
+import { sceneTintStyle, type SceneId } from '../../lib/scenes'
 import { SceneBackdrop } from './SceneBackdrop'
 import { SceneLabel } from './SceneLabel'
 
@@ -11,6 +11,7 @@ type PageHeroProps = {
 }
 
 type PageBodyProps = {
+  scene?: SceneId
   className?: string
   children: ReactNode
 }
@@ -48,12 +49,13 @@ export function PageHero({ scene, title, subtitle }: PageHeroProps) {
   )
 }
 
-export function PageBody({ className = '', children }: PageBodyProps) {
+export function PageBody({ scene, className = '', children }: PageBodyProps) {
   return (
     <div
-      className={`relative z-10 mx-auto -mt-6 max-w-7xl px-3 md:-mt-12 md:px-6 xl:px-8 ${className}`}
+      className={`relative z-10 -mt-6 [--hero-overlap:1.5rem] md:-mt-12 md:[--hero-overlap:3rem] ${scene ? 'scene-tint' : ''}`}
+      style={scene ? sceneTintStyle(scene) : undefined}
     >
-      {children}
+      <div className={`mx-auto max-w-7xl px-3 md:px-6 xl:px-8 ${className}`}>{children}</div>
     </div>
   )
 }

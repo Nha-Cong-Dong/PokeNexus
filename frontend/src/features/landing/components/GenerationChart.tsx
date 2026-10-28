@@ -50,7 +50,7 @@ export function GenerationChart() {
                           style={{ height: `${height}%` }}
                         />
                       </span>
-                      <span className="text-center font-pixel text-xs text-ink-muted">
+                      <span className="tabular-nums font-bold text-center text-xs text-ink-muted">
                         {generation.year}
                       </span>
                       <span className="text-center text-sm font-extrabold">

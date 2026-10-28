@@ -19,7 +19,7 @@ export function TeamScoreGauge({ score, teamKey }: TeamScoreGaugeProps) {
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <p className="flex items-baseline gap-1.5">
-          <span className="font-pixel text-pixel-lg font-bold">{formatScore(score)}</span>
+          <span className="tabular-nums text-num-lg font-extrabold">{formatScore(score)}</span>
           <span className="text-sm font-bold text-ink-muted">/ 100</span>
         </p>
         {delta !== 0 && (

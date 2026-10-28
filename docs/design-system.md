@@ -1,11 +1,12 @@
 # PokeNexus - Design System và UI Guidelines
 
-- Phiên bản: 0.4 (cập nhật 2026-10-28; Phần 5: nút cỡ `sm` cao 40 px trên mobile)
+- Phiên bản: 0.5 (cập nhật 2026-10-28; con số dùng Nunito `tabular-nums`; bảng 4 màu cho mỗi khung cảnh, nền thân trang nhuộm theo khung cảnh)
 - Phạm vi: định hướng thẩm mỹ, token, font, ảnh khung cảnh, component, pattern, bố cục trang và accessibility cho frontend.
 - Theme: **light là mặc định và bắt buộc ở MVP**. Token đã định nghĩa sẵn cặp light/dark; dark mode là mức Could ở Tuần 4 ([roadmap.md](roadmap.md), Phần 2).
 - Mọi giá trị màu dùng cho chữ và thành phần giao diện đã được kiểm tra tỷ lệ tương phản theo công thức WCAG 2.x bằng script ngày 2026-10-24.
 - Thay đổi so với 0.2: bỏ font Be Vietnam Pro, đổi bảng màu thương hiệu, thêm trang Tổng quan, thêm nền khung cảnh theo vùng đất. Các mục cần đồng bộ sang tài liệu khác liệt kê ở Phần 11.
 - Thay đổi so với 0.3: Phần 3 trỏ thẳng tới `src/styles/index.css` và `src/main.tsx`, không chép lại mã nguồn.
+- Thay đổi so với 0.4: chữ số Pixelify Sans dễ đọc nhầm (5 và 8 giống S, 2 giống 8, 7 giống ⅂; chụp màn hình ngày 2026-10-28), nên mọi con số chuyển sang Nunito 800 `tabular-nums`, token `text-pixel*` đổi tên `text-num*`; Pixelify Sans chỉ còn cho nhãn "HP". Khung cảnh có bảng 4 màu và nền thân trang nhuộm theo khung cảnh (Phần 2, mục VI).
 
 ---
 
@@ -154,12 +155,12 @@
 |---|---|---|---|---|
 | Display | **Dela Gothic One** | `@fontsource/dela-gothic-one` | 400 (duy nhất) | Tiêu đề trang (`<h1>`), tên Pokémon ở trang chi tiết, tiêu đề hero trang Tổng quan, logo chữ PokeNexus |
 | Text | **Nunito** (variable) | `@fontsource-variable/nunito` | 400-800 | Nội dung, nút, nhãn, bảng, tiêu đề section và card |
-| Pixel | **Pixelify Sans** (variable) | `@fontsource-variable/pixelify-sans` | 500-700 | Chỉ chữ số và ký hiệu Latin đứng riêng: số Pokédex `#0006`, BST, điểm đội, giá trị chỉ số |
+| Pixel | **Pixelify Sans** (variable) | `@fontsource-variable/pixelify-sans` | 700 | Chỉ nhãn trang trí "HP" trên thanh điểm đội; không dùng cho con số |
 
 - Lý do chọn:
   - Dela Gothic One: nét đậm, góc mềm, mang chất poster game Nhật; có đủ dấu tiếng Việt.
   - Nunito: chữ tròn, thân thiện như font giao diện trong game Pokémon 3D, đọc tốt ở 14-16 px; chữ số mặc định cùng độ rộng nên cột số thẳng hàng mà không cần `tabular-nums`.
-  - Pixelify Sans: gợi màn hình Game Boy, dùng như "con dấu" của Pokédex trên các con số.
+  - Pixelify Sans: gợi màn hình Game Boy. Từ bản 0.5 không dùng cho con số vì chữ số dễ đọc nhầm; con số (số Pokédex, BST, chỉ số, điểm, chiều cao, cân nặng) dùng Nunito 800 kèm `tabular-nums`.
 - Đã kiểm tra ngày 2026-10-24 (Fontsource API, npm registry, đọc bảng glyph bằng fontTools):
   - Ba gói đều ở bản 5.3.0, giấy phép SIL OFL 1.1.
   - Dela Gothic One (subset `latin`, `latin-ext`, `vietnamese`) có đủ 134 ký tự tiếng Việt có dấu đã thử.
@@ -177,13 +178,13 @@
 | `text-base` | 16 / 24 px | Text | 400, 600 | Nội dung chính |
 | `text-sm` | 14 / 20 px | Text | 500, 700 | Chữ phụ, ô bảng, nhãn form, nút `sm` |
 | `text-xs` | 12 / 16 px | Text | 700 | Nhãn hệ cỡ nhỏ, chú thích |
-| `text-pixel-lg` | 32 / 32 px | Pixel | 700 | Điểm đội, BST ở trang chi tiết |
-| `text-pixel` | 16 / 16 px | Pixel | 500 | Số Pokédex trên card, giá trị cạnh `StatBar` |
+| `text-num-lg` | 32 / 32 px | Text, `tabular-nums` | 800 | Điểm đội, BST ở trang chi tiết, điểm phù hợp, số hệ phủ |
+| `text-num` | 16 / 16 px | Text, `tabular-nums` | 800 | BST trên card, giá trị cạnh `StatBar` |
 
 #### 3. Quy tắc
 
 - Dela Gothic One chỉ có weight 400: không gắn `font-bold` cho chữ display (trình duyệt sẽ làm đậm giả, vỡ nét). Không dùng cho chữ dưới 24 px hoặc đoạn văn.
-- Pixelify Sans không dùng cho chữ tiếng Việt, tên Pokémon, câu văn; không dùng trong cột bảng (độ rộng chữ số không đều). Số trong bảng (heatmap, ma trận, phân trang) dùng font Text.
+- Pixelify Sans không dùng cho con số, chữ tiếng Việt, tên Pokémon, câu văn. Mọi con số dùng font Text kèm `tabular-nums` để cột số thẳng hàng.
 - Ô hệ số (`MultiplierCell`) dùng font Text 700 để `½`, `¼` hiển thị đồng nhất với nhãn khác trong bảng.
 - Tiêu đề viết theo kiểu câu (sentence case); không viết hoa toàn bộ. Nhãn hệ viết hoa chữ cái đầu (`Fire`).
 - Đoạn văn dài tối đa 70 ký tự mỗi dòng (`max-w-prose`).
@@ -194,25 +195,28 @@
 
 #### 1. Danh sách khung cảnh
 
-| Mã scene | Tên hiển thị | Dùng cho | Màu dự phòng trên / dưới |
+| Mã scene | Tên hiển thị | Dùng cho | Trời / chân trời / mặt đất / nhấn |
 |---|---|---|---|
-| `grassland` | Đồng cỏ | Hệ Normal; trang Omni-Dex | `#9FD3F5` / `#7FBF5A` |
-| `forest` | Rừng rậm | Hệ Grass, Bug | `#7DB7A0` / `#2F6B3A` |
-| `sea` | Biển khơi | Hệ Water | `#8ACFF2` / `#1F6FB2` |
-| `volcano` | Núi lửa | Hệ Fire | `#F2A15C` / `#6B2A1E` |
-| `power-plant` | Nhà máy điện | Hệ Electric, Steel | `#C9D3DE` / `#56606E` |
-| `snowfield` | Núi tuyết | Hệ Ice | `#DDEFF8` / `#A9C9DE` |
-| `mountain` | Vách núi đá | Hệ Fighting, Rock | `#B9CFE0` / `#8A7357` |
-| `desert` | Sa mạc | Hệ Ground | `#F5D9A0` / `#C8964F` |
-| `swamp` | Đầm lầy | Hệ Poison | `#9AA88A` / `#4B3F5C` |
-| `sky` | Tầng mây | Hệ Flying, Dragon | `#7FB2F0` / `#DCEBFA` |
-| `ruins` | Tàn tích cổ | Hệ Psychic | `#E7C9D9` / `#8D7A86` |
-| `haunted` | Rừng đêm | Hệ Ghost, Dark | `#3B3557` / `#16131F` |
-| `flower-garden` | Vườn hoa | Hệ Fairy | `#F7CFE0` / `#7FB86A` |
-| `stadium` | Đấu trường | Trang So sánh (khi chưa chọn đủ 2 Pokémon), Team Builder, Đội chia sẻ | `#4A6FA5` / `#2E4A2E` |
-| `lab` | Phòng nghiên cứu | Trang Tương khắc, trang 404 | `#E8EEF4` / `#B8C4D0` |
+| `grassland` | Đồng cỏ | Hệ Normal; trang Omni-Dex | `#9FD3F5` / `#D8EFC6` / `#7FBF5A` / `#F2C94C` |
+| `forest` | Rừng rậm | Hệ Grass, Bug | `#A8D5C2` / `#5E9C6A` / `#2F6B3A` / `#A6B91A` |
+| `sea` | Biển khơi | Hệ Water | `#8ACFF2` / `#D6F0FB` / `#1F6FB2` / `#6390F0` |
+| `volcano` | Núi lửa | Hệ Fire | `#F7B267` / `#F25C3B` / `#5A2219` / `#EE8130` |
+| `power-plant` | Nhà máy điện | Hệ Electric, Steel | `#C9D3DE` / `#F3E28A` / `#4F5967` / `#F7D02C` |
+| `snowfield` | Núi tuyết | Hệ Ice | `#CFE8F7` / `#F4FBFF` / `#A9C9DE` / `#96D9D6` |
+| `mountain` | Vách núi đá | Hệ Fighting, Rock | `#B9CFE0` / `#E2D6C2` / `#8A7357` / `#B6A136` |
+| `desert` | Sa mạc | Hệ Ground | `#F7D9A8` / `#FBE7C0` / `#C8964F` / `#E2BF65` |
+| `swamp` | Đầm lầy | Hệ Poison | `#A3AD8F` / `#7A6B8C` / `#3F354E` / `#A33EA1` |
+| `sky` | Tầng mây | Hệ Flying, Dragon | `#5F9FF0` / `#CFE3FB` / `#F3F8FE` / `#A98FF3` |
+| `ruins` | Tàn tích cổ | Hệ Psychic | `#E7C9D9` / `#F3E1C7` / `#8D7A86` / `#F95587` |
+| `haunted` | Rừng đêm | Hệ Ghost, Dark | `#2C2747` / `#4B3F72` / `#16131F` / `#735797` |
+| `flower-garden` | Vườn hoa | Hệ Fairy | `#F7CFE0` / `#FDE8F0` / `#7FB86A` / `#D685AD` |
+| `stadium` | Đấu trường | Trang So sánh (khi chưa chọn đủ 2 Pokémon), Team Builder, Đội chia sẻ | `#4A6FA5` / `#9FB7D9` / `#2E4A2E` / `#FFD23F` |
+| `lab` | Phòng nghiên cứu | Trang Tương khắc, trang 404 | `#E8EEF4` / `#FFFFFF` / `#B8C4D0` / `#1F57B8` |
 
-- Màu dự phòng là gradient dọc (trên xuống dưới) hiển thị khi ảnh đang tải hoặc tải lỗi, để bố cục không bị trống. Đây là màu trang trí, không đặt chữ trực tiếp lên.
+- Gradient dự phòng (`sceneGradient`) vẽ phong cảnh giản lược: trời ở 0%, chân trời ở 56%, mặt đất từ 62% (khớp chân trời 55-65% của ảnh, Phần 4), đáy đậm hơn mặt đất 30%; thêm quầng sáng màu nhấn ở góc trên phải. Hiển thị khi scene chưa có ảnh, ảnh đang tải hoặc tải lỗi. Đây là màu trang trí, không đặt chữ trực tiếp lên.
+- `sceneSwatch` là bản hai nửa (trời trên, mặt đất dưới) cho chấm tròn ở bộ chọn vùng đất trang Tổng quan.
+- Nền thân trang (utility `scene-tint` trong `src/styles/index.css`): ngay dưới khung cảnh, nền trộn 18% màu nhấn vào `bg` rồi nhạt dần về `bg` trong 32 rem, để mỗi trang có sắc riêng. `PageBody` bật khi nhận `scene`; trang chi tiết nhuộm theo khung cảnh của Pokémon. Màu nhấn truyền qua biến `--scene-accent` (`sceneTintStyle`), trộn bằng `color-mix` nên tự theo dark mode.
+- Vùng nhuộm chỉ làm nền; chữ và bảng vẫn nằm trong panel `surface`.
 
 #### 2. Quy tắc chọn khung cảnh cho Pokémon
 
@@ -257,7 +261,7 @@
 ### I. File `src/styles/index.css`
 
 - Nguồn duy nhất của token là [frontend/src/styles/index.css](../frontend/src/styles/index.css); giá trị và mục đích từng token ghi ở Phần 2. Tài liệu không chép lại mã CSS để tránh lệch với code.
-- `@theme` sinh class tiện ích từ biến: `--color-type-fire` thành `bg-type-fire`; `--font-display` thành `font-display`; `--text-pixel` thành `text-pixel`; `--shadow-block` thành `shadow-block`.
+- `@theme` sinh class tiện ích từ biến: `--color-type-fire` thành `bg-type-fire`; `--font-display` thành `font-display`; `--text-num` thành `text-num`; `--shadow-block` thành `shadow-block`.
 - `@theme inline` dùng cho token ngữ nghĩa vì giá trị của chúng là `var(...)` đổi theo class `.dark`.
 - `@custom-variant dark` cho phép bật dark mode bằng class `.dark` trên thẻ `<html>`, thay vì chỉ theo cài đặt hệ điều hành.
 - Cỡ display lớn hơn ở `lg` khai báo trong component bằng `lg:text-[3.5rem]/[3.75rem]` và `lg:text-[2.5rem]/[2.75rem]`, hoặc thêm token riêng nếu dùng từ 3 nơi trở lên.
@@ -287,7 +291,8 @@
   - Không dùng ảnh do AI tạo hoặc ảnh fan art.
 - Bản quyền hình ảnh thuộc Nintendo, Game Freak, The Pokémon Company, giống sprite và artwork ([ADR 0005](adr/0005-hybrid-image-assets.md)). Dùng phi thương mại, ghi nguồn từng ảnh trong `frontend/public/scenes/SOURCES.md` (tên game, vị trí trong game, người chụp hoặc URL nguồn).
 - Nguồn đã dùng: Bulbagarden Archives (ảnh chụp game và ảnh bìa Nintendo Music). Tìm qua API MediaWiki của trang, xem từng ảnh trước khi chọn.
-- Trạng thái ngày 2026-10-25: 2/15 scene có ảnh (`grassland`, `stadium`). `lab` chưa có ảnh đạt yêu cầu: các ảnh phòng nghiên cứu tìm được đều có nhân vật ở giữa khung hoặc có HUD. 12 scene theo hệ tìm ảnh cùng T303.
+- Trạng thái ngày 2026-10-28: 14/15 scene có ảnh, tổng 1,9 MB cho 28 file. `flower-garden` chưa có ảnh đạt yêu cầu (các ứng viên đều có nhân vật hoặc tượng Pokémon ở giữa khung, hoặc là ảnh anime; danh sách ở `SOURCES.md`, mục II) nên dùng gradient dự phòng. `lab` dùng ảnh trạm nghiên cứu Area Zero nhìn từ ngoài.
+- Ảnh gốc 1280 x 720 được phóng lên 1600 (giống `stadium`); ảnh có viền đen trên dưới được cắt viền trước khi cắt 16:9.
 - Mỗi scene có cờ `photo` trong `src/lib/scenes.ts`; `photo: false` thì `SceneBackdrop` chỉ vẽ gradient, không gửi request ảnh.
 
 ### II. Định dạng, thư mục, dung lượng
@@ -338,7 +343,7 @@
 |---|---|---|---|
 | `SceneBackdrop` | `scene`, `priority?: boolean` | Ảnh scene tràn ngang, gradient dự phòng | Theo Phần 4, mục III |
 | `PageHero` | `scene`, `title`, `subtitle?` | Dải khung cảnh cao 192 px (mobile) và 320 px (từ `md`), tiêu đề `text-display` trên scrim ở mép dưới, `SceneLabel` từ `md` | Mỗi trang dùng đúng một `PageHero`; tiêu đề là `<h1>` duy nhất của trang |
-| `PageBody` | `className?` | Vùng nội dung `max-w-7xl` kéo lên đè mép dưới khung cảnh 24 px (mobile) và 48 px (từ `md`) | Đặt ngay sau `PageHero` |
+| `PageBody` | `scene?`, `className?` | Vùng nội dung `max-w-7xl` kéo lên đè mép dưới khung cảnh 24 px (mobile) và 48 px (từ `md`); có `scene` thì nền nhuộm `scene-tint` (Phần 2, mục VI) | Đặt ngay sau `PageHero`, truyền cùng `scene` với `PageHero` |
 | `SceneLabel` | `scene` | Chip nhỏ "Khung cảnh: Núi lửa" ở góc ảnh | Cho người dùng biết vì sao nền đổi; không phải link |
 
 ### III. Component Pokémon (`components/pokemon`)
@@ -346,11 +351,11 @@
 | Component | Props chính | Hiển thị | Quy tắc |
 |---|---|---|---|
 | `TypeBadge` | `type`, `size: sm \| md` | Viên thuốc màu hệ, chữ tên hệ | Màu chữ theo Phần 2, mục II; luôn có chữ |
-| `DexNumber` | `id` | `#0006` bằng font Pixel | Luôn 4 chữ số; không dùng trong cột bảng |
-| `StatBar` | `label`, `value`, `max = 255` | Nhãn, số (font Pixel), thanh ngang kiểu thanh HP có viền `ink` 2 px | Số luôn hiển thị; thanh chỉ là minh họa. Màu thanh: dưới 60 cam (`stat-low` #FB923C), 60-89 vàng (`stat-mid` #FACC15), 90-119 xanh lục (`stat-good` #22C55E), từ 120 xanh dương (`stat-high` #3B82F6); token khai báo ở `src/styles/index.css` |
+| `DexNumber` | `id` | `#0006` bằng font Text 800, `tabular-nums` | Luôn 4 chữ số |
+| `StatBar` | `label`, `value`, `max = 255` | Nhãn, số (`text-num`), thanh ngang kiểu thanh HP có viền `ink` 2 px | Số luôn hiển thị; thanh chỉ là minh họa. Màu thanh: dưới 60 cam (`stat-low` #FB923C), 60-89 vàng (`stat-mid` #FACC15), 90-119 xanh lục (`stat-good` #22C55E), từ 120 xanh dương (`stat-high` #3B82F6); token khai báo ở `src/styles/index.css` |
 | `MultiplierCell` | `multiplier` | Ô vuông 40 px có nhãn `x2` | Màu theo Phần 2, mục III; `title` mô tả đầy đủ, ví dụ "Rock gây x4" |
 | `PokemonSprite` | `id`, `name`, `variant: sprite \| artwork`, `size` | Ảnh Pokémon đứng trên đế bóng elip | Đặt sẵn `width`, `height`; `loading="lazy"`; `alt` là tên Pokémon; fallback theo [assets.md](assets.md), Phần 5 |
-| `PokemonCard` | `pokemon: PokemonSummary` | Nền màu hệ đậm của slot 1, chữ trắng (Phần 2, mục II, 1); `TypeGlyph` mờ ở góc trên phải; tên, `DexNumber`, nhãn hệ, BST font Pixel; sprite đứng trên đế trắng bo hữu cơ | Toàn card là link; hover: card nhấc 4 px, đế nghiêng, sprite nhảy 1 lần (4 px, 200 ms) |
+| `PokemonCard` | `pokemon: PokemonSummary` | Nền màu hệ đậm của slot 1, chữ trắng (Phần 2, mục II, 1); `TypeGlyph` mờ ở góc trên phải; tên, `DexNumber`, nhãn hệ, BST `text-num`; sprite đứng trên đế trắng bo hữu cơ | Toàn card là link; hover: card nhấc 4 px, đế nghiêng, sprite nhảy 1 lần (4 px, 200 ms) |
 | `TypeGlyph` | `type`, `className?` | Icon SVG nét đơn cho 18 hệ, `aria-hidden` | Chỉ trang trí; không thay cho tên hệ |
 | `PokemonSearchBox` | `onSelect`, `excludeIds` | Ô nhập và danh sách gợi ý có sprite nhỏ | Mẫu ARIA combobox; debounce 250 ms; từ 2 ký tự; điều khiển bằng mũi tên, `Enter`, `Esc` |
 | `PartnerBadge` (Could) | | Sprite Pokémon đồng hành 32 px ở header | Link tới trang chi tiết; `aria-label="Pokémon đồng hành: <tên>"` |
@@ -375,7 +380,7 @@
 | `VerdictPanel` | So sánh | Bọc trong `GameDialog`; 3 dòng kết luận, mỗi dòng nêu bên thắng và con số |
 | `TeamSlots` | Team Builder | 5 slot chọn và 1 slot đề xuất; slot có thành viên hiển thị dải màu khung cảnh của Pokémon đó; slot trống có nút "Thêm Pokémon" |
 | `WeaknessHeatmap` | Team Builder | `<table>` 18 hàng; cột: hệ, từng thành viên, số yếu, số kháng, mức hở; hàng `criticalHole` có nhãn "Lỗ hổng" |
-| `TeamScoreGauge` | Team Builder | Số điểm 0-100 font Pixel `text-pixel-lg` kèm thanh ngang kiểu thanh HP; thay đổi so với lần trước hiển thị `+12` màu `success` |
+| `TeamScoreGauge` | Team Builder | Số điểm 0-100 `text-num-lg` kèm thanh ngang kiểu thanh HP; thay đổi so với lần trước hiển thị `+12` màu `success` |
 | `RecommendationCard` | Team Builder | Sprite, tên, nhãn hệ, điểm phù hợp, danh sách lý do, nút "Thêm vào đội" |
 | `SaveTeamDialog` | Team Builder | Ô tên đội (1-60 ký tự); lưu xong hiện link chia sẻ và nút "Sao chép" |
 
@@ -455,7 +460,7 @@
 | Chi tiết | `/pokemon/:idOrName` | Theo hệ của Pokémon (Phần 2, mục VI) | Artwork cỡ lớn đứng trên khung cảnh vùng đất của nó, kèm `SceneLabel` | Artwork rơi xuống đế và nảy nhẹ (một lần, 300 ms) |
 | Tương khắc | `/types` | `lab` | Ma trận 18 x 18 với hàng, cột tiêu đề là nhãn hệ màu | Không có |
 | So sánh | `/compare` | `stadium`; khi đủ 2 Pokémon thì `VersusBanner` | Màn hình đối đầu chia đôi theo đường xiên | Hai nửa trượt vào giữa (một lần, 400 ms) khi chọn đủ 2 Pokémon |
-| Team Builder | `/team-builder` | `stadium` | Điểm đội font Pixel trong thanh kiểu HP | Không có |
+| Team Builder | `/team-builder` | `stadium` | Điểm đội `text-num-lg` trên thanh kiểu HP | Không có |
 | Đội chia sẻ | `/team/:shareCode` | `stadium` | Tên đội font Display trên khung cảnh | Không có |
 
 #### 1. Trang Tổng quan
@@ -552,7 +557,7 @@ Desktop (1440 px)
 ## Phần 10. Checklist cho PR giao diện
 
 - Không có mã màu, cỡ chữ, họ font, URL ảnh viết trực tiếp ngoài token và `src/lib/assets.ts`.
-- Font Display không dưới 24 px và không bị gắn `font-bold`; font Pixel không chứa chữ tiếng Việt và không nằm trong cột bảng.
+- Font Display không dưới 24 px và không bị gắn `font-bold`; con số dùng font Text `tabular-nums`, không dùng font Pixel.
 - Chữ trên ảnh khung cảnh có scrim; bảng dữ liệu nằm trên panel `surface` đặc.
 - Trang có đúng một điểm nhấn và tối đa một chuyển động tự chạy; đã thử với `prefers-reduced-motion: reduce`.
 - Đã xử lý đủ trạng thái tải, rỗng, lỗi; khung cảnh tải lỗi vẫn hiện gradient dự phòng.
@@ -568,7 +573,7 @@ Desktop (1440 px)
 
 | Tài liệu | Nội dung cần cập nhật |
 |---|---|
-| [roadmap.md](roadmap.md) | Task thu thập ảnh cho 13 khung cảnh còn thiếu (đang dùng gradient dự phòng); Pokémon đồng hành (Could, ngoài phạm vi [spec.md](spec.md) 1.2) |
+| [roadmap.md](roadmap.md) | Pokémon đồng hành (Could, ngoài phạm vi [spec.md](spec.md) 1.2). Ảnh khung cảnh đã bổ sung ngày 2026-10-28 (14/15), không cần task riêng |
 | `docs/adr/` | ADR mới về ảnh khung cảnh tự host và cách chọn khung cảnh theo hệ, bổ sung cho [ADR 0005](adr/0005-hybrid-image-assets.md) |
 
 - Đã đồng bộ ngày 2026-10-26: trang Tổng quan vào [spec.md](spec.md) 1.2 và [roadmap.md](roadmap.md) 0.3 (T311, T312); route `/` và `/pokedex` ở [architecture.md](architecture.md), Phần 6; `LandingPage` ở [folder-structure.md](folder-structure.md); [wireframes/README.md](wireframes/README.md).
