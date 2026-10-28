@@ -20,7 +20,7 @@ class SaveRateLimiterTest {
     private static final Instant START = Instant.parse("2026-11-06T09:30:00Z");
 
     private final MutableClock clock = new MutableClock(START);
-    private final SaveRateLimiter limiter = new SaveRateLimiter(10, clock);
+    private final SaveRateLimiter limiter = new SaveRateLimiter(10, SaveRateLimiter.MAX_TRACKED_CLIENTS, clock);
 
     @Test
     void allowsTenSavesPerMinuteThenAsksToRetryLater() {
@@ -69,6 +69,54 @@ class SaveRateLimiterTest {
         assertThatThrownBy(() -> limiter.acquire("10.0.0.1"))
                 .isInstanceOfSatisfying(RateLimitedException.class,
                         ex -> assertThat(ex.retryAfterSeconds()).isEqualTo(1));
+    }
+
+    @Test
+    void rejectsNewClientsWhileTrackingIsFullButKeepsCountingKnownOnes() {
+        SaveRateLimiter small = new SaveRateLimiter(10, 2, clock);
+        small.acquire("10.0.0.1");
+        clock.advance(Duration.ofSeconds(20));
+        small.acquire("10.0.0.2");
+        clock.advance(Duration.ofSeconds(10));
+
+        assertThatThrownBy(() -> small.acquire("10.0.0.3"))
+                .isInstanceOfSatisfying(RateLimitedException.class, ex -> {
+                    assertThat(ex.errorCode()).isEqualTo(ErrorCode.RATE_LIMITED);
+                    assertThat(ex.retryAfterSeconds()).isEqualTo(30);
+                });
+        assertThatCode(() -> small.acquire("10.0.0.1")).doesNotThrowAnyException();
+        assertThat(small.trackedClients()).isEqualTo(2);
+    }
+
+    @Test
+    void freesExpiredClientsBeforeRejectingANewOne() {
+        SaveRateLimiter small = new SaveRateLimiter(10, 2, clock);
+        small.acquire("10.0.0.1");
+        small.acquire("10.0.0.2");
+        clock.advance(Duration.ofSeconds(60));
+
+        assertThatCode(() -> small.acquire("10.0.0.3")).doesNotThrowAnyException();
+        assertThat(small.trackedClients()).isEqualTo(1);
+    }
+
+    @Test
+    void neverTracksMoreClientsThanTheCap() {
+        SaveRateLimiter small = new SaveRateLimiter(10, 50, clock);
+        for (int client = 0; client < 500; client++) {
+            try {
+                small.acquire("10.0.1." + client);
+            } catch (RateLimitedException ignored) {
+                assertThat(client).isGreaterThanOrEqualTo(50);
+            }
+        }
+
+        assertThat(small.trackedClients()).isEqualTo(50);
+    }
+
+    @Test
+    void rejectsAnEmptyTrackingCap() {
+        assertThatThrownBy(() -> new SaveRateLimiter(10, 0, clock))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static final class MutableClock extends Clock {

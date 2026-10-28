@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.pokenexus.common.domain.FormCategory;
 import com.pokenexus.common.domain.PokemonType;
@@ -21,6 +22,7 @@ final class SynergyFixture {
     static final int TALONFLAME = 663;
     static final int VOLCARONA = 637;
     static final int EXCADRILL = 530;
+    static final int IRON_TREADS = 990;
     static final List<Integer> EXAMPLE_TEAM = List.of(CHARIZARD, GYARADOS, DRAGONITE, TALONFLAME, VOLCARONA);
     static final List<Integer> EXAMPLE_TEAM_WITH_SIXTH =
             List.of(CHARIZARD, GYARADOS, DRAGONITE, TALONFLAME, VOLCARONA, EXCADRILL);
@@ -67,6 +69,10 @@ final class SynergyFixture {
             entry(10104, "ninetales-alola", List.of(PokemonType.ICE, PokemonType.FAIRY), FormCategory.REGIONAL, true,
                     new Stats(73, 67, 75, 81, 100, 109)));
 
+    static final List<PokemonCatalogEntry> CATALOG_WITH_PARADOX = Stream.concat(CATALOG.stream(), Stream.of(
+            entry(IRON_TREADS, "iron-treads", List.of(PokemonType.GROUND, PokemonType.STEEL), FormCategory.DEFAULT,
+                    true, new Stats(90, 112, 120, 72, 70, 106)))).toList();
+
     private SynergyFixture() {
     }
 
@@ -75,8 +81,12 @@ final class SynergyFixture {
     }
 
     static PokemonProfileRegistry registry(TypeChartService typeChart) {
+        return registry(typeChart, CATALOG);
+    }
+
+    static PokemonProfileRegistry registry(TypeChartService typeChart, List<PokemonCatalogEntry> catalog) {
         PokemonQueryService pokemonQueryService = mock(PokemonQueryService.class);
-        when(pokemonQueryService.findAllCatalogEntries()).thenReturn(CATALOG);
+        when(pokemonQueryService.findAllCatalogEntries()).thenReturn(catalog);
         PokemonProfileRegistry registry = new PokemonProfileRegistry(pokemonQueryService, typeChart);
         registry.reload();
         return registry;
@@ -84,7 +94,7 @@ final class SynergyFixture {
 
     static SynergyAnalyzer analyzer() {
         TypeChartService typeChart = typeChart();
-        return new SynergyAnalyzer(registry(typeChart), typeChart);
+        return new SynergyAnalyzer(registry(typeChart));
     }
 
     private static PokemonCatalogEntry entry(int id, String name, List<PokemonType> types, FormCategory form,

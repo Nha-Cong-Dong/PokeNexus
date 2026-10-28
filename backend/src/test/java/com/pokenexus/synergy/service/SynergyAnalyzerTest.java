@@ -120,7 +120,7 @@ class SynergyAnalyzerTest {
         when(emptyPokedex.findAllCatalogEntries()).thenReturn(List.of());
         PokemonProfileRegistry emptyRegistry = new PokemonProfileRegistry(emptyPokedex, typeChart);
         emptyRegistry.loadOnStartup();
-        SynergyAnalyzer emptyAnalyzer = new SynergyAnalyzer(emptyRegistry, typeChart);
+        SynergyAnalyzer emptyAnalyzer = new SynergyAnalyzer(emptyRegistry);
 
         assertThat(emptyRegistry.isLoaded()).isFalse();
         assertError(() -> emptyAnalyzer.analyze(List.of(CHARIZARD)), ErrorCode.DATA_NOT_READY);

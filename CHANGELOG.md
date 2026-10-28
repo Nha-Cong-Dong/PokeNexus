@@ -7,6 +7,20 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ## [Unreleased]
 
+### Added
+
+- `backend/Dockerfile` multi-stage (Eclipse Temurin 25 JDK để build, JRE để chạy, jar tách layer, user không phải root) và service `backend` (profile `app`) trong Docker Compose: `docker compose --profile app up -d --build` chạy backend cùng MySQL.
+- `scripts/bench-synergy.sh`: đo p50, p95 của `analyze` và `recommendations`, thoát mã lỗi khi p95 từ 50 ms.
+
+### Changed
+
+- `excludeLegendary=true` loại thêm 20 Pokémon Paradox (CSV PokéAPI không đánh dấu chúng là huyền thoại).
+- Độ phủ tấn công của mỗi Pokémon tính sẵn khi nạp dữ liệu; `SynergyAnalyzer` không còn dựng bảng siêu hiệu quả ở mỗi request.
+
+### Security
+
+- `SaveRateLimiter` theo dõi tối đa 10.000 IP; trước đây map trong bộ nhớ có thể tăng không giới hạn khi nhiều IP khác nhau lưu đội trong cùng một phút.
+
 ## [0.2.0] - 2026-10-28
 
 ### Added

@@ -123,6 +123,7 @@ docker compose ps
 
 - Backend: chạy trong `backend/` theo [backend/README.md](backend/README.md), Phần 2. Lần khởi động đầu tự nạp CSV vào MySQL; Swagger UI ở `http://localhost:8080/swagger-ui.html`.
 - Frontend: chạy trong `frontend/` theo [frontend/README.md](frontend/README.md), Phần 2; dev server ở `http://localhost:5173`.
+- Chạy backend bằng Docker, không cần cài JDK: `docker compose --profile app up -d --build` dựng image từ `backend/Dockerfile` và chạy cùng MySQL ở `http://localhost:8080`. Container đọc CSV trong `data/csv/` và tự nạp khi DB còn trống. Dừng bằng `docker compose --profile app down`.
 
 ---
 

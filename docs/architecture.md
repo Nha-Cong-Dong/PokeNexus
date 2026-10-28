@@ -1,6 +1,6 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 0.3 (cập nhật 2026-10-28; Phần 5: phân tích đội nhận tới 6 thành viên, đề xuất vẫn cần đội 1-5; Phần 6: tham số `six` giữ slot 6 khi reload)
+- Phiên bản: 0.4 (cập nhật 2026-10-28; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
 
@@ -215,6 +215,7 @@ sequenceDiagram
 
 - Hệ số hệ kép bằng tích hai hệ số đơn (ví dụ Fire/Flying chịu Rock: 2 x 2 = 4).
 - `defenseScore` của mọi Pokémon với 18 hệ được tính sẵn khi khởi động.
+- Các hệ phòng thủ mà mỗi Pokémon đánh siêu hiệu quả bằng hệ của nó (`superEffectiveAgainst`) cũng được tính sẵn khi nạp `PokemonProfileRegistry`; phân tích và đề xuất không tra bảng hệ số khi xử lý request.
 - Chỉ tính theo hệ; Ability (ví dụ Levitate) và vật phẩm nằm ngoài phạm vi MVP.
 
 ### II. Phân tích đội
@@ -240,7 +241,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 
 - Đội đầu vào có 1-5 thành viên (`RecommendationEngine.MAX_TEAM_SIZE`); đội đủ 6 không còn vị trí để đề xuất.
 - `form_category` là `DEFAULT` hoặc `REGIONAL`; loài đã tiến hóa hoàn toàn; không có trong đội.
-- `excludeLegendary = true` thì loại cả huyền thoại và thần thoại; `minBaseStatTotal` lọc theo BST.
+- `excludeLegendary = true` thì loại huyền thoại, thần thoại và 20 Pokémon Paradox (`RecommendationEngine.PARADOX_POKEMON_IDS`: 984-995, 1005, 1006, 1009, 1010, 1020-1023; CSV PokéAPI không đánh dấu Paradox là huyền thoại); `minBaseStatTotal` lọc theo BST.
 
 #### 2. Chấm điểm
 
@@ -334,7 +335,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | Rủi ro | Biện pháp |
 |---|---|
 | Gọi API từ origin lạ | CORS chỉ cho phép `CORS_ALLOWED_ORIGINS` |
-| Spam lưu đội | `SaveRateLimiter`: 10 lần lưu mỗi phút mỗi IP (cửa sổ cố định, trong bộ nhớ); vượt thì 429 |
+| Spam lưu đội | `SaveRateLimiter`: 10 lần lưu mỗi phút mỗi IP (cửa sổ cố định, trong bộ nhớ); vượt thì 429. Theo dõi tối đa 10.000 IP (`MAX_TRACKED_CLIENTS`): khi đầy, IP mới chỉ được nhận sau khi dọn cửa sổ hết hạn, nếu vẫn đầy thì nhận 429 |
 | Đoán mã chia sẻ | `share_code` 8 ký tự base62 từ `SecureRandom` (62^8, khoảng 2,18 x 10^14 tổ hợp); `id` nội bộ không lộ ra API |
 | SQL injection | Chỉ dùng JPA, Specification, tham số bind; không nối chuỗi SQL |
 | Sắp xếp theo cột tùy ý | Whitelist thuộc tính `sort` ([api.md](api.md), Phần 1) |
@@ -351,10 +352,12 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 
 | Chỉ số | Mục tiêu | Cách đo |
 |---|---|---|
-| `POST /synergy/analyze`, `/recommendations` | p95 dưới 50 ms | Script gọi 100 lần bằng `curl -w "%{time_total}"` ở local |
+| `POST /synergy/analyze`, `/recommendations` | p95 dưới 50 ms | `scripts/bench-synergy.sh [base-url]`: 20 lần khởi động rồi 100 lần đo bằng `curl -w "%{time_total}"`; thoát mã khác 0 khi có request lỗi hoặc p95 từ 50 ms |
 | Trang Omni-Dex, trang đầu | Dưới 1 giây ở local | Tab Network của DevTools |
 | JS bundle ban đầu | Dưới 300 KB sau gzip | Kết quả `npm run build` |
 | Khởi động backend (đã có dữ liệu) | Dưới 15 giây | Log thời gian khởi động |
+
+- Đo ngày 2026-10-28 (backend và MySQL trong Docker, 1.351 Pokémon): p95 `analyze` 7,2 ms (đội 5) và 6,9 ms (đội 6), `recommendations` 8,6 ms; khởi động 5,4 giây. Phần lớn thời gian là chi phí HTTP, việc tính sẵn độ phủ tấn công không tạo khác biệt đo được (bản trước: 8,5 ms và 8,7 ms).
 
 ### II. Cache HTTP
 
@@ -400,7 +403,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 
 | Môi trường | Mô tả |
 |---|---|
-| Local | MySQL trong Docker; backend và frontend chạy trực tiếp trên máy |
+| Local | MySQL trong Docker; backend chạy trực tiếp trên máy hoặc bằng service `backend` (profile `app`) trong Docker Compose; frontend chạy trực tiếp |
 | CI | Testcontainers dựng MySQL tạm; dữ liệu test lấy từ CSV mẫu trong `src/test/resources` |
 | Production | Frontend build tĩnh; backend chạy bằng Docker image; MySQL do nhà cung cấp hosting quản lý |
 
@@ -419,7 +422,8 @@ flowchart LR
 ```
 
 - Production không chạy ingestion: dữ liệu được nạp ở local, xuất `mysqldump`, rồi import một lần vào MySQL của hosting.
-- Backend đóng gói bằng `backend/Dockerfile` multi-stage (stage build dùng JDK 25, stage chạy dùng JRE 25).
+- Backend đóng gói bằng `backend/Dockerfile` multi-stage: stage build dùng `eclipse-temurin:25-jdk`, chạy `mvnw package` rồi tách jar theo layer (`-Djarmode=tools ... extract --layers`); stage chạy dùng `eclipse-temurin:25-jre`, user không phải root, `-XX:MaxRAMPercentage=75`. Không dùng AOT cache vì bước huấn luyện cần kết nối MySQL lúc build.
+- Chạy bản local bằng Docker: `docker compose --profile app up -d --build`. Service `backend` chờ MySQL `healthy`, kết nối `mysql:3306` trong mạng Compose, đọc CSV từ `./data/csv` (gắn chỉ đọc vào `/data/csv`, biến `APP_INGESTION_CSVDIR`) và nạp khi bảng `pokemon` rỗng.
 
 ### II. Tiêu chí chọn hosting (chốt ở T403)
 

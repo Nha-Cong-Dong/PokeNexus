@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,6 +55,17 @@ class TypeChartServiceTest {
         assertThat(typeChart.multiplier(PokemonType.FIRE, PokemonType.WATER)).isEqualTo(0.5);
         assertThat(typeChart.multiplier(PokemonType.NORMAL, PokemonType.GHOST)).isEqualTo(0.0);
         assertThat(typeChart.multiplier(PokemonType.FAIRY, PokemonType.DRAGON)).isEqualTo(2.0);
+    }
+
+    @Test
+    void marksDefendingTypesHitSuperEffectivelyByAnyAttackingType() {
+        boolean[] groundSteel = typeChart.superEffectiveAgainst(List.of(PokemonType.GROUND, PokemonType.STEEL));
+        boolean[] none = typeChart.superEffectiveAgainst(List.of());
+
+        assertThat(Arrays.stream(PokemonType.values()).filter(type -> groundSteel[type.index()]))
+                .containsExactlyInAnyOrder(PokemonType.POISON, PokemonType.ROCK, PokemonType.STEEL, PokemonType.FIRE,
+                        PokemonType.ELECTRIC, PokemonType.ICE, PokemonType.FAIRY);
+        assertThat(none).hasSize(PokemonType.COUNT).containsOnly(false);
     }
 
     @Test

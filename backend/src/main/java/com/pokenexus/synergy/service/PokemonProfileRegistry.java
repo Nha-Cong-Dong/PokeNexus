@@ -62,7 +62,8 @@ public class PokemonProfileRegistry implements StaticDataCache {
             return isLoaded();
         }
         List<PokemonProfile> profiles = entries.stream()
-                .map(entry -> new PokemonProfile(entry, typeChartService.defenseMultipliers(entry.types())))
+                .map(entry -> new PokemonProfile(entry, typeChartService.defenseMultipliers(entry.types()),
+                        typeChartService.superEffectiveAgainst(entry.types())))
                 .sorted(Comparator.comparingInt(PokemonProfile::id))
                 .toList();
         Map<Integer, PokemonProfile> byId = new LinkedHashMap<>();

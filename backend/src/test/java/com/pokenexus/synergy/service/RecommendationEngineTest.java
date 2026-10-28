@@ -25,7 +25,7 @@ class RecommendationEngineTest {
     private final TypeChartService typeChart = SynergyFixture.typeChart();
     private final PokemonProfileRegistry registry = SynergyFixture.registry(typeChart);
     private final RecommendationEngine engine = new RecommendationEngine(
-            new SynergyAnalyzer(registry, typeChart), registry, new ReasonBuilder());
+            new SynergyAnalyzer(registry), registry, new ReasonBuilder());
 
     @Test
     void topRecommendationAddressesRockWeaknessFromSpecExampleTwo() {
@@ -83,6 +83,24 @@ class RecommendationEngineTest {
         assertThat(withoutLegends.items()).extracting(Recommendation::name).doesNotContain("mewtwo", "mew");
         assertThat(strongOnly.candidateCount()).isEqualTo(6);
         assertThat(strongOnly.items()).allSatisfy(item -> assertThat(item.baseStatTotal()).isGreaterThanOrEqualTo(550));
+    }
+
+    @Test
+    void treatsParadoxPokemonAsLegendaryWhenExcludingLegends() {
+        PokemonProfileRegistry withParadox = SynergyFixture.registry(typeChart, SynergyFixture.CATALOG_WITH_PARADOX);
+        RecommendationEngine paradoxEngine = new RecommendationEngine(
+                new SynergyAnalyzer(withParadox), withParadox, new ReasonBuilder());
+
+        RecommendationResponse everyone = paradoxEngine.recommend(
+                new RecommendationRequest(EXAMPLE_TEAM, 10, false, null));
+        RecommendationResponse withoutLegends = paradoxEngine.recommend(
+                new RecommendationRequest(EXAMPLE_TEAM, 10, true, null));
+
+        assertThat(everyone.items().getFirst().name()).isEqualTo("iron-treads");
+        assertThat(withoutLegends.candidateCount()).isEqualTo(11);
+        assertThat(withoutLegends.items()).extracting(Recommendation::name)
+                .doesNotContain("iron-treads", "mewtwo", "mew");
+        assertThat(withoutLegends.items().getFirst().name()).isEqualTo("excadrill");
     }
 
     @Test
