@@ -1,9 +1,10 @@
 # PokeNexus - Đặc tả REST API
 
-- Phiên bản: 0.4 (phạm vi MVP, cập nhật 2026-10-27; khớp code backend sau khi làm T303-T308)
+- Phiên bản: 0.5 (phạm vi MVP, cập nhật 2026-10-28; khớp code backend sau khi làm T303-T308)
 - Tài liệu tương tác (sau khi có backend): Swagger UI tại `http://localhost:8080/swagger-ui.html`. Khi Swagger và tài liệu này lệch nhau, sửa cho khớp trong cùng PR.
 - Thay đổi so với 0.1: thêm schema DTO (Phần 3), danh mục lỗi có `code` (Phần 4), mã 429 và 503; bỏ `spriteUrl` khỏi response ([ADR 0005](adr/0005-hybrid-image-assets.md)); response đề xuất đổi từ mảng sang object.
 - Thay đổi so với 0.3: `analyze` nhận 1-6 Pokémon để chấm điểm cả đội đủ 6; `recommendations` vẫn nhận 1-5; `synergyScore` của đội đã lưu tính trên mọi thành viên ([spec.md](spec.md) 1.3).
+- Thay đổi so với 0.4: `excludeLegendary = true` của `recommendations` loại thêm 20 Pokémon Paradox (Phần 2, mục IX).
 
 ---
 
@@ -132,7 +133,7 @@
 |---|---|---|---|
 | `pokemonIds` | mảng số | 1-5 phần tử (đội phải còn ít nhất 1 vị trí trống), không trùng, mỗi ID tồn tại | |
 | `limit` | số | 1-10 | 3 |
-| `excludeLegendary` | boolean | | `false` |
+| `excludeLegendary` | boolean | `true` thì loại huyền thoại, thần thoại và Pokémon Paradox ([architecture.md](architecture.md), Phần 5, mục III) | `false` |
 | `minBaseStatTotal` | số hoặc `null` | 0-1530 | `null` |
 
 - Response 200: `RecommendationResponse`. `items` có thể ít hơn `limit` nếu tập ứng viên nhỏ.
@@ -346,7 +347,7 @@ interface TeamResponse {
 | `POKEMON_NOT_FOUND` | 404 | Pokémon trên đường dẫn không tồn tại |
 | `TEAM_NOT_FOUND` | 404 | Mã chia sẻ không tồn tại |
 | `ROUTE_NOT_FOUND` | 404 | Đường dẫn API không tồn tại |
-| `RATE_LIMITED` | 429 | Vượt giới hạn lưu đội |
+| `RATE_LIMITED` | 429 | Vượt giới hạn lưu đội (10 lần mỗi phút mỗi IP), hoặc bộ đếm đang theo dõi đủ 10.000 IP và IP gửi request là IP mới |
 | `DATA_NOT_READY` | 503 | Dữ liệu tĩnh chưa nạp; áp dụng cho mọi endpoint đọc dữ liệu Pokémon, hệ, synergy |
 | `INTERNAL_ERROR` | 500 | Lỗi không lường trước |
 

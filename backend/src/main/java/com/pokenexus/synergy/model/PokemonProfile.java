@@ -15,14 +15,19 @@ public final class PokemonProfile {
     private final PokemonCatalogEntry entry;
     private final double[] defenseMultipliers;
     private final int[] defenseScores;
+    private final boolean[] superEffectiveAgainst;
     private final Set<PokemonType> typeCombination;
 
-    public PokemonProfile(PokemonCatalogEntry entry, double[] defenseMultipliers) {
+    public PokemonProfile(PokemonCatalogEntry entry, double[] defenseMultipliers, boolean[] superEffectiveAgainst) {
         if (defenseMultipliers.length != PokemonType.COUNT) {
             throw new IllegalArgumentException("Expected " + PokemonType.COUNT + " defense multipliers");
         }
+        if (superEffectiveAgainst.length != PokemonType.COUNT) {
+            throw new IllegalArgumentException("Expected offensive coverage of " + PokemonType.COUNT + " types");
+        }
         this.entry = entry;
         this.defenseMultipliers = defenseMultipliers.clone();
+        this.superEffectiveAgainst = superEffectiveAgainst.clone();
         this.defenseScores = new int[PokemonType.COUNT];
         for (int index = 0; index < PokemonType.COUNT; index++) {
             defenseScores[index] = DefenseScale.scoreOf(defenseMultipliers[index]);
@@ -76,6 +81,10 @@ public final class PokemonProfile {
 
     public int defenseScore(PokemonType attacking) {
         return defenseScores[attacking.index()];
+    }
+
+    public boolean hitsSuperEffectively(PokemonType defending) {
+        return superEffectiveAgainst[defending.index()];
     }
 
     public PokemonRef toRef() {

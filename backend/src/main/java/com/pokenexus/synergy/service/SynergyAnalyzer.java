@@ -21,7 +21,6 @@ import com.pokenexus.synergy.dto.AnalyzeResponse.StatRadar;
 import com.pokenexus.synergy.dto.AnalyzeResponse.TypeMatrixRow;
 import com.pokenexus.synergy.model.PokemonProfile;
 import com.pokenexus.synergy.model.TeamAnalysis;
-import com.pokenexus.typechart.service.TypeChartService;
 
 @Service
 public class SynergyAnalyzer {
@@ -29,15 +28,12 @@ public class SynergyAnalyzer {
     public static final int MIN_TEAM_SIZE = 1;
     public static final int MAX_TEAM_SIZE = 6;
 
-    private static final double SUPER_EFFECTIVE = 2.0;
     private static final PokemonType[] TYPES = PokemonType.values();
 
     private final PokemonProfileRegistry registry;
-    private final TypeChartService typeChartService;
 
-    public SynergyAnalyzer(PokemonProfileRegistry registry, TypeChartService typeChartService) {
+    public SynergyAnalyzer(PokemonProfileRegistry registry) {
         this.registry = registry;
-        this.typeChartService = typeChartService;
     }
 
     public AnalyzeResponse analyze(List<Integer> pokemonIds) {
@@ -69,27 +65,13 @@ public class SynergyAnalyzer {
     }
 
     public TeamAnalysis evaluate(List<PokemonProfile> members) {
-        boolean[][] superEffective = superEffectiveTable();
         boolean[] covered = new boolean[PokemonType.COUNT];
         for (PokemonProfile member : members) {
-            for (PokemonType attacking : member.types()) {
-                for (PokemonType defending : TYPES) {
-                    covered[defending.index()] |= superEffective[attacking.index()][defending.index()];
-                }
+            for (PokemonType defending : TYPES) {
+                covered[defending.index()] |= member.hitsSuperEffectively(defending);
             }
         }
         return new TeamAnalysis(members, covered);
-    }
-
-    public boolean[][] superEffectiveTable() {
-        boolean[][] table = new boolean[PokemonType.COUNT][PokemonType.COUNT];
-        for (PokemonType attacking : TYPES) {
-            for (PokemonType defending : TYPES) {
-                table[attacking.index()][defending.index()] =
-                        typeChartService.multiplier(attacking, defending) >= SUPER_EFFECTIVE;
-            }
-        }
-        return table;
     }
 
     public AnalyzeResponse toResponse(TeamAnalysis analysis) {

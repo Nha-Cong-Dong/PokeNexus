@@ -29,6 +29,9 @@ public class RecommendationEngine {
     public static final int SCORE_SCALE = 100;
     public static final int BREAKDOWN_DECIMALS = 3;
     public static final int MAX_TEAM_SIZE = SynergyAnalyzer.MAX_TEAM_SIZE - 1;
+    public static final Set<Integer> PARADOX_POKEMON_IDS = Set.of(
+            984, 985, 986, 987, 988, 989, 990, 991, 992, 993, 994, 995,
+            1005, 1006, 1009, 1010, 1020, 1021, 1022, 1023);
 
     private static final PokemonType[] TYPES = PokemonType.values();
 
@@ -54,10 +57,9 @@ public class RecommendationEngine {
             return new RecommendationResponse(0, List.of());
         }
 
-        boolean[][] superEffective = synergyAnalyzer.superEffectiveTable();
         List<Scored> scored = candidates.stream()
                 .map(candidate -> new Scored(candidate, defenseValue(candidate, analysis),
-                        addedCoverage(candidate, analysis, superEffective)))
+                        addedCoverage(candidate, analysis)))
                 .toList();
         Range defenseRange = Range.of(scored, Scored::defense);
         Range offenseRange = Range.of(scored, scoredCandidate -> scoredCandidate.addedCoverage().size());
@@ -95,10 +97,14 @@ public class RecommendationEngine {
         if (!profile.formCategory().isShownByDefault() || !profile.fullyEvolved() || teamIds.contains(profile.id())) {
             return false;
         }
-        if (Boolean.TRUE.equals(request.excludeLegendary()) && (profile.legendary() || profile.mythical())) {
+        if (Boolean.TRUE.equals(request.excludeLegendary()) && isLegendaryLike(profile)) {
             return false;
         }
         return request.minBaseStatTotal() == null || profile.baseStatTotal() >= request.minBaseStatTotal();
+    }
+
+    static boolean isLegendaryLike(PokemonProfile profile) {
+        return profile.legendary() || profile.mythical() || PARADOX_POKEMON_IDS.contains(profile.id());
     }
 
     static double defenseValue(PokemonProfile candidate, TeamAnalysis analysis) {
@@ -115,18 +121,11 @@ public class RecommendationEngine {
         return value;
     }
 
-    static List<PokemonType> addedCoverage(PokemonProfile candidate, TeamAnalysis analysis,
-                                           boolean[][] superEffective) {
+    static List<PokemonType> addedCoverage(PokemonProfile candidate, TeamAnalysis analysis) {
         List<PokemonType> added = new ArrayList<>();
         for (PokemonType defending : TYPES) {
-            if (analysis.covered(defending)) {
-                continue;
-            }
-            for (PokemonType attacking : candidate.types()) {
-                if (superEffective[attacking.index()][defending.index()]) {
-                    added.add(defending);
-                    break;
-                }
+            if (!analysis.covered(defending) && candidate.hitsSuperEffectively(defending)) {
+                added.add(defending);
             }
         }
         return List.copyOf(added);

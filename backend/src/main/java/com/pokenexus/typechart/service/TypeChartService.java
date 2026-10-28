@@ -25,6 +25,7 @@ import com.pokenexus.typechart.repository.TypeEfficacyRepository;
 public class TypeChartService implements StaticDataCache {
 
     public static final int MATRIX_SIZE = PokemonType.COUNT * PokemonType.COUNT;
+    public static final double SUPER_EFFECTIVE = 2.0;
 
     private static final Logger log = LoggerFactory.getLogger(TypeChartService.class);
     private static final double DAMAGE_FACTOR_SCALE = 100.0;
@@ -88,6 +89,17 @@ public class TypeChartService implements StaticDataCache {
         double[] result = new double[PokemonType.COUNT];
         for (PokemonType attacking : TYPES) {
             result[attacking.index()] = multiplier(attacking, defendingTypes);
+        }
+        return result;
+    }
+
+    public boolean[] superEffectiveAgainst(Collection<PokemonType> attackingTypes) {
+        double[][] table = table();
+        boolean[] result = new boolean[PokemonType.COUNT];
+        for (PokemonType attacking : attackingTypes) {
+            for (PokemonType defending : TYPES) {
+                result[defending.index()] |= table[attacking.index()][defending.index()] >= SUPER_EFFECTIVE;
+            }
         }
         return result;
     }
