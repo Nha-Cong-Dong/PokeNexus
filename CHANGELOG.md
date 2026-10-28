@@ -11,6 +11,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 - Trang Địa hình `/terrain/:terrainId?`: 13 địa hình phủ 18 hệ, mô tả, Pokémon thường gặp, minigame "Who's that Pokémon?" (bóng đen, 4 lựa chọn, chuỗi 5 câu đúng nhận huy hiệu). Header có mục thứ 5 "Địa hình".
 - Thử tài Trainer có 5 bộ, mỗi bộ 6 câu (hệ số sát thương, điểm yếu và miễn nhiễm, chỉ số gốc, hệ của Pokémon, vùng đất ra mắt); đáp án tính từ ma trận tương khắc và API chi tiết.
+- Team Builder có ô "Loại huyền thoại, thần thoại và Paradox" cho phần đề xuất (gửi `excludeLegendary: true`), mặc định tắt.
 - Phần thưởng Trainer dùng chung cho Thử tài Trainer và trang Địa hình: điểm, thưởng chuỗi đúng, Poké/Great/Ultra/Master Ball theo kết quả bộ câu hỏi, huy hiệu, 6 danh hiệu; lưu trong `localStorage`.
 - `backend/Dockerfile` multi-stage (Eclipse Temurin 25 JDK để build, JRE để chạy, jar tách layer, user không phải root) và service `backend` (profile `app`) trong Docker Compose: `docker compose --profile app up -d --build` chạy backend cùng MySQL.
 - `scripts/bench-synergy.sh`: đo p50, p95 của `analyze` và `recommendations`, thoát mã lỗi khi p95 từ 50 ms.

@@ -32,7 +32,8 @@ function toRef({ id, name, types }: PokemonRef): PokemonRef {
 
 export function TeamBuilderPage() {
   const draft = useTeamDraft()
-  const recommendations = useRecommendations(draft.ids)
+  const [excludeLegendary, setExcludeLegendary] = useState(false)
+  const recommendations = useRecommendations(draft.ids, excludeLegendary)
   const [knownRefs, setKnownRefs] = useState<Record<number, PokemonRef>>({})
   const [saveOpen, setSaveOpen] = useState(false)
 
@@ -236,6 +237,15 @@ export function TeamBuilderPage() {
           >
             {draft.isFull ? 'Đề xuất slot thứ 6' : 'Đề xuất thành viên tiếp theo'}
           </h2>
+          <label className="flex min-h-10 cursor-pointer items-center gap-3 rounded-2xl border-2 border-border bg-surface px-4 py-2 font-bold">
+            <input
+              type="checkbox"
+              checked={excludeLegendary}
+              onChange={(event) => setExcludeLegendary(event.target.checked)}
+              className="size-5 flex-none accent-primary"
+            />
+            Loại huyền thoại, thần thoại và Paradox
+          </label>
           {hasMembers ? (
             <RecommendationList
               recommendations={recommendations}

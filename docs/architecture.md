@@ -292,7 +292,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | Trạng thái chia sẻ được | Query string trên URL | Bộ lọc Omni-Dex, cặp so sánh |
 | Đội nháp | Hook `useTeamDraft` (`useReducer`), đồng bộ URL và `localStorage` | 5 slot Team Builder |
 | Tiến độ Trainer | Hook `useTrainerProgress`, `localStorage` khóa `pokenexus.trainer`; mỗi trang giữ một bản và truyền xuống component con | Điểm, chuỗi đúng dài nhất, Ball, huy hiệu của Thử tài Trainer và Who's that Pokémon? |
-| Trạng thái giao diện cục bộ | `useState` trong component | Mở hoặc đóng dialog |
+| Trạng thái giao diện cục bộ | `useState` trong component | Mở hoặc đóng dialog; ô loại huyền thoại ở Team Builder (không lên URL vì `useTeamDraft` quản lý query string của trang) |
 
 | Query key | `staleTime` | Lý do |
 |---|---|---|

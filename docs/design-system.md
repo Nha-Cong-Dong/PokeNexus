@@ -542,7 +542,7 @@ Desktop (1440 px)
 | Chi tiết | Khung cảnh cao 280 px có artwork; panel: tên, nhãn hệ, chỉ số, lưới phòng thủ 3 cột, các dạng | Khung cảnh cao 420 px, artwork bên trái; panel bên phải chứa chỉ số; lưới phòng thủ 6 cột bên dưới |
 | Tương khắc | Chọn 1-2 hệ phòng thủ, kết quả dạng danh sách; ma trận cuộn ngang trong khung | Ma trận 18 x 18 đầy đủ, bộ chọn hệ kép phía trên |
 | So sánh | Hai ô tìm kiếm xếp dọc; `VersusBanner` chia ngang trên, dưới; radar; kết luận | `VersusBanner` chia chéo trái, phải; radar ở giữa, kết luận bên dưới |
-| Team Builder | Slot dạng lưới 3 x 2; điểm đội; heatmap cuộn ngang, cột hệ cố định; đề xuất xếp dọc | Trái: slot và điểm; giữa: heatmap; phải: 3 thẻ đề xuất |
+| Team Builder | Slot dạng lưới 3 x 2; điểm đội; heatmap cuộn ngang, cột hệ cố định; ô "Loại huyền thoại, thần thoại và Paradox" rồi đề xuất xếp dọc | Trái: slot và điểm; giữa: heatmap; phải: ô loại huyền thoại và 3 thẻ đề xuất |
 | Đội chia sẻ | Tên đội, 6 slot chỉ đọc, heatmap, nút "Mở trong Team Builder" | Như mobile, rộng hơn |
 | Địa hình | `PageHero` theo địa hình đang chọn; 13 link địa hình lưới 2 cột; mô tả; trò chơi (bóng đen trên, 4 nút xếp dọc); lưới Pokémon 2 cột; Thẻ Trainer | Link địa hình 7 cột; mô tả và trò chơi chia 2:3; lưới Pokémon 6 cột; Thẻ Trainer |
 

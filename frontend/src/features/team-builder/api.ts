@@ -33,9 +33,14 @@ export function analyzeTeam(
 export function fetchRecommendations(
   pokemonIds: readonly number[],
   limit: number,
+  excludeLegendary: boolean,
   signal?: AbortSignal,
 ): Promise<RecommendationResponse> {
-  const body: RecommendationRequest = { pokemonIds: [...pokemonIds], limit }
+  const body: RecommendationRequest = {
+    pokemonIds: [...pokemonIds],
+    limit,
+    ...(excludeLegendary ? { excludeLegendary } : {}),
+  }
   return postJson<RecommendationResponse>('/synergy/recommendations', body, signal)
 }
 
