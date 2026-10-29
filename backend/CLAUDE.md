@@ -45,6 +45,7 @@
 
 - Luồng một chiều Controller -> Service -> Repository. Controller không gọi Repository.
 - DTO là Java `record`. Entity không ra khỏi tầng Service; mapping qua class `*Mapper`.
+- Lombok chỉ dùng cho JPA Entity (`@Getter`, `@NoArgsConstructor`, `@AllArgsConstructor`, `@EqualsAndHashCode` cho khóa ghép); không bỏ dependency này vì 12 class (10 Entity, 2 khóa ghép `@Embeddable`) đang dùng.
 - `@Transactional(readOnly = true)` cho truy vấn, `@Transactional` cho ghi, đặt ở Service.
 - Cấu hình `app.*` đọc qua record `AppProperties` (`@ConfigurationProperties`), không dùng `@Value` rải rác.
 - `spring.jpa.hibernate.ddl-auto=validate`, `spring.jpa.open-in-view=false`.
@@ -88,7 +89,7 @@
 
 - Unit test: `<Class>Test`. Tích hợp: `<Class>IT` với `@SpringBootTest` và Testcontainers MySQL.
 - CSV mẫu khoảng 20 Pokémon ở `src/test/resources/csv/`; CI không dùng bộ CSV đầy đủ.
-- 4 ví dụ có đáp án ở [docs/spec.md](../docs/spec.md), Phần 2, mục V.4 là test bắt buộc. Danh sách test: [docs/spec.md](../docs/spec.md), Phần 6, mục II.
+- 5 ví dụ có đáp án ở [docs/spec.md](../docs/spec.md), Phần 2, mục V.4 là test bắt buộc. Danh sách test: [docs/spec.md](../docs/spec.md), Phần 6, mục II.
 - Mỗi logic mới có ít nhất 1 case thường và 1 case biên (rỗng, trùng, vượt giới hạn, ID không tồn tại).
 
 ### II. Logging

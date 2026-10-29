@@ -42,33 +42,19 @@
 
 ## Phần 2. Cách tải
 
-### I. macOS, Linux, Git Bash
+### I. Lệnh
 
 ```bash
-BASE_URL="https://raw.githubusercontent.com/PokeAPI/pokeapi/e2710d30d14b3f4dc6a02a4a71e8619cd835b7ff/data/v2/csv"
-FILES="types type_efficacy regions generations evolution_chains pokemon_species pokemon pokemon_types pokemon_stats stats pokemon_evolution evolution_triggers"
-mkdir -p data/csv
-for name in $FILES; do
-  curl -fsSL "$BASE_URL/$name.csv" -o "data/csv/$name.csv"
-done
-ls -lh data/csv
+bash scripts/download-csv.sh
 ```
-
-### II. Windows PowerShell
 
 ```powershell
-$BaseUrl = "https://raw.githubusercontent.com/PokeAPI/pokeapi/e2710d30d14b3f4dc6a02a4a71e8619cd835b7ff/data/v2/csv"
-$Files = @("types","type_efficacy","regions","generations","evolution_chains","pokemon_species","pokemon","pokemon_types","pokemon_stats","stats","pokemon_evolution","evolution_triggers")
-New-Item -ItemType Directory -Force -Path data/csv | Out-Null
-foreach ($Name in $Files) {
-  Invoke-WebRequest -Uri "$BaseUrl/$Name.csv" -OutFile "data/csv/$Name.csv"
-}
-Get-ChildItem data/csv
+powershell -ExecutionPolicy Bypass -File scripts/download-csv.ps1
 ```
 
-- Chạy lệnh từ thư mục gốc của repo.
-- `BASE_URL` cố định commit `e2710d3` của PokéAPI (2026-10-20), để số liệu (1.351 dạng, 324 dòng tương khắc) và các test có đáp án giống nhau trên mọi máy. Ngày 2026-10-29 đã đối chiếu: 12/12 file tải từ commit này trùng hash với bộ CSV dùng từ T102.
-- Muốn cập nhật dữ liệu mới: thay SHA bằng commit mới, nạp lại vào DB trống, chạy `verify` và kịch bản demo, rồi ghi số liệu mới ở Phần 4.
+- Chạy từ thư mục gốc của repo, chọn một trong hai lệnh (Git Bash, macOS, Linux hoặc PowerShell). Script tải 12 file vào `data/csv/`, ghi đè file cũ; truyền đường dẫn làm tham số đầu tiên (`.sh`) hoặc `-OutDir` (`.ps1`) để tải vào thư mục khác.
+- Hai script cố định commit `e2710d3` của PokéAPI (2026-10-20) ở biến `POKEAPI_COMMIT` và `$PokeApiCommit`, để số liệu (1.351 dạng, 324 dòng tương khắc) và các test có đáp án giống nhau trên mọi máy. Ngày 2026-10-29 đã đối chiếu: 12/12 file tải bằng mỗi script trùng hash với bộ CSV dùng từ T102.
+- Muốn cập nhật dữ liệu mới: thay SHA trong cả hai script, nạp lại vào DB trống, chạy `verify` và kịch bản demo, rồi ghi số liệu mới ở Phần 4.
 
 ---
 

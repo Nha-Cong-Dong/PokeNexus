@@ -102,27 +102,26 @@ Spring Boot API  (Controller -> Service -> Repository)
 | Docker và Docker Compose | Bản ổn định mới nhất       |
 | Git                      | 2.40 trở lên               |
 
-### II. Khởi động cơ sở dữ liệu
+### II. Chạy nhanh
 
 ```bash
-git clone https://github.com/Nha-Cong-Dong/PokeNexus.git
-cd PokeNexus
+git clone https://github.com/Nha-Cong-Dong/PokeNexus.git && cd PokeNexus
 cp .env.example .env
 docker compose up -d mysql
-docker compose ps
+bash scripts/download-csv.sh
+cd backend && ./mvnw spring-boot:run
+cd frontend && npm ci && npm run dev
 ```
 
-- Sửa `DB_PASSWORD` và `DB_ROOT_PASSWORD` trong `.env` trước khi chạy. File `.env` không được commit.
+- Hai lệnh cuối chạy ở hai cửa sổ terminal riêng, tính từ thư mục gốc. Trong PowerShell: `Copy-Item .env.example .env`, `powershell -ExecutionPolicy Bypass -File scripts/download-csv.ps1`, `.\mvnw.cmd spring-boot:run`.
+- Lần khởi động đầu, backend tự nạp CSV vào MySQL (khoảng 3 giây với bộ đầy đủ). `GET http://localhost:8080/api/v1/health` trả `"dataLoaded": true` khi đã nạp xong.
+- Mở `http://localhost:5173`. Swagger UI ở `http://localhost:8080/swagger-ui.html`.
+
+### III. Ghi chú
+
+- Sửa `DB_PASSWORD` và `DB_ROOT_PASSWORD` trong `.env` trước khi chạy. File `.env` không được commit. Cổng 3306 trên máy đã bị chiếm thì đổi `DB_PORT` (Docker Compose và backend cùng đọc biến này).
+- Nguồn CSV, commit PokéAPI cố định và số liệu: [data/README.md](data/README.md). Lệnh chi tiết của từng phần: [backend/README.md](backend/README.md), [frontend/README.md](frontend/README.md), Phần 2.
 - Công cụ quản trị DB trên trình duyệt (Adminer): `docker compose --profile tools up -d`, sau đó mở `http://localhost:8081`.
-
-### III. Chuẩn bị dữ liệu
-
-- Tải bộ CSV của PokéAPI vào `data/csv/` theo hướng dẫn tại [data/README.md](data/README.md).
-
-### IV. Backend và Frontend
-
-- Backend: chạy trong `backend/` theo [backend/README.md](backend/README.md), Phần 2. Lần khởi động đầu tự nạp CSV vào MySQL; Swagger UI ở `http://localhost:8080/swagger-ui.html`.
-- Frontend: chạy trong `frontend/` theo [frontend/README.md](frontend/README.md), Phần 2; dev server ở `http://localhost:5173`.
 - Chạy backend bằng Docker, không cần cài JDK: `docker compose --profile app up -d --build` dựng image từ `backend/Dockerfile` và chạy cùng MySQL ở `http://localhost:8080`. Container đọc CSV trong `data/csv/` và tự nạp khi DB còn trống. Dừng bằng `docker compose --profile app down`.
 
 ---
@@ -154,8 +153,8 @@ pokenexus/
 | Mốc                         | Nội dung                                                         |
 | --------------------------- | ---------------------------------------------------------------- |
 | Tuần 1 (18/10 - 25/10)      | Nghiên cứu, ý tưởng, tài liệu, khung dự án (Checkpoint 2)        |
-| Tuần 2 (26/10 - 01/11)      | MVP chạy end-to-end ở local (Checkpoint 3)                       |
-| Tuần 3 (02/11 - 08/11)      | Triển khai, kiểm thử, tài liệu, demo, tag `v1.0.0` (Checkpoint 4) |
+| Tuần 2 (26/10 - 01/11)      | MVP chạy end-to-end ở local (Checkpoint 3); triển khai production 30-31/10 |
+| Tuần 3 (02/11 - 08/11)      | Kiểm thử, sửa lỗi, tài liệu; bản hoàn chỉnh trên link thật, demo, tag `v1.0.0` (Checkpoint 4) |
 
 - Kế hoạch chi tiết: [docs/roadmap.md](docs/roadmap.md). Trạng thái hiện tại chỉ ghi ở [PLAN.md](PLAN.md).
 
