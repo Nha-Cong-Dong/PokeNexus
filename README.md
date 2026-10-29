@@ -151,14 +151,13 @@ pokenexus/
 
 ## Phần 7. Lộ trình
 
-| Mốc    | Nội dung                                                 | Trạng thái                        |
-| ------ | -------------------------------------------------------- | --------------------------------- |
-| Tuần 1 | Nghiên cứu, ý tưởng, khởi tạo repo và tài liệu           | Hoàn thành (T105 cắt giảm)        |
-| Tuần 2 | Chốt đặc tả, dựng khung backend, frontend, cơ sở dữ liệu | Hoàn thành, tag `v0.1.0`          |
-| Tuần 3 | Xây dựng MVP                                             | Đang thực hiện (8 trang đã chạy)  |
-| Tuần 4 | Hoàn thiện, triển khai, demo                             | Kế hoạch                          |
+| Mốc                         | Nội dung                                                         |
+| --------------------------- | ---------------------------------------------------------------- |
+| Tuần 1 (18/10 - 25/10)      | Nghiên cứu, ý tưởng, tài liệu, khung dự án (Checkpoint 2)        |
+| Tuần 2 (26/10 - 01/11)      | MVP chạy end-to-end ở local (Checkpoint 3)                       |
+| Tuần 3 (02/11 - 08/11)      | Triển khai, kiểm thử, tài liệu, demo, tag `v1.0.0` (Checkpoint 4) |
 
-- Chi tiết: [docs/roadmap.md](docs/roadmap.md).
+- Kế hoạch chi tiết: [docs/roadmap.md](docs/roadmap.md). Trạng thái hiện tại chỉ ghi ở [PLAN.md](PLAN.md).
 
 ---
 

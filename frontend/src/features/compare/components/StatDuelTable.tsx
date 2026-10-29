@@ -1,6 +1,7 @@
 import { STAT_AXES } from '../../../components/pokemon/statAxes'
 import { Panel } from '../../../components/ui/Panel'
 import { formatPokemonName } from '../../../lib/formatters'
+import { staggerDelay } from '../../../lib/motion'
 import type { PokemonDetail } from '../../../types/api'
 import { percentOf, statScale, totalScale } from '../scale'
 
@@ -76,7 +77,7 @@ export function StatDuelTable({ left, right }: StatDuelTableProps) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => {
+          {rows.map((row, rowIndex) => {
             const leftLead = leadLabel(row.left, row.right)
             const rightLead = leadLabel(row.right, row.left)
             return (
@@ -101,8 +102,11 @@ export function StatDuelTable({ left, right }: StatDuelTableProps) {
                       className="flex h-3 flex-1 justify-end overflow-hidden rounded-full bg-surface-muted"
                     >
                       <span
-                        className="h-full rounded-full bg-primary"
-                        style={{ width: `${percentOf(row.left, row.scale)}%` }}
+                        className="h-full origin-right animate-grow-x rounded-full bg-primary"
+                        style={{
+                          width: `${percentOf(row.left, row.scale)}%`,
+                          ...staggerDelay(rowIndex, 60, 300),
+                        }}
                       />
                     </span>
                   </span>
@@ -120,8 +124,11 @@ export function StatDuelTable({ left, right }: StatDuelTableProps) {
                       className="flex h-3 flex-1 overflow-hidden rounded-full bg-surface-muted"
                     >
                       <span
-                        className="h-full rounded-full bg-accent"
-                        style={{ width: `${percentOf(row.right, row.scale)}%` }}
+                        className="h-full origin-left animate-grow-x rounded-full bg-accent"
+                        style={{
+                          width: `${percentOf(row.right, row.scale)}%`,
+                          ...staggerDelay(rowIndex, 60, 300),
+                        }}
                       />
                     </span>
                     <span className="flex min-w-14 items-baseline justify-end gap-1">

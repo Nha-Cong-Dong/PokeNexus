@@ -1,5 +1,6 @@
 import { multiplierClassName } from '../../../components/pokemon/multiplierStyles'
 import { Panel } from '../../../components/ui/Panel'
+import { staggerDelay } from '../../../lib/motion'
 import { formatMultiplier } from '../../../lib/formatters'
 import { TYPE_NAMES, typeClassName, typeLabel } from '../../../lib/pokemonTypes'
 import type { DefenseEntry } from '../../../types/api'
@@ -65,10 +66,11 @@ export function DefenseGrid({ name, defense }: DefenseGridProps) {
               <span className="text-sm font-bold text-ink-muted">{group.items.length} hệ</span>
             </h3>
             <ul className="flex flex-wrap gap-2">
-              {group.items.map((item) => (
+              {group.items.map((item, index) => (
                 <li
                   key={item.type}
-                  className="flex h-10 overflow-hidden rounded-[10px] border-2 border-ink bg-surface text-sm font-extrabold"
+                  className="flex h-10 animate-fade-up overflow-hidden rounded-[10px] border-2 border-ink bg-surface text-sm font-extrabold transition-transform duration-150 ease-out hover:-translate-y-0.5"
+                  style={staggerDelay(index, 40, 200)}
                 >
                   <span className={`flex items-center px-3 ${typeClassName(item.type)}`}>
                     {typeLabel(item.type)}

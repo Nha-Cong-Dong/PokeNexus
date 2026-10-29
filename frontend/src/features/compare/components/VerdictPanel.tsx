@@ -4,6 +4,7 @@ import { MultiplierCell } from '../../../components/pokemon/MultiplierCell'
 import { TypeBadge } from '../../../components/pokemon/TypeBadge'
 import { GameDialog } from '../../../components/ui/GameDialog'
 import { formatMultiplier, formatNumber, formatPokemonName } from '../../../lib/formatters'
+import { staggerDelay } from '../../../lib/motion'
 import { typeLabel } from '../../../lib/pokemonTypes'
 import type { CompareResponse, PokemonDetail, Winner } from '../../../types/api'
 
@@ -43,8 +44,12 @@ export function VerdictPanel({ result }: VerdictPanelProps) {
       </h2>
       {verdict.summary.length > 0 && (
         <ol className="flex flex-col gap-3.5">
-          {verdict.summary.map((sentence) => (
-            <li key={sentence} className="flex items-start gap-3">
+          {verdict.summary.map((sentence, index) => (
+            <li
+              key={sentence}
+              className="flex animate-fade-up items-start gap-3"
+              style={staggerDelay(index, 150, 700)}
+            >
               <span
                 aria-hidden="true"
                 className="mt-1.5 size-3.5 flex-none rotate-45 rounded-[4px] border-2 border-ink bg-dex-yellow"

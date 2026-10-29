@@ -9,6 +9,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ### Added
 
+- Bộ chuyển động theo bản thiết kế hi-fi ngày 2026-10-24 cho mọi trang: card và danh sách vào lần lượt, artwork rơi xuống rồi lơ lửng, thanh chỉ số chạy dài, ma trận tương khắc hiện theo đường chéo, màn đối đầu So sánh bay vào, radar phóng từ tâm, nhãn lỗ hổng nghiêm trọng nhấp nháy, màn hình Tổng quan mở kiểu CRT, dải hệ chạy ngang, khối hiện khi cuộn tới (`Reveal`), ảnh hero lộ theo vòng tròn khi đổi khung cảnh. `prefers-reduced-motion` hiện ngay trạng thái cuối.
 - Trang Địa hình `/terrain/:terrainId?`: 13 địa hình phủ 18 hệ, mô tả, Pokémon thường gặp, minigame "Who's that Pokémon?" (bóng đen, 4 lựa chọn, chuỗi 5 câu đúng nhận huy hiệu). Header có mục thứ 5 "Địa hình".
 - Thử tài Trainer có 5 bộ, mỗi bộ 6 câu (hệ số sát thương, điểm yếu và miễn nhiễm, chỉ số gốc, hệ của Pokémon, vùng đất ra mắt); đáp án tính từ ma trận tương khắc và API chi tiết.
 - Team Builder có ô "Loại huyền thoại, thần thoại và Paradox" cho phần đề xuất (gửi `excludeLegendary: true`), mặc định tắt.
@@ -18,11 +19,18 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ### Changed
 
+- Bảng chọn địa hình thành dải 13 cột xiên có ảnh nhỏ (`{scene}-thumb.webp`, 400 x 600, tổng 254 KB): cột đang chọn nở rộng với tên lớn và nhãn hệ, hover nở nhẹ; trên mobile cuộn ngang và tự cuộn tới địa hình đang chọn.
+- Thanh điều hướng header canh giữa trang; bỏ ống kính tròn xanh trên vỏ Pokédex ở hero vì trùng với logo.
+- Khung cảnh đầu các trang con cao hơn (288/480/544 px thay vì 192/320 px; trang Chi tiết 544 px từ `lg`) và đáy chuyển mượt sang màu nền trang (`scene-fade`), không còn đường cắt giữa ảnh và nền.
+- Lộ trình 0.6 theo lịch hackathon (review Checkpoint 2): Checkpoint 3 ngày 01/11, triển khai 30-31/10, đóng băng tính năng từ 05/11, demo và `v1.0.0` ngày 08/11 (trước là 15/11).
+- `data/README.md` tải CSV từ commit PokéAPI `e2710d3` thay vì nhánh `master`.
+- `design-system.md` 0.8: bỏ giới hạn một khoảnh khắc chuyển động mỗi trang; README Phần 7 không còn cột trạng thái (trạng thái chỉ ở `PLAN.md`).
 - `excludeLegendary=true` loại thêm 20 Pokémon Paradox (CSV PokéAPI không đánh dấu chúng là huyền thoại).
 - Độ phủ tấn công của mỗi Pokémon tính sẵn khi nạp dữ liệu; `SynergyAnalyzer` không còn dựng bảng siêu hiệu quả ở mỗi request.
 
 ### Fixed
 
+- Bảng task tuần 3 trong `docs/roadmap.md` bị tách đôi do dòng trống trước T313, làm T313-T315 mất header.
 - Nút đáp án đúng và sai của Thử tài Trainer hiện chữ trắng trên nền trắng, vì lớp `bg-surface` của biến thể nút được Tailwind sinh sau lớp ghi đè; bộ câu hỏi đang chọn cũng không có nền vàng.
 
 ### Security

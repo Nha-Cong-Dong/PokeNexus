@@ -5,6 +5,7 @@ import { ErrorState } from '../../../components/ui/ErrorState'
 import { errorMessageFor } from '../../../lib/errorMessages'
 import { formatNumber } from '../../../lib/formatters'
 import { ApiError } from '../../../lib/http'
+import { staggerDelay } from '../../../lib/motion'
 import type { Recommendation, RecommendationResponse } from '../../../types/api'
 import { RECOMMENDATION_LIMIT } from '../api'
 import { RecommendationCard, RecommendationSkeleton } from './RecommendationCard'
@@ -68,7 +69,11 @@ export function RecommendationList({
           const isSixth = item.id === sixthId
           const inTeam = teamIds.includes(item.id)
           return (
-            <li key={item.id} className="flex">
+            <li
+              key={item.id}
+              className="flex animate-slide-in-right"
+              style={staggerDelay(index, 90)}
+            >
               <RecommendationCard
                 recommendation={item}
                 rank={index + 1}

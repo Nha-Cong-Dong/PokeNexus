@@ -5,6 +5,7 @@ import { PokemonSprite } from '../../../components/pokemon/PokemonSprite'
 import { buttonClassName } from '../../../components/ui/buttonStyles'
 import { EmptyState } from '../../../components/ui/EmptyState'
 import { formatPokemonName } from '../../../lib/formatters'
+import { staggerDelay } from '../../../lib/motion'
 import { SCENES } from '../../../lib/scenes'
 import type { PokemonSummary } from '../../../types/api'
 import { awardBadge, pointsForAnswer, recordAnswer } from '../../trainer/progress'
@@ -33,7 +34,7 @@ interface Outcome {
 }
 
 function optionClassName(index: number, outcome: Outcome | null, correctIndex: number): string {
-  const base = `${buttonClassName('secondary')} h-auto min-h-11 py-2 disabled:opacity-100`
+  const base = `${buttonClassName('secondary')} h-auto min-h-11 animate-pop-in py-2 disabled:opacity-100`
   if (outcome === null) return base
   if (index === correctIndex) return `${base} border-success! bg-success! text-white!`
   if (index === outcome.picked) return `${base} border-danger! bg-danger! text-white!`
@@ -96,7 +97,7 @@ export function WhosThatPokemon({
 
   return (
     <div className="flex flex-col gap-6 md:flex-row md:items-center">
-      <div className="mx-auto flex size-56 flex-none items-center justify-center rounded-full border-6 border-white bg-surface-muted shadow-[0_0_0_3px_var(--color-ink),8px_10px_0_0_rgb(22_33_62/0.3)] md:size-64">
+      <div className="mx-auto flex size-56 flex-none animate-float items-center justify-center rounded-full border-6 border-white bg-surface-muted shadow-[0_0_0_3px_var(--color-ink),8px_10px_0_0_rgb(22_33_62/0.3)] md:size-64">
         <PokemonSprite
           key={roundNumber}
           id={round.answer.id}
@@ -120,7 +121,8 @@ export function WhosThatPokemon({
         >
           {round.options.map((option, index) => (
             <button
-              key={option.id}
+              key={`${roundNumber}-${option.id}`}
+              style={staggerDelay(index, 60, 150)}
               type="button"
               aria-pressed={outcome?.picked === index}
               disabled={outcome !== null}

@@ -37,7 +37,7 @@ export function TeamScoreGauge({ score, teamKey }: TeamScoreGaugeProps) {
         <span className="px-1 font-pixel text-xs font-bold text-dex-yellow">HP</span>
         <span className="h-full flex-1 overflow-hidden rounded-md bg-surface-muted">
           <span
-            className={`block h-full rounded-md ${scoreBarClassName(score)}`}
+            className={`block h-full origin-left animate-grow-x rounded-md transition-[width,background-color] duration-700 ease-out [animation-delay:200ms] ${scoreBarClassName(score)}`}
             style={{ width: `${width}%` }}
           />
         </span>

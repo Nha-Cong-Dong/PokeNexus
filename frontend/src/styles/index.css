@@ -144,6 +144,364 @@
   --animate-scene-enter:
     scene-fade 1200ms ease-out both, scene-drift 24s ease-in-out infinite alternate;
 
+  --ease-emphasized: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-spring: cubic-bezier(0.3, 0.7, 0.4, 1);
+  --ease-overshoot: cubic-bezier(0.3, 0.7, 0.4, 1.4);
+
+  --animate-card-in: card-in 420ms var(--ease-emphasized) both;
+  --animate-fade-up: fade-up 400ms ease-out both;
+  --animate-slide-in-left: slide-in-left 360ms var(--ease-emphasized) both;
+  --animate-slide-in-right: slide-in-right 420ms var(--ease-emphasized) both;
+  --animate-pop-in: pop-in 420ms var(--ease-overshoot) both;
+  --animate-chip-on: chip-on 260ms ease-out;
+  --animate-cell-in: cell-in 380ms var(--ease-emphasized) both;
+  --animate-grow-x: grow-x 700ms var(--ease-emphasized) both;
+  --animate-grow-y: grow-y 1000ms var(--ease-emphasized) both;
+  --animate-drop-in: drop-in 300ms 200ms var(--ease-spring) both;
+  --animate-drop-shadow: drop-shadow 300ms 200ms ease-out both;
+  --animate-float: float 3.2s 600ms ease-in-out infinite alternate;
+  --animate-float-shadow: float-shadow 3.2s 600ms ease-in-out infinite alternate;
+  --animate-fly-in-left: fly-in-left 680ms 220ms var(--ease-spring) both;
+  --animate-fly-in-right: fly-in-right 680ms 300ms var(--ease-spring) both;
+  --animate-half-in-left: half-in-left 420ms var(--ease-emphasized) both;
+  --animate-half-in-right: half-in-right 420ms var(--ease-emphasized) both;
+  --animate-vs-pop: vs-pop 480ms 480ms var(--ease-overshoot) both;
+  --animate-radar-in: radar-in 700ms 300ms var(--ease-emphasized) both;
+  --animate-pulse-ring: pulse-ring 1.2s ease-out 3;
+  --animate-shine: shine 600ms ease-out 1;
+  --animate-title-in: title-in 900ms 300ms var(--ease-emphasized) both;
+  --animate-boot: boot 950ms var(--ease-emphasized) both;
+  --animate-iris: iris 950ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  --animate-rise: rise 1000ms var(--ease-emphasized) both;
+  --animate-marquee: marquee 46s linear infinite;
+  --animate-bob: bob 3.4s ease-in-out infinite alternate;
+  --animate-draw: draw 1100ms cubic-bezier(0.4, 0, 0.2, 1) both;
+
+  @keyframes card-in {
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes slide-in-left {
+    from {
+      opacity: 0;
+      transform: translateX(-14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes slide-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes pop-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    70% {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes chip-on {
+    0% {
+      transform: scale(0.85);
+    }
+    60% {
+      transform: scale(1.08);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes cell-in {
+    from {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes grow-x {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes grow-y {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes drop-in {
+    0% {
+      opacity: 0;
+      transform: translateY(-90px);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    80% {
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes drop-shadow {
+    0% {
+      opacity: 0;
+      transform: scaleX(0.4);
+    }
+    60% {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+    80% {
+      transform: scaleX(0.88);
+    }
+    100% {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes float {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-12px);
+    }
+  }
+
+  @keyframes float-shadow {
+    from {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+    to {
+      opacity: 0.55;
+      transform: scaleX(0.8);
+    }
+  }
+
+  @keyframes fly-in-left {
+    0% {
+      opacity: 0;
+      transform: translateX(-180px) rotate(-18deg) scale(0.7);
+    }
+    70% {
+      opacity: 1;
+      transform: translateX(12px) rotate(4deg) scale(1.04);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes fly-in-right {
+    0% {
+      opacity: 0;
+      transform: translateX(180px) rotate(18deg) scale(0.7);
+    }
+    70% {
+      opacity: 1;
+      transform: translateX(-12px) rotate(-4deg) scale(1.04);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes half-in-left {
+    from {
+      opacity: 0;
+      transform: translateX(-30%);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes half-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(30%);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes vs-pop {
+    0% {
+      transform: scale(0) rotate(-30deg);
+    }
+    70% {
+      transform: scale(1.18) rotate(6deg);
+    }
+    100% {
+      transform: none;
+    }
+  }
+
+  @keyframes radar-in {
+    from {
+      opacity: 0;
+      transform: scale(0);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes pulse-ring {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(180 35 24 / 0.55);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgb(180 35 24 / 0);
+    }
+  }
+
+  @keyframes shine {
+    from {
+      transform: translateX(-120%) skewX(-20deg);
+    }
+    to {
+      transform: translateX(260%) skewX(-20deg);
+    }
+  }
+
+  @keyframes title-in {
+    from {
+      opacity: 0;
+      letter-spacing: 0.32em;
+      filter: blur(10px);
+    }
+    to {
+      opacity: 1;
+      letter-spacing: 0;
+      filter: blur(0);
+    }
+  }
+
+  @keyframes boot {
+    0% {
+      clip-path: inset(50% 50% 50% 50% round 24px);
+      filter: brightness(2.4) saturate(0);
+    }
+    35% {
+      clip-path: inset(49.3% 0 49.3% 0 round 24px);
+      filter: brightness(1.8) saturate(0.4);
+    }
+    100% {
+      clip-path: inset(0 0 0 0 round 24px);
+      filter: none;
+    }
+  }
+
+  @keyframes iris {
+    from {
+      clip-path: circle(0% at 50% 100%);
+    }
+    to {
+      clip-path: circle(150% at 50% 100%);
+    }
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(70px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes bob {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-16px);
+    }
+  }
+
+  @keyframes draw {
+    from {
+      stroke-dashoffset: 100;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
   @keyframes scene-fade {
     from {
       opacity: 0;
@@ -188,11 +546,26 @@
 }
 
 @utility scene-tint {
+  --scene-surface: color-mix(in oklab, var(--scene-accent) 18%, var(--color-bg));
   background-image: linear-gradient(
     180deg,
     transparent var(--hero-overlap, 0px),
-    color-mix(in oklab, var(--scene-accent) 18%, var(--color-bg)) var(--hero-overlap, 0px),
+    var(--scene-surface) var(--hero-overlap, 0px),
     var(--color-bg) calc(var(--hero-overlap, 0px) + 32rem)
+  );
+}
+
+@utility scene-fade {
+  --scene-surface: color-mix(in oklab, var(--scene-accent) 18%, var(--color-bg));
+  background-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklab, var(--scene-surface) 8%, transparent) 22%,
+    color-mix(in oklab, var(--scene-surface) 26%, transparent) 42%,
+    color-mix(in oklab, var(--scene-surface) 56%, transparent) 62%,
+    color-mix(in oklab, var(--scene-surface) 84%, transparent) 80%,
+    color-mix(in oklab, var(--scene-surface) 97%, transparent) 92%,
+    var(--scene-surface) 100%
   );
 }
 
@@ -201,6 +574,73 @@
 }
 
 @layer components {
+  .reveal {
+    transition:
+      opacity 800ms var(--ease-emphasized),
+      transform 900ms var(--ease-emphasized);
+  }
+
+  .reveal-up:not(.is-in) {
+    opacity: 0;
+    transform: translateY(56px);
+  }
+
+  .reveal-left:not(.is-in) {
+    opacity: 0;
+    transform: translateX(-80px);
+  }
+
+  .reveal-right:not(.is-in) {
+    opacity: 0;
+    transform: translateX(80px);
+  }
+
+  .reveal-zoom:not(.is-in) {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+
+  .reveal-tilt:not(.is-in) {
+    opacity: 0;
+    transform: translateY(80px) rotate(-5deg);
+  }
+
+  .reveal .reveal-grow-y {
+    transform-origin: bottom center;
+  }
+
+  .reveal.is-in .reveal-grow-y {
+    animation: var(--animate-grow-y);
+  }
+
+  .reveal:not(.is-in) .reveal-grow-y {
+    transform: scaleY(0);
+  }
+
+  .shine-sweep {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 40%;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0),
+      rgb(255 255 255 / 0.55),
+      rgb(255 255 255 / 0)
+    );
+    transform: translateX(-120%) skewX(-20deg);
+  }
+
+  .group:hover .shine-sweep,
+  .group:focus-visible .shine-sweep {
+    animation: var(--animate-shine);
+  }
+
+  [aria-pressed='true'].chip-pop {
+    animation: var(--animate-chip-on);
+  }
+
   .scene-ambience {
     position: absolute;
     inset: 0;

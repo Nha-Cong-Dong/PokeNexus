@@ -7,6 +7,7 @@ import { TypeBadge } from '../../../components/pokemon/TypeBadge'
 import { SceneBackdrop } from '../../../components/scene/SceneBackdrop'
 import { SceneLabel } from '../../../components/scene/SceneLabel'
 import { formatPokemonName } from '../../../lib/formatters'
+import { staggerDelay } from '../../../lib/motion'
 import { sceneForTypes } from '../../../lib/scenes'
 import type { PokemonDetail } from '../../../types/api'
 
@@ -23,8 +24,12 @@ export function PokemonHero({ detail, children }: PokemonHeroProps) {
 
   return (
     <div className="relative">
-      <div className="absolute inset-x-0 top-0 h-70 overflow-hidden bg-scrim lg:h-105">
+      <div className="absolute inset-x-0 top-0 h-70 overflow-hidden bg-scrim lg:h-136">
         <SceneBackdrop scene={scene} priority animated />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 scene-fade lg:h-1/2"
+        />
       </div>
       <div className="relative z-10 mx-auto grid max-w-7xl gap-6 px-3 md:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] xl:px-8">
         <section aria-labelledby={POKEMON_NAME_ID} className="relative min-w-0 lg:h-105">
@@ -49,15 +54,19 @@ export function PokemonHero({ detail, children }: PokemonHeroProps) {
             <div className="absolute bottom-0 left-1/2 w-56 -translate-x-1/2 lg:bottom-8 lg:left-[66%] lg:w-72 xl:w-80">
               <span
                 aria-hidden="true"
-                className="absolute inset-x-6 bottom-1 h-6 rounded-[50%] bg-scrim/40"
+                className="absolute inset-x-6 bottom-1 h-6 animate-float-shadow rounded-[50%] bg-scrim/40"
               />
-              <PokemonSprite
-                id={detail.id}
-                alt={displayName}
-                variant="artwork"
-                size={320}
-                className="relative aspect-square w-full object-contain"
-              />
+              <div key={detail.id} className="relative animate-drop-in">
+                <div className="animate-float">
+                  <PokemonSprite
+                    id={detail.id}
+                    alt={displayName}
+                    variant="artwork"
+                    size={320}
+                    className="relative aspect-square w-full object-contain"
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div className="mt-4 flex flex-col items-center gap-2 text-center lg:absolute lg:bottom-7 lg:left-0 lg:z-10 lg:mt-0 lg:max-w-[calc(100%-1rem)] lg:items-start lg:rounded-2xl lg:bg-scrim/85 lg:px-5 lg:pt-4 lg:pb-4.5 lg:text-left lg:text-white">
@@ -71,9 +80,11 @@ export function PokemonHero({ detail, children }: PokemonHeroProps) {
             >
               {displayName}
             </h1>
-            <p className="flex flex-wrap justify-center gap-2 lg:justify-start">
-              {detail.types.map((type) => (
-                <TypeBadge key={type} type={type} size="md" />
+            <p key={detail.id} className="flex flex-wrap justify-center gap-2 lg:justify-start">
+              {detail.types.map((type, index) => (
+                <span key={type} className="animate-pop-in" style={staggerDelay(index, 90, 450)}>
+                  <TypeBadge type={type} size="md" />
+                </span>
               ))}
             </p>
           </div>

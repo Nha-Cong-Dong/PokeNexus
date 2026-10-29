@@ -37,6 +37,7 @@
 |---|---|---|
 | Sprite | ID PokéAPI, không thêm số 0 ở đầu | `sprites/pokemon/6.png`, `sprites/pokemon/10034.png` |
 | Ảnh khung cảnh | `{scene}-{n}-{rộng}.webp`, `scene` là mã trong `src/lib/scenes.ts`, `n` là số thứ tự ảnh từ 1 | `scenes/grassland-1-1920.webp`, `scenes/grassland-1-960.webp` |
+| Ảnh nhỏ khung cảnh | `{scene}-thumb.webp`, 400 x 600, cắt dọc giữa ảnh 1 bản 1920; chỉ có cho 13 địa hình, sinh URL qua `sceneThumbUrl` | `scenes/volcano-thumb.webp` |
 | Ảnh trong `docs/images/` | `<trang>-<thiết bị>.<đuôi>`, chữ thường, gạch nối | `dex-desktop.png`, `team-builder-mobile.png` |
 | Sơ đồ | `diagram-<tên>.<đuôi>` | `diagram-container.svg` |
 | Wireframe | `<trang>-<thiết bị>.png` | `pokemon-detail-mobile.png` |

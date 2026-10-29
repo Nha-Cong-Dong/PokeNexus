@@ -171,14 +171,16 @@ frontend/
     ├── components/
     │   ├── ui/                    buttonStyles.ts, Panel, GameDialog, Card, Dialog, Skeleton, EmptyState,
     │   │                          ErrorState, Toast, Pagination, pageItems.ts
-    │   ├── scene/                 SceneBackdrop (chuyển ảnh), SceneAmbience (lớp hạt), useReducedMotion, PageHero (kèm PageBody nhuộm theo scene), SceneLabel
+    │   ├── motion/                Reveal (hiện khi cuộn tới, IntersectionObserver; T315)
+    │   ├── scene/                 SceneBackdrop (chuyển ảnh), SceneAmbience (lớp hạt), useReducedMotion, PageHero (kèm PageBody nhuộm theo scene, `iris` khi đổi scene), SceneLabel
     │   └── pokemon/               TypeBadge, TypeGlyph, DexNumber, StatBar, MultiplierCell, PokemonSprite,
     │                              PokemonCard, PokemonSearchBox, StatRadar, statAxes.ts, multiplierStyles.ts
     ├── lib/
     │   ├── http.ts                fetch wrapper, chuyển ProblemDetail thành ApiError (kèm Retry-After)
     │   ├── queryClient.ts         Không thử lại khi lỗi 4xx, thử lại 1 lần với lỗi khác
     │   ├── typeEffectiveness.ts   Tra hệ số từ TypeMatrix, hệ số hệ kép, nhóm x2/x½/x0 của một hệ tấn công
-    │   ├── assets.ts              getSpriteUrl, getArtworkUrl, sceneUrl, sceneSrcSet
+    │   ├── assets.ts              getSpriteUrl, getArtworkUrl, sceneUrl, sceneSrcSet, sceneThumbUrl
+    │   ├── motion.ts              staggerDelay (độ trễ vào lần lượt, tối đa 640 ms; T315)
     │   ├── scenes.ts              15 scene (tên, bảng 4 màu, số ảnh, kiểu hạt), sceneForTypes, nextPhoto, sceneGradient, sceneSwatch, sceneTintStyle
     │   ├── pokemonTypes.ts        Danh sách 18 hệ, ánh xạ hệ sang class token
     │   ├── errorMessages.ts       Ánh xạ code lỗi sang thông điệp tiếng Việt

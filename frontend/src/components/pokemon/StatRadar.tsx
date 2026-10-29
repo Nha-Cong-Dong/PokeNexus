@@ -17,6 +17,8 @@ const RADIUS = 120
 const LABEL_GAP = 18
 const LINE_HEIGHT = 17
 const RING_STEPS = [0.25, 0.5, 0.75, 1]
+const RADAR_DELAY_MS = 300
+const RADAR_STEP_MS = 150
 
 const TONE_CLASSES: Record<Tone, { shape: string; dot: string; line: string; dash?: string }> = {
   primary: { shape: 'stroke-primary fill-primary/25', dot: 'fill-primary', line: 'stroke-primary' },
@@ -95,13 +97,20 @@ export function StatRadar({ title, series, max = STAT_MAX }: StatRadarProps) {
             ).join(' ')}
           />
         </g>
-        {series.map((item) => {
+        {series.map((item, seriesIndex) => {
           const tone = TONE_CLASSES[item.tone]
           const points = STAT_AXES.map((axis, index) =>
             pointAt(index, ratioOf(item.stats[axis.key], scale)),
           )
           return (
-            <g key={item.label}>
+            <g
+              key={item.label}
+              className="animate-radar-in"
+              style={{
+                transformOrigin: `${CENTER_X}px ${CENTER_Y}px`,
+                animationDelay: `${RADAR_DELAY_MS + seriesIndex * RADAR_STEP_MS}ms`,
+              }}
+            >
               <polygon
                 points={points.map((point) => point.join(',')).join(' ')}
                 className={tone.shape}

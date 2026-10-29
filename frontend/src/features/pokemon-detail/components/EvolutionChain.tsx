@@ -4,6 +4,7 @@ import { DexNumber } from '../../../components/pokemon/DexNumber'
 import { PokemonSprite } from '../../../components/pokemon/PokemonSprite'
 import { Panel } from '../../../components/ui/Panel'
 import { formatPokemonName } from '../../../lib/formatters'
+import { staggerDelay } from '../../../lib/motion'
 import { typeScopeClassName } from '../../../lib/pokemonTypes'
 import type { PokemonDetail } from '../../../types/api'
 import { evolutionLevels, evolutionStepLabel } from '../evolution'
@@ -33,7 +34,8 @@ export function EvolutionChain({ detail }: EvolutionChainProps) {
           {levels.map((level, index) => (
             <li
               key={level[0]?.speciesId ?? index}
-              className="flex flex-col items-start gap-2.5 sm:flex-row sm:items-center"
+              className="flex animate-slide-in-right flex-col items-start gap-2.5 sm:flex-row sm:items-center"
+              style={staggerDelay(index, 120, 200)}
             >
               {index > 0 && (
                 <svg

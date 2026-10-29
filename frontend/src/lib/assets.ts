@@ -21,6 +21,10 @@ export function sceneUrl(scene: SceneId, photo: number, width: SceneWidth): stri
   return `/scenes/${scene}-${photo}-${width}.webp`
 }
 
+export function sceneThumbUrl(scene: SceneId): string {
+  return `/scenes/${scene}-thumb.webp`
+}
+
 export function sceneSrcSet(scene: SceneId, photo: number): string {
   return SCENE_WIDTHS.map((width) => `${sceneUrl(scene, photo, width)} ${width}w`).join(', ')
 }

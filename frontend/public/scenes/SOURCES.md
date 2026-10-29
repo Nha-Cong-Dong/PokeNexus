@@ -3,6 +3,7 @@
 - Cập nhật: 2026-10-28
 - Quy định ảnh (nội dung, kích thước, dung lượng, kiểm duyệt ảnh đã sửa): [docs/design-system.md](../../../docs/design-system.md), Phần 4.
 - Bản quyền hình ảnh thuộc Nintendo, Game Freak, The Pokémon Company. Dự án dùng phi thương mại, giống sprite và artwork ([ADR 0005](../../../docs/adr/0005-hybrid-image-assets.md), [ADR 0006](../../../docs/adr/0006-animated-scene-backdrops.md)).
+- Ảnh nhỏ cho bảng chọn địa hình (thêm ngày 2026-10-29): `{scene}-thumb.webp`, 13 file, 400 x 600, tổng 254 KB, cắt dọc giữa ảnh 1 bản 1920 của 13 địa hình, đổi cỡ Lanczos, WebP chất lượng 72; `node scripts/check-image-provenance.mjs`: 13/13 đạt.
 - Mỗi ảnh có 2 file `{scene}-{n}-1920.webp` và `{scene}-{n}-960.webp`. Xử lý chung: cắt 16:9 giữa khung, đổi cỡ Lanczos, làm nét nhẹ (unsharp mask), WebP chất lượng 64-82 để nằm trong giới hạn 260 KB và 80 KB.
 - Tổng: 25 ảnh, 50 file, 5,8 MB. Ảnh gốc đã chạy `node scripts/check-image-provenance.mjs`: 27/27 không có dấu vết AI trong metadata. Chưa ảnh nào phải xóa HUD hoặc nhân vật.
 

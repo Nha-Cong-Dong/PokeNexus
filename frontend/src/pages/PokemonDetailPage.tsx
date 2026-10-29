@@ -42,7 +42,7 @@ export function PokemonDetailPage() {
 function PokemonDetailView({ detail }: { detail: PokemonDetail }) {
   return (
     <div
-      className="scene-tint [--hero-overlap:17.5rem] lg:[--hero-overlap:26.25rem]"
+      className="scene-tint [--hero-overlap:17.5rem] lg:[--hero-overlap:34rem]"
       style={sceneTintStyle(sceneForTypes(detail.types))}
     >
       <PokemonHero detail={detail}>
