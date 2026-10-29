@@ -1,4 +1,4 @@
-import { TYPE_NAMES, typeClassName, typeLabel } from '../../../lib/pokemonTypes'
+import { TYPE_NAMES, typeClassName, typeLabel, typeScopeClassName } from '../../../lib/pokemonTypes'
 import type { FormCategory, TypeName } from '../../../types/api'
 import {
   FORM_CATEGORIES,
@@ -29,6 +29,7 @@ const CHIP_BASE =
   'chip-pop border-2 font-extrabold transition-colors duration-150 ease-out not-disabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-45'
 const CHIP_OFF = 'border-border bg-surface text-ink not-disabled:hover:border-border-strong'
 const CHIP_ON_DARK = 'border-ink bg-ink text-surface'
+const TYPE_CHIP_OFF = 'border-(--type-base) bg-surface text-ink not-disabled:hover:bg-mult-1'
 
 export function DexFilters({ filter, onChange, layout = 'sidebar' }: DexFiltersProps) {
   const typesFull = filter.types.length >= MAX_TYPES
@@ -67,12 +68,8 @@ export function DexFilters({ filter, onChange, layout = 'sidebar' }: DexFiltersP
                 aria-pressed={selected}
                 disabled={typesFull && !selected}
                 onClick={() => toggleType(type)}
-                className={`flex h-10 items-center gap-2 rounded-full px-2.5 text-left text-xs ${CHIP_BASE} ${selected ? `border-ink ${typeClassName(type)}` : CHIP_OFF}`}
+                className={`flex items-center justify-center rounded-full px-2 text-[13px] ${layout === 'sheet' ? 'h-11' : 'h-9'} ${CHIP_BASE} ${typeScopeClassName(type)} ${selected ? `border-ink ${typeClassName(type)}` : TYPE_CHIP_OFF}`}
               >
-                <span
-                  aria-hidden="true"
-                  className={`size-3 flex-none rounded-full ${typeClassName(type)} ${selected ? 'ring-2 ring-white' : ''}`}
-                />
                 {typeLabel(type)}
               </button>
             )
@@ -82,7 +79,13 @@ export function DexFilters({ filter, onChange, layout = 'sidebar' }: DexFiltersP
 
       <fieldset>
         <legend className={LEGEND_CLASS}>Thế hệ</legend>
-        <div className="grid grid-cols-5 gap-1.5">
+        <div
+          className={
+            layout === 'sheet'
+              ? '-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1'
+              : 'grid grid-cols-5 gap-1.5'
+          }
+        >
           {GENERATIONS.map((gen) => {
             const selected = filter.gen === gen
             return (
@@ -92,7 +95,7 @@ export function DexFilters({ filter, onChange, layout = 'sidebar' }: DexFiltersP
                 aria-pressed={selected}
                 aria-label={`Thế hệ ${gen}`}
                 onClick={() => onChange({ gen: selected ? undefined : gen })}
-                className={`h-10 rounded-[10px] text-[15px] ${CHIP_BASE} ${selected ? CHIP_ON_DARK : CHIP_OFF}`}
+                className={`rounded-[10px] text-[15px] ${layout === 'sheet' ? 'size-11 flex-none' : 'h-10'} ${CHIP_BASE} ${selected ? CHIP_ON_DARK : CHIP_OFF}`}
               >
                 {gen}
               </button>

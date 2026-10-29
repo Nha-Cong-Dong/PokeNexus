@@ -54,9 +54,12 @@ export function StatPanel({ detail }: StatPanelProps) {
         ))}
       </dl>
 
-      <dl className="grid grid-cols-2 gap-x-5 gap-y-3.5 border-t-2 border-surface-muted pt-4.5">
+      <dl className="grid grid-cols-2 gap-2.5 border-t-2 border-surface-muted pt-4.5 lg:gap-x-5 lg:gap-y-3.5">
         {facts.map((fact) => (
-          <div key={fact.label}>
+          <div
+            key={fact.label}
+            className="rounded-[14px] border-2 border-border px-3 py-2.5 lg:rounded-none lg:border-0 lg:p-0"
+          >
             <dt className="text-sm font-bold text-ink-muted">{fact.label}</dt>
             <dd className="mt-0.5 text-lg font-extrabold">{fact.value}</dd>
           </div>

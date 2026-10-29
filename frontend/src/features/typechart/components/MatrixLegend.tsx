@@ -1,4 +1,5 @@
 import { MultiplierCell } from '../../../components/pokemon/MultiplierCell'
+import { NeutralMark } from '../../../components/pokemon/NeutralMark'
 
 const LEGEND_ITEMS = [
   { multiplier: 2, label: 'Hiệu quả' },
@@ -21,9 +22,9 @@ export function MatrixLegend() {
       <li className="flex items-center gap-1.5">
         <span
           aria-hidden="true"
-          className="flex h-7 min-w-10 items-center justify-center rounded-md border border-dashed border-border font-extrabold"
+          className="flex h-7 min-w-10 items-center justify-center rounded-md border border-dashed border-border"
         >
-          ·
+          <NeutralMark />
         </span>
         x1 Trung tính
       </li>

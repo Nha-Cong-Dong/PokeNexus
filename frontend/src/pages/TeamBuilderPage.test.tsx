@@ -37,6 +37,11 @@ vi.mock('../components/pokemon/StatRadar', () => ({
 }))
 
 const SPEC_IDS = SPEC_TEAM.map((pokemon) => pokemon.id).join(',')
+const SAVE_BUTTON = /^Lưu và chia sẻ\s*Lưu đội$/
+
+function slotsRegion() {
+  return within(screen.getByRole('region', { name: 'Đội của bạn' }))
+}
 
 const SAVED_TEAM: TeamResponse = {
   shareCode: 'a1B2c3D4',
@@ -87,13 +92,18 @@ describe('TeamBuilderPage', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Xây đội' })).toBeInTheDocument()
     expect(within(rockRow).getAllByText('x4')).toHaveLength(3)
     expect(within(rockRow).getAllByText('x2')).toHaveLength(2)
-    expect(within(rockRow).getByText('Cao (8)')).toBeInTheDocument()
+    expect(within(rockRow).getByText('Cao')).toBeInTheDocument()
     expect(
       within(rockRow)
         .getAllByRole('cell')
         .map((cell) => cell.textContent),
-    ).toEqual(['x4', 'x2', 'x2', 'x4', 'x4', '5', '0', 'Cao (8)'])
-    expect(screen.getByRole('row', { name: /^Water/ })).not.toHaveTextContent('Lỗ hổng')
+    ).toEqual(['x4', 'x2', 'x2', 'x4', 'x4', '5', '0', 'Cao'])
+    const waterRow = screen.getByRole('row', { name: /^Water/ })
+    expect(waterRow).not.toHaveTextContent('Lỗ hổng')
+    expect(within(waterRow).getAllByText('x1')).toHaveLength(5)
+    expect(
+      screen.getByRole('heading', { level: 2, name: /Đề xuất slot thứ 6$/ }),
+    ).toBeInTheDocument()
     expect(screen.getByText('41')).toBeInTheDocument()
     expect(screen.getByText('Điểm đội 41, có 1 lỗ hổng nghiêm trọng: Rock.')).toBeInTheDocument()
     expect(bodiesSentTo(fetchMock, '/synergy/analyze')).toEqual([
@@ -136,6 +146,9 @@ describe('TeamBuilderPage', () => {
     const router = renderTeamRoute(`/team-builder?ids=${four.join(',')}`)
 
     await screen.findByText('40')
+    expect(
+      screen.getByRole('heading', { level: 2, name: /Đề xuất slot thứ 5$/ }),
+    ).toBeInTheDocument()
     const firstCard = screen.getByRole('article', { name: 'Tyranitar' })
     expect(
       within(firstCard).getByText('Chống chịu hệ Rock (đội đang hở mức 8)'),
@@ -157,10 +170,11 @@ describe('TeamBuilderPage', () => {
 
     const card = await screen.findByRole('article', { name: 'Tyranitar' })
     await userEvent.click(within(card).getByRole('button', { name: /Thêm vào đội/ }))
-    expect(screen.getByText('Slot 6 · đề xuất')).toBeInTheDocument()
+    expect(slotsRegion().getByText('Đề xuất')).toBeInTheDocument()
+    expect(slotsRegion().getByRole('button', { name: 'Bỏ Tyranitar khỏi đội' })).toBeInTheDocument()
     expect(screen.getByText('6 / 6')).toBeInTheDocument()
 
-    await userEvent.click(screen.getByRole('button', { name: 'Lưu đội' }))
+    await userEvent.click(screen.getByRole('button', { name: SAVE_BUTTON }))
     const dialog = within(screen.getByRole('dialog', { name: 'Lưu đội' }))
     await userEvent.type(dialog.getByLabelText('Tên đội'), '  Rain Team ')
     await userEvent.click(dialog.getByRole('button', { name: 'Lưu đội' }))
@@ -214,10 +228,9 @@ describe('TeamBuilderPage', () => {
     })
     renderTeamRoute(`/team-builder?ids=${SPEC_IDS}&six=248`)
 
-    expect(await screen.findByText('Slot 6 · đề xuất')).toBeInTheDocument()
+    expect(await slotsRegion().findByText('Đề xuất')).toBeInTheDocument()
     expect(screen.getByText('6 / 6')).toBeInTheDocument()
-    const slots = screen.getByRole('region', { name: 'Đội của bạn' })
-    expect(await within(slots).findByText('Tyranitar')).toBeInTheDocument()
+    expect(await slotsRegion().findByText('Tyranitar')).toBeInTheDocument()
   })
 
   it('keeps a recommended sixth member in the URL so a reload restores it', async () => {
@@ -252,7 +265,7 @@ describe('TeamBuilderPage', () => {
     renderTeamRoute('/team-builder?ids=6')
 
     await screen.findByText('50')
-    await user.click(screen.getByRole('button', { name: 'Lưu đội' }))
+    await user.click(screen.getByRole('button', { name: SAVE_BUTTON }))
     await user.type(screen.getByLabelText('Tên đội'), 'Solo')
     await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Lưu đội' }))
     await user.click(await screen.findByRole('button', { name: 'Sao chép' }))
@@ -270,7 +283,7 @@ describe('TeamBuilderPage', () => {
     renderTeamRoute('/team-builder?ids=6')
 
     await screen.findByText('50')
-    await userEvent.click(screen.getByRole('button', { name: 'Lưu đội' }))
+    await userEvent.click(screen.getByRole('button', { name: SAVE_BUTTON }))
     const dialog = within(screen.getByRole('dialog', { name: 'Lưu đội' }))
     await userEvent.type(dialog.getByLabelText('Tên đội'), 'Rain Team')
     await userEvent.click(dialog.getByRole('button', { name: 'Lưu đội' }))
@@ -294,7 +307,7 @@ describe('TeamBuilderPage', () => {
     renderTeamRoute('/team-builder?ids=6')
 
     await screen.findByText('50')
-    await userEvent.click(screen.getByRole('button', { name: 'Lưu đội' }))
+    await userEvent.click(screen.getByRole('button', { name: SAVE_BUTTON }))
     const dialog = within(screen.getByRole('dialog', { name: 'Lưu đội' }))
     await userEvent.type(dialog.getByLabelText('Tên đội'), 'Rain Team')
     await userEvent.click(dialog.getByRole('button', { name: 'Lưu đội' }))
@@ -312,7 +325,7 @@ describe('TeamBuilderPage', () => {
     renderTeamRoute('/team-builder?ids=6')
 
     await screen.findByText('50')
-    await userEvent.click(screen.getByRole('button', { name: 'Lưu đội' }))
+    await userEvent.click(screen.getByRole('button', { name: SAVE_BUTTON }))
     const dialog = within(screen.getByRole('dialog', { name: 'Lưu đội' }))
     await userEvent.type(dialog.getByLabelText('Tên đội'), '   ')
     await userEvent.click(dialog.getByRole('button', { name: 'Lưu đội' }))
@@ -330,7 +343,7 @@ describe('TeamBuilderPage', () => {
     const router = renderTeamRoute('/team-builder')
 
     expect(screen.getByText('Đội đang trống')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Lưu đội' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: SAVE_BUTTON })).toBeDisabled()
     expect(fetchMock).not.toHaveBeenCalled()
 
     await userEvent.click(screen.getByRole('button', { name: 'Dùng đội mẫu' }))

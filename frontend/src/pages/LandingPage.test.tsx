@@ -94,6 +94,21 @@ describe('LandingPage', () => {
     expect(await within(hero).findByText('1,7 m')).toBeInTheDocument()
   })
 
+  it('places the featured artwork between the title and the professor dialog', async () => {
+    renderRoute('/')
+    const hero = screen.getByRole('region', { name: 'PokeNexus' })
+    const title = within(hero).getByRole('heading', { level: 1 })
+    const artwork = within(hero).getByRole('img', { name: /^Artwork/ })
+    const greeting = within(hero).getByText(/^Chào Trainer!/)
+
+    expect(title.compareDocumentPosition(artwork) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(
+      artwork.compareDocumentPosition(greeting) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+    expect(await within(hero).findByText('Chiều cao')).toBeInTheDocument()
+    expect(within(hero).getByText('Cân nặng')).toBeInTheDocument()
+  })
+
   it('switches the featured Pokémon when another region is chosen', async () => {
     const fetchMock = stubApi()
     renderRoute('/')
@@ -134,6 +149,12 @@ describe('LandingPage', () => {
         .map((node) => node.textContent),
     ).toEqual(['Grass', 'Ice', 'Bug', 'Steel'])
 
+    expect(within(wheel).getByRole('button', { name: 'Fire' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    expect(within(wheel).getByRole('button', { name: 'Grass, nhận x2' })).toBeInTheDocument()
+
     await userEvent.click(within(wheel).getByRole('button', { name: 'Electric' }))
     const electricRow = (await within(wheel).findByText('x2', { selector: 'dt' }))
       .parentElement as HTMLElement
@@ -168,9 +189,31 @@ describe('LandingPage', () => {
       'Đúng 1 trên 1 câu đã trả lời',
     )
     expect(within(quiz).getByRole('button', { name: 'x1' })).toBeDisabled()
+    expect(correctOption.querySelector('svg')).not.toBeNull()
+    expect(within(quiz).getByRole('button', { name: 'x1' })).toHaveClass('opacity-45!')
+    expect(within(quiz).getByRole('button', { name: 'x2' })).toHaveClass('opacity-45!')
 
     await userEvent.click(next)
     expect(within(quiz).getByText('Câu')).toHaveTextContent('Câu 2/6')
+  })
+
+  it('marks a wrong pick, reveals the right answer and fades the rest', async () => {
+    renderRoute('/')
+    const quiz = screen.getByRole('region', { name: 'Thử tài Trainer' })
+    const wrongOption = await within(quiz).findByRole('button', { name: 'x2' })
+
+    await userEvent.click(wrongOption)
+
+    expect(within(quiz).getByText('Chưa đúng.')).toBeInTheDocument()
+    expect(wrongOption).toHaveClass('bg-danger!')
+    expect(wrongOption.querySelector('svg')).toBeNull()
+    const correctOption = within(quiz).getByRole('button', { name: 'x4' })
+    expect(correctOption).toHaveClass('bg-success!')
+    expect(correctOption.querySelector('svg')).not.toBeNull()
+    expect(within(quiz).getByRole('button', { name: 'x1' })).toHaveClass('opacity-45!')
+    expect(within(quiz).getByText(/câu đã trả lời/)).toHaveTextContent(
+      'Đúng 0 trên 1 câu đã trả lời',
+    )
   })
 
   it('shows per-block errors with the API reason when data is not ready', async () => {

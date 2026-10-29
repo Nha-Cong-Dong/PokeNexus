@@ -1,5 +1,5 @@
 import { buttonClassName } from '../../../components/ui/buttonStyles'
-import { TYPE_NAMES, typeClassName, typeLabel } from '../../../lib/pokemonTypes'
+import { TYPE_NAMES, typeClassName, typeLabel, typeScopeClassName } from '../../../lib/pokemonTypes'
 import type { TypeName } from '../../../types/api'
 import { MAX_DEFENDING_TYPES } from '../useDefendingTypes'
 
@@ -12,8 +12,15 @@ type DualTypePickerProps = {
 
 const HELP_ID = 'dual-type-picker-help'
 const CHIP_BASE =
-  'chip-pop flex h-10 items-center gap-2 rounded-full border-2 px-2.5 text-left text-xs font-extrabold transition-colors duration-150 ease-out not-disabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-45'
-const CHIP_OFF = 'border-border bg-surface text-ink not-disabled:hover:border-border-strong'
+  'chip-pop flex h-10.5 items-center justify-center rounded-full border-2 px-2 text-center text-sm font-extrabold transition-[transform,background-color,border-color] duration-150 ease-out not-disabled:cursor-pointer not-disabled:hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-45 md:h-10 md:text-[13px]'
+const CHIP_ON = 'border-ink shadow-[0_3px_0_var(--color-ink)]'
+const CHIP_OFF = 'border-(--type-base) bg-surface text-ink'
+
+function compactHint(count: number): string {
+  if (count >= MAX_DEFENDING_TYPES) return 'Đã chọn đủ 2 hệ. Chạm một hệ đang chọn để đổi.'
+  if (count === 1) return 'Chọn thêm 1 hệ cho Pokémon hệ kép.'
+  return 'Chọn 1 hoặc 2 hệ.'
+}
 
 export function DualTypePicker({ titleId, selected, onToggle, onClear }: DualTypePickerProps) {
   const full = selected.length >= MAX_DEFENDING_TYPES
@@ -34,13 +41,14 @@ export function DualTypePicker({ titleId, selected, onToggle, onClear }: DualTyp
         </button>
       </div>
       <p id={HELP_ID} className="mb-4 text-ink-muted">
-        Chọn 1 hoặc 2 hệ của Pokémon phòng thủ.
+        <span className="hidden lg:inline">Chọn 1 hoặc 2 hệ của Pokémon phòng thủ.</span>
+        <span className="lg:hidden">{compactHint(selected.length)}</span>
       </p>
       <div
         role="group"
         aria-label="Hệ phòng thủ"
         aria-describedby={HELP_ID}
-        className="grid grid-cols-3 gap-2 sm:grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))]"
+        className="grid grid-cols-3 gap-2 sm:grid-cols-[repeat(auto-fill,minmax(6rem,1fr))]"
       >
         {TYPE_NAMES.map((type) => {
           const pressed = selected.includes(type)
@@ -51,12 +59,8 @@ export function DualTypePicker({ titleId, selected, onToggle, onClear }: DualTyp
               aria-pressed={pressed}
               disabled={full && !pressed}
               onClick={() => onToggle(type)}
-              className={`${CHIP_BASE} ${pressed ? `border-ink shadow-[0_3px_0_var(--color-ink)] ${typeClassName(type)}` : CHIP_OFF}`}
+              className={`${CHIP_BASE} ${typeScopeClassName(type)} ${pressed ? `${CHIP_ON} ${typeClassName(type)}` : CHIP_OFF}`}
             >
-              <span
-                aria-hidden="true"
-                className={`size-3 flex-none rounded-full ${typeClassName(type)} ${pressed ? 'ring-2 ring-white' : ''}`}
-              />
               {typeLabel(type)}
             </button>
           )

@@ -42,19 +42,25 @@ function typeNames(entries: readonly MultiplierEntry[]): string {
   return entries.map((entry) => typeLabel(entry.type)).join(', ')
 }
 
+function weaknessSentence(subject: string, weak: readonly MultiplierEntry[]): string {
+  const [only] = weak
+  if (!only) return `${subject} không yếu trước hệ nào.`
+  if (weak.length === 1) {
+    return `${subject} chỉ có một điểm yếu: ${typeLabel(only.type)}, và đòn đó gây ${formatMultiplier(only.multiplier)}.`
+  }
+  const strongest = Math.max(...weak.map((entry) => entry.multiplier))
+  const worst = weak.filter((entry) => entry.multiplier === strongest)
+  return worst.length === weak.length
+    ? `${subject} yếu trước ${typeNames(worst)} ${formatMultiplier(strongest)}.`
+    : `${subject} yếu trước ${weak.length} hệ, nặng nhất là ${typeNames(worst)} ${formatMultiplier(strongest)}.`
+}
+
 export function defenseSummary(subject: string, entries: readonly MultiplierEntry[]): string {
   const weak = entries.filter((entry) => entry.multiplier > 1)
-  const strongest = Math.max(0, ...weak.map((entry) => entry.multiplier))
-  const worst = weak.filter((entry) => entry.multiplier === strongest)
   const resist = entries.filter((entry) => entry.multiplier > 0 && entry.multiplier < 1)
   const immune = entries.filter((entry) => entry.multiplier === 0)
 
-  const weakSentence =
-    weak.length === 0
-      ? `${subject} không yếu trước hệ nào.`
-      : worst.length === weak.length
-        ? `${subject} yếu trước ${typeNames(worst)} ${formatMultiplier(strongest)}.`
-        : `${subject} yếu trước ${weak.length} hệ, nặng nhất là ${typeNames(worst)} ${formatMultiplier(strongest)}.`
+  const weakSentence = weaknessSentence(subject, weak)
 
   const immuneText = immune.length > 0 ? `miễn nhiễm ${typeNames(immune)}` : ''
   const resistSentence =

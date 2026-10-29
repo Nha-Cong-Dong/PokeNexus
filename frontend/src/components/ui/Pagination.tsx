@@ -8,10 +8,10 @@ type PaginationProps = {
 }
 
 const OUTLINE_CLASS =
-  'inline-flex h-10 min-w-10 items-center justify-center rounded-[10px] border-2 border-border bg-surface px-3.5 text-sm font-extrabold text-ink not-disabled:hover:border-border-strong disabled:cursor-not-allowed disabled:text-ink-muted disabled:opacity-60'
+  'inline-flex h-11 min-w-11 items-center justify-center rounded-[10px] border-2 lg:h-10 lg:min-w-10 border-border bg-surface px-3.5 text-sm font-extrabold text-ink not-disabled:hover:border-border-strong disabled:cursor-not-allowed disabled:text-ink-muted disabled:opacity-60'
 
 const CURRENT_CLASS =
-  'inline-flex h-10 min-w-10 items-center justify-center rounded-[10px] bg-ink text-sm font-extrabold text-surface'
+  'inline-flex h-11 min-w-11 items-center justify-center rounded-[10px] bg-ink lg:h-10 lg:min-w-10 text-sm font-extrabold text-surface'
 
 export function Pagination({ page, totalPages, onChange }: PaginationProps) {
   if (totalPages <= 1) return null

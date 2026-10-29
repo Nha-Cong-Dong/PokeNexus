@@ -9,9 +9,9 @@ describe('pageItems', () => {
   })
 
   it('keeps the first, last and neighbouring pages with gaps in between', () => {
-    expect(pageItems(0, 46)).toEqual([0, 1, 'gap', 45])
+    expect(pageItems(0, 46)).toEqual([0, 1, 2, 'gap', 45])
     expect(pageItems(10, 46)).toEqual([0, 'gap', 9, 10, 11, 'gap', 45])
-    expect(pageItems(45, 46)).toEqual([0, 'gap', 44, 45])
+    expect(pageItems(45, 46)).toEqual([0, 'gap', 43, 44, 45])
   })
 
   it('does not add a gap between adjacent pages', () => {

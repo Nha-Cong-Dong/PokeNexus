@@ -8,7 +8,8 @@ export function pageItems(page: number, totalPages: number): PageItem[] {
     return Array.from({ length: totalPages }, (_, index) => index)
   }
   const last = totalPages - 1
-  const visible = [...new Set([0, page - 1, page, page + 1, last])]
+  const edgeNeighbour = page === 0 ? 2 : page === last ? last - 2 : page
+  const visible = [...new Set([0, page - 1, page, page + 1, edgeNeighbour, last])]
     .filter((index) => index >= 0 && index <= last)
     .sort((a, b) => a - b)
   return visible.flatMap((index, position): PageItem[] => {

@@ -12,3 +12,7 @@ const MULTIPLIER_CLASSES: Record<string, string> = {
 export function multiplierClassName(multiplier: number): string {
   return MULTIPLIER_CLASSES[String(multiplier)] ?? NEUTRAL
 }
+
+export function multiplierWeightClassName(multiplier: number): string {
+  return multiplier === 0 || multiplier === 4 ? 'font-extrabold' : 'font-bold'
+}

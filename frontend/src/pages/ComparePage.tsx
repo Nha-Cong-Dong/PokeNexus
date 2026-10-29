@@ -5,11 +5,11 @@ import { PageBody, PageHero } from '../components/scene/PageHero'
 import { buttonClassName } from '../components/ui/buttonStyles'
 import { EmptyState } from '../components/ui/EmptyState'
 import { ErrorState } from '../components/ui/ErrorState'
-import { Panel } from '../components/ui/Panel'
+import { ComparePicker } from '../features/compare/components/ComparePicker'
 import { CompareRadar } from '../features/compare/components/CompareRadar'
-import { CompareSlot } from '../features/compare/components/CompareSlot'
+import { StabPanel } from '../features/compare/components/StabPanel'
 import { StatDuelTable } from '../features/compare/components/StatDuelTable'
-import { VersusBanner } from '../features/compare/components/VersusBanner'
+import { VersusBanner, VersusBannerSkeleton } from '../features/compare/components/VersusBanner'
 import { VerdictPanel } from '../features/compare/components/VerdictPanel'
 import { useCompare } from '../features/compare/hooks'
 import {
@@ -55,17 +55,31 @@ export function ComparePage() {
   const detailError = [leftDetail, rightDetail].find(
     (query) => query.error && !isNotFound(query.error),
   )?.error
+  const pair =
+    leftDetail.data && rightDetail.data && !sameChoice
+      ? { left: leftDetail.data, right: rightDetail.data }
+      : undefined
+  const pairPending =
+    pair === undefined &&
+    left !== undefined &&
+    right !== undefined &&
+    !sameChoice &&
+    !missingSide &&
+    !detailError &&
+    (leftDetail.isPending || rightDetail.isPending)
+  const versus = pair !== undefined || pairPending
 
-  const select = (side: CompareSide) => (pokemon: PokemonRef) => {
+  const select = (side: CompareSide, pokemon: PokemonRef): boolean => {
     const other = otherSide(side)
     if (matches(keys[other], pokemon) || details[other].data?.id === pokemon.id) {
       setNotice(
         `${formatPokemonName(pokemon.name)} đã ở ${SIDE_NAMES[other]}. Hãy chọn một Pokémon khác.`,
       )
-      return
+      return false
     }
     setNotice('')
     setSide(side, pokemon.name)
+    return true
   }
 
   const clear = (side: CompareSide) => {
@@ -73,21 +87,12 @@ export function ComparePage() {
     setSide(side, undefined)
   }
 
-  const slot = (side: CompareSide) => {
-    const other = details[otherSide(side)].data
-    return (
-      <CompareSlot
-        side={side}
-        value={keys[side]}
-        pokemon={details[side].data}
-        notFound={isNotFound(details[side].error)}
-        failed={details[side].isError}
-        excludeIds={other ? [other.id] : []}
-        onSelect={select(side)}
-        onClear={() => clear(side)}
-      />
-    )
-  }
+  const slotOf = (side: CompareSide) => ({
+    value: keys[side],
+    pokemon: details[side].data,
+    notFound: isNotFound(details[side].error),
+    failed: details[side].isError,
+  })
 
   const renderResult = () => {
     if (left === undefined && right === undefined) {
@@ -169,58 +174,68 @@ export function ComparePage() {
     if (compare.isPending) return <CompareSkeleton />
 
     const result = compare.data
+    const leftName = formatPokemonName(result.left.name)
+    const rightName = formatPokemonName(result.right.name)
     return (
-      <div key={`${result.left.id}-${result.right.id}`} className="flex flex-col gap-6">
-        <VersusBanner left={result.left} right={result.right} />
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
-          <CompareRadar left={result.left} right={result.right} />
+      <div key={`${result.left.id}-${result.right.id}`} className="flex flex-col gap-4 md:gap-6">
+        <div className="grid gap-4 md:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
           <StatDuelTable left={result.left} right={result.right} />
+          <CompareRadar left={result.left} right={result.right} className="lg:order-first" />
         </div>
-        <VerdictPanel result={result} />
+        <div className="grid items-start gap-4 md:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
+          <StabPanel left={result.left} right={result.right} />
+          <VerdictPanel result={result} />
+        </div>
+        <div className="mt-1.5 flex gap-2.5 md:hidden">
+          <Link
+            to={`/pokemon/${result.right.name}`}
+            className={`min-w-0 flex-1 text-center leading-5 max-md:h-13 max-md:px-2 ${buttonClassName('secondary')}`}
+          >
+            Xem {rightName}
+          </Link>
+          <Link
+            to={`/team-builder?add=${result.left.id}`}
+            className={`min-w-0 flex-[1.3] text-center leading-5 max-md:h-13 max-md:px-2 ${buttonClassName('primary')}`}
+          >
+            Đưa {leftName} vào đội
+          </Link>
+        </div>
       </div>
     )
   }
 
   return (
     <>
-      <PageHero
-        scene="stadium"
-        title="Bàn Cân Sức Mạnh"
-        subtitle="Đặt hai Pokémon lên bàn cân: chỉ số, tốc độ và lợi thế hệ."
-      />
-      <PageBody scene="stadium" className="flex flex-col gap-6">
-        <Panel aria-label="Chọn Pokémon" className="flex flex-col gap-3">
-          <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-center">
-            {slot('left')}
-            <button
-              type="button"
-              onClick={() => {
-                setNotice('')
-                swap()
-              }}
-              disabled={left === undefined && right === undefined}
-              aria-label="Đổi bên hai Pokémon"
-              className="inline-flex size-12 flex-none items-center justify-center self-center rounded-full border-2 border-ink bg-surface text-ink shadow-[0_3px_0_var(--color-ink)] transition-[transform,box-shadow,background-color] duration-150 ease-out not-disabled:cursor-pointer not-disabled:hover:bg-surface-muted not-disabled:active:translate-y-0.5 not-disabled:active:shadow-none disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="size-5.5 rotate-90 md:rotate-0"
-              >
-                <path d="M4 8h14l-4-4M20 16H6l4 4" />
-              </svg>
-            </button>
-            {slot('right')}
-          </div>
-          <p role="status" className={notice ? 'text-sm font-bold text-danger' : 'sr-only'}>
-            {notice}
-          </p>
-        </Panel>
+      {pair ? (
+        <VersusBanner
+          key={`${pair.left.id}-${pair.right.id}`}
+          left={pair.left}
+          right={pair.right}
+        />
+      ) : pairPending ? (
+        <VersusBannerSkeleton />
+      ) : (
+        <PageHero
+          scene="stadium"
+          title="Bàn Cân Sức Mạnh"
+          subtitle="Đặt hai Pokémon lên bàn cân: chỉ số, tốc độ và lợi thế hệ."
+        />
+      )}
+      <PageBody
+        scene={versus ? undefined : 'stadium'}
+        className={`flex flex-col gap-4 md:gap-6 ${versus ? 'pt-[calc(var(--hero-overlap)+3.75rem)] md:pt-[calc(var(--hero-overlap)+6.875rem)]' : ''}`}
+      >
+        <ComparePicker
+          slots={{ left: slotOf('left'), right: slotOf('right') }}
+          notice={notice}
+          bare={versus}
+          onSelect={select}
+          onClear={clear}
+          onSwap={() => {
+            setNotice('')
+            swap()
+          }}
+        />
         {renderResult()}
       </PageBody>
     </>
@@ -231,11 +246,7 @@ function CompareSkeleton() {
   return (
     <div aria-busy="true" className="flex flex-col gap-6">
       <p className="sr-only">Đang cân sức mạnh hai Pokémon…</p>
-      <div
-        aria-hidden="true"
-        className="h-96 animate-pulse rounded-3xl border-2 border-border bg-surface-muted md:h-88 lg:h-96"
-      />
-      <div aria-hidden="true" className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
+      <div aria-hidden="true" className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
         <div className="h-96 animate-pulse rounded-3xl bg-surface-muted" />
         <div className="h-96 animate-pulse rounded-3xl bg-surface-muted" />
       </div>

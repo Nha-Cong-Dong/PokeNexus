@@ -16,6 +16,7 @@ type PokemonSearchBoxProps = {
   excludeIds?: readonly number[]
   placeholder?: string
   id?: string
+  hideLabel?: boolean
 }
 
 const DEBOUNCE_MS = 250
@@ -36,6 +37,7 @@ export function PokemonSearchBox({
   excludeIds = NO_EXCLUDED_IDS,
   placeholder = 'Nhập ít nhất 2 chữ cái, ví dụ: char',
   id,
+  hideLabel = false,
 }: PokemonSearchBoxProps) {
   const generatedId = useId()
   const inputId = id ?? `${generatedId}-input`
@@ -109,7 +111,7 @@ export function PokemonSearchBox({
 
   return (
     <div className="relative flex flex-col gap-1.5">
-      <label htmlFor={inputId} className="text-sm font-bold text-ink">
+      <label htmlFor={inputId} className={hideLabel ? 'sr-only' : 'text-sm font-bold text-ink'}>
         {label}
       </label>
       <div className="relative">

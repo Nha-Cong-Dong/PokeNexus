@@ -130,22 +130,34 @@ describe('ComparePage', () => {
     expect(memoryRouter.state.location.search).toBe('?left=garchomp&right=salamence')
   })
 
-  it('compares Garchomp with Salamence: banner, radar, stat table and the API verdict', async () => {
+  it('compares Garchomp with Salamence: versus hero, radar, stat table, STAB panel and the API verdict', async () => {
     const fetchMock = stubApi()
     renderRoute('/compare?left=Garchomp&right=salamence')
 
     const verdict = await screen.findByRole('region', { name: 'Kết luận' })
     SUMMARY.forEach((sentence) => expect(within(verdict).getByText(sentence)).toBeInTheDocument())
-    expect(within(verdict).getByText('Garchomp thắng')).toBeInTheDocument()
-    expect(within(verdict).getAllByText('Ngang nhau')).toHaveLength(2)
-    expect(verdict).toHaveTextContent('Đòn cùng hệ tốt nhất: Garchomp x2, Salamence x2.')
-    expect(verdict).toHaveTextContent('Garchomp:Dragonx2Groundx0')
+    expect(within(verdict).getAllByRole('listitem')).toHaveLength(3)
+    expect(within(verdict).queryByText('Garchomp thắng')).not.toBeInTheDocument()
+
+    const stab = screen.getByRole('region', { name: 'Đòn cùng hệ' })
+    expect(within(stab).getByRole('list', { name: 'Garchomp đánh Salamence' })).toHaveTextContent(
+      'Dragonx2Groundx0',
+    )
+    expect(within(stab).getByRole('list', { name: 'Salamence đánh Garchomp' })).toHaveTextContent(
+      'Dragonx2Flyingx1',
+    )
 
     expect(requestedPaths(fetchMock)).toContain(
       '/api/v1/pokemon/compare?left=garchomp&right=salamence',
     )
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
-    expect(screen.getByRole('region', { name: 'Garchomp đối đầu Salamence' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'So sánh Garchomp và Salamence' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('Bàn Cân Sức Mạnh')).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: 'So sánh Garchomp và Salamence' }),
+    ).toBeInTheDocument()
     expect(
       screen.getByRole('img', { name: /Garchomp: HP 108, .*Tốc độ 102\. Salamence: HP 95/ }),
     ).toBeInTheDocument()
@@ -153,7 +165,77 @@ describe('ComparePage', () => {
     const speedRow = screen.getByRole('row', { name: /Tốc độ/ })
     expect(speedRow).toHaveTextContent('102+2')
     expect(speedRow).toHaveTextContent('100')
-    expect(screen.getByRole('row', { name: /Tổng \(BST\)/ })).toHaveTextContent('600')
+    expect(screen.getByRole('row', { name: /Tổng/ })).toHaveTextContent('600')
+
+    expect(screen.getByRole('link', { name: 'Xem Salamence' })).toHaveAttribute(
+      'href',
+      '/pokemon/salamence',
+    )
+    expect(screen.getByRole('link', { name: 'Đưa Garchomp vào đội' })).toHaveAttribute(
+      'href',
+      '/team-builder?add=445',
+    )
+  })
+
+  it('keeps the selection compact and reveals the search with "Đổi Pokémon"', async () => {
+    stubApi({ search: () => [toRef(SALAMENCE), toRef(GARCHOMP)] })
+    const memoryRouter = renderRoute('/compare?left=garchomp&right=salamence')
+    await screen.findByRole('region', { name: 'Kết luận' })
+
+    const picker = screen.getByRole('region', { name: 'Chọn Pokémon' })
+    expect(within(picker).queryByRole('combobox')).not.toBeInTheDocument()
+    expect(picker).toHaveTextContent('Pokémon 1')
+    expect(picker).toHaveTextContent('Bên trái')
+    expect(picker).toHaveTextContent('Garchomp#0445')
+
+    const toggle = within(picker).getByRole('button', {
+      name: 'Đổi Pokémon bên trái, hiện là Garchomp',
+    })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+
+    await userEvent.click(toggle)
+
+    const search = within(picker).getByRole('combobox', { name: 'Pokémon bên trái' })
+    expect(search).toHaveFocus()
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    expect(within(picker).queryByRole('combobox', { name: 'Pokémon bên phải' })).toBeNull()
+
+    await userEvent.keyboard('{Escape}')
+
+    expect(within(picker).queryByRole('combobox')).not.toBeInTheDocument()
+    expect(toggle).toHaveFocus()
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+
+    await userEvent.keyboard('{Enter}')
+    await userEvent.type(screen.getByRole('combobox', { name: 'Pokémon bên trái' }), 'ga')
+    expect(await screen.findByRole('option', { name: /Garchomp/ })).toBeInTheDocument()
+    expect(screen.queryByRole('option', { name: /Salamence/ })).not.toBeInTheDocument()
+    await userEvent.keyboard('{Enter}')
+
+    expect(memoryRouter.state.location.search).toBe('?left=garchomp&right=salamence')
+    expect(within(picker).queryByRole('combobox')).not.toBeInTheDocument()
+    expect(toggle).toHaveFocus()
+
+    await userEvent.click(toggle)
+    await userEvent.click(screen.getByRole('button', { name: 'Đóng ô tìm Pokémon bên trái' }))
+
+    expect(within(picker).queryByRole('combobox')).not.toBeInTheDocument()
+    expect(toggle).toHaveFocus()
+  })
+
+  it('clears one side from the open search and goes back to the stadium hero', async () => {
+    stubApi()
+    const memoryRouter = renderRoute('/compare?left=garchomp&right=salamence')
+    await screen.findByRole('region', { name: 'Kết luận' })
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Đổi Pokémon bên phải, hiện là Salamence' }),
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Bỏ chọn Salamence' }))
+
+    expect(memoryRouter.state.location.search).toBe('?left=garchomp')
+    expect(screen.getByRole('combobox', { name: 'Pokémon bên phải' })).toHaveFocus()
+    expect(screen.getByRole('heading', { level: 1, name: 'Bàn Cân Sức Mạnh' })).toBeInTheDocument()
   })
 
   it('asks for the second Pokémon, hides the chosen one from the other search and fills the URL', async () => {
@@ -181,6 +263,12 @@ describe('ComparePage', () => {
     expect(memoryRouter.state.location.search).toBe('?left=garchomp&right=salamence')
     expect(await screen.findByRole('region', { name: 'Kết luận' })).toBeInTheDocument()
     expect(requestedPaths(fetchMock).filter((path) => path.includes('/compare'))).toHaveLength(1)
+    expect(
+      screen.getByRole('button', { name: 'Đổi Pokémon bên phải, hiện là Salamence' }),
+    ).toHaveFocus()
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'So sánh Garchomp và Salamence' }),
+    ).toBeInTheDocument()
   })
 
   it('refuses the same Pokémon on both sides without calling the compare endpoint', async () => {

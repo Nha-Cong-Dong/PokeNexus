@@ -173,7 +173,7 @@ frontend/
     │   │                          ErrorState, Toast, Pagination, pageItems.ts
     │   ├── motion/                Reveal (hiện khi cuộn tới, IntersectionObserver; T315)
     │   ├── scene/                 SceneBackdrop (chuyển ảnh), SceneAmbience (lớp hạt), useReducedMotion, PageHero (kèm PageBody nhuộm theo scene, `iris` khi đổi scene), SceneLabel
-    │   └── pokemon/               TypeBadge, TypeGlyph, DexNumber, StatBar, MultiplierCell, PokemonSprite,
+    │   └── pokemon/               TypeBadge, TypeGlyph, DexNumber, StatBar, MultiplierCell, NeutralMark, PokemonSprite,
     │                              PokemonCard, PokemonSearchBox, StatRadar, statAxes.ts, multiplierStyles.ts
     ├── lib/
     │   ├── http.ts                fetch wrapper, chuyển ProblemDetail thành ApiError (kèm Retry-After)
@@ -203,13 +203,13 @@ frontend/
 
 | Trang | Feature folder | Component chính | Tạo ở |
 |---|---|---|---|
-| `LandingPage` | `landing` | `LandingHero`, `TypeTicker`, `FeatureRegions`, `TypeWheel`, `DailyPokemon`, `TeamSteps`, `GenerationChart`, `TrainerQuiz`, `ClosingCta` | T311, T312 |
+| `LandingPage` | `landing` | `LandingHero`, `TypeTicker`, `FeatureRegions`, `TypeWheel`, `DailyPokemon`, `TeamSteps`, `GenerationChart`, `TrainerQuiz`, `ClosingCta`, `SectionDecor` (Aura, Blob, Cloud, Spark, Wave; T316) | T311, T312 |
 | `DexPage` | `dex` | `DexFilters`, `StatRangeFields`, `DexToolbar`, `ViewToggle`, `FilterSheet`, `PokemonGrid`, `PokemonList`, `Pagination` | T301 |
 | `PokemonDetailPage` | `pokemon-detail` | `PokemonHero`, `StatPanel`, `DefenseGrid`, `FormSwitcher`, `EvolutionChain`, `DetailStates`; `evolution.ts`, `labels.ts` | T303 |
-| `TypeChartPage` | `typechart` | `TypeMatrixTable`, `DualTypePicker`, `DefenseResult`, `MatrixLegend`; `defense.ts`, `useDefendingTypes.ts` | T304 |
-| `ComparePage` | `compare` | `CompareSlot`, `VersusBanner`, `CompareRadar`, `StatDuelTable`, `VerdictPanel`; `useCompareSearchParams.ts`, `scale.ts` | T308 |
+| `TypeChartPage` | `typechart` | `TypeMatrixTable`, `DualTypePicker`, `DefenseResult`, `MatrixLegend`, `MatrixFocusPanel`; `defense.ts`, `matrixFocus.ts`, `useDefendingTypes.ts` | T304, T316 |
+| `ComparePage` | `compare` | `ComparePicker`, `CompareSlot`, `VersusBanner`, `CompareRadar`, `StatDuelTable`, `StabPanel`, `VerdictPanel`; `useCompareSearchParams.ts`, `scale.ts` | T308, T316 |
 | `TeamBuilderPage` | `team-builder` | `TeamSlots`, `TeamMemberCard`, `WeaknessHeatmap`, `TeamScoreGauge`, `CoverageAndStats`, `RecommendationList`, `RecommendationCard`, `SaveTeamDialog`, `ShareLinkField`; `useTeamDraft.ts`, `teamAnalysis.ts` | T306, T307 |
-| `SharedTeamPage` | `team-builder` | `ReadOnlyTeamSlots`, `AnalysisHeatmap`, `ShareLinkField` | T307 |
+| `SharedTeamPage` | `team-builder` | `ReadOnlyTeamSlots`, `SharedMemberCard` (trong `TeamMemberCard.tsx`), `AnalysisHeatmap` (`compact`), `ShareLinkField` | T307, T316 |
 | `TerrainPage` | `terrain`, `trainer` | `TerrainPicker`, `TerrainPokemon`, `WhosThatPokemon`, `TrainerCard`; `terrains.ts`, `whosThat.ts` | T314 |
 
 ### III. Quy tắc đặt tên frontend

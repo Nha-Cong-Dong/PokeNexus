@@ -30,7 +30,7 @@ function TypeList({ label, hidden = false }: TypeListProps) {
 
 export function TypeTicker() {
   return (
-    <div className="group relative z-10 overflow-hidden border-y-3 border-ink bg-dex-yellow py-3 shadow-block">
+    <div className="group relative z-10 -mx-5 -mt-[22px] -rotate-2 overflow-hidden border-y-3 border-ink bg-dex-yellow py-2.5 shadow-[0_6px_0_rgb(22_33_62/0.2)] md:-mx-6 md:-mt-[26px] md:-rotate-[1.6deg] md:py-3">
       <div className="flex w-max motion-safe:animate-marquee motion-safe:group-hover:[animation-play-state:paused] motion-reduce:mx-auto motion-reduce:w-auto motion-reduce:max-w-7xl motion-reduce:px-3">
         <TypeList label="18 hệ Pokémon" />
         <TypeList hidden />

@@ -27,7 +27,7 @@ describe('Header', () => {
 
   it('keeps the mobile menu closed until the menu button is pressed', async () => {
     renderHeader()
-    const menuButton = screen.getByRole('button', { name: 'Menu' })
+    const menuButton = screen.getByRole('button', { name: 'Mở menu' })
 
     expect(menuButton).toHaveAttribute('aria-expanded', 'false')
     expect(screen.queryByRole('navigation', { name: 'Điều hướng di động' })).not.toBeInTheDocument()
@@ -41,18 +41,21 @@ describe('Header', () => {
 
   it('closes the mobile menu after choosing a destination', async () => {
     renderHeader()
-    await userEvent.click(screen.getByRole('button', { name: 'Menu' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Mở menu' }))
 
     const mobileNav = screen.getByRole('navigation', { name: 'Điều hướng di động' })
     await userEvent.click(within(mobileNav).getByRole('link', { name: 'Xây đội' }))
 
     expect(screen.queryByRole('navigation', { name: 'Điều hướng di động' })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Menu' })).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.getByRole('button', { name: 'Mở menu' })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    )
   })
 
   it('closes the mobile menu with Escape and returns focus to the menu button', async () => {
     renderHeader()
-    const menuButton = screen.getByRole('button', { name: 'Menu' })
+    const menuButton = screen.getByRole('button', { name: 'Mở menu' })
     await userEvent.click(menuButton)
 
     const mobileNav = screen.getByRole('navigation', { name: 'Điều hướng di động' })
