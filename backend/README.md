@@ -28,8 +28,7 @@
 | MySQL Driver | `mysql-connector-j` | Kết nối MySQL |
 | Flyway Migration | `spring-boot-starter-flyway`, `flyway-mysql` | Quản lý schema |
 | Validation | `spring-boot-starter-validation` | Kiểm tra đầu vào |
-| Lombok | `lombok` | Giảm mã lặp |
-| Spring Boot DevTools | `spring-boot-devtools` | Tự khởi động lại khi phát triển |
+| Lombok | `lombok` | Getter, constructor cho JPA Entity; DTO vẫn là `record` |
 | Testcontainers | `spring-boot-testcontainers`, `testcontainers-mysql`, `testcontainers-junit-jupiter` | MySQL tạm cho test tích hợp |
 | (thêm thủ công) | `springdoc-openapi-starter-webmvc-ui` 3.1.1 | Swagger UI; bản 3.x build trên Spring Boot 4.1 |
 | (thêm thủ công, T205) | `commons-csv` 1.14.1 | Đọc CSV PokéAPI theo tên cột |

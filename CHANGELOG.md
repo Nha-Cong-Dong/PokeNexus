@@ -16,6 +16,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - Phần thưởng Trainer dùng chung cho Thử tài Trainer và trang Địa hình: điểm, thưởng chuỗi đúng, Poké/Great/Ultra/Master Ball theo kết quả bộ câu hỏi, huy hiệu, 6 danh hiệu; lưu trong `localStorage`.
 - `backend/Dockerfile` multi-stage (Eclipse Temurin 25 JDK để build, JRE để chạy, jar tách layer, user không phải root) và service `backend` (profile `app`) trong Docker Compose: `docker compose --profile app up -d --build` chạy backend cùng MySQL.
 - `scripts/bench-synergy.sh`: đo p50, p95 của `analyze` và `recommendations`, thoát mã lỗi khi p95 từ 50 ms.
+- `scripts/download-csv.sh` và `.ps1`: tải 12 file CSV từ commit PokéAPI cố định vào `data/csv/`. README gốc có mục "Chạy nhanh" (6 lệnh từ clone tới chạy frontend).
 
 ### Changed
 
@@ -23,13 +24,19 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - Thanh điều hướng header canh giữa trang; bỏ ống kính tròn xanh trên vỏ Pokédex ở hero vì trùng với logo.
 - Khung cảnh đầu các trang con cao hơn (288/480/544 px thay vì 192/320 px; trang Chi tiết 544 px từ `lg`) và đáy chuyển mượt sang màu nền trang (`scene-fade`), không còn đường cắt giữa ảnh và nền.
 - Lộ trình 0.6 theo lịch hackathon (review Checkpoint 2): Checkpoint 3 ngày 01/11, triển khai 30-31/10, đóng băng tính năng từ 05/11, demo và `v1.0.0` ngày 08/11 (trước là 15/11).
+- Lộ trình 0.7: mốc 08/11 là bản hoàn chỉnh trên link thật (đủ F01-F08, không còn Issue `type: bug` mở), tiêu chí đo theo Core Web Vitals, dải điểm Lighthouse và WCAG AA; tính năng mở rộng chỉ làm 01/11 - 04/11.
 - `data/README.md` tải CSV từ commit PokéAPI `e2710d3` thay vì nhánh `master`.
 - `design-system.md` 0.8: bỏ giới hạn một khoảnh khắc chuyển động mỗi trang; README Phần 7 không còn cột trạng thái (trạng thái chỉ ở `PLAN.md`).
 - `excludeLegendary=true` loại thêm 20 Pokémon Paradox (CSV PokéAPI không đánh dấu chúng là huyền thoại).
 - Độ phủ tấn công của mỗi Pokémon tính sẵn khi nạp dữ liệu; `SynergyAnalyzer` không còn dựng bảng siêu hiệu quả ở mỗi request.
 
+### Removed
+
+- Dependency `spring-boot-devtools`: không dùng và không có trong bảng công nghệ.
+
 ### Fixed
 
+- `GET /api/v1/health` trả 503 với `status = "DOWN"` khi không kết nối được DB; trước đây vẫn trả 200 `UP` nên health check của hosting không phát hiện được DB chết. Bảng `pokemon` chưa tạo vẫn trả 200 `UP`.
 - Bảng task tuần 3 trong `docs/roadmap.md` bị tách đôi do dòng trống trước T313, làm T313-T315 mất header.
 - Nút đáp án đúng và sai của Thử tài Trainer hiện chữ trắng trên nền trắng, vì lớp `bg-surface` của biến thể nút được Tailwind sinh sau lớp ghi đè; bộ câu hỏi đang chọn cũng không có nền vàng.
 

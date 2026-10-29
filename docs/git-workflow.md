@@ -32,7 +32,7 @@ gitGraph
 
 | Mô hình | Phù hợp khi | Với PokeNexus |
 |---|---|---|
-| GitHub Flow (chọn) | Một người hoặc nhóm nhỏ, triển khai liên tục | Một người làm, 4 tuần, một môi trường production |
+| GitHub Flow (chọn) | Một người hoặc nhóm nhỏ, triển khai liên tục | Một người làm, 3 tuần, một môi trường production |
 | Git Flow (`develop`, `release/*`) | Nhiều phiên bản song song, chu kỳ phát hành dài | Thừa nhánh, tốn thời gian merge |
 | Trunk-based (commit thẳng `main`) | Có test tự động mạnh, feature flag | Mất bước review qua PR và lịch sử theo Issue |
 

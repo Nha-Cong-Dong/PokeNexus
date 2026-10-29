@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @ExtendWith(MockitoExtension.class)
@@ -82,5 +84,17 @@ class HealthServiceTest {
         HealthResponse response = healthService.check();
 
         assertThat(response).isEqualTo(new HealthResponse("UP", false, 0));
+    }
+
+    @Test
+    void reportsDownWhenDatabaseIsUnreachable() {
+        when(jdbcTemplate.queryForObject(anyString(), eq(Long.class)))
+                .thenThrow(new CannotGetJdbcConnectionException("Failed to obtain JDBC Connection",
+                        new SQLException("Communications link failure")));
+
+        HealthResponse response = healthService.check();
+
+        assertThat(response).isEqualTo(new HealthResponse("DOWN", false, 0));
+        verifyNoInteractions(cache);
     }
 }

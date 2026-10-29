@@ -1,6 +1,6 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 0.5 (cập nhật 2026-10-28; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
+- Phiên bản: 0.6 (cập nhật 2026-10-29; Phần 2: thêm Lombok vào bảng công nghệ; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
 
@@ -52,6 +52,7 @@ flowchart LR
 | Framework | Spring Boot 4.1.x | Spring Framework 7, Jakarta EE 11 |
 | Build | Maven Wrapper (`mvnw`) | Không cần cài Maven trên máy |
 | Truy cập dữ liệu | Spring Data JPA (Hibernate) | Dùng Specification cho bộ lọc động |
+| Giảm mã lặp ở Entity | Lombok | Chỉ cho 10 Entity và 2 khóa ghép (`@Getter`, constructor, `@EqualsAndHashCode`); DTO là `record`. Có từ T202, ghi vào bảng ngày 2026-10-29 theo review Issue #43 |
 | Migration | Flyway | Script trong `backend/src/main/resources/db/migration` |
 | Đọc CSV | Apache Commons CSV | Xử lý đúng trường có dấu ngoặc kép, dấu phẩy |
 | Tài liệu API | springdoc-openapi | Swagger UI tại `/swagger-ui.html` |

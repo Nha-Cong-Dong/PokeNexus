@@ -1,10 +1,11 @@
 # PokeNexus - Đặc tả REST API
 
-- Phiên bản: 0.5 (phạm vi MVP, cập nhật 2026-10-28; khớp code backend sau khi làm T303-T308)
+- Phiên bản: 0.6 (phạm vi MVP, cập nhật 2026-10-29; khớp code backend sau khi làm T303-T308)
 - Tài liệu tương tác (sau khi có backend): Swagger UI tại `http://localhost:8080/swagger-ui.html`. Khi Swagger và tài liệu này lệch nhau, sửa cho khớp trong cùng PR.
 - Thay đổi so với 0.1: thêm schema DTO (Phần 3), danh mục lỗi có `code` (Phần 4), mã 429 và 503; bỏ `spriteUrl` khỏi response ([ADR 0005](adr/0005-hybrid-image-assets.md)); response đề xuất đổi từ mảng sang object.
 - Thay đổi so với 0.3: `analyze` nhận 1-6 Pokémon để chấm điểm cả đội đủ 6; `recommendations` vẫn nhận 1-5; `synergyScore` của đội đã lưu tính trên mọi thành viên ([spec.md](spec.md) 1.3).
 - Thay đổi so với 0.4: `excludeLegendary = true` của `recommendations` loại thêm 20 Pokémon Paradox (Phần 2, mục IX).
+- Thay đổi so với 0.5: `/health` trả 503 với `status = "DOWN"` khi không truy vấn được DB (review Checkpoint 2, Issue #43); bảng `pokemon` chưa tồn tại vẫn trả 200 `UP` (Phần 2, mục II).
 
 ---
 
@@ -36,7 +37,7 @@
 | 404 Not Found | Không tìm thấy tài nguyên trên đường dẫn (Pokémon, đội, route) |
 | 429 Too Many Requests | Vượt giới hạn lưu đội, kèm header `Retry-After` (giây) |
 | 500 Internal Server Error | Lỗi không lường trước |
-| 503 Service Unavailable | Dữ liệu chưa được nạp (`dataLoaded = false`) |
+| 503 Service Unavailable | Dữ liệu chưa được nạp (`dataLoaded = false`); riêng `/health`: không truy vấn được DB |
 
 ---
 
@@ -65,7 +66,8 @@
 ### II. `GET /api/v1/health`
 
 - Response 200: `{ "status": "UP", "dataLoaded": true, "pokemonCount": 1302 }` (số liệu minh họa).
-- `pokemonCount` là số dòng bảng `pokemon`; bảng chưa tồn tại hoặc rỗng thì trả `0`. `dataLoaded = pokemonCount > 0` và mọi cache trong bộ nhớ (`TypeChartService`, `PokemonProfileRegistry`) đã nạp; cache chưa nạp mà DB đã có dữ liệu thì health thử nạp lại.
+- Response 503: `{ "status": "DOWN", "dataLoaded": false, "pokemonCount": 0 }` khi không truy vấn được DB (mất kết nối, hết thời gian chờ kết nối); backend ghi log mức `warn`. Health check của hosting dựa vào mã này để biết dịch vụ hỏng.
+- `pokemonCount` là số dòng bảng `pokemon`; bảng chưa tồn tại (`BadSqlGrammarException`) hoặc rỗng thì trả `0` với `status = "UP"`. `dataLoaded = pokemonCount > 0` và mọi cache trong bộ nhớ (`TypeChartService`, `PokemonProfileRegistry`) đã nạp; cache chưa nạp mà DB đã có dữ liệu thì health thử nạp lại.
 
 ### III. `GET /api/v1/pokemon`
 

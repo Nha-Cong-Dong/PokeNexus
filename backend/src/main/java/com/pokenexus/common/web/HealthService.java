@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,13 @@ public class HealthService {
     }
 
     public HealthResponse check() {
-        long pokemonCount = countPokemon();
+        long pokemonCount;
+        try {
+            pokemonCount = countPokemon();
+        } catch (DataAccessException ex) {
+            log.warn("Database is unreachable: {}", ex.getMessage());
+            return HealthResponse.down();
+        }
         return HealthResponse.of(pokemonCount, pokemonCount > 0 && cachesLoaded());
     }
 
@@ -49,7 +56,7 @@ public class HealthService {
         try {
             Long count = jdbcTemplate.queryForObject(COUNT_POKEMON_SQL, Long.class);
             return count != null ? count : 0;
-        } catch (DataAccessException ex) {
+        } catch (BadSqlGrammarException ex) {
             log.debug("Pokemon table not readable yet: {}", ex.getMessage());
             return 0;
         }
