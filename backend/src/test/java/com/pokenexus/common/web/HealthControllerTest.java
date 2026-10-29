@@ -33,6 +33,19 @@ class HealthControllerTest {
     }
 
     @Test
+    void returnsServiceUnavailableWhenDatabaseIsDown() {
+        when(healthService.check()).thenReturn(new HealthResponse("DOWN", false, 0));
+
+        assertThat(mvc.get().uri("/api/v1/health"))
+                .hasStatus(503)
+                .hasContentTypeCompatibleWith(MediaType.APPLICATION_JSON)
+                .bodyJson()
+                .isLenientlyEqualTo("""
+                        { "status": "DOWN", "dataLoaded": false, "pokemonCount": 0 }
+                        """);
+    }
+
+    @Test
     void rejectsUnsupportedMethodWithProblemDetail() {
         assertThat(mvc.post().uri("/api/v1/health"))
                 .hasStatus(405)
