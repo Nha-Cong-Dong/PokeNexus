@@ -1,6 +1,11 @@
 server:
   forward-headers-strategy: framework
 
+spring:
+  datasource:
+    hikari:
+      connection-timeout: 5000
+
 app:
   ingestion:
     enabled: false

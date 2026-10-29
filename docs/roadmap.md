@@ -1,11 +1,12 @@
 # PokeNexus - Lộ trình 3 tuần
 
-- Phiên bản: 0.7 (cập nhật 2026-10-29)
+- Phiên bản: 0.8 (cập nhật 2026-10-29)
 - Thay đổi so với 0.2: thêm trang Tổng quan (T311, T312) và chuyển Omni-Dex sang `/pokedex` theo [spec.md](spec.md) 1.2; thêm thứ tự cắt cho trang Tổng quan ở Phần 4.
 - Thay đổi so với 0.3: bỏ T406 (slide, video demo); ngày 14/11 thành buffer. Kịch bản demo ở [spec.md](spec.md), Phần 4 vẫn giữ và chạy trực tiếp ở T310, T403, T407.
 - Thay đổi so với 0.4: thêm T313 (Thử tài Trainer 5 bộ câu hỏi và phần thưởng) và T314 (Trang Địa hình, F08) theo [spec.md](spec.md) 1.4, mức Could, làm sớm ngày 2026-10-28; thêm vào thứ tự cắt ở Phần 4.
 - Thay đổi so với 0.5: dời mốc theo lịch hackathon (review Checkpoint 2, Issue #43). MVP là mốc Checkpoint 3 ngày 01/11, triển khai và demo là Checkpoint 4 ngày 08/11 (bản cũ ghi 15/11). Bỏ tuần 4: T401-T407 dời vào 30/10 - 08/11, T403 làm sớm 30-31/10, đóng băng tính năng từ 05/11; T402 thay bằng T313-T315; thêm T315 (hiệu ứng chuyển động theo bản thiết kế ngày 2026-10-24). Ngày của task đã xong ghi theo ngày làm thực tế.
 - Thay đổi so với 0.6: Goal Checkpoint 4 theo chủ dự án: bản hoàn chỉnh chạy thật (không lỗi, đúng thiết kế, đủ F01-F08, thêm tính năng mở rộng nếu kịp), tiêu chí hoàn thành đo được theo ngưỡng chuẩn (Core Web Vitals, dải điểm Lighthouse, WCAG AA); T404 kiểm tra theo các ngưỡng này; quy tắc làm tính năng mở rộng 01/11 - 04/11 (Phần 4, mục I); ngày T102-T104, T201-T209 theo ngày làm thực tế; bỏ ghi chú buffer 14/11 nằm ngoài lịch.
+- Thay đổi so với 0.7: milestone GitHub chia lại theo chủ dự án: `W3 - Hoàn thiện` hạn 01/11 (MVP và triển khai production), `W4 - Demo và phát triển` hạn 08/11 (tính năng mở rộng, kiểm thử, tài liệu, tổng duyệt, demo); trước 08/11 mọi thứ phải sẵn sàng chạy thật. Issue T401-T407 là #49-#53. Hosting chốt ở [ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md).
 - Thời gian: 2026-10-18 đến 2026-11-08, một người phát triển (Full-stack).
 - Mỗi tuần tương ứng một **Milestone** trên GitHub, mỗi task là một Issue ([github-setup.md](github-setup.md)).
 - Quy trình nhánh, PR, tag: [git-workflow.md](git-workflow.md).
@@ -26,15 +27,15 @@
   - Hiệu năng API: `POST /api/v1/synergy/analyze` và `/recommendations` phản hồi dưới 50 ms (p95, đo local, 100 request liên tiếp).
   - Phát hành: link sản phẩm công khai mở được trên điện thoại và máy tính; bản local chạy bằng Docker; tag `v1.0.0`.
 
-### II. Ba mốc
+### II. Các mốc
 
-| Tuần | Thời gian | Milestone | Mục tiêu | Checkpoint hackathon | Tag |
+| Tuần | Thời gian | Milestone GitHub (hạn) | Mục tiêu | Checkpoint hackathon | Tag |
 |---|---|---|---|---|---|
-| 1 | 18/10 - 25/10 | `W1 - Ý tưởng và khởi tạo` | Tài liệu kế hoạch, khảo sát dữ liệu, wireframe, thiết lập GitHub, khung dự án | Checkpoint 2 (25/10) | `v0.1.0` |
-| 2 | 26/10 - 01/11 | `W2 - Đặc tả và khung dự án` | MVP F01-F07 chạy end-to-end ở local; bắt đầu triển khai | Checkpoint 3 (01/11) | `v0.2.0` |
-| 3 | 02/11 - 08/11 | `W3 - Hoàn thiện và demo` | Bản hoàn chỉnh chạy thật (không lỗi, đủ F01-F08, E9 nếu kịp), kiểm thử, tài liệu, tổng duyệt | Checkpoint 4 (08/11) | `v1.0.0` |
+| 1 | 18/10 - 25/10 | `W1 - Ý tưởng và khởi tạo` (25/10) | Tài liệu kế hoạch, khảo sát dữ liệu, wireframe, thiết lập GitHub, khung dự án | Checkpoint 2 (25/10) | `v0.1.0` |
+| 2 | 26/10 - 01/11 | `W2 - Đặc tả và khung dự án` (01/11), `W3 - Hoàn thiện` (01/11) | MVP F01-F07 chạy end-to-end ở local; triển khai production 30-31/10 | Checkpoint 3 (01/11) | `v0.2.0` |
+| 3 | 02/11 - 08/11 | `W4 - Demo và phát triển` (08/11) | Bản hoàn chỉnh chạy thật (không lỗi, đủ F01-F08, E9 nếu kịp), kiểm thử, tài liệu, tổng duyệt, demo | Checkpoint 4 (08/11) | `v1.0.0` |
 
-- Milestone trên GitHub vẫn mang tên và hạn cũ (`W3 - MVP` hạn 08/11, `W4 - Hoàn thiện và demo` hạn 15/11): đổi tên W3 thành `W3 - Hoàn thiện và demo`, chuyển Issue T401-T407 sang W3, đóng W4.
+- Tên milestone không trùng số tuần (chủ dự án chốt ngày 2026-10-29): `W2` gồm T201-T209 (làm sớm 21-25/10); `W3 - Hoàn thiện` gồm T301-T315 và T403 (#49); `W4 - Demo và phát triển` gồm T401 (#50), T404 (#51), T405 (#52), T407 (#53) và tính năng mở rộng.
 
 ### III. Biểu đồ Gantt
 
@@ -50,14 +51,14 @@ gantt
     Migration, ingestion, API    :done, t204, 2026-10-23, 1d
     GitHub, board                :done, t104, 2026-10-24, 1d
     Omni-Dex UI, CI, v0.1.0      :done, t209, 2026-10-25, 1d
-    section W2 MVP
+    section W2-W3 MVP, triển khai
     API và 8 trang MVP           :done, t302, 2026-10-26, 1d
     Phân tích đội 6, rà soát     :done, t309, 2026-10-27, 1d
     E2E, v0.2.0, T313, T314      :done, t310, 2026-10-28, 1d
     Hiệu ứng chuyển động         :t315, 2026-10-29, 1d
     Triển khai production        :crit, t403, 2026-10-30, 2d
     Checkpoint 3, buffer         :milestone, cp3, 2026-11-01, 0d
-    section W3 Hoàn thiện và demo
+    section W4 Demo và phát triển
     Cây tiến hóa (kiểm tra)      :t401, 2026-11-02, 1d
     Bug bash, hiệu năng          :t404, 2026-11-03, 1d
     README, ảnh chụp             :t405, 2026-11-04, 1d
@@ -184,8 +185,8 @@ gantt
 |---|---|
 | W1 | Repo công khai có README và bộ tài liệu v0.2; nhãn, milestone, Issue W2-W3 đã tạo; wireframe 6 trang |
 | W2 | `docker compose up -d mysql`, chạy backend thì dữ liệu được nạp; `GET /api/v1/pokemon?type=dragon` trả đúng; CI xanh; tag `v0.1.0` |
-| W2 (Checkpoint 3) | Kịch bản E2E ở spec Phần 4 chạy trọn vẹn trên local; tag `v0.2.0` |
-| W3 (Checkpoint 4) | Có link sản phẩm chạy thật; bản local chạy bằng Docker; tag `v1.0.0` |
+| W3 (Checkpoint 3) | Kịch bản E2E ở spec Phần 4 chạy trọn vẹn trên local; tag `v0.2.0`; link production chạy được (T403) |
+| W4 (Checkpoint 4) | Bản hoàn chỉnh chạy thật đạt tiêu chí ở Phần 1, mục I; bản local chạy bằng Docker; tag `v1.0.0` |
 
 ---
 

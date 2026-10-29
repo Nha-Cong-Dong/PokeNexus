@@ -1,6 +1,6 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 0.6 (cập nhật 2026-10-29; Phần 2: thêm Lombok vào bảng công nghệ; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
+- Phiên bản: 0.7 (cập nhật 2026-10-29; Phần 11: chốt Railway và Cloudflare Pages theo ADR 0007, thiết lập production, nhập dữ liệu bằng `scripts/db-dump.sh`; Phần 2: thêm Lombok vào bảng công nghệ; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
 
@@ -346,7 +346,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | XSS qua tên đội, biệt danh | React escape mặc định; không dùng `dangerouslySetInnerHTML`; giới hạn độ dài ở backend |
 | Lộ bí mật | Bí mật chỉ ở `.env` hoặc biến môi trường hosting; bật Secret scanning ([github-setup.md](github-setup.md)) |
 
-- Sau reverse proxy của hosting, IP thật nằm ở header `X-Forwarded-For`. Bật `server.forward-headers-strategy=framework` ở profile `prod`; chấp nhận rủi ro header bị giả mạo vì đây chỉ là biện pháp chống spam cơ bản.
+- Sau reverse proxy của hosting, IP thật nằm ở header `X-Forwarded-For`. Bật `server.forward-headers-strategy=framework` ở profile `prod`; chấp nhận rủi ro header bị giả mạo vì đây chỉ là biện pháp chống spam cơ bản. Trên Railway, edge proxy ghi đè header do client gửi; kiểm chứng sau deploy theo [ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md), Phần 4.
 
 ---
 
@@ -399,6 +399,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | `app.team.save-limit-per-minute` | `10` | `10` | Giới hạn lưu đội mỗi IP |
 | `spring.jpa.hibernate.ddl-auto` | `validate` | `validate` | Schema do Flyway quản lý, Hibernate chỉ kiểm tra |
 | `spring.jpa.open-in-view` | `false` | `false` | Tránh truy vấn lười ở tầng web |
+| `spring.datasource.hikari.connection-timeout` | mặc định (30 s) | `5000` | Thời gian chờ lấy kết nối; `/health` trả 503 sau 5 s khi mất DB |
 | `springdoc.swagger-ui.enabled` | `true` | `true` | Giữ Swagger để giám khảo xem API |
 
 - Các thuộc tính `app.*` ánh xạ vào một `@ConfigurationProperties` record `AppProperties`.
@@ -441,6 +442,50 @@ flowchart LR
 | Ngủ đông | Biết rõ thời gian cold start để làm nóng trước demo |
 
 - Ứng viên tham khảo: Render, Railway, Fly.io (backend); Vercel, Netlify, Cloudflare Pages (frontend); Aiven, Railway (MySQL). Gói miễn phí và giá thay đổi thường xuyên, phải tra cứu lại tại thời điểm chốt và ghi kết quả vào ADR mới.
+- Đã chốt ngày 2026-10-29: Railway (backend, MySQL) và Cloudflare Pages (frontend), lý do và rủi ro ở [ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md).
+
+### III. Thiết lập production
+
+#### 1. Railway (backend và MySQL)
+
+| Mục | Giá trị |
+|---|---|
+| Project | Một project, vùng Southeast Asia (Singapore); chọn vùng trước khi tạo MySQL vì service có volume bị khóa vùng |
+| Service MySQL | Template MySQL chính thức, tên service `MySQL` |
+| Service backend | Nguồn GitHub `Nha-Cong-Dong/PokeNexus`, nhánh `main`, Root Directory `backend` (Railway build bằng `backend/Dockerfile`) |
+| Healthcheck Path | `/api/v1/health`: Railway chỉ chuyển traffic sang bản deploy mới khi endpoint trả 200 |
+| Domain | Generate Domain, cổng đích 8080 |
+
+| Biến của backend | Giá trị |
+|---|---|
+| `SPRING_PROFILES_ACTIVE` | `prod` |
+| `DB_HOST`, `DB_PORT` | `${{MySQL.MYSQLHOST}}`, `${{MySQL.MYSQLPORT}}` |
+| `DB_NAME` | `${{MySQL.MYSQLDATABASE}}` |
+| `DB_USERNAME`, `DB_PASSWORD` | `${{MySQL.MYSQLUSER}}`, `${{MySQL.MYSQLPASSWORD}}` |
+| `CORS_ALLOWED_ORIGINS` | Domain production của Pages, ví dụ `https://pokenexus.pages.dev` |
+
+#### 2. Cloudflare Pages (frontend)
+
+| Mục | Giá trị |
+|---|---|
+| Nguồn | GitHub `Nha-Cong-Dong/PokeNexus`, production branch `main` |
+| Root directory | `frontend` |
+| Build command, output | `npm run build`, `dist` |
+| Biến môi trường | `NODE_VERSION=24` (`.nvmrc` nằm ở gốc repo, ngoài Root directory); `VITE_API_BASE_URL=https://<domain backend>/api/v1` |
+
+- Vite lấy `VITE_API_BASE_URL` từ biến môi trường lúc build (đã thử ngày 2026-10-29: biến môi trường ghi đè giá trị trong `.env`). Đổi domain backend thì phải build lại frontend.
+
+#### 3. Nhập dữ liệu và kiểm tra
+
+- Nhập dữ liệu trước lần deploy backend đầu tiên:
+  - Ở máy dev: `bash scripts/db-dump.sh export` (ghi `data/dumps/pokenexus.sql`, không gồm đội đã lưu).
+  - Trên Railway: service MySQL > Settings > Networking, bật Public Networking (TCP Proxy), lấy `MYSQL_PUBLIC_URL`.
+  - `TARGET_DB_URL='<MYSQL_PUBLIC_URL>' bash scripts/db-dump.sh import`: in `pokemon rows: 1351`, `flyway migrations: 3`. Script từ chối nhập nếu DB đích đã có bảng; đặt `FORCE=1` để thay toàn bộ.
+  - Tắt Public Networking sau khi nhập.
+- Kiểm tra sau deploy:
+  - `GET https://<domain backend>/api/v1/health` trả 200 `UP`, `pokemonCount` 1351.
+  - Kịch bản demo ([spec.md](spec.md), Phần 4) chạy trên domain Pages, cả trên điện thoại.
+  - 11 request `POST /api/v1/teams` liên tiếp, mỗi request một `X-Forwarded-For` giả khác nhau: request thứ 11 phải trả 429 ([ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md), Phần 4).
 
 ---
 
