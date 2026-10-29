@@ -1,7 +1,7 @@
 # PokeNexus - Hướng dẫn cho Claude
 
 - Bách khoa Pokémon kiêm công cụ phân tích đội hình VGC. Monorepo: `backend/` (Spring Boot), `frontend/` (React), `docs/`, `data/`.
-- Một người phát triển, 3 tuần (2026-10-18 đến 2026-11-08). Checkpoint 3 (01/11): MVP chạy end-to-end ở local. Checkpoint 4 (08/11): link sản phẩm chạy thật, demo, tag `v1.0.0`.
+- Một người phát triển, 3 tuần (2026-10-18 đến 2026-11-08). Checkpoint 3 (01/11): MVP chạy end-to-end ở local. Checkpoint 4 (08/11): bản hoàn chỉnh chạy trên link thật (không lỗi, đủ tính năng, tính năng mở rộng nếu kịp), demo, tag `v1.0.0`.
 - File này chỉ chứa quy tắc riêng của dự án. Tiến độ hiện tại xem [PLAN.md](PLAN.md); không ghi trạng thái vào file này.
 
 ---
