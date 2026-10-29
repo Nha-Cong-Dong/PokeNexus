@@ -1,6 +1,6 @@
 # ADR 0006 - Nền khung cảnh nhiều ảnh và chuyển động nền
 
-- Trạng thái: Đã chấp nhận
+- Trạng thái: Đã chấp nhận; quy tắc loại ảnh đã sửa có Content Credentials được sửa đổi bởi [ADR 0008](0008-ai-edited-scene-patches.md) (2026-10-30)
 - Ngày: 2026-10-28
 
 ## Phần 1. Bối cảnh

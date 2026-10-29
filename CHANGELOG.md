@@ -31,6 +31,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - Profile `prod` chờ lấy kết nối DB tối đa 5 giây (`spring.datasource.hikari.connection-timeout`), nên `/health` trả 503 sau 5 giây khi mất DB thay vì 30 giây.
 - `design-system.md` 0.8: bỏ giới hạn một khoảnh khắc chuyển động mỗi trang; README Phần 7 không còn cột trạng thái (trạng thái chỉ ở `PLAN.md`).
 - `excludeLegendary=true` loại thêm 20 Pokémon Paradox (CSV PokéAPI không đánh dấu chúng là huyền thoại).
+- Ảnh khung cảnh: 36 ảnh (trước 25), mỗi scene 2-4 ảnh, không còn ảnh 1280 px phóng to. 13 ảnh mới xóa nhân vật, bóng, minimap, chữ bằng ChatGPT; chỉ vùng đã xóa được ghép vào ảnh chụp gốc 1920 px và ghi nhãn trong `SOURCES.md` (ADR 0008, sửa đổi một phần ADR 0006). `stadium-1` thay bằng màn hình tiêu đề Sword/Shield 1920 px.
 - Độ phủ tấn công của mỗi Pokémon tính sẵn khi nạp dữ liệu; `SynergyAnalyzer` không còn dựng bảng siêu hiệu quả ở mỗi request.
 
 ### Removed
