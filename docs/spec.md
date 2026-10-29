@@ -1,10 +1,11 @@
 # PokeNexus - Đặc tả MVP
 
-- Phiên bản: 1.3 (yêu cầu chốt ở task T201 ngày 2026-10-21; cập nhật 2026-10-27)
+- Phiên bản: 1.4 (yêu cầu chốt ở task T201 ngày 2026-10-21; cập nhật 2026-10-28)
 - Tài liệu liên quan: [product.md](product.md), [architecture.md](architecture.md), [database.md](database.md), [api.md](api.md).
 - Thay đổi so với 1.0: thêm Phần 6 (truy vết và kiểm chứng, chuyển từ `SPEC.md` ở gốc repo); không đổi yêu cầu và tiêu chí chấp nhận.
 - Thay đổi so với 1.1: thêm F07 Trang Tổng quan (Phần 2, mục VII) theo bản thiết kế giao diện ngày 2026-10-24; Omni-Dex chuyển từ `/` sang `/pokedex`. Lý do: người dùng mới cần một trang giới thiệu dẫn tới 4 công cụ, thay vì vào thẳng lưới dữ liệu. Thay đổi yêu cầu từ đây phải tăng phiên bản và ghi lý do.
 - Thay đổi so với 1.2: phân tích đội nhận 1-6 Pokémon, đề xuất vẫn nhận 1-5 (Phần 2, mục V.1); ví dụ 4 đổi thành 7 Pokémon, thêm ví dụ 5 (mục V.4). Lý do: bước "thêm đề xuất số 1, xác nhận điểm đội tăng" của kịch bản demo (Phần 4) cần chấm điểm đội đủ 6; với giới hạn 5, điểm không đổi khi thêm đề xuất vào slot 6.
+- Thay đổi so với 1.3: Thử tài Trainer có 5 bộ câu hỏi và phần thưởng (Phần 2, mục VII); thêm F08 Trang Địa hình (Phần 2, mục VIII). Lý do: chủ dự án yêu cầu ngày 2026-10-28 thêm nội dung khám phá và trò chơi nhỏ cho người mới; cả hai mức Could, không đổi API và kịch bản demo.
 
 ---
 
@@ -117,11 +118,31 @@
 | Pokémon hôm nay | Cùng một ngày luôn ra cùng một Pokémon; hiện artwork, số, hệ, BST, một câu về điểm yếu x2 trở lên; nút "Xem chi tiết" tới trang chi tiết |
 | Xây đội trong 3 bước | 3 bước có minh họa tĩnh; nút "Xây đội ngay" |
 | Số loài qua 9 thế hệ | Biểu đồ cột 9 thế hệ, số liệu là số dạng `DEFAULT` của từng thế hệ từ `GET /pokemon`; bấm một cột mở `/pokedex?gen=<n>` |
-| Thử tài Trainer | 5 câu hỏi hệ số sát thương, đáp án tính từ ma trận tương khắc; chọn đáp án thì hiện đúng hoặc sai kèm giải thích; đếm số câu đúng; làm lại được |
+| Thử tài Trainer | 5 bộ, mỗi bộ 6 câu, 3 lựa chọn: hệ số sát thương, điểm yếu và miễn nhiễm, chỉ số gốc, hệ của Pokémon, vùng đất ra mắt. Đáp án tính từ ma trận tương khắc hoặc `GET /pokemon/{id}`, không ghi cứng; chọn đáp án thì hiện đúng hoặc sai kèm giải thích; đếm số câu đúng; làm lại được. Phần thưởng: 10 điểm Trainer mỗi câu đúng, thêm 5 điểm từ câu đúng thứ 3 liên tiếp; hết bộ nhận Master Ball (6/6), Ultra Ball (5/6), Great Ball (4/6) hoặc Poké Ball (1-3); đúng từ 5/6 nhận huy hiệu của bộ; 6 danh hiệu theo điểm (Tân binh 0, Trainer 100, Trainer ưu tú 300, Thủ lĩnh Gym 600, Tứ Thiên Vương 1000, Nhà vô địch 1500); tiến độ lưu `localStorage` của trình duyệt |
 | Kêu gọi cuối trang | Tiêu đề, một câu, 2 nút như hero |
 
 - Chuyển động trang trí (chữ hiện dần, dải hệ chạy ngang, đảo nổi) không bắt buộc ở MVP. Trang vẫn dùng được khi API lỗi: các khối dùng dữ liệu API hiển thị trạng thái lỗi riêng, phần còn lại vẫn hiện.
 - Ngoài phạm vi: Pokémon đồng hành (chọn một Pokémon đi theo ở header), mức Could.
+
+### VIII. F08 - Trang Địa hình
+
+#### 1. Mô tả
+
+- Trang `/terrain/:terrainId?` giới thiệu 13 địa hình (các khung cảnh tự nhiên ở `src/lib/scenes.ts`, bỏ `stadium` và `lab`), Pokémon thường gặp ở mỗi địa hình và minigame "Who's that Pokémon?". Thêm ngày 2026-10-28, mức Could.
+- Hệ của một địa hình là các hệ có khung cảnh đó trong bảng hệ sang khung cảnh (`TYPE_SCENES`), nên 13 địa hình phủ đủ 18 hệ, mỗi hệ đúng một địa hình.
+
+#### 2. Tiêu chí chấp nhận
+
+| Khối | Tiêu chí |
+|---|---|
+| Chọn địa hình | 13 link có tên và dải màu khung cảnh; địa hình đang chọn có `aria-current="page"`; ID lạ chuyển về `/terrain` (Đồng cỏ) |
+| Mô tả | Tên, đoạn mô tả, nhãn hệ thường gặp, số Pokémon mỗi hệ (`totalElements` của `GET /pokemon?type=`) |
+| Who's that Pokémon? | Artwork tô đen của một Pokémon mang hệ của địa hình, 4 tên khác nhau; chọn thì hiện artwork màu, đúng hoặc sai, link tới trang chi tiết; 5 điểm mỗi câu đúng, thêm 5 điểm từ câu đúng thứ 3 liên tiếp; chuỗi 5 câu đúng nhận huy hiệu của địa hình; không lặp Pokémon vừa hỏi |
+| Pokémon thường gặp | 12 Pokémon đầu theo ID của các hệ, link "Xem đủ N Pokémon hệ X trong Pokédex" tới `/pokedex?type=x` |
+| Thẻ Trainer | Danh hiệu, điểm, Ball, 13 huy hiệu địa hình; dùng chung tiến độ với Thử tài Trainer |
+
+- Dữ liệu từ `GET /pokemon?type=<hệ>&size=100&sort=id,asc`, mỗi hệ một request, gộp và bỏ trùng; không thêm endpoint. Trò chơi chọn trong tối đa 100 Pokémon đầu theo ID của mỗi hệ.
+- Khi API lỗi, khối trò chơi và khối danh sách hiện `ErrorState` có nút thử lại; phần chọn địa hình và mô tả vẫn dùng được.
 
 ---
 
@@ -190,7 +211,8 @@
 | F04 Bàn Cân Sức Mạnh | US-04 | Phần 2, mục IV | `GET /pokemon/compare` | `/compare`, `ComparePage` | `pokedex` | T308 | Should |
 | F05 Team Builder, Synergy | US-05, US-06 | Phần 2, mục V | `POST /synergy/analyze`, `POST /synergy/recommendations` | `/team-builder`, `TeamBuilderPage` | `synergy` | T305, T306 | Must |
 | F06 Lưu và chia sẻ đội | US-07 | Phần 2, mục VI | `POST /teams`, `GET /teams/shared/{shareCode}` | `/team/:shareCode`, `SharedTeamPage` | `team` | T307 | Must |
-| F07 Trang Tổng quan | | Phần 2, mục VII | `GET /pokemon/{idOrName}`, `GET /pokemon`, `GET /types/matrix` | `/`, `LandingPage` | | T311, T312 | Should |
+| F07 Trang Tổng quan | | Phần 2, mục VII | `GET /pokemon/{idOrName}`, `GET /pokemon`, `GET /types/matrix` | `/`, `LandingPage` | | T311, T312, T313 | Should |
+| F08 Trang Địa hình | | Phần 2, mục VIII | `GET /pokemon` | `/terrain/:terrainId?`, `TerrainPage` | | T314 | Could |
 
 - Mọi endpoint có tiền tố `/api/v1` ([api.md](api.md), Phần 2). Route: [architecture.md](architecture.md), Phần 6. Class của từng package: [folder-structure.md](folder-structure.md), Phần 2, mục II.
 

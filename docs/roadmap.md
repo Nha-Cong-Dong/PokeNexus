@@ -1,8 +1,9 @@
 # PokeNexus - Lộ trình 4 tuần
 
-- Phiên bản: 0.4 (cập nhật 2026-10-27)
+- Phiên bản: 0.5 (cập nhật 2026-10-28)
 - Thay đổi so với 0.2: thêm trang Tổng quan (T311, T312) và chuyển Omni-Dex sang `/pokedex` theo [spec.md](spec.md) 1.2; thêm thứ tự cắt cho trang Tổng quan ở Phần 4.
 - Thay đổi so với 0.3: bỏ T406 (slide, video demo); ngày 14/11 thành buffer. Kịch bản demo ở [spec.md](spec.md), Phần 4 vẫn giữ và chạy trực tiếp ở T310, T403, T407.
+- Thay đổi so với 0.4: thêm T313 (Thử tài Trainer 5 bộ câu hỏi và phần thưởng) và T314 (Trang Địa hình, F08) theo [spec.md](spec.md) 1.4, mức Could, làm sớm ngày 2026-10-28; thêm vào thứ tự cắt ở Phần 4.
 - Thời gian: 2026-10-18 đến 2026-11-15, một người phát triển (Full-stack).
 - Mỗi tuần tương ứng một **Milestone** trên GitHub, mỗi task là một Issue ([github-setup.md](github-setup.md)).
 - Quy trình nhánh, PR, tag: [git-workflow.md](git-workflow.md).
@@ -165,7 +166,10 @@ gantt
 | T311 | 07/11 | Trang Tổng quan phần 1: hero, dải hệ, Bốn vùng đất, Vòng tương khắc, Pokémon hôm nay; chuyển Omni-Dex sang `/pokedex` | E7 | Should | [spec.md](spec.md), Phần 2, mục VII; [design-system.md](design-system.md), Phần 7, mục II.1; T304 | `LandingPage`, `features/landing/`, route `/` và `/pokedex` | 4 thẻ dẫn đúng route; chọn Fire ở vòng tương khắc hiện x2 Grass, Ice, Bug, Steel; reload cùng ngày ra cùng Pokémon hôm nay |
 | T312 | 08/11 | Trang Tổng quan phần 2: Xây đội trong 3 bước, biểu đồ số loài 9 thế hệ, Thử tài Trainer, kêu gọi cuối trang | E7 | Could | T311, T206 | Các khối còn lại của `LandingPage` | Cột thế hệ 1 ghi 151, bấm cột mở `/pokedex?gen=1`; trả lời đủ 5 câu thì hiện điểm và làm lại được |
 
-- T311, T312: thêm ngày 2026-10-26 theo bản thiết kế giao diện ngày 2026-10-24. Ngày trong bảng là ngày dự kiến theo lộ trình; làm sớm thì ghi ngày thực tế ở `PLAN.md`.
+| T313 | 08/11 | Thử tài Trainer: 5 bộ câu hỏi, phần thưởng, Thẻ Trainer | E7 | Could | T312, [spec.md](spec.md), Phần 2, mục VII | `quiz.ts` 5 bộ, `features/trainer/` | Mỗi câu về hệ có đúng 1 đáp án trên ma trận thật; hết bộ nhận Ball, đúng 5/6 nhận huy hiệu, reload giữ điểm |
+| T314 | 08/11 | Trang Địa hình và minigame Who's that Pokémon? | E9 | Could | [spec.md](spec.md), Phần 2, mục VIII | `TerrainPage`, `features/terrain/`, route `/terrain/:terrainId?` | 13 địa hình phủ 18 hệ; Núi lửa hiện Pokémon hệ Fire; chuỗi 5 câu đúng nhận huy hiệu; 375 px không cuộn ngang |
+
+- T311, T312: thêm ngày 2026-10-26 theo bản thiết kế giao diện ngày 2026-10-24. T313, T314: thêm ngày 2026-10-28 theo yêu cầu của chủ dự án. Ngày trong bảng là ngày dự kiến theo lộ trình; làm sớm thì ghi ngày thực tế ở `PLAN.md`.
 
 ### IV. Tuần 4 - Hoàn thiện và demo (09/11 - 15/11)
 
@@ -203,7 +207,7 @@ gantt
 
 | Thứ tự | Cắt | Không ảnh hưởng |
 |---|---|---|
-| 1 | Toàn bộ E9 (tính năng mở rộng) | MVP |
+| 1 | Toàn bộ E9 (tính năng mở rộng, gồm T314 Trang Địa hình) và bộ câu hỏi 2-5 của T313 | MVP; Thử tài Trainer giữ bộ Hệ số sát thương |
 | 2 | Trang Tổng quan phần 2 (T312) | Hero và 4 lối vào công cụ vẫn còn |
 | 3 | Kết luận tự động của Bàn Cân, chỉ giữ radar | F04 vẫn dùng được |
 | 4 | Chọn hệ kép ở Bảng tương khắc, chỉ giữ ma trận | Lưới phòng thủ ở trang chi tiết vẫn tính hệ kép |

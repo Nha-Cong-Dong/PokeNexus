@@ -160,6 +160,7 @@ describe('LandingPage', () => {
     await userEvent.click(correctOption)
 
     expect(within(quiz).getByText('Chính xác!')).toBeInTheDocument()
+    expect(correctOption).toHaveClass('bg-success!')
     expect(
       within(quiz).getByText(/Electric gây x2 lên Water và x2 lên Flying, nhân lại thành x4\./),
     ).toBeInTheDocument()
@@ -169,7 +170,7 @@ describe('LandingPage', () => {
     expect(within(quiz).getByRole('button', { name: 'x1' })).toBeDisabled()
 
     await userEvent.click(next)
-    expect(within(quiz).getByText('Câu')).toHaveTextContent('Câu 2/5')
+    expect(within(quiz).getByText('Câu')).toHaveTextContent('Câu 2/6')
   })
 
   it('shows per-block errors with the API reason when data is not ready', async () => {

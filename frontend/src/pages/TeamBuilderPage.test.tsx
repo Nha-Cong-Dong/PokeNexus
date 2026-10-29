@@ -104,6 +104,28 @@ describe('TeamBuilderPage', () => {
     ])
   })
 
+  it('asks for recommendations without legendary and Paradox Pokémon when the box is ticked', async () => {
+    const fetchMock = routeFetch({
+      'POST /synergy/analyze': analyzeById({ [SPEC_IDS]: 41 }),
+      'POST /synergy/recommendations': () => jsonResponse(recommendationsOf([TYRANITAR, 92])),
+    })
+    renderTeamRoute(`/team-builder?ids=${SPEC_IDS}`)
+    const toggle = await screen.findByRole('checkbox', {
+      name: 'Loại huyền thoại, thần thoại và Paradox',
+    })
+    expect(toggle).not.toBeChecked()
+
+    await userEvent.click(toggle)
+
+    expect(toggle).toBeChecked()
+    await waitFor(() =>
+      expect(bodiesSentTo(fetchMock, '/synergy/recommendations')).toEqual([
+        { pokemonIds: [6, 130, 149, 663, 637], limit: 3 },
+        { pokemonIds: [6, 130, 149, 663, 637], limit: 3, excludeLegendary: true },
+      ]),
+    )
+  })
+
   it('adds recommendation number 1 to a 4-member team and shows the score increase', async () => {
     const four = [CHARIZARD, GYARADOS, DRAGONITE, TALONFLAME].map((pokemon) => pokemon.id)
     routeFetch({

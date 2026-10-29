@@ -1,6 +1,6 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 0.4 (cập nhật 2026-10-28; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
+- Phiên bản: 0.5 (cập nhật 2026-10-28; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
 
@@ -281,6 +281,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | `/compare` | `ComparePage` | `left`, `right` |
 | `/team-builder` | `TeamBuilderPage` | `ids` (đội nháp, ví dụ `ids=6,130,149`); `add` (thêm một Pokémon vào đội nháp đang có rồi tự xóa khỏi URL, dùng cho nút "Thêm vào đội"); `six` (thành viên slot 6: đề xuất đã chọn hoặc thành viên thứ 6 của đội chia sẻ; chỉ có hiệu lực khi đội nháp đủ 5, reload vẫn giữ) |
 | `/team/:shareCode` | `SharedTeamPage` | |
+| `/terrain/:terrainId?` | `TerrainPage` | `terrainId` trên đường dẫn (13 địa hình; ID lạ chuyển về `/terrain`) |
 | `*` | `NotFoundPage` | |
 
 ### II. Dữ liệu và trạng thái
@@ -290,7 +291,8 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | Dữ liệu từ server | TanStack Query | Danh sách Pokémon, ma trận hệ, kết quả phân tích |
 | Trạng thái chia sẻ được | Query string trên URL | Bộ lọc Omni-Dex, cặp so sánh |
 | Đội nháp | Hook `useTeamDraft` (`useReducer`), đồng bộ URL và `localStorage` | 5 slot Team Builder |
-| Trạng thái giao diện cục bộ | `useState` trong component | Mở hoặc đóng dialog |
+| Tiến độ Trainer | Hook `useTrainerProgress`, `localStorage` khóa `pokenexus.trainer`; mỗi trang giữ một bản và truyền xuống component con | Điểm, chuỗi đúng dài nhất, Ball, huy hiệu của Thử tài Trainer và Who's that Pokémon? |
+| Trạng thái giao diện cục bộ | `useState` trong component | Mở hoặc đóng dialog; ô loại huyền thoại ở Team Builder (không lên URL vì `useTeamDraft` quản lý query string của trang) |
 
 | Query key | `staleTime` | Lý do |
 |---|---|---|
@@ -301,8 +303,9 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | `['compare', left, right]` | `Infinity` | Kết quả xác định theo cặp; không thử lại khi lỗi 4xx |
 | `['pokemon', 'search', q]` | 5 phút | Gợi ý tên khi gõ |
 | `['pokemon', 'generation-count', n]` | `Infinity` | Số loài mỗi thế hệ ở trang Tổng quan |
+| `['pokemon', 'type-pool', type]` | `Infinity` | 100 Pokémon đầu theo ID của một hệ cho trang Địa hình |
 
-- Không thêm thư viện quản lý state toàn cục trong MVP; đội nháp là trạng thái toàn cục duy nhất.
+- Không thêm thư viện quản lý state toàn cục trong MVP; đội nháp là trạng thái toàn cục duy nhất. Tiến độ Trainer không phải state toàn cục: mỗi trang đọc `localStorage` khi mở và ghi lại khi thay đổi.
 - Mỗi route bọc `ErrorBoundary`; lỗi API hiển thị `ErrorState` có nút thử lại ([design-system.md](design-system.md), Phần 5).
 
 ---

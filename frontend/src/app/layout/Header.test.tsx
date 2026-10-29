@@ -36,7 +36,7 @@ describe('Header', () => {
 
     expect(menuButton).toHaveAttribute('aria-expanded', 'true')
     const mobileNav = screen.getByRole('navigation', { name: 'Điều hướng di động' })
-    expect(within(mobileNav).getAllByRole('link')).toHaveLength(4)
+    expect(within(mobileNav).getAllByRole('link')).toHaveLength(5)
   })
 
   it('closes the mobile menu after choosing a destination', async () => {
