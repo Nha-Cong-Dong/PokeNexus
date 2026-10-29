@@ -67,10 +67,11 @@ gh label create "status: blocked" --color 000000 --description "Đang bị chặ
 ```bash
 gh api repos/{owner}/{repo}/milestones -f title="W1 - Ý tưởng và khởi tạo" -f due_on="2026-10-25T23:59:59Z"
 gh api repos/{owner}/{repo}/milestones -f title="W2 - Đặc tả và khung dự án" -f due_on="2026-11-01T23:59:59Z"
-gh api repos/{owner}/{repo}/milestones -f title="W3 - Hoàn thiện và demo" -f due_on="2026-11-08T23:59:59Z"
+gh api repos/{owner}/{repo}/milestones -f title="W3 - Hoàn thiện" -f due_on="2026-11-01T00:00:00Z" -f description="MVP và triển khai production; Checkpoint 3 (01/11)"
+gh api repos/{owner}/{repo}/milestones -f title="W4 - Demo và phát triển" -f due_on="2026-11-08T00:00:00Z" -f description="Tính năng mở rộng tới 04/11, kiểm thử, tài liệu, tổng duyệt, demo; Checkpoint 4 (08/11)"
 ```
 
-- Mỗi milestone kết thúc vào Chủ nhật của tuần tương ứng, tuần 1 bắt đầu ngày 2026-10-18. Lịch dời ngày 2026-10-29 còn 3 tuần ([roadmap.md](roadmap.md) 0.6); repo đã tạo theo bản cũ có `W3 - MVP` và `W4 - Hoàn thiện và demo`: đổi tên W3, đóng W4. `{owner}` và `{repo}` được `gh` tự điền khi chạy trong thư mục repo.
+- W1, W2 kết thúc vào Chủ nhật của tuần tương ứng, tuần 1 bắt đầu ngày 2026-10-18. Ngày 2026-10-29 chủ dự án chia lại hai milestone cuối theo lịch hackathon: `W3 - Hoàn thiện` hạn 01/11, `W4 - Demo và phát triển` hạn 08/11 (đã đổi tên và hạn trên repo; trước đó là `W3 - MVP` hạn 08/11 và `W4 - Hoàn thiện và demo` hạn 15/11). `{owner}` và `{repo}` được `gh` tự điền khi chạy trong thư mục repo.
 - Nội dung từng milestone xem ở [roadmap.md](roadmap.md).
 
 ---
