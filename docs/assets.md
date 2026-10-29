@@ -1,6 +1,7 @@
 # PokeNexus - Kế hoạch quản lý Assets
 
-- Phiên bản: 0.6 (cập nhật 2026-10-28; bộ nhiều ảnh cho mỗi khung cảnh, cỡ 1920 và 960, ngân sách 25 MB theo [ADR 0006](adr/0006-animated-scene-backdrops.md))
+- Phiên bản: 0.7 (cập nhật 2026-10-30; chiều cao `PageHero` 288/480/544 px ở Phần 5; ảnh khung cảnh có vùng vá do AI vẽ theo [ADR 0008](adr/0008-ai-edited-scene-patches.md))
+- Bản 0.6 (2026-10-28): bộ nhiều ảnh cho mỗi khung cảnh, cỡ 1920 và 960, ngân sách 25 MB theo [ADR 0006](adr/0006-animated-scene-backdrops.md).
 - Chiến lược ảnh Pokémon: **Hybrid**. Sprite nhỏ được tự host; artwork lớn lấy từ đường dẫn công khai, có fallback ([ADR 0005](adr/0005-hybrid-image-assets.md)).
 - Dữ liệu CSV không thuộc phạm vi tài liệu này: xem [data/README.md](../data/README.md).
 
@@ -111,7 +112,7 @@
 |---|---|---|
 | Lưới Omni-Dex, kết quả tìm kiếm, slot đội, thẻ đề xuất, trang đội chia sẻ | Sprite | 96 px (lưới), 48 px (tìm kiếm) |
 | Trang chi tiết, Bàn Cân | Artwork | 240 px mobile, 320 px desktop |
-| `PageHero` của mọi trang | Ảnh khung cảnh qua `SceneBackdrop` (`srcset` 960w, 1920w) | Tràn ngang, cao 192 px mobile, 320 px desktop |
+| `PageHero` của mọi trang | Ảnh khung cảnh qua `SceneBackdrop` (`srcset` 960w, 1920w) | Tràn ngang, cao 288 px mobile, 480 px từ `md`, 544 px từ `lg` ([design-system.md](design-system.md), Phần 5) |
 
 ### III. Chuỗi fallback trong `PokemonSprite`
 
@@ -166,4 +167,4 @@ flowchart LR
 - Tên file theo Phần 2; dung lượng trong giới hạn Phần 3.
 - Ảnh trong UI có `alt` phù hợp ([design-system.md](design-system.md), Phần 7).
 - Asset bên thứ ba đã kiểm tra giấy phép và ghi nguồn.
-- Ảnh khung cảnh đã xóa HUD hoặc người thừa: ghi công cụ trong `SOURCES.md` và đã chạy `node scripts/check-image-provenance.mjs` trên file sửa ([design-system.md](design-system.md), Phần 4, mục I).
+- Ảnh khung cảnh đã xóa HUD hoặc người thừa: ghi công cụ và tỷ lệ vẽ lại trong `SOURCES.md`, đã chạy `node scripts/check-image-provenance.mjs` trên file sửa; file có Content Credentials thì chỉ ghép vùng đã xóa vào ảnh gốc ([design-system.md](design-system.md), Phần 4, mục I; [ADR 0008](adr/0008-ai-edited-scene-patches.md)).

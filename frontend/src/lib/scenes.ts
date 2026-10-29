@@ -44,7 +44,7 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#d8efc6',
     ground: '#7fbf5a',
     accent: '#f2c94c',
-    photos: 2,
+    photos: 3,
     ambience: { kind: 'motes', color: '#fff6c2' },
   },
   forest: {
@@ -71,7 +71,7 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#f25c3b',
     ground: '#5a2219',
     accent: '#ee8130',
-    photos: 1,
+    photos: 2,
     ambience: { kind: 'embers', color: '#ffb347' },
   },
   'power-plant': {
@@ -89,7 +89,7 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#f4fbff',
     ground: '#a9c9de',
     accent: '#96d9d6',
-    photos: 1,
+    photos: 4,
     ambience: { kind: 'snow', color: '#ffffff' },
   },
   mountain: {
@@ -98,7 +98,7 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#e2d6c2',
     ground: '#8a7357',
     accent: '#b6a136',
-    photos: 1,
+    photos: 2,
     ambience: { kind: 'motes', color: '#fdf3dc' },
   },
   desert: {
@@ -107,7 +107,7 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#fbe7c0',
     ground: '#c8964f',
     accent: '#e2bf65',
-    photos: 1,
+    photos: 3,
     ambience: { kind: 'sand', color: '#f7e2b5' },
   },
   swamp: {
@@ -116,7 +116,7 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#7a6b8c',
     ground: '#3f354e',
     accent: '#a33ea1',
-    photos: 1,
+    photos: 2,
     ambience: { kind: 'fireflies', color: '#d7b3ff' },
   },
   sky: {
@@ -125,7 +125,7 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#cfe3fb',
     ground: '#f3f8fe',
     accent: '#a98ff3',
-    photos: 1,
+    photos: 2,
     ambience: { kind: 'motes', color: '#ffffff' },
   },
   ruins: {
@@ -161,7 +161,7 @@ export const SCENES: Record<SceneId, Scene> = {
     horizon: '#9fb7d9',
     ground: '#2e4a2e',
     accent: '#ffd23f',
-    photos: 1,
+    photos: 2,
     ambience: { kind: 'sparks', color: '#ffe07a' },
   },
   lab: {

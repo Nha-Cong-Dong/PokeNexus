@@ -1,11 +1,12 @@
 # PokeNexus - Design System và UI Guidelines
 
-- Phiên bản: 0.8 (cập nhật 2026-10-29; bộ chuyển động theo bản thiết kế ngày 2026-10-24: token `--animate-*`, `Reveal`, `staggerDelay`; trang Địa hình; nền khung cảnh nhiều ảnh theo [ADR 0006](adr/0006-animated-scene-backdrops.md))
+- Phiên bản: 0.9 (cập nhật 2026-10-30; bộ chuyển động theo bản thiết kế ngày 2026-10-24: token `--animate-*`, `Reveal`, `staggerDelay`; trang Địa hình; nền khung cảnh nhiều ảnh theo [ADR 0006](adr/0006-animated-scene-backdrops.md); vùng vá do AI vẽ có Content Credentials theo [ADR 0008](adr/0008-ai-edited-scene-patches.md))
 - Phạm vi: định hướng thẩm mỹ, token, font, ảnh khung cảnh, component, pattern, bố cục trang và accessibility cho frontend.
 - Theme: **light là mặc định và bắt buộc ở MVP**. Token đã định nghĩa sẵn cặp light/dark; dark mode là mức Could, chưa xếp lịch ([roadmap.md](roadmap.md), Phần 2).
 - Mọi giá trị màu dùng cho chữ và thành phần giao diện đã được kiểm tra tỷ lệ tương phản theo công thức WCAG 2.x bằng script ngày 2026-10-24.
 - Thay đổi so với 0.2: bỏ font Be Vietnam Pro, đổi bảng màu thương hiệu, thêm trang Tổng quan, thêm nền khung cảnh theo vùng đất. Các mục cần đồng bộ sang tài liệu khác liệt kê ở Phần 11.
 - Thay đổi so với 0.3: Phần 3 trỏ thẳng tới `src/styles/index.css` và `src/main.tsx`, không chép lại mã nguồn.
+- Thay đổi so với 0.8: ảnh đã sửa bằng công cụ AI có Content Credentials được dùng nếu chỉ ghép vùng đã xóa vào ảnh gốc 1920 px, chỉnh màu khớp viền và ghi nhãn trong `SOURCES.md` (Phần 4, mục I.1, I.2; [ADR 0008](adr/0008-ai-edited-scene-patches.md)); bộ ảnh lên 36 ảnh, hết ngoại lệ 1280 px.
 - Bản 0.8, bổ sung ngày 2026-10-29: khung cảnh `PageHero` cao hơn (288/480/544 px), đáy chuyển mượt sang nền trang (`scene-fade`), theo phản hồi "ảnh nền quá bé, trang bị bó lại".
 - Thay đổi so với 0.7: bỏ giới hạn "một khoảnh khắc chuyển động mỗi trang"; dùng bộ chuyển động của bản thiết kế hi-fi ngày 2026-10-24 (vào trang, hiện khi cuộn tới, đổi dữ liệu) theo yêu cầu chủ dự án ngày 2026-10-29 (T315). Phần 2, mục VII và Phần 7, mục II cập nhật.
 - Thay đổi so với 0.6: thêm bố cục trang Địa hình (Phần 7, mục II.2) và quy tắc ghi đè màu nút bằng modifier `!`.
@@ -299,16 +300,17 @@
   - Ảnh nguồn rộng từ 1920 px; không phóng to ảnh nhỏ hơn.
 - Bản quyền hình ảnh thuộc Nintendo, Game Freak, The Pokémon Company, giống sprite và artwork ([ADR 0005](adr/0005-hybrid-image-assets.md)). Dùng phi thương mại, ghi nguồn từng ảnh trong `frontend/public/scenes/SOURCES.md` (tên game, vị trí trong game, người chụp hoặc URL nguồn).
 - Nguồn đã dùng: Bulbagarden Archives (ảnh chụp game, ảnh bìa Nintendo Music, ảnh Wild Zone của Legends: Z-A). Tìm qua API MediaWiki của trang, tải chậm (3 giây mỗi request, trang trả 403 khi tải dồn), xem từng ảnh trước khi chọn. Ảnh trên trang chính thức của game quá nhỏ (tối đa 1367 px); nguồn đã loại ghi ở `SOURCES.md`, mục II.
-- Trạng thái ngày 2026-10-28: 15/15 scene có ảnh, 25 ảnh, 50 file, 5,8 MB. Số ảnh mỗi scene: `sea`, `lab` 3; `grassland`, `forest`, `power-plant`, `ruins`, `haunted`, `flower-garden` 2; còn lại 1. Mục tiêu 4-5 ảnh mỗi scene chưa đạt vì thiếu ảnh 1920 px đạt chuẩn; bổ sung bằng ảnh đã xóa HUD, nhân vật theo mục 1, 2.
-- Ngoại lệ tạm thời: scene chưa có ảnh 1920 px đạt chuẩn được giữ ảnh 1280 x 720 đang dùng, phóng lên 1920 và ghi "Ngoại lệ" trong `SOURCES.md` (`volcano`, `swamp`, `stadium`); thay ngay khi có ảnh đạt chuẩn. Ảnh có viền đen trên dưới được cắt viền trước khi cắt 16:9.
+- Trạng thái ngày 2026-10-30: 15/15 scene có ảnh, 36 ảnh, 72 file, 8,2 MB; mọi ảnh từ nguồn 1920 px. Số ảnh mỗi scene: `snowfield` 4; `grassland`, `sea`, `desert`, `lab` 3; còn lại 2. 13 ảnh đã xóa nhân vật, bóng, minimap hoặc chữ theo mục 1, 2. Mục tiêu 4-5 ảnh mỗi scene là mức Could.
+- Ngoại lệ tạm thời: scene chưa có ảnh 1920 px đạt chuẩn được giữ ảnh nhỏ hơn đang dùng, phóng lên 1920 và ghi "Ngoại lệ" trong `SOURCES.md`; thay ngay khi có ảnh đạt chuẩn. Hiện không còn ngoại lệ: `stadium` thay ngày 2026-10-29, `volcano` và `swamp` thay ngày 2026-10-30. Ảnh có viền đen trên dưới được cắt viền trước khi cắt 16:9.
 - Mỗi scene có số ảnh `photos` trong `src/lib/scenes.ts`; `photos: 0` thì `SceneBackdrop` chỉ vẽ gradient, không gửi request ảnh.
 
 #### 1. Xóa HUD, người hoặc Pokémon thừa
 
 - Chỉ được xóa: HUD, minimap, chữ chèn, người hoặc Pokémon thừa. Không thêm vật thể mới, không đổi bố cục, bầu trời, mùa, ánh sáng.
 - Vùng phải vẽ lại nhỏ so với toàn ảnh. Ảnh mà phần lớn nội dung phải vẽ lại (ví dụ nhân vật chiếm giữa khung) thì loại, không sửa.
-- Công cụ được dùng: công cụ vá thường (Clone Stamp, Healing, GIMP Heal) hoặc công cụ sửa ảnh bằng AI, kể cả plugin MCP `nano-banana` (Gemini 2.5 Flash Image) trong Claude Code. Giữ file gốc chưa sửa ở thư mục làm việc (không commit) để đối chiếu.
-- Ghi vào cột "Xử lý" của `frontend/public/scenes/SOURCES.md`: đã xóa gì, bằng công cụ nào (ví dụ "Xóa minimap và nhân vật bằng GIMP Heal"). Ảnh sửa bằng công cụ có watermark ẩn ghi thêm tên watermark (ví dụ "Sửa bằng Gemini 2.5 Flash Image, có SynthID").
+- Công cụ được dùng: công cụ vá thường (Clone Stamp, Healing, GIMP Heal) hoặc công cụ sửa ảnh bằng AI, kể cả plugin MCP `nano-banana` (Gemini 2.5 Flash Image) trong Claude Code và ChatGPT. Giữ file gốc chưa sửa và file công cụ xuất ra ở thư mục làm việc (không commit) để đối chiếu.
+- Công cụ AI thường vẽ lại cả khung (ChatGPT ngày 2026-10-30: lệch màu 3-25 mức ngoài vùng cần xóa, ảnh ra 1672 x 941). Vì vậy chỉ lấy vùng đã xóa, ghép vào ảnh gốc 1920 px, chỉnh màu vùng ghép cho khớp viền ảnh gốc; phần ngoài vùng ghép giữ nguyên điểm ảnh gốc. Khung vùng ghép phải trùm cả bóng và vệt bụi của vật đã xóa.
+- Ghi vào cột "Xử lý" của `frontend/public/scenes/SOURCES.md`: đã xóa gì, bằng công cụ nào (ví dụ "Xóa minimap và nhân vật bằng GIMP Heal"). Ảnh sửa bằng công cụ có watermark ẩn ghi thêm tên watermark (ví dụ "Sửa bằng Gemini 2.5 Flash Image, có SynthID"); công cụ gắn Content Credentials thì ghi thêm điều này và tỷ lệ diện tích vẽ lại.
 
 #### 2. Kiểm duyệt dấu vết AI (bắt buộc với mọi ảnh đã sửa)
 
@@ -317,12 +319,12 @@
 | Kiểm tra | Cách làm | Dấu hiệu phải loại |
 |---|---|---|
 | Watermark nhìn thấy | Xem ảnh ở 100%, soát 4 góc và các mép | Logo, chữ, biểu tượng của công cụ AI (chữ "AI", "Generated", biểu tượng ngôi sao...) |
-| Metadata nguồn gốc | `node scripts/check-image-provenance.mjs <file>`; kết quả `LOẠI` thì thoát mã 1 | Manifest C2PA (Content Credentials); IPTC `DigitalSourceType` là `trainedAlgorithmicMedia` hoặc `compositeWithTrainedAlgorithmicMedia`; tên công cụ AI trong EXIF, XMP, PNG text; tham số prompt |
+| Metadata nguồn gốc | `node scripts/check-image-provenance.mjs <file>`; kết quả `LOẠI` thì thoát mã 1 | Không loại file đã sửa, mà bắt buộc ghép vùng theo mục 1 và ghi nhãn ([ADR 0008](adr/0008-ai-edited-scene-patches.md)). Ảnh nguồn chưa sửa có kết quả `LOẠI` thì loại. Dấu hiệu: manifest C2PA (Content Credentials); IPTC `DigitalSourceType` là `trainedAlgorithmicMedia` hoặc `compositeWithTrainedAlgorithmicMedia`; tên công cụ AI trong EXIF, XMP, PNG text; tham số prompt |
 | Dấu vết vẽ lại | So với ảnh gốc ở 100% tại vùng đã xóa | Vân lặp, vật thể méo, chữ vô nghĩa, đường chân trời gãy |
 
-- Có bất kỳ dấu hiệu nào trong bảng: loại ảnh đã sửa, giữ ảnh đang dùng của scene đó; không thêm ảnh đã sửa vào bộ ảnh. Không xóa metadata hoặc che watermark để vượt qua bước này.
+- Có watermark nhìn thấy hoặc dấu vết vẽ lại không sửa được: loại ảnh đã sửa, giữ ảnh đang dùng của scene đó. Không che watermark; không dùng nguyên file có Content Credentials mà bỏ metadata, chỉ được ghép vùng đã xóa và ghi nhãn như trên.
 - Watermark ẩn trong điểm ảnh (ví dụ SynthID, mà Google ghi là có trong mọi ảnh do Gemini API sinh ra) được chấp nhận từ ngày 2026-10-28, với điều kiện ghi rõ trong cột "Xử lý" của `SOURCES.md`. Script và mắt thường không phát hiện được loại watermark này, nên nguồn thông tin là tài liệu của công cụ đã dùng.
-- Nhiều công cụ AI tự gắn Content Credentials vào file xuất ra, nên ảnh sửa bằng các công cụ đó sẽ bị loại ở bước này. Công cụ vá không dùng AI tạo sinh (Clone Stamp, Healing, GIMP Heal) không gắn dấu này.
+- Nhiều công cụ AI tự gắn Content Credentials vào file xuất ra (ChatGPT gắn manifest C2PA ký bởi OpenAI). Từ ngày 2026-10-30 các file này đi theo quy trình ghép vùng ở mục 1 thay vì bị loại ([ADR 0008](adr/0008-ai-edited-scene-patches.md)). Công cụ vá không dùng AI tạo sinh (Clone Stamp, Healing, GIMP Heal) không gắn dấu này.
 
 ### II. Định dạng, thư mục, dung lượng
 
