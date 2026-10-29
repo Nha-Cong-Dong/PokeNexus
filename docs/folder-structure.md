@@ -1,6 +1,6 @@
 # PokeNexus - Cấu trúc thư mục
 
-- Phiên bản: 0.3 (cập nhật 2026-10-28; thêm `features/trainer/`, `features/terrain/`, `TerrainPage`)
+- Phiên bản: 0.4 (cập nhật 2026-10-29; Phần 4: `db-dump.sh` xuất, nhập dữ liệu cho production, script chỉ có bản Bash trừ `download-csv`. Bản 0.3: thêm `features/trainer/`, `features/terrain/`, `TerrainPage`)
 - Đây là cấu trúc **đích** khi xong MVP. Thư mục, file nào chưa tồn tại thì được tạo ở task ghi trong cột "Tạo ở" (mã task theo [roadmap.md](roadmap.md)).
 - Thêm hoặc đổi tên package, thư mục cấp 1-2 thì cập nhật tài liệu này trong cùng PR.
 
@@ -231,10 +231,10 @@ frontend/
 | Script | Mục đích | Tạo ở |
 |---|---|---|
 | `scripts/download-csv.sh`, `.ps1` | Tải bộ CSV vào `data/csv/` (chuyển từ lệnh trong `data/README.md`) | T205 |
-| `scripts/download-sprites.sh`, `.ps1` | Tải sprite vào `frontend/public/sprites/pokemon/` ([assets.md](assets.md), Phần 4) | T207 |
-| `scripts/db-dump.sh`, `.ps1` | Xuất và nhập `mysqldump` | T205 |
+| `scripts/download-sprites.sh` | Tải sprite vào `frontend/public/sprites/pokemon/` ([assets.md](assets.md), Phần 4) | T207 |
+| `scripts/db-dump.sh` | `export`: xuất dữ liệu tĩnh và schema rỗng của bảng đội từ container MySQL local vào `data/dumps/`; `import`: nhập vào DB đích theo `TARGET_DB_URL` ([architecture.md](architecture.md), Phần 11, mục III) | T403 |
 | `scripts/bench-synergy.sh` | Gọi 100 lần endpoint synergy, in p50, p95 | T305 |
 | `scripts/check-image-provenance.mjs` | Tìm dấu vết AI (C2PA, IPTC `DigitalSourceType`, tên công cụ AI) trong metadata ảnh đã sửa ([design-system.md](design-system.md), Phần 4, mục I, 2) | ADR 0006 |
 
-- Mỗi script có cả bản Bash (macOS, Linux, Git Bash) và PowerShell, trừ script đo hiệu năng chỉ cần Bash.
+- Script Bash chạy được trên macOS, Linux và Git Bash (Windows). Chỉ `download-csv` có thêm bản PowerShell vì nằm trong mục "Chạy nhanh" của README.
 - Script chạy từ thư mục gốc repo, không dùng đường dẫn tuyệt đối.
