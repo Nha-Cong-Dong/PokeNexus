@@ -163,8 +163,6 @@
   --animate-float-shadow: float-shadow 3.2s 600ms ease-in-out infinite alternate;
   --animate-fly-in-left: fly-in-left 680ms 220ms var(--ease-spring) both;
   --animate-fly-in-right: fly-in-right 680ms 300ms var(--ease-spring) both;
-  --animate-half-in-left: half-in-left 420ms var(--ease-emphasized) both;
-  --animate-half-in-right: half-in-right 420ms var(--ease-emphasized) both;
   --animate-vs-pop: vs-pop 480ms 480ms var(--ease-overshoot) both;
   --animate-radar-in: radar-in 700ms 300ms var(--ease-emphasized) both;
   --animate-pulse-ring: pulse-ring 1.2s ease-out 3;
@@ -358,28 +356,6 @@
       transform: translateX(-12px) rotate(-4deg) scale(1.04);
     }
     100% {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  @keyframes half-in-left {
-    from {
-      opacity: 0;
-      transform: translateX(-30%);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  @keyframes half-in-right {
-    from {
-      opacity: 0;
-      transform: translateX(30%);
-    }
-    to {
       opacity: 1;
       transform: none;
     }

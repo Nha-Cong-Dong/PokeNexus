@@ -1,8 +1,11 @@
-import { screen, waitFor, within } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { createMemoryRouter, RouterProvider } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { renderRoute, stubFetch } from '../test/renderRoute'
+import { routes } from './router'
 
 const renderAt = renderRoute
 
@@ -48,6 +51,20 @@ describe('app routes', () => {
 
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
     expect(screen.getByRole('heading', { level: 1, name: heading })).toBeInTheDocument()
+  })
+
+  it('keeps the layout visible while the page module loads on demand', async () => {
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/types'] })
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <RouterProvider router={memoryRouter} />
+      </QueryClientProvider>,
+    )
+
+    expect(screen.getByRole('navigation', { name: 'Điều hướng chính' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Bảng tương khắc' }),
+    ).toBeInTheDocument()
   })
 
   it('passes the route parameter to the detail page', async () => {

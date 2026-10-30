@@ -90,11 +90,6 @@ export interface CompareResponse {
   }
 }
 
-export interface TypeInfo {
-  id: number
-  name: TypeName
-}
-
 export interface TypeMatrix {
   types: TypeName[]
   multipliers: number[][]
