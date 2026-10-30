@@ -25,6 +25,7 @@ const SPECIES_COUNT = 1025
 const RESULTS_TITLE_ID = 'results-title'
 const SEARCH_LABEL = 'Tìm Pokémon theo tên'
 const SEARCH_PLACEHOLDER = 'Ví dụ: garchomp'
+const COMPACT_SEARCH_PLACEHOLDER = 'Tìm Pokémon theo tên'
 
 export function DexPage() {
   const { filter, view, updateFilter, setPage, setView, clearFilter, activeCount } =
@@ -42,6 +43,9 @@ export function DexPage() {
         ? '0 Pokémon'
         : `Hiển thị ${formatNumber(data.page * data.size + 1)}–${formatNumber(data.page * data.size + data.content.length)} trong ${formatNumber(data.totalElements)} Pokémon`
 
+  const compactCount = data ? `${formatNumber(data.totalElements)} Pokémon` : 'Pokémon'
+  const pageLabel = data && data.totalPages > 0 ? `Trang ${data.page + 1}/${data.totalPages}` : ''
+
   const clearButton = (
     <button type="button" onClick={clearFilter} className={buttonClassName('primary')}>
       Xóa bộ lọc
@@ -53,7 +57,17 @@ export function DexPage() {
       <PageHero
         scene="grassland"
         title="Pokédex"
-        subtitle={`${formatNumber(SPECIES_COUNT)} loài từ Thế hệ 1 đến 9. Lọc theo hệ, thế hệ và tổng chỉ số; chọn tối đa 2 hệ.`}
+        subtitle={
+          <>
+            <span className="md:hidden">
+              {formatNumber(SPECIES_COUNT)} loài, lọc theo hệ, thế hệ và BST.
+            </span>
+            <span className="hidden md:inline">
+              {formatNumber(SPECIES_COUNT)} loài từ Thế hệ 1 đến 9. Lọc theo hệ, thế hệ và tổng chỉ
+              số; chọn tối đa 2 hệ.
+            </span>
+          </>
+        }
       />
       <PageBody scene="grassland" className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <aside
@@ -88,10 +102,14 @@ export function DexPage() {
               <h2
                 id={RESULTS_TITLE_ID}
                 aria-live="polite"
-                className="text-xl font-extrabold lg:text-[22px] lg:leading-7"
+                className="text-xl font-extrabold max-lg:sr-only lg:text-[22px] lg:leading-7"
               >
                 {countLabel}
               </h2>
+              <p aria-hidden="true" className="flex items-baseline gap-3 lg:hidden">
+                <span className="text-xl font-extrabold">{compactCount}</span>
+                {pageLabel && <span className="text-sm font-bold text-ink-muted">{pageLabel}</span>}
+              </p>
               <ViewToggle view={view} onChange={setView} />
             </div>
             <DexToolbar
@@ -102,8 +120,9 @@ export function DexPage() {
               search={
                 <PokemonSearchBox
                   label={SEARCH_LABEL}
-                  placeholder={SEARCH_PLACEHOLDER}
+                  placeholder={COMPACT_SEARCH_PLACEHOLDER}
                   onSelect={openPokemon}
+                  hideLabel
                 />
               }
             />

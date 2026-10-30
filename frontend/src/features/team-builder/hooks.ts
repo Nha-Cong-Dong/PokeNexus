@@ -1,4 +1,5 @@
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 
 import {
   analyzeTeam,
@@ -44,4 +45,24 @@ export function useSharedTeam(shareCode: string) {
     enabled: isValidShareCode(shareCode),
     staleTime: Infinity,
   })
+}
+
+type ScoreHistory = {
+  teamKey: string
+  score: number
+  delta: number
+}
+
+export function useScoreDelta(score: number | undefined, teamKey: string): number {
+  const [history, setHistory] = useState<ScoreHistory | null>(null)
+  if (score === undefined) {
+    if (history !== null) setHistory(null)
+    return 0
+  }
+  if (history === null || history.teamKey !== teamKey) {
+    const delta = history === null ? 0 : Math.round(score) - Math.round(history.score)
+    setHistory({ teamKey, score, delta })
+    return delta
+  }
+  return history.delta
 }

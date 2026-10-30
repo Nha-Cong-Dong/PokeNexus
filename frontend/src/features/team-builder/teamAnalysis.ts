@@ -39,8 +39,8 @@ export function formatScore(score: number): string {
 }
 
 export function scoreBarClassName(score: number): string {
-  if (score >= 50) return 'bg-success'
-  if (score >= 20) return 'bg-warning'
+  if (score >= 50) return 'bg-stat-good'
+  if (score >= 20) return 'bg-stat-mid'
   return 'bg-danger'
 }
 

@@ -540,8 +540,225 @@
   }
 }
 
+@theme {
+  --color-band-sky: #e6f3ff;
+  --color-band-lilac: #efeaff;
+  --color-band-peach: #ffeee4;
+  --color-band-rose: #ffe8e4;
+  --color-band-cream: #fff4de;
+  --color-band-apricot: #ffedde;
+  --color-band-mint: #e4f6ec;
+  --color-band-violet: #ece7ff;
+  --color-band-ice: #e2eeff;
+
+  --color-isle-grassland: #e6f5da;
+  --color-isle-grassland-ink: #2f6b15;
+  --color-isle-sea: #e2eeff;
+  --color-isle-volcano: #ffe7d6;
+  --color-isle-volcano-ink: #a63f00;
+  --color-isle-stadium: #ece6ff;
+  --color-isle-stadium-ink: #5b3fc4;
+
+  --color-scrim-raised: #1d2840;
+  --color-dex-red-deep: #8e0b21;
+  --color-dex-red-edge: #7e0a1e;
+  --color-answer-hover: #fff4c2;
+
+  --animate-drift-a: drift-a 19s ease-in-out infinite alternate;
+  --animate-drift-b: drift-b 23s ease-in-out infinite alternate;
+  --animate-cloud: cloud 70s linear infinite;
+  --animate-twinkle: twinkle 2.8s ease-in-out infinite;
+  --animate-orb: orb 5s ease-in-out infinite alternate;
+  --animate-trail-flow: trail-flow 1.4s linear infinite;
+  --animate-isle-shadow: float-shadow 3.4s ease-in-out infinite alternate;
+  --animate-ring-in: ring-in 1500ms 550ms var(--ease-emphasized) both;
+  --animate-spin-slow: spin-slow 60s linear infinite;
+  --animate-path-draw: draw 1800ms 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+
+  @keyframes drift-a {
+    from {
+      transform: translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate(70px, -50px) scale(1.12);
+    }
+  }
+
+  @keyframes drift-b {
+    from {
+      transform: translate(0, 0) scale(1.08);
+    }
+    to {
+      transform: translate(-80px, 40px) scale(0.94);
+    }
+  }
+
+  @keyframes cloud {
+    from {
+      transform: translateX(-320px);
+    }
+    to {
+      transform: translateX(calc(100vw + 320px));
+    }
+  }
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.45;
+      transform: scale(0.55) rotate(0deg);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.1) rotate(45deg);
+    }
+  }
+
+  @keyframes orb {
+    from {
+      transform: translateY(0) rotate(-6deg);
+    }
+    to {
+      transform: translateY(-22px) rotate(6deg);
+    }
+  }
+
+  @keyframes trail-flow {
+    to {
+      stroke-dashoffset: -32;
+    }
+  }
+
+  @keyframes ring-in {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) rotateX(74deg) rotate(-220deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) rotateX(74deg) rotate(0deg);
+    }
+  }
+
+  @keyframes spin-slow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@utility type-blob {
+  background-image: radial-gradient(
+    circle at 34% 28%,
+    white 0%,
+    color-mix(in oklab, var(--type-base, var(--color-border)) 45%, white) 46%,
+    var(--type-base, var(--color-border)) 100%
+  );
+}
+
+@utility type-ring {
+  background-image: conic-gradient(
+    transparent 0deg 1.5deg,
+    var(--color-type-normal) 1.5deg 18.5deg,
+    transparent 18.5deg 21.5deg,
+    var(--color-type-fire) 21.5deg 38.5deg,
+    transparent 38.5deg 41.5deg,
+    var(--color-type-water) 41.5deg 58.5deg,
+    transparent 58.5deg 61.5deg,
+    var(--color-type-electric) 61.5deg 78.5deg,
+    transparent 78.5deg 81.5deg,
+    var(--color-type-grass) 81.5deg 98.5deg,
+    transparent 98.5deg 101.5deg,
+    var(--color-type-ice) 101.5deg 118.5deg,
+    transparent 118.5deg 121.5deg,
+    var(--color-type-fighting) 121.5deg 138.5deg,
+    transparent 138.5deg 141.5deg,
+    var(--color-type-poison) 141.5deg 158.5deg,
+    transparent 158.5deg 161.5deg,
+    var(--color-type-ground) 161.5deg 178.5deg,
+    transparent 178.5deg 181.5deg,
+    var(--color-type-flying) 181.5deg 198.5deg,
+    transparent 198.5deg 201.5deg,
+    var(--color-type-psychic) 201.5deg 218.5deg,
+    transparent 218.5deg 221.5deg,
+    var(--color-type-bug) 221.5deg 238.5deg,
+    transparent 238.5deg 241.5deg,
+    var(--color-type-rock) 241.5deg 258.5deg,
+    transparent 258.5deg 261.5deg,
+    var(--color-type-ghost) 261.5deg 278.5deg,
+    transparent 278.5deg 281.5deg,
+    var(--color-type-dragon) 281.5deg 298.5deg,
+    transparent 298.5deg 301.5deg,
+    var(--color-type-dark) 301.5deg 318.5deg,
+    transparent 318.5deg 321.5deg,
+    var(--color-type-steel) 321.5deg 338.5deg,
+    transparent 338.5deg 341.5deg,
+    var(--color-type-fairy) 341.5deg 358.5deg,
+    transparent 358.5deg 360deg
+  );
+  mask-image: radial-gradient(
+    farthest-side,
+    transparent 68%,
+    black 69%,
+    black 97%,
+    transparent 98%
+  );
+}
+
+@utility scan-grid {
+  background-image:
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.07) 0 1px, transparent 1px 20px),
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.07) 0 1px, transparent 1px 20px);
+}
+
+@utility aura-mask {
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0,
+    black var(--aura-fade, 150px),
+    black calc(100% - var(--aura-fade, 150px)),
+    transparent 100%
+  );
+}
+
+@utility bar-stripes {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgb(255 255 255 / 0.18) 0 6px,
+    transparent 6px 14px
+  );
+}
+
+@utility dot-field {
+  background-image: radial-gradient(
+    color-mix(in oklab, var(--color-accent) 18%, transparent) 1.3px,
+    transparent 1.7px
+  );
+  background-size: 22px 22px;
+}
+
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: var(--outline-width, 2px) var(--outline-color, rgb(22 33 62 / 0.08));
+}
+
+@layer components {
+  .reveal:not(.is-in) .reveal-draw {
+    stroke-dashoffset: 100;
+  }
+
+  .reveal.is-in .reveal-draw {
+    animation: var(--animate-path-draw);
+  }
+}
+
 @utility type-card {
   background-color: var(--type-deep);
+  background-image: radial-gradient(
+    circle at 88% 78%,
+    color-mix(in oklab, white 18%, transparent),
+    transparent 45%
+  );
   box-shadow: 0 4px 0 color-mix(in oklab, var(--type-deep) 55%, var(--pn-ink));
 }
 

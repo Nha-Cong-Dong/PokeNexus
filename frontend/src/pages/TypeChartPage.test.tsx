@@ -86,12 +86,99 @@ describe('TypeChartPage', () => {
     const memoryRouter = renderRoute('/types?def=ghost')
     await screen.findByRole('table')
 
-    expect(screen.getByText('Chọn thêm 1 hệ nếu Pokémon có hệ kép.')).toBeInTheDocument()
+    expect(screen.getByText('Chọn thêm 1 hệ nếu Pokémon có hệ kép')).toBeInTheDocument()
+    expect(screen.getByText('Chọn thêm 1 hệ cho Pokémon hệ kép.')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Bỏ chọn' }))
 
     expect(memoryRouter.state.location.search).toBe('')
-    expect(screen.getByText(/^Chưa chọn hệ nào\./)).toBeInTheDocument()
+    expect(screen.getByText('Chưa chọn hệ nào.')).toBeInTheDocument()
+    expect(screen.getByText('Chọn hệ ở bên trái')).toBeInTheDocument()
+    expect(screen.getByText('Chọn 1 hoặc 2 hệ.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Bỏ chọn' })).toBeDisabled()
+  })
+
+  it('summarises a single weakness and tells a full pick how to swap', async () => {
+    stubFetch(jsonResponse(TYPE_MATRIX_FIXTURE))
+    renderRoute('/types?def=water&def=ground')
+    await screen.findByRole('table')
+
+    expect(
+      screen.getByText(
+        'Water + Ground chỉ có một điểm yếu: Grass, và đòn đó gây x4. Kháng 4 hệ và miễn nhiễm Electric.',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Đã chọn đủ 2 hệ. Chạm một hệ đang chọn để đổi.')).toBeInTheDocument()
+    expect(resultRow('x4')).toHaveTextContent(/^x4Grass$/)
+  })
+
+  it('keeps x1 cells empty on screen but readable as x1', async () => {
+    stubFetch(jsonResponse(TYPE_MATRIX_FIXTURE))
+    renderRoute('/types')
+
+    const table = await screen.findByRole('table')
+    const neutralCell = within(table).getByTitle('Fire tấn công Normal: x1')
+
+    expect(neutralCell).toHaveTextContent(/^x1$/)
+    expect(within(neutralCell).getByText('x1')).toHaveClass('sr-only')
+    expect(within(table).getByTitle('Fire tấn công Grass: x2')).toHaveTextContent(/^x2$/)
+  })
+
+  it('highlights an attacking row and summarises it in the aside', async () => {
+    stubFetch(jsonResponse(TYPE_MATRIX_FIXTURE))
+    renderRoute('/types')
+    const table = await screen.findByRole('table')
+
+    expect(screen.getByRole('complementary', { name: 'Chưa chọn' })).toBeInTheDocument()
+    const fireButton = within(within(table).getByRole('rowheader', { name: 'Fire' })).getByRole(
+      'button',
+    )
+    expect(fireButton).toHaveAttribute('aria-pressed', 'false')
+
+    await userEvent.click(fireButton)
+
+    expect(fireButton).toHaveAttribute('aria-pressed', 'true')
+    const aside = screen.getByRole('complementary', { name: 'Fire tấn công' })
+    expect(within(aside).getByRole('list', { name: 'Gây x2 lên' })).toHaveTextContent(
+      /^GrassIceBugSteel$/,
+    )
+    expect(within(aside).getByRole('list', { name: 'Bị giảm còn x½ khi đánh' })).toHaveTextContent(
+      /^FireWaterRockDragon$/,
+    )
+    expect(within(aside).queryByRole('list', { name: 'Không tác dụng lên' })).toBeNull()
+    expect(within(aside).getByText('Không có')).toBeInTheDocument()
+    expect(within(table).getByTitle('Fire tấn công Grass: x2')).not.toHaveClass('opacity-20')
+    expect(within(table).getByTitle('Water tấn công Fire: x2')).toHaveClass('opacity-20')
+
+    await userEvent.click(within(aside).getByRole('button', { name: 'Bỏ chọn' }))
+
+    expect(fireButton).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByRole('complementary', { name: 'Chưa chọn' })).toBeInTheDocument()
+    expect(within(table).getByTitle('Water tấn công Fire: x2')).not.toHaveClass('opacity-20')
+  })
+
+  it('highlights a defending column and toggles it off with a second press', async () => {
+    stubFetch(jsonResponse(TYPE_MATRIX_FIXTURE))
+    renderRoute('/types')
+    const table = await screen.findByRole('table')
+    const groundButton = within(
+      within(table).getByRole('columnheader', { name: 'Ground' }),
+    ).getByRole('button')
+
+    await userEvent.click(groundButton)
+
+    expect(groundButton).toHaveAttribute('aria-pressed', 'true')
+    const aside = screen.getByRole('complementary', { name: 'Ground phòng thủ' })
+    expect(within(aside).getByRole('list', { name: 'Yếu trước' })).toHaveTextContent(
+      /^WaterGrassIce$/,
+    )
+    expect(within(aside).getByRole('list', { name: 'Miễn nhiễm' })).toHaveTextContent(/^Electric$/)
+    expect(within(table).getByTitle('Water tấn công Ground: x2')).not.toHaveClass('opacity-20')
+    expect(within(table).getByTitle('Ground tấn công Water: x1')).toHaveClass('opacity-20')
+
+    await userEvent.click(groundButton)
+
+    expect(groundButton).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByRole('complementary', { name: 'Chưa chọn' })).toBeInTheDocument()
   })
 
   it('shows a Vietnamese error with a retry button when the matrix fails to load', async () => {

@@ -1,12 +1,13 @@
 # PokeNexus - Lộ trình 3 tuần
 
-- Phiên bản: 0.8 (cập nhật 2026-10-29)
+- Phiên bản: 0.9 (cập nhật 2026-10-30)
 - Thay đổi so với 0.2: thêm trang Tổng quan (T311, T312) và chuyển Omni-Dex sang `/pokedex` theo [spec.md](spec.md) 1.2; thêm thứ tự cắt cho trang Tổng quan ở Phần 4.
 - Thay đổi so với 0.3: bỏ T406 (slide, video demo); ngày 14/11 thành buffer. Kịch bản demo ở [spec.md](spec.md), Phần 4 vẫn giữ và chạy trực tiếp ở T310, T403, T407.
 - Thay đổi so với 0.4: thêm T313 (Thử tài Trainer 5 bộ câu hỏi và phần thưởng) và T314 (Trang Địa hình, F08) theo [spec.md](spec.md) 1.4, mức Could, làm sớm ngày 2026-10-28; thêm vào thứ tự cắt ở Phần 4.
 - Thay đổi so với 0.5: dời mốc theo lịch hackathon (review Checkpoint 2, Issue #43). MVP là mốc Checkpoint 3 ngày 01/11, triển khai và demo là Checkpoint 4 ngày 08/11 (bản cũ ghi 15/11). Bỏ tuần 4: T401-T407 dời vào 30/10 - 08/11, T403 làm sớm 30-31/10, đóng băng tính năng từ 05/11; T402 thay bằng T313-T315; thêm T315 (hiệu ứng chuyển động theo bản thiết kế ngày 2026-10-24). Ngày của task đã xong ghi theo ngày làm thực tế.
 - Thay đổi so với 0.6: Goal Checkpoint 4 theo chủ dự án: bản hoàn chỉnh chạy thật (không lỗi, đúng thiết kế, đủ F01-F08, thêm tính năng mở rộng nếu kịp), tiêu chí hoàn thành đo được theo ngưỡng chuẩn (Core Web Vitals, dải điểm Lighthouse, WCAG AA); T404 kiểm tra theo các ngưỡng này; quy tắc làm tính năng mở rộng 01/11 - 04/11 (Phần 4, mục I); ngày T102-T104, T201-T209 theo ngày làm thực tế; bỏ ghi chú buffer 14/11 nằm ngoài lịch.
 - Thay đổi so với 0.7: milestone GitHub chia lại theo chủ dự án: `W3 - Hoàn thiện` hạn 01/11 (MVP và triển khai production), `W4 - Demo và phát triển` hạn 08/11 (tính năng mở rộng, kiểm thử, tài liệu, tổng duyệt, demo); trước 08/11 mọi thứ phải sẵn sàng chạy thật. Issue T401-T407 là #49-#53. Hosting chốt ở [ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md).
+- Thay đổi so với 0.8: thêm T316 (giao diện 8 trang khớp bản thiết kế ngày 2026-10-24, đối chiếu 14 artboard) theo yêu cầu của chủ dự án ngày 2026-10-30, mức Should, làm trước ngày đóng băng tính năng 05/11.
 - Thời gian: 2026-10-18 đến 2026-11-08, một người phát triển (Full-stack).
 - Mỗi tuần tương ứng một **Milestone** trên GitHub, mỗi task là một Issue ([github-setup.md](github-setup.md)).
 - Quy trình nhánh, PR, tag: [git-workflow.md](git-workflow.md).
@@ -163,8 +164,9 @@ gantt
 | T313 | 28/10 | Thử tài Trainer: 5 bộ câu hỏi, phần thưởng, Thẻ Trainer | E7 | Could | T312, [spec.md](spec.md), Phần 2, mục VII | `quiz.ts` 5 bộ, `features/trainer/` | Mỗi câu về hệ có đúng 1 đáp án trên ma trận thật; hết bộ nhận Ball, đúng 5/6 nhận huy hiệu, reload giữ điểm |
 | T314 | 28/10 | Trang Địa hình và minigame Who's that Pokémon? | E9 | Could | [spec.md](spec.md), Phần 2, mục VIII | `TerrainPage`, `features/terrain/`, route `/terrain/:terrainId?` | 13 địa hình phủ 18 hệ; Núi lửa hiện Pokémon hệ Fire; chuỗi 5 câu đúng nhận huy hiệu; 375 px không cuộn ngang |
 | T315 | 29/10 | Hiệu ứng chuyển động theo bản thiết kế ngày 2026-10-24 | E7 | Could | Canvas thiết kế (14 artboard), [design-system.md](design-system.md), Phần 2, mục VII | Token `--animate-*` trong `index.css`, `Reveal`, `staggerDelay`, áp dụng cho 9 trang | Mỗi trang có chuyển động vào trang theo thiết kế; `prefers-reduced-motion` hiện ngay trạng thái cuối; lint, test, build xanh; 375 px không cuộn ngang |
+| T316 | 30/10 | Giao diện khớp bản thiết kế ngày 2026-10-24 | E7 | Should | Canvas thiết kế (14 artboard), [design-system.md](design-system.md) 1.0 | 8 trang ở 1440 và 390 px; `NeutralMark`, `MatrixFocusPanel`, `ComparePicker`, `StabPanel`, `SectionDecor` | Ảnh chụp từng trang đặt cạnh artboard không còn chỗ lệch mức Lớn; ô x1 để trống vẫn đọc được "x1"; lint, test, build xanh; 375 px không cuộn ngang |
 
-- T311, T312: thêm ngày 2026-10-26 theo bản thiết kế giao diện ngày 2026-10-24. T313, T314: thêm ngày 2026-10-28, T315 ngày 2026-10-29, theo yêu cầu của chủ dự án. Từ bản 0.6, cột Ngày của task đã xong là ngày làm thực tế. Ngày trong bảng là ngày dự kiến theo lộ trình; làm sớm thì ghi ngày thực tế ở `PLAN.md`.
+- T311, T312: thêm ngày 2026-10-26 theo bản thiết kế giao diện ngày 2026-10-24. T313, T314: thêm ngày 2026-10-28, T315 ngày 2026-10-29, T316 ngày 2026-10-30, theo yêu cầu của chủ dự án. Từ bản 0.6, cột Ngày của task đã xong là ngày làm thực tế. Ngày trong bảng là ngày dự kiến theo lộ trình; làm sớm thì ghi ngày thực tế ở `PLAN.md`.
 
 ### IV. Hoàn thiện và demo (30/10 - 08/11; mốc Checkpoint 4 ngày 08/11)
 

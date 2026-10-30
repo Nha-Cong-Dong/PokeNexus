@@ -30,11 +30,11 @@ export function EvolutionChain({ detail }: EvolutionChainProps) {
       {data.stages.length <= 1 ? (
         <p className="text-ink-muted">{formatPokemonName(detail.name)} không tiến hóa.</p>
       ) : (
-        <ol className="flex flex-col items-start gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
+        <ol className="-mx-1 flex snap-x items-center gap-2.5 overflow-x-auto px-1 pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0">
           {levels.map((level, index) => (
             <li
               key={level[0]?.speciesId ?? index}
-              className="flex animate-slide-in-right flex-col items-start gap-2.5 sm:flex-row sm:items-center"
+              className="flex flex-none animate-slide-in-right snap-start items-center gap-2.5"
               style={staggerDelay(index, 120, 200)}
             >
               {index > 0 && (
@@ -46,7 +46,7 @@ export function EvolutionChain({ detail }: EvolutionChainProps) {
                   strokeWidth={2}
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="ml-5 size-5 flex-none rotate-90 text-ink-muted sm:ml-0 sm:rotate-0"
+                  className="size-5 flex-none text-ink-muted"
                 >
                   <path d="M5 12h13M13 6l6 6-6 6" />
                 </svg>
@@ -67,9 +67,11 @@ export function EvolutionChain({ detail }: EvolutionChainProps) {
                       <Link
                         to={`/pokemon/${stage.pokemonId}`}
                         aria-current={stage.pokemonId === detail.id ? 'page' : undefined}
-                        className={`flex items-center gap-2.5 rounded-2xl border-2 bg-surface py-1.5 pr-3.5 pl-1.5 text-ink transition-colors duration-150 ease-out ${isCurrentSpecies ? 'border-ink shadow-block' : 'border-border hover:border-border-strong'} ${typeScopeClassName(stage.types[0] ?? 'normal')}`}
+                        className={`flex items-center gap-2.5 rounded-2xl border-2 py-1.5 pr-3.5 pl-1.5 whitespace-nowrap text-ink transition-colors duration-150 ease-out ${isCurrentSpecies ? 'type-tint border-ink shadow-block' : 'border-border bg-surface hover:border-border-strong'} ${typeScopeClassName(stage.types[0] ?? 'normal')}`}
                       >
-                        <span className="type-tint flex size-12 flex-none items-center justify-center rounded-full">
+                        <span
+                          className={`flex size-12 flex-none items-center justify-center rounded-full ${isCurrentSpecies ? 'bg-surface' : 'type-tint'}`}
+                        >
                           <PokemonSprite id={stage.pokemonId} alt={displayName} size={48} />
                         </span>
                         <span className="flex flex-col">

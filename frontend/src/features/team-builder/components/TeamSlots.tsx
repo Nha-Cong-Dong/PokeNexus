@@ -3,7 +3,7 @@ import { formatPokemonName } from '../../../lib/formatters'
 import { staggerDelay } from '../../../lib/motion'
 import type { PokemonRef, TeamMember } from '../../../types/api'
 import { MAX_DRAFT_SIZE } from '../useTeamDraft'
-import { TeamMemberCard } from './TeamMemberCard'
+import { SharedMemberCard, TeamMemberCard } from './TeamMemberCard'
 
 type TeamSlotsProps = {
   ids: readonly number[]
@@ -32,7 +32,7 @@ const PLUS_ICON = (
 )
 
 const DASHED_SLOT =
-  'flex min-h-40 w-full flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed p-2 text-center'
+  'flex min-h-34 w-full flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed p-2 text-center md:min-h-38'
 
 export function TeamSlots({
   ids,
@@ -48,7 +48,7 @@ export function TeamSlots({
   const isFull = ids.length >= MAX_DRAFT_SIZE
 
   return (
-    <ul className="grid grid-cols-3 gap-x-2 gap-y-3 lg:grid-cols-2">
+    <ul className="grid grid-cols-3 gap-x-2 gap-y-2.5 lg:grid-cols-2 lg:gap-2.5">
       {Array.from({ length: MAX_DRAFT_SIZE }, (_, index) => {
         const id = ids[index]
         return (
@@ -61,14 +61,13 @@ export function TeamSlots({
                 id={id}
                 pokemon={refFor(id)}
                 unavailable={unavailable}
-                slotLabel={`Slot ${index + 1}`}
                 onRemove={() => onRemove(id)}
               />
             ) : (
               <button
                 type="button"
                 onClick={onAddClick}
-                className={`${DASHED_SLOT} cursor-pointer border-border-strong bg-surface text-sm font-extrabold hover:bg-surface-muted`}
+                className={`${DASHED_SLOT} cursor-pointer border-border-strong bg-surface text-sm font-extrabold text-ink hover:bg-surface-muted`}
               >
                 {PLUS_ICON}
                 Thêm Pokémon
@@ -84,28 +83,28 @@ export function TeamSlots({
             id={sixthId}
             pokemon={refFor(sixthId)}
             unavailable={unavailable}
-            slotLabel="Slot 6 · đề xuất"
+            badge="Đề xuất"
             onRemove={onRemoveSixth}
           />
         ) : isFull && suggestion ? (
           <div className={`${DASHED_SLOT} border-primary bg-primary/10`}>
-            <span className="text-xs font-extrabold text-primary">Slot 6 · đề xuất</span>
-            <span className="text-sm font-extrabold break-words">
+            <span className="text-xs font-extrabold text-primary">Đề xuất</span>
+            <span className="text-[0.9375rem] leading-5 font-extrabold break-words">
               {formatPokemonName(suggestion.name)}
             </span>
             <button
               type="button"
               onClick={onAddSuggestion}
-              className={`${buttonClassName('primary', 'sm')} px-2.5 text-xs`}
+              className={`${buttonClassName('primary', 'sm')} w-full px-1 text-xs whitespace-nowrap max-md:h-11`}
             >
               Thêm vào đội
             </button>
           </div>
         ) : (
-          <div className={`${DASHED_SLOT} border-border bg-surface-muted text-ink-muted`}>
-            <span className="text-xs font-extrabold">Slot 6</span>
+          <div className={`${DASHED_SLOT} border-border-strong/60 bg-bg text-ink-muted`}>
+            <span className="text-sm font-bold">Ô trống</span>
             <span className="text-xs font-bold">
-              {isFull ? 'Chọn từ thẻ đề xuất' : 'Mở khi đội đủ 5 thành viên'}
+              {isFull ? 'Chọn từ thẻ đề xuất' : 'Mở khi đủ 5 thành viên'}
             </span>
           </div>
         )}
@@ -120,16 +119,10 @@ type ReadOnlyTeamSlotsProps = {
 
 export function ReadOnlyTeamSlots({ members }: ReadOnlyTeamSlotsProps) {
   return (
-    <ul className="grid grid-cols-2 gap-x-3 gap-y-4 sm:grid-cols-3 lg:grid-cols-6">
+    <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(8.5rem,100%),1fr))] gap-3 md:grid-cols-[repeat(auto-fit,minmax(min(10.625rem,100%),1fr))] md:gap-3.5">
       {members.map((member, index) => (
-        <li key={member.slot} className="flex animate-card-in" style={staggerDelay(index, 80)}>
-          <TeamMemberCard
-            id={member.id}
-            pokemon={member}
-            nickname={member.nickname}
-            slotLabel={`Slot ${member.slot}`}
-            linkToDetail
-          />
+        <li key={member.slot} className="flex animate-card-in" style={staggerDelay(index, 90, 200)}>
+          <SharedMemberCard member={member} />
         </li>
       ))}
     </ul>

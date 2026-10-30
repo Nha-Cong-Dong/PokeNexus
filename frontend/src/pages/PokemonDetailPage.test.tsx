@@ -168,7 +168,13 @@ describe('PokemonDetailPage', () => {
       within(defense)
         .getAllByRole('heading', { level: 3 })
         .map((h) => h.textContent),
-    ).toEqual(['Yếu3 hệ', 'Kháng6 hệ', 'Miễn nhiễm1 hệ', 'Hệ số nhận từ 18 hệ'])
+    ).toEqual([
+      'Yếu3 hệ',
+      'Kháng6 hệ',
+      'Miễn nhiễm1 hệ',
+      'Trung tính x18 hệ',
+      'Hệ số nhận từ 18 hệ',
+    ])
     expect(
       within(screen.getByRole('list', { name: 'Hệ số nhận từ 18 hệ' })).getAllByRole('listitem'),
     ).toHaveLength(18)

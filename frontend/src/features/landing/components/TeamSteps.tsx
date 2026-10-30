@@ -2,13 +2,18 @@ import { Link } from 'react-router'
 
 import { Reveal } from '../../../components/motion/Reveal'
 
-import { multiplierClassName } from '../../../components/pokemon/multiplierStyles'
+import {
+  multiplierClassName,
+  multiplierWeightClassName,
+} from '../../../components/pokemon/multiplierStyles'
+import { NeutralMark } from '../../../components/pokemon/NeutralMark'
 import { TypeBadge } from '../../../components/pokemon/TypeBadge'
 import { TypeGlyph } from '../../../components/pokemon/TypeGlyph'
 import { buttonClassName } from '../../../components/ui/buttonStyles'
 import { formatMultiplier } from '../../../lib/formatters'
 import { typeClassName } from '../../../lib/pokemonTypes'
 import type { TypeName } from '../../../types/api'
+import { Aura, Blob } from './SectionDecor'
 import { SectionTitle } from './SectionTitle'
 
 const SAMPLE_TEAM: readonly TypeName[] = ['fire', 'water', 'rock', 'fighting', 'ghost']
@@ -21,7 +26,7 @@ const SAMPLE_HEATMAP: readonly { type: TypeName; multipliers: number[]; critical
 
 function SlotsIllustration() {
   return (
-    <div aria-hidden="true" className="grid grid-cols-3 gap-2 rounded-2xl bg-surface-muted p-3">
+    <div aria-hidden="true" className="grid grid-cols-3 gap-2 rounded-2xl bg-band-apricot/90 p-3.5">
       {SAMPLE_TEAM.map((type) => (
         <span
           key={type}
@@ -41,7 +46,7 @@ function HeatmapIllustration() {
   return (
     <div
       aria-hidden="true"
-      className="flex flex-col gap-2 overflow-hidden rounded-2xl bg-surface-muted p-3"
+      className="flex flex-col gap-2 overflow-hidden rounded-2xl bg-band-apricot/90 p-3.5"
     >
       {SAMPLE_HEATMAP.map((row) => (
         <div
@@ -54,9 +59,9 @@ function HeatmapIllustration() {
           {row.multipliers.map((multiplier, index) => (
             <span
               key={index}
-              className={`flex h-6 min-w-0 flex-1 items-center justify-center rounded-md text-xs font-extrabold ${multiplierClassName(multiplier)}`}
+              className={`flex h-6 min-w-0 flex-1 items-center justify-center rounded-md text-xs ${multiplier === 1 ? 'bg-surface' : `${multiplierClassName(multiplier)} ${multiplierWeightClassName(multiplier)}`}`}
             >
-              {formatMultiplier(multiplier)}
+              {multiplier === 1 ? <NeutralMark /> : formatMultiplier(multiplier)}
             </span>
           ))}
         </div>
@@ -67,7 +72,7 @@ function HeatmapIllustration() {
 
 function ShareIllustration() {
   return (
-    <div aria-hidden="true" className="flex flex-col gap-2 rounded-2xl bg-surface-muted p-3">
+    <div aria-hidden="true" className="flex flex-col gap-2 rounded-2xl bg-band-apricot/90 p-3.5">
       <span className="flex items-center gap-3 rounded-xl border-2 border-ink bg-surface px-3 py-2">
         <span
           className={`flex size-9 items-center justify-center rounded-full ${typeClassName('dragon')}`}
@@ -86,6 +91,8 @@ function ShareIllustration() {
     </div>
   )
 }
+
+const STEPS_PATH = 'M60 70 C 260 -20, 340 180, 600 90 S 960 -10, 1150 80'
 
 const STEPS = [
   {
@@ -107,34 +114,77 @@ const STEPS = [
 
 export function TeamSteps() {
   return (
-    <section aria-labelledby="steps-title" className="bg-bg px-4 py-16 md:px-6 md:py-24">
-      <div className="mx-auto max-w-7xl">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+    <section
+      aria-labelledby="steps-title"
+      className="relative overflow-hidden bg-linear-to-b from-band-cream to-band-apricot px-4 pt-8 pb-14 md:px-6 md:pt-[60px] md:pb-[110px]"
+    >
+      <Aura>
+        <span className="dot-field absolute inset-0" />
+        <Blob
+          drift="b"
+          className="top-0 -right-[50%] size-[420px] from-type-electric/38 md:-top-[10%] md:-right-[8%] md:size-[620px]"
+        />
+        <Blob className="-bottom-[24%] -left-[10%] hidden size-[640px] from-type-fire/24 md:block" />
+      </Aura>
+      <div className="relative mx-auto max-w-7xl">
+        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
           <SectionTitle id="steps-title">Xây đội trong 3 bước</SectionTitle>
-          <Link to="/team-builder" className={buttonClassName('primary')}>
+          <Link to="/team-builder" className={`${buttonClassName('primary')} max-md:hidden`}>
             Xây đội ngay
           </Link>
         </div>
-        <ol className="mt-10 grid gap-6 md:grid-cols-3">
-          {STEPS.map((step, index) => (
-            <li key={step.title} className="flex min-w-0">
-              <Reveal
-                variant="up"
-                delay={index * 140}
-                className="flex min-w-0 flex-1 flex-col gap-4 rounded-3xl border-2 border-ink bg-surface p-5 shadow-block-lg transition-[translate,rotate] duration-200 ease-out hover:-translate-y-1 hover:-rotate-[0.5deg]"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="tabular-nums flex size-10 flex-none items-center justify-center rounded-full border-2 border-ink bg-dex-yellow text-lg font-extrabold">
-                    {index + 1}
-                  </span>
-                  <h3 className="text-xl font-extrabold md:text-2xl">{step.title}</h3>
-                </div>
-                <p className="text-ink-muted">{step.description}</p>
-                <div className="mt-auto">{step.illustration}</div>
-              </Reveal>
-            </li>
-          ))}
-        </ol>
+        <div className="relative mt-6 md:mt-10">
+          <Reveal
+            variant="zoom"
+            className="pointer-events-none absolute inset-x-0 top-10 hidden h-50 md:block"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 1200 200"
+              preserveAspectRatio="none"
+              className="size-full overflow-visible"
+            >
+              <path
+                d={STEPS_PATH}
+                pathLength={100}
+                strokeDasharray="100"
+                fill="none"
+                className="reveal-draw stroke-primary"
+                strokeWidth="3"
+                strokeLinecap="round"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+          </Reveal>
+          <ol className="relative grid gap-[22px] pl-[58px] before:absolute before:top-5 before:bottom-[30px] before:left-6 before:w-1 before:rounded-sm before:bg-primary md:grid-cols-3 md:gap-7 md:pl-0 md:before:hidden">
+            {STEPS.map((step, index) => (
+              <li key={step.title} className="flex min-w-0">
+                <Reveal
+                  variant="up"
+                  delay={index * 140}
+                  className="relative flex min-w-0 flex-1 flex-col gap-3.5 rounded-[18px] border-3 border-ink bg-surface p-4 shadow-[0_4px_0_rgb(22_33_62/0.2)] transition-[translate,rotate] duration-200 ease-out hover:-translate-y-1 hover:-rotate-[0.5deg] md:rounded-3xl md:p-[22px] md:shadow-block-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex size-[46px] flex-none items-center justify-center rounded-full border-3 border-ink bg-dex-yellow text-[22px] font-extrabold tabular-nums max-md:absolute max-md:top-0 max-md:-left-[58px] md:size-12 md:text-2xl">
+                      {index + 1}
+                    </span>
+                    <h3 className="text-[21px]/[26px] font-extrabold md:text-2xl/7">
+                      {step.title}
+                    </h3>
+                  </div>
+                  <p className="text-ink-muted md:text-[17px]/[26px]">{step.description}</p>
+                  <div className="mt-auto">{step.illustration}</div>
+                </Reveal>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <Link
+          to="/team-builder"
+          className={`${buttonClassName('primary')} mt-[22px] w-full md:hidden`}
+        >
+          Xây đội ngay
+        </Link>
       </div>
     </section>
   )

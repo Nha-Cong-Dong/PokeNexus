@@ -39,7 +39,7 @@ export function Header() {
         >
           <span
             aria-hidden="true"
-            className="size-6.5 rounded-full border-3 border-white bg-radial-[at_35%_30%] from-white from-10% via-primary via-40% to-primary-hover shadow-[0_0_0_2px_var(--color-scrim)]"
+            className="size-6 rounded-full border-3 border-white bg-radial-[at_35%_30%] from-white from-10% via-primary via-40% to-primary-hover shadow-[0_0_0_2px_var(--color-scrim)]"
           />
           <span className="font-display text-2xl">PokeNexus</span>
         </Link>
@@ -62,7 +62,8 @@ export function Header() {
         <button
           ref={menuButtonRef}
           type="button"
-          className={`ml-auto flex h-11 items-center gap-2 rounded-xl bg-dex-red-hover px-3.5 text-base font-extrabold text-white md:hidden ${ON_RED_FOCUS}`}
+          className={`ml-auto flex size-11 items-center justify-center rounded-xl bg-dex-red-hover text-white md:hidden ${ON_RED_FOCUS}`}
+          aria-label="Mở menu"
           aria-expanded={menuOpen}
           aria-controls={MOBILE_NAV_ID}
           onClick={() => setMenuOpen((open) => !open)}
@@ -78,7 +79,6 @@ export function Header() {
           >
             <path d="M4 7h16 M4 12h16 M4 17h16" />
           </svg>
-          Menu
         </button>
       </div>
 

@@ -1,8 +1,11 @@
-import { multiplierClassName } from '../../../components/pokemon/multiplierStyles'
+import {
+  multiplierClassName,
+  multiplierWeightClassName,
+} from '../../../components/pokemon/multiplierStyles'
 import { Panel } from '../../../components/ui/Panel'
 import { staggerDelay } from '../../../lib/motion'
 import { formatMultiplier } from '../../../lib/formatters'
-import { TYPE_NAMES, typeClassName, typeLabel } from '../../../lib/pokemonTypes'
+import { TYPE_NAMES, typeClassName, typeLabel, typeScopeClassName } from '../../../lib/pokemonTypes'
 import type { DefenseEntry } from '../../../types/api'
 import { defenseSummary, type MultiplierEntry } from '../../typechart/defense'
 
@@ -48,6 +51,7 @@ export function DefenseGrid({ name, defense }: DefenseGridProps) {
     ...group,
     items: entries.filter((entry) => group.matches(entry.multiplier)).sort(group.strongestFirst),
   })).filter((group) => group.items.length > 0)
+  const neutral = entries.filter((entry) => entry.multiplier === 1)
 
   return (
     <Panel aria-labelledby={TITLE_ID} className="min-w-0">
@@ -76,7 +80,7 @@ export function DefenseGrid({ name, defense }: DefenseGridProps) {
                     {typeLabel(item.type)}
                   </span>
                   <span
-                    className={`flex min-w-10 items-center justify-center px-1.5 ${multiplierClassName(item.multiplier)}`}
+                    className={`flex min-w-10 items-center justify-center px-1.5 ${multiplierWeightClassName(item.multiplier)} ${multiplierClassName(item.multiplier)}`}
                   >
                     {formatMultiplier(item.multiplier)}
                   </span>
@@ -86,6 +90,29 @@ export function DefenseGrid({ name, defense }: DefenseGridProps) {
           </div>
         ))}
       </div>
+
+      {neutral.length > 0 && (
+        <div className="mt-4 rounded-2xl bg-mult-1 px-4 pt-4 pb-4.5">
+          <h3 className="flex items-center justify-between text-lg font-extrabold md:mb-3">
+            Trung tính x1
+            <span className="text-sm font-bold text-ink-muted">{neutral.length} hệ</span>
+          </h3>
+          <p className="mt-1 text-sm text-ink-muted md:hidden">
+            Nhận sát thương x1 từ {neutral.length} hệ còn lại.
+          </p>
+          <ul className="hidden flex-wrap gap-2 md:flex">
+            {neutral.map((entry) => (
+              <li
+                key={entry.type}
+                className={`flex h-8 items-center gap-1.5 rounded-full border-2 border-border bg-surface px-3 text-sm font-bold ${typeScopeClassName(entry.type)}`}
+              >
+                <span aria-hidden="true" className="size-2.5 rounded-full bg-(--type-base)" />
+                {typeLabel(entry.type)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <h3 id={GRID_TITLE_ID} className="mt-6 mb-3 text-lg font-extrabold">
         Hệ số nhận từ 18 hệ
@@ -99,7 +126,9 @@ export function DefenseGrid({ name, defense }: DefenseGridProps) {
             <span className={`py-1 text-xs ${typeClassName(entry.type)}`}>
               {typeLabel(entry.type)}
             </span>
-            <span className={`py-1.5 text-sm ${multiplierClassName(entry.multiplier)}`}>
+            <span
+              className={`py-1.5 text-sm ${multiplierWeightClassName(entry.multiplier)} ${multiplierClassName(entry.multiplier)}`}
+            >
               {formatMultiplier(entry.multiplier)}
             </span>
           </li>

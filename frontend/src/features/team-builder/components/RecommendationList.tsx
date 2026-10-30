@@ -17,7 +17,8 @@ type RecommendationListProps = {
   onAdd: (recommendation: Recommendation) => void
 }
 
-const LIST_CLASS = 'grid gap-4 md:grid-cols-3 xl:grid-cols-1'
+const LIST_CLASS =
+  '-mx-3 flex snap-x snap-mandatory scroll-px-3 gap-3 overflow-x-auto px-3 pt-13.5 pb-3.5 md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-4 md:overflow-visible md:p-0 lg:grid-cols-3 min-[84rem]:grid-cols-1'
 
 export function RecommendationList({
   recommendations,
@@ -71,7 +72,7 @@ export function RecommendationList({
           return (
             <li
               key={item.id}
-              className="flex animate-slide-in-right"
+              className="flex w-75 flex-none animate-slide-in-right snap-start md:w-auto"
               style={staggerDelay(index, 90)}
             >
               <RecommendationCard

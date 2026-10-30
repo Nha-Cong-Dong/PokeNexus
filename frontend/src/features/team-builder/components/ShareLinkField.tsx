@@ -58,9 +58,9 @@ export function ShareLinkField({ shareCode }: ShareLinkFieldProps) {
         <button
           type="button"
           onClick={() => void copy()}
-          className={`flex-none ${buttonClassName('secondary')}`}
+          className={`flex-none whitespace-nowrap ${buttonClassName('secondary')}`}
         >
-          Sao chép
+          {status.kind === 'copied' ? 'Đã sao chép' : 'Sao chép'}
         </button>
       </div>
       <p

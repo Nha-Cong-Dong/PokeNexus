@@ -57,12 +57,24 @@ describe('defense helpers', () => {
   it('names every weakness when they share the same multiplier', () => {
     const entries: MultiplierEntry[] = [
       { type: 'fighting', multiplier: 2 },
+      { type: 'ground', multiplier: 2 },
       { type: 'ghost', multiplier: 0 },
       { type: 'fire', multiplier: 1 },
     ]
 
     expect(defenseSummary('Normal', entries)).toBe(
-      'Normal yếu trước Fighting x2. Không kháng hệ nào nhưng miễn nhiễm Ghost.',
+      'Normal yếu trước Fighting, Ground x2. Không kháng hệ nào nhưng miễn nhiễm Ghost.',
+    )
+  })
+
+  it('calls out a single weakness and how hard it hits', () => {
+    const entries = defendingEntries(TYPE_MATRIX_FIXTURE, ['water', 'ground'])
+
+    expect(defenseSummary('Water + Ground', entries)).toBe(
+      'Water + Ground chỉ có một điểm yếu: Grass, và đòn đó gây x4. Kháng 4 hệ và miễn nhiễm Electric.',
+    )
+    expect(defenseSummary('Normal', defendingEntries(TYPE_MATRIX_FIXTURE, ['normal']))).toBe(
+      'Normal chỉ có một điểm yếu: Fighting, và đòn đó gây x2. Không kháng hệ nào nhưng miễn nhiễm Ghost.',
     )
   })
 })

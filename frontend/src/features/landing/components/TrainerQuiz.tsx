@@ -3,11 +3,14 @@ import { Link } from 'react-router'
 
 import { DexNumber } from '../../../components/pokemon/DexNumber'
 import { PokemonSprite } from '../../../components/pokemon/PokemonSprite'
+import { TypeGlyph } from '../../../components/pokemon/TypeGlyph'
 import { buttonClassName } from '../../../components/ui/buttonStyles'
 import { ErrorState } from '../../../components/ui/ErrorState'
 import { GameDialog } from '../../../components/ui/GameDialog'
 import { errorMessageFor } from '../../../lib/errorMessages'
 import { ApiError } from '../../../lib/http'
+import { typeClassName, typeScopeClassName } from '../../../lib/pokemonTypes'
+import type { TypeName } from '../../../types/api'
 import { BallIcon } from '../../trainer/components/BallIcon'
 import { TrainerCard } from '../../trainer/components/TrainerCard'
 import {
@@ -31,7 +34,14 @@ import {
   QUIZ_SETS,
   quizBadgeId,
 } from '../quiz'
+import { Aura, Blob } from './SectionDecor'
 import { SectionTitle } from './SectionTitle'
+
+const QUIZ_ORBS: readonly { type: TypeName; className: string; delay: string }[] = [
+  { type: 'water', className: 'bottom-6 left-[25%] size-14', delay: '-1s' },
+  { type: 'electric', className: 'top-[22px] right-[2%] size-16', delay: '-2.5s' },
+  { type: 'flying', className: 'top-10 left-[38%] size-11', delay: '-3.7s' },
+]
 
 interface QuizState {
   setIndex: number
@@ -62,12 +72,11 @@ function initialState(setIndex: number): QuizState {
 }
 
 function optionClassName(index: number, picked: number | null, correctIndex: number): string {
-  if (picked === null) return buttonClassName('secondary')
-  if (index === correctIndex)
-    return `${buttonClassName('secondary')} border-success! bg-success! text-white!`
-  if (index === picked)
-    return `${buttonClassName('secondary')} border-danger! bg-danger! text-white!`
-  return buttonClassName('secondary')
+  const base = `${buttonClassName('secondary')} h-auto min-h-[54px] rounded-xl! py-2 text-lg! not-disabled:hover:-translate-y-0.5 not-disabled:hover:bg-answer-hover!`
+  if (picked === null) return base
+  if (index === correctIndex) return `${base} border-success! bg-success! text-white! opacity-100!`
+  if (index === picked) return `${base} border-danger! bg-danger! text-white! opacity-100!`
+  return `${base} opacity-45!`
 }
 
 export function TrainerQuiz() {
@@ -128,23 +137,45 @@ export function TrainerQuiz() {
   return (
     <section
       aria-labelledby="quiz-title"
-      className="bg-linear-to-b from-surface-muted to-bg px-4 py-16 md:px-6 md:py-24"
+      className="relative overflow-hidden bg-linear-to-b from-band-mint to-band-violet px-4 pt-8 pb-14 md:px-6 md:pt-[90px] md:pb-[110px]"
     >
-      <div className="mx-auto flex max-w-7xl flex-col gap-10 lg:flex-row lg:items-center">
+      <Aura>
+        <Blob
+          drift="b"
+          className="top-[10%] -left-[50%] size-[440px] from-type-flying/36 md:-top-[10%] md:-left-[6%] md:size-[640px]"
+        />
+        <Blob className="-right-[50%] bottom-0 size-[440px] from-type-psychic/22 md:-right-[10%] md:-bottom-[26%] md:size-[700px]" />
+      </Aura>
+      <div aria-hidden="true" className="hidden md:block">
+        {QUIZ_ORBS.map((orb) => (
+          <span
+            key={orb.type}
+            className={`pointer-events-none absolute flex items-center justify-center rounded-full border-[2.5px] border-ink text-ink shadow-[0_4px_0_rgb(22_33_62/0.18)] motion-safe:animate-orb ${typeClassName(orb.type)} ${orb.className}`}
+            style={{ animationDelay: orb.delay }}
+          >
+            <TypeGlyph type={orb.type} className="size-1/2" strokeWidth={1.9} />
+          </span>
+        ))}
+      </div>
+      <div className="relative mx-auto flex max-w-7xl flex-col gap-10 lg:flex-row lg:items-center">
         <div className="flex flex-col gap-5 lg:w-2/5">
           <SectionTitle id="quiz-title">Thử tài Trainer</SectionTitle>
           <p className="max-w-[40ch] text-lg/7 text-ink-muted">
             {QUIZ_SETS.length} bộ câu hỏi, mỗi bộ {total} câu: hệ số, điểm yếu, chỉ số, hệ và vùng
             đất ra mắt. Trả lời đúng để nhận điểm Trainer, Ball và huy hiệu.
           </p>
-          <div className="relative size-44 md:size-52">
-            <div className="flex size-full items-center justify-center rounded-full border-6 border-white bg-surface-muted shadow-[0_0_0_3px_var(--color-ink),8px_10px_0_0_rgb(22_33_62/0.3)]">
+          <div className="relative size-48 md:size-60">
+            <div className="relative flex size-full animate-float items-center justify-center">
+              <span
+                aria-hidden="true"
+                className={`type-blob absolute inset-2.5 -rotate-5 rounded-[46%_54%_50%_50%/52%_46%_54%_48%] border-6 border-white shadow-[0_0_0_3px_var(--color-ink),8px_10px_0_0_rgb(22_33_62/0.3)] md:border-7 md:shadow-[0_0_0_3px_var(--color-ink),10px_14px_0_0_rgb(22_33_62/0.3)] ${typeScopeClassName(question.subject.type)}`}
+              />
               <PokemonSprite
                 id={question.subject.id}
                 alt={`Artwork ${question.subject.name}`}
                 size={160}
                 variant="artwork"
-                className="size-36 object-contain md:size-40"
+                className="relative size-36 object-contain md:size-44"
               />
             </div>
             <span className="absolute -right-4 bottom-4 rotate-3 rounded-lg border-2 border-ink bg-dex-yellow px-2.5 py-1 text-xs font-extrabold">
@@ -257,9 +288,23 @@ export function TrainerQuiz() {
                     aria-pressed={state.picked === index}
                     disabled={state.picked !== null}
                     onClick={() => pick(index)}
-                    className={`${optionClassName(index, state.picked, evaluated.correctIndex)} h-auto min-h-11 py-2 disabled:opacity-100`}
+                    className={optionClassName(index, state.picked, evaluated.correctIndex)}
                   >
                     {option}
+                    {state.picked !== null && index === evaluated.correctIndex && (
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        className="size-5 flex-none"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M5 12.5l4.5 4.5L19 7.5" />
+                      </svg>
+                    )}
                   </button>
                 ))}
               </div>
@@ -306,7 +351,7 @@ export function TrainerQuiz() {
         progress={progress}
         badges={QUIZ_BADGES}
         badgeTitle="Huy hiệu bộ câu hỏi"
-        className="mx-auto mt-10 max-w-7xl"
+        className="relative mx-auto mt-10 max-w-7xl"
       />
     </section>
   )

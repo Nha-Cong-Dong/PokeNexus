@@ -6,9 +6,13 @@ import type { PokemonDetail, Stats, TypeMatrix, TypeName } from '../../types/api
 import type { Badge } from '../trainer/progress'
 import { GENERATIONS } from './generations'
 
-export interface QuizSubject {
+export interface QuizPokemon {
   id: number
   name: string
+}
+
+export interface QuizSubject extends QuizPokemon {
+  type: TypeName
 }
 
 export type QuizStat = keyof Stats | 'baseStatTotal'
@@ -44,7 +48,7 @@ interface StatQuestion {
   prompt: string
   subject: QuizSubject
   stat: QuizStat
-  options: QuizSubject[]
+  options: QuizPokemon[]
 }
 
 interface TypingQuestion {
@@ -91,10 +95,10 @@ export interface EvaluatedQuestion {
 
 export const BADGE_MIN_CORRECT = 5
 
-const GYARADOS = { id: 130, name: 'Gyarados' }
-const GARCHOMP = { id: 445, name: 'Garchomp' }
-const GENGAR = { id: 94, name: 'Gengar' }
-const LUCARIO = { id: 448, name: 'Lucario' }
+const GYARADOS: QuizSubject = { id: 130, name: 'Gyarados', type: 'water' }
+const GARCHOMP: QuizSubject = { id: 445, name: 'Garchomp', type: 'dragon' }
+const GENGAR: QuizSubject = { id: 94, name: 'Gengar', type: 'ghost' }
+const LUCARIO: QuizSubject = { id: 448, name: 'Lucario', type: 'fighting' }
 
 export const QUIZ_SETS: readonly QuizSet[] = [
   {
@@ -121,7 +125,7 @@ export const QUIZ_SETS: readonly QuizSet[] = [
       {
         kind: 'immunity',
         prompt: 'Hệ nào miễn nhiễm hoàn toàn đòn Ground?',
-        subject: { id: 6, name: 'Charizard' },
+        subject: { id: 6, name: 'Charizard', type: 'fire' },
         attacking: 'ground',
         options: ['flying', 'water', 'steel'],
       },
@@ -144,7 +148,7 @@ export const QUIZ_SETS: readonly QuizSet[] = [
       {
         kind: 'multiplier',
         prompt: 'Đòn Water đánh Ludicolo (Water/Grass) gây bao nhiêu?',
-        subject: { id: 272, name: 'Ludicolo' },
+        subject: { id: 272, name: 'Ludicolo', type: 'water' },
         attacking: 'water',
         defending: ['water', 'grass'],
         options: [0.25, 0.5, 2],
@@ -159,7 +163,7 @@ export const QUIZ_SETS: readonly QuizSet[] = [
       {
         kind: 'attacker',
         prompt: 'Đòn hệ nào gây x4 lên Tyranitar (Rock/Dark)?',
-        subject: { id: 248, name: 'Tyranitar' },
+        subject: { id: 248, name: 'Tyranitar', type: 'rock' },
         defending: ['rock', 'dark'],
         target: 4,
         options: ['water', 'fighting', 'ground'],
@@ -182,14 +186,14 @@ export const QUIZ_SETS: readonly QuizSet[] = [
       {
         kind: 'immunity',
         prompt: 'Hệ nào miễn nhiễm hoàn toàn đòn Psychic?',
-        subject: { id: 197, name: 'Umbreon' },
+        subject: { id: 197, name: 'Umbreon', type: 'dark' },
         attacking: 'psychic',
         options: ['steel', 'psychic', 'dark'],
       },
       {
         kind: 'attacker',
         prompt: 'Đòn hệ nào chỉ gây x¼ lên Scizor (Bug/Steel)?',
-        subject: { id: 212, name: 'Scizor' },
+        subject: { id: 212, name: 'Scizor', type: 'bug' },
         defending: ['bug', 'steel'],
         target: 0.25,
         options: ['fire', 'grass', 'poison'],
@@ -197,7 +201,7 @@ export const QUIZ_SETS: readonly QuizSet[] = [
       {
         kind: 'immunity',
         prompt: 'Hệ nào miễn nhiễm hoàn toàn đòn Dragon?',
-        subject: { id: 700, name: 'Sylveon' },
+        subject: { id: 700, name: 'Sylveon', type: 'fairy' },
         attacking: 'dragon',
         options: ['fairy', 'steel', 'ice'],
       },
@@ -211,7 +215,7 @@ export const QUIZ_SETS: readonly QuizSet[] = [
       {
         kind: 'stat',
         prompt: 'Ai có Tốc độ gốc cao nhất?',
-        subject: { id: 135, name: 'Jolteon' },
+        subject: { id: 135, name: 'Jolteon', type: 'electric' },
         stat: 'speed',
         options: [
           { id: 135, name: 'Jolteon' },
@@ -229,14 +233,14 @@ export const QUIZ_SETS: readonly QuizSet[] = [
       {
         kind: 'stat',
         prompt: 'Ai có Tấn công gốc cao nhất?',
-        subject: { id: 68, name: 'Machamp' },
+        subject: { id: 68, name: 'Machamp', type: 'fighting' },
         stat: 'attack',
         options: [{ id: 68, name: 'Machamp' }, GARCHOMP, { id: 409, name: 'Rampardos' }],
       },
       {
         kind: 'stat',
         prompt: 'Ai có HP gốc cao nhất?',
-        subject: { id: 143, name: 'Snorlax' },
+        subject: { id: 143, name: 'Snorlax', type: 'normal' },
         stat: 'hp',
         options: [
           { id: 143, name: 'Snorlax' },
@@ -247,7 +251,7 @@ export const QUIZ_SETS: readonly QuizSet[] = [
       {
         kind: 'stat',
         prompt: 'Ai có Phòng thủ gốc cao nhất?',
-        subject: { id: 208, name: 'Steelix' },
+        subject: { id: 208, name: 'Steelix', type: 'steel' },
         stat: 'defense',
         options: [
           { id: 208, name: 'Steelix' },
@@ -282,31 +286,31 @@ export const QUIZ_SETS: readonly QuizSet[] = [
       {
         kind: 'typing',
         prompt: 'Togekiss mang hệ nào?',
-        subject: { id: 468, name: 'Togekiss' },
+        subject: { id: 468, name: 'Togekiss', type: 'fairy' },
         options: [['normal', 'flying'], ['fairy'], ['fairy', 'flying']],
       },
       {
         kind: 'typing',
         prompt: 'Mawile mang hệ nào?',
-        subject: { id: 303, name: 'Mawile' },
+        subject: { id: 303, name: 'Mawile', type: 'steel' },
         options: [['steel', 'fairy'], ['steel'], ['dark', 'fairy']],
       },
       {
         kind: 'typing',
         prompt: 'Azumarill mang hệ nào?',
-        subject: { id: 184, name: 'Azumarill' },
+        subject: { id: 184, name: 'Azumarill', type: 'water' },
         options: [['water'], ['water', 'fairy'], ['water', 'normal']],
       },
       {
         kind: 'typing',
         prompt: 'Dragonite mang hệ nào?',
-        subject: { id: 149, name: 'Dragonite' },
+        subject: { id: 149, name: 'Dragonite', type: 'dragon' },
         options: [['dragon', 'water'], ['dragon'], ['dragon', 'flying']],
       },
       {
         kind: 'typing',
         prompt: 'Ferrothorn mang hệ nào?',
-        subject: { id: 598, name: 'Ferrothorn' },
+        subject: { id: 598, name: 'Ferrothorn', type: 'grass' },
         options: [
           ['bug', 'steel'],
           ['grass', 'steel'],
@@ -329,31 +333,31 @@ export const QUIZ_SETS: readonly QuizSet[] = [
       {
         kind: 'region',
         prompt: 'Greninja ra mắt ở vùng đất nào?',
-        subject: { id: 658, name: 'Greninja' },
+        subject: { id: 658, name: 'Greninja', type: 'water' },
         options: [5, 6, 7],
       },
       {
         kind: 'region',
         prompt: 'Mimikyu ra mắt ở vùng đất nào?',
-        subject: { id: 778, name: 'Mimikyu' },
+        subject: { id: 778, name: 'Mimikyu', type: 'ghost' },
         options: [7, 8, 9],
       },
       {
         kind: 'region',
         prompt: 'Togepi ra mắt ở vùng đất nào?',
-        subject: { id: 175, name: 'Togepi' },
+        subject: { id: 175, name: 'Togepi', type: 'fairy' },
         options: [1, 2, 3],
       },
       {
         kind: 'region',
         prompt: 'Corviknight ra mắt ở vùng đất nào?',
-        subject: { id: 823, name: 'Corviknight' },
+        subject: { id: 823, name: 'Corviknight', type: 'flying' },
         options: [6, 7, 8],
       },
       {
         kind: 'region',
         prompt: 'Blaziken ra mắt ở vùng đất nào?',
-        subject: { id: 257, name: 'Blaziken' },
+        subject: { id: 257, name: 'Blaziken', type: 'fire' },
         options: [3, 4, 5],
       },
     ],

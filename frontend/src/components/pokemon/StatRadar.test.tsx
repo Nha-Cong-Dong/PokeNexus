@@ -61,6 +61,37 @@ describe('StatRadar', () => {
     expect(screen.getByRole('list')).toHaveTextContent('GarchompSalamence')
   })
 
+  it('uses lighter fills and moves the legend above the chart on mobile when asked', () => {
+    const { container } = render(
+      <StatRadar
+        title="So sánh"
+        fill="light"
+        legendAboveOnMobile
+        series={[
+          { label: 'Garchomp', stats: GARCHOMP, tone: 'primary' },
+          { label: 'Salamence', stats: SALAMENCE, tone: 'accent' },
+        ]}
+      />,
+    )
+
+    const [left, right] = Array.from(container.querySelectorAll('polygon'))
+    expect(left).toHaveClass('stroke-primary', 'fill-primary/16')
+    expect(right).toHaveClass('stroke-accent', 'fill-accent/12')
+    expect(screen.getByRole('list')).toHaveClass('max-md:order-first')
+  })
+
+  it('keeps the default fills and the legend below the chart', () => {
+    const { container } = render(
+      <StatRadar
+        title="Đội"
+        series={[{ label: 'Trung bình đội', stats: GARCHOMP, tone: 'primary' }]}
+      />,
+    )
+
+    expect(container.querySelector('polygon')).toHaveClass('fill-primary/25')
+    expect(screen.getByRole('list')).not.toHaveClass('max-md:order-first')
+  })
+
   it('clamps values to the scale and keeps zero stats at the center', () => {
     const { container } = render(
       <StatRadar

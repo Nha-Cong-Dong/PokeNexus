@@ -10,7 +10,7 @@ import { TypeWheel } from '../features/landing/components/TypeWheel'
 
 export function LandingPage() {
   return (
-    <>
+    <div className="overflow-x-clip">
       <LandingHero />
       <TypeTicker />
       <FeatureRegions />
@@ -20,6 +20,6 @@ export function LandingPage() {
       <GenerationChart />
       <TrainerQuiz />
       <ClosingCta />
-    </>
+    </div>
   )
 }

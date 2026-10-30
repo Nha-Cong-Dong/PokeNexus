@@ -9,10 +9,10 @@ import { MAX_TEAM_SIZE } from '../features/team-builder/api'
 import { CoverageAndStats } from '../features/team-builder/components/CoverageAndStats'
 import { RecommendationList } from '../features/team-builder/components/RecommendationList'
 import { SaveTeamDialog } from '../features/team-builder/components/SaveTeamDialog'
-import { TeamScoreGauge } from '../features/team-builder/components/TeamScoreGauge'
+import { ScoreDeltaChip, TeamScoreGauge } from '../features/team-builder/components/TeamScoreGauge'
 import { TeamSlots } from '../features/team-builder/components/TeamSlots'
 import { AnalysisHeatmap } from '../features/team-builder/components/WeaknessHeatmap'
-import { useRecommendations, useTeamAnalysis } from '../features/team-builder/hooks'
+import { useRecommendations, useScoreDelta, useTeamAnalysis } from '../features/team-builder/hooks'
 import { analysisSummary, buildTeamMembers } from '../features/team-builder/teamAnalysis'
 import { useTeamDraft } from '../features/team-builder/useTeamDraft'
 import { formatPokemonName } from '../lib/formatters'
@@ -25,6 +25,21 @@ const SCORE_TITLE_ID = 'team-score-title'
 const HEATMAP_TITLE_ID = 'team-heatmap-title'
 const ATTACK_TITLE_ID = 'team-attack-title'
 const RECOMMENDATION_TITLE_ID = 'team-recommendation-title'
+
+const UPLOAD_ICON = (
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 24 24"
+    className="size-4.5 md:hidden"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.4"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 4v11 M7.5 8.5L12 4l4.5 4.5 M5 14v5h14v-5" />
+  </svg>
+)
 
 function toRef({ id, name, types }: PokemonRef): PokemonRef {
   return { id, name, types }
@@ -47,6 +62,8 @@ export function TeamBuilderPage() {
   const hasMembers = draft.ids.length > 0
   const analysisData = hasMembers ? analysis.data : undefined
   const freshAnalysis = analysis.isPlaceholderData ? undefined : analysisData
+  const scoreKey = analysisData?.members.map((member) => member.id).join(',') ?? ''
+  const scoreDelta = useScoreDelta(analysisData?.teamScore, scoreKey)
   const suggestion =
     draft.isFull && !recommendations.isPlaceholderData
       ? (recommendations.data?.items[0] ?? null)
@@ -87,6 +104,7 @@ export function TeamBuilderPage() {
     return pokemon ? formatPokemonName(pokemon.name) : `#${pokemonId}`
   })
   const memberCount = saveMembers.length
+  const nextSlot = Math.min(draft.ids.length + 1, MAX_TEAM_SIZE)
 
   return (
     <>
@@ -139,17 +157,17 @@ export function TeamBuilderPage() {
           </Panel>
 
           <Panel aria-labelledby={SCORE_TITLE_ID} className="flex flex-col gap-4">
-            <h2 id={SCORE_TITLE_ID} className="text-xl font-extrabold">
-              Điểm đội
-            </h2>
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+              <h2 id={SCORE_TITLE_ID} className="text-xl font-extrabold">
+                Điểm đội
+              </h2>
+              <ScoreDeltaChip key={scoreKey} delta={scoreDelta} />
+            </div>
             <div className="flex flex-col gap-3">
               {!hasMembers ? (
                 <p className="text-ink-muted">Thêm ít nhất 1 Pokémon để tính điểm đội.</p>
               ) : analysisData ? (
-                <TeamScoreGauge
-                  score={analysisData.teamScore}
-                  teamKey={analysisData.members.map((member) => member.id).join(',')}
-                />
+                <TeamScoreGauge score={analysisData.teamScore} />
               ) : analysis.isError ? (
                 <p className="text-ink-muted">Chưa tính được điểm đội.</p>
               ) : (
@@ -162,20 +180,22 @@ export function TeamBuilderPage() {
                 {freshAnalysis ? analysisSummary(freshAnalysis) : ''}
               </p>
             </div>
-            <div className="flex flex-wrap gap-2.5">
+            <div className="flex gap-2.5 md:flex-wrap">
               <button
                 type="button"
                 onClick={() => setSaveOpen(true)}
                 disabled={!hasMembers}
-                className={buttonClassName('primary')}
+                className={`${buttonClassName('primary')} max-md:order-1 max-md:h-12.5 max-md:flex-[1.4] max-md:px-3`}
               >
-                Lưu đội
+                {UPLOAD_ICON}
+                <span className="md:hidden">Lưu và chia sẻ</span>
+                <span className="hidden md:inline">Lưu đội</span>
               </button>
               <button
                 type="button"
                 onClick={draft.clear}
                 disabled={!hasMembers}
-                className={buttonClassName('secondary')}
+                className={`${buttonClassName('secondary')} max-md:h-12.5 max-md:flex-1 max-md:px-3`}
               >
                 Đặt lại
               </button>
@@ -183,8 +203,8 @@ export function TeamBuilderPage() {
           </Panel>
         </div>
 
-        <div className="flex min-w-0 flex-col gap-4 md:gap-6">
-          <Panel aria-labelledby={HEATMAP_TITLE_ID} className="flex flex-col gap-3">
+        <div className="contents lg:flex lg:min-w-0 lg:flex-col lg:gap-6">
+          <Panel aria-labelledby={HEATMAP_TITLE_ID} className="flex min-w-0 flex-col gap-3">
             <h2 id={HEATMAP_TITLE_ID} className="text-xl font-extrabold">
               Bản đồ điểm yếu
             </h2>
@@ -207,7 +227,10 @@ export function TeamBuilderPage() {
             )}
           </Panel>
 
-          <Panel aria-labelledby={ATTACK_TITLE_ID} className="flex flex-col gap-4">
+          <Panel
+            aria-labelledby={ATTACK_TITLE_ID}
+            className="order-1 flex min-w-0 flex-col gap-4 lg:order-none"
+          >
             <h2 id={ATTACK_TITLE_ID} className="text-xl font-extrabold">
               Tấn công và chỉ số
             </h2>
@@ -231,12 +254,20 @@ export function TeamBuilderPage() {
           aria-labelledby={RECOMMENDATION_TITLE_ID}
           className="flex min-w-0 flex-col gap-4 lg:col-span-2 min-[84rem]:col-span-1"
         >
-          <h2
-            id={RECOMMENDATION_TITLE_ID}
-            className="rounded-2xl bg-ink px-4 py-2.5 text-xl font-extrabold text-surface"
-          >
-            {draft.isFull ? 'Đề xuất slot thứ 6' : 'Đề xuất thành viên tiếp theo'}
-          </h2>
+          <div className="flex items-baseline justify-between gap-3 px-1 md:block md:px-0">
+            <h2
+              id={RECOMMENDATION_TITLE_ID}
+              className="text-xl font-extrabold md:rounded-2xl md:bg-ink md:px-4 md:py-2.5 md:text-surface"
+            >
+              <span className="md:hidden">Gợi ý bổ sung</span>
+              <span className="hidden md:inline">Đề xuất slot thứ {nextSlot}</span>
+            </h2>
+            {hasMembers && (
+              <span aria-hidden="true" className="text-sm font-bold text-ink-muted md:hidden">
+                Vuốt ngang
+              </span>
+            )}
+          </div>
           <label className="flex min-h-10 cursor-pointer items-center gap-3 rounded-2xl border-2 border-border bg-surface px-4 py-2 font-bold">
             <input
               type="checkbox"

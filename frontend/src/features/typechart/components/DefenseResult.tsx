@@ -1,10 +1,19 @@
 import { MultiplierCell } from '../../../components/pokemon/MultiplierCell'
 import { TypeBadge } from '../../../components/pokemon/TypeBadge'
 import { staggerDelay } from '../../../lib/motion'
-import { typeLabel } from '../../../lib/pokemonTypes'
+import { typeClassName, typeLabel } from '../../../lib/pokemonTypes'
 import type { TypeMatrix, TypeName } from '../../../types/api'
 import { defendingEntries, defenseSummary, groupByMultiplier } from '../defense'
 import { MAX_DEFENDING_TYPES } from '../useDefendingTypes'
+
+const RESULT_BADGE =
+  'inline-flex h-7 items-center rounded-full px-2.5 text-sm font-extrabold md:text-[13px]'
+
+function pickHint(count: number): string {
+  if (count === 0) return 'Chọn hệ ở bên trái'
+  if (count < MAX_DEFENDING_TYPES) return 'Chọn thêm 1 hệ nếu Pokémon có hệ kép'
+  return ''
+}
 
 type DefenseResultProps = {
   matrix: TypeMatrix | undefined
@@ -20,27 +29,23 @@ export function DefenseResult({ matrix, defending }: DefenseResultProps) {
   const summary = !matrix
     ? 'Đang tải bảng tương khắc…'
     : defending.length === 0
-      ? 'Chưa chọn hệ nào. Bấm một hệ để xem 18 hệ tấn công gây bao nhiêu sát thương lên nó.'
+      ? 'Chưa chọn hệ nào.'
       : defenseSummary(subject, entries)
+
+  const hint = pickHint(defending.length)
 
   return (
     <div
       aria-busy={!matrix}
-      className="flex min-w-0 flex-[1_1_26rem] flex-col gap-3.5 rounded-2xl bg-bg p-4 md:px-5.5 md:py-5"
+      className="flex min-w-0 flex-[1_1_26rem] flex-col gap-3 rounded-2xl bg-bg p-3.5 md:gap-3.5 md:px-5.5 md:pt-5 md:pb-5.5"
     >
-      {defending.length > 0 && (
-        <p className="flex flex-wrap items-center gap-2">
-          {defending.map((type) => (
-            <TypeBadge key={type} type={type} size="md" />
-          ))}
-          {defending.length < MAX_DEFENDING_TYPES && (
-            <span className="text-sm font-bold text-ink-muted">
-              Chọn thêm 1 hệ nếu Pokémon có hệ kép.
-            </span>
-          )}
-        </p>
-      )}
-      <p aria-live="polite" className="max-w-prose font-bold">
+      <p className="hidden flex-wrap items-center gap-2 lg:flex">
+        {defending.map((type) => (
+          <TypeBadge key={type} type={type} size="md" />
+        ))}
+        {hint && <span className="text-sm font-bold text-ink-muted">{hint}</span>}
+      </p>
+      <p aria-live="polite" className="max-w-prose font-bold max-md:text-lg">
         {summary}
       </p>
       {groups.length > 0 && (
@@ -56,10 +61,10 @@ export function DefenseResult({ matrix, defending }: DefenseResultProps) {
               style={staggerDelay(index, 60)}
             >
               <MultiplierCell multiplier={group.multiplier} className="h-8 w-11 flex-none" />
-              <ul className="flex flex-wrap gap-1.5 pt-1">
+              <ul className="flex flex-wrap gap-1.5 pt-0.5">
                 {group.types.map((type) => (
-                  <li key={type}>
-                    <TypeBadge type={type} />
+                  <li key={type} className={`${RESULT_BADGE} ${typeClassName(type)}`}>
+                    {typeLabel(type)}
                   </li>
                 ))}
               </ul>

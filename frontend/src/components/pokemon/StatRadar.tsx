@@ -5,6 +5,8 @@ type StatRadarProps = {
   title: string
   series: readonly { label: string; stats: Stats; tone: 'primary' | 'accent' }[]
   max?: number
+  fill?: 'solid' | 'light'
+  legendAboveOnMobile?: boolean
 }
 
 type Tone = StatRadarProps['series'][number]['tone']
@@ -20,14 +22,19 @@ const RING_STEPS = [0.25, 0.5, 0.75, 1]
 const RADAR_DELAY_MS = 300
 const RADAR_STEP_MS = 150
 
-const TONE_CLASSES: Record<Tone, { shape: string; dot: string; line: string; dash?: string }> = {
-  primary: { shape: 'stroke-primary fill-primary/25', dot: 'fill-primary', line: 'stroke-primary' },
+const TONE_CLASSES: Record<Tone, { stroke: string; dot: string; line: string; dash?: string }> = {
+  primary: { stroke: 'stroke-primary', dot: 'fill-primary', line: 'stroke-primary' },
   accent: {
-    shape: 'stroke-accent fill-accent/25',
+    stroke: 'stroke-accent',
     dot: 'fill-accent',
     line: 'stroke-accent',
     dash: '8 5',
   },
+}
+
+const FILL_CLASSES: Record<NonNullable<StatRadarProps['fill']>, Record<Tone, string>> = {
+  solid: { primary: 'fill-primary/25', accent: 'fill-accent/25' },
+  light: { primary: 'fill-primary/16', accent: 'fill-accent/12' },
 }
 
 function angleAt(index: number): number {
@@ -73,7 +80,13 @@ function labelPosition(
   return { x, y: round(firstBaseline), anchor }
 }
 
-export function StatRadar({ title, series, max = STAT_MAX }: StatRadarProps) {
+export function StatRadar({
+  title,
+  series,
+  max = STAT_MAX,
+  fill = 'solid',
+  legendAboveOnMobile = false,
+}: StatRadarProps) {
   const scale = max > 0 ? max : STAT_MAX
   const ariaLabel = [title, ...series.map((item) => `${item.label}: ${describeStats(item.stats)}`)]
     .join('. ')
@@ -113,7 +126,7 @@ export function StatRadar({ title, series, max = STAT_MAX }: StatRadarProps) {
             >
               <polygon
                 points={points.map((point) => point.join(',')).join(' ')}
-                className={tone.shape}
+                className={`${tone.stroke} ${FILL_CLASSES[fill][item.tone]}`}
                 strokeWidth={3}
                 strokeLinejoin="round"
                 strokeDasharray={tone.dash}
@@ -143,7 +156,9 @@ export function StatRadar({ title, series, max = STAT_MAX }: StatRadarProps) {
           )
         })}
       </svg>
-      <ul className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm font-extrabold">
+      <ul
+        className={`flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm font-extrabold ${legendAboveOnMobile ? 'max-md:order-first max-md:self-start max-md:justify-start' : ''}`}
+      >
         {series.map((item) => {
           const tone = TONE_CLASSES[item.tone]
           return (
