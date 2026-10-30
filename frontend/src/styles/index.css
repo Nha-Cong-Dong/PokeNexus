@@ -163,8 +163,6 @@
   --animate-float-shadow: float-shadow 3.2s 600ms ease-in-out infinite alternate;
   --animate-fly-in-left: fly-in-left 680ms 220ms var(--ease-spring) both;
   --animate-fly-in-right: fly-in-right 680ms 300ms var(--ease-spring) both;
-  --animate-half-in-left: half-in-left 420ms var(--ease-emphasized) both;
-  --animate-half-in-right: half-in-right 420ms var(--ease-emphasized) both;
   --animate-vs-pop: vs-pop 480ms 480ms var(--ease-overshoot) both;
   --animate-radar-in: radar-in 700ms 300ms var(--ease-emphasized) both;
   --animate-pulse-ring: pulse-ring 1.2s ease-out 3;
@@ -363,28 +361,6 @@
     }
   }
 
-  @keyframes half-in-left {
-    from {
-      opacity: 0;
-      transform: translateX(-30%);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  @keyframes half-in-right {
-    from {
-      opacity: 0;
-      transform: translateX(30%);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
   @keyframes vs-pop {
     0% {
       transform: scale(0) rotate(-30deg);
@@ -558,6 +534,8 @@
   --color-isle-volcano-ink: #a63f00;
   --color-isle-stadium: #ece6ff;
   --color-isle-stadium-ink: #5b3fc4;
+  --color-isle-desert: #fbefd2;
+  --color-isle-desert-ink: #7a5200;
 
   --color-scrim-raised: #1d2840;
   --color-dex-red-deep: #8e0b21;
@@ -788,6 +766,37 @@
 
 @utility type-tint {
   background-color: color-mix(in oklab, var(--type-base) 22%, var(--color-surface));
+}
+
+@utility poster-cut {
+  clip-path: polygon(
+    0 var(--poster-slant, 0px),
+    100% 0,
+    100% calc(100% - var(--poster-slant, 0px)),
+    0 100%
+  );
+}
+
+@utility poster-scrim {
+  background-image: linear-gradient(
+    var(--poster-scrim-angle, 180deg),
+    color-mix(in oklab, var(--color-scrim) 18%, transparent) var(--poster-scrim-start, 30%),
+    color-mix(in oklab, var(--color-scrim) 78%, transparent) var(--poster-scrim-solid, 60%),
+    color-mix(in oklab, var(--color-scrim) 88%, transparent)
+  );
+}
+
+@utility poster-rays {
+  background-image: repeating-conic-gradient(
+    color-mix(in oklab, var(--type-base, white) 34%, transparent) 0deg 3deg,
+    transparent 3deg 15deg
+  );
+  mask-image: radial-gradient(closest-side, black 18%, transparent);
+}
+
+@utility type-glow {
+  filter: drop-shadow(0 0 34px color-mix(in oklab, var(--type-base, white) 60%, transparent))
+    drop-shadow(0 12px 0 color-mix(in oklab, var(--color-scrim) 45%, transparent));
 }
 
 @layer components {

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
 
 import { PageBody, PageHero } from '../components/scene/PageHero'
@@ -8,6 +8,7 @@ import { GameDialog } from '../components/ui/GameDialog'
 import { Panel } from '../components/ui/Panel'
 import { isValidShareCode } from '../features/team-builder/api'
 import { ShareLinkField } from '../features/team-builder/components/ShareLinkField'
+import { ShowdownExportDialog } from '../features/team-builder/components/ShowdownDialogs'
 import { ReadOnlyTeamSlots } from '../features/team-builder/components/TeamSlots'
 import { AnalysisHeatmap } from '../features/team-builder/components/WeaknessHeatmap'
 import { useSharedTeam, useTeamAnalysis } from '../features/team-builder/hooks'
@@ -56,6 +57,7 @@ export function SharedTeamPage() {
   const analysisIds = useMemo(() => members.map((member) => member.id), [members])
   const draftIds = analysisIds.slice(0, MAX_DRAFT_SIZE)
   const analysis = useTeamAnalysis(analysisIds)
+  const [exportOpen, setExportOpen] = useState(false)
 
   const notFound = !validCode || isNotFound(team.error)
   const data = notFound ? undefined : team.data
@@ -177,12 +179,25 @@ export function SharedTeamPage() {
                 >
                   Mở trong Team Builder
                 </Link>
+                <button
+                  type="button"
+                  onClick={() => setExportOpen(true)}
+                  disabled={analysisIds.length === 0}
+                  className={buttonClassName('secondary')}
+                >
+                  Xuất Showdown
+                </button>
                 <ShareLinkField shareCode={data.shareCode} />
               </Panel>
             </div>
           </>
         )}
       </PageBody>
+      <ShowdownExportDialog
+        open={exportOpen}
+        onClose={() => setExportOpen(false)}
+        ids={analysisIds}
+      />
     </>
   )
 }

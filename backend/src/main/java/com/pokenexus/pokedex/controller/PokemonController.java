@@ -21,9 +21,11 @@ import com.pokenexus.pokedex.dto.PokemonDetail;
 import com.pokenexus.pokedex.dto.PokemonFilter;
 import com.pokenexus.pokedex.dto.PokemonRef;
 import com.pokenexus.pokedex.dto.PokemonSummary;
+import com.pokenexus.pokedex.dto.SpeedTier;
 import com.pokenexus.pokedex.service.CompareService;
 import com.pokenexus.pokedex.service.EvolutionService;
 import com.pokenexus.pokedex.service.PokemonQueryService;
+import com.pokenexus.pokedex.service.SpeedTierService;
 
 @RestController
 @RequestMapping("/api/v1/pokemon")
@@ -35,12 +37,14 @@ public class PokemonController {
     private final PokemonQueryService pokemonQueryService;
     private final CompareService compareService;
     private final EvolutionService evolutionService;
+    private final SpeedTierService speedTierService;
 
     public PokemonController(PokemonQueryService pokemonQueryService, CompareService compareService,
-                             EvolutionService evolutionService) {
+                             EvolutionService evolutionService, SpeedTierService speedTierService) {
         this.pokemonQueryService = pokemonQueryService;
         this.compareService = compareService;
         this.evolutionService = evolutionService;
+        this.speedTierService = speedTierService;
     }
 
     @GetMapping
@@ -82,6 +86,14 @@ public class PokemonController {
             @Parameter(description = "Numeric id or name") @RequestParam String left,
             @Parameter(description = "Numeric id or name, different from left") @RequestParam String right) {
         return compareService.compare(left, right);
+    }
+
+    @GetMapping("/speed-tiers")
+    @Operation(summary = "Default and regional forms grouped by base Speed, fastest first")
+    public ResponseEntity<List<SpeedTier>> speedTiers() {
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, CACHE_ONE_HOUR)
+                .body(speedTierService.findTiers());
     }
 
     @GetMapping("/{idOrName}")

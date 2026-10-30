@@ -1,6 +1,6 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 0.7 (cập nhật 2026-10-29; Phần 11: chốt Railway và Cloudflare Pages theo ADR 0007, thiết lập production, nhập dữ liệu bằng `scripts/db-dump.sh`; Phần 2: thêm Lombok vào bảng công nghệ; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
+- Phiên bản: 0.8 (cập nhật 2026-10-30; Phần 6: query key `['pokemon', 'speed-tiers']` cho Bảng tốc độ cấp 50; Phần 11: chốt Railway và Cloudflare Pages theo ADR 0007, thiết lập production, nhập dữ liệu bằng `scripts/db-dump.sh`; Phần 2: thêm Lombok vào bảng công nghệ; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
 
@@ -305,6 +305,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | `['pokemon', 'search', q]` | 5 phút | Gợi ý tên khi gõ |
 | `['pokemon', 'generation-count', n]` | `Infinity` | Số loài mỗi thế hệ ở trang Tổng quan |
 | `['pokemon', 'type-pool', type]` | `Infinity` | 100 Pokémon đầu theo ID của một hệ cho trang Địa hình |
+| `['pokemon', 'speed-tiers']` | `Infinity` | Mốc tốc độ gốc cho Bảng tốc độ cấp 50 (F09); chi tiết thành viên dùng chung key `['pokemon', id]` |
 
 - Không thêm thư viện quản lý state toàn cục trong MVP; đội nháp là trạng thái toàn cục duy nhất. Tiến độ Trainer không phải state toàn cục: mỗi trang đọc `localStorage` khi mở và ghi lại khi thay đổi.
 - Mỗi route bọc `ErrorBoundary`; lỗi API hiển thị `ErrorState` có nút thử lại ([design-system.md](design-system.md), Phần 5).

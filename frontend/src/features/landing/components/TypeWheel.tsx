@@ -14,7 +14,7 @@ import { TYPE_NAMES, typeClassName, typeLabel, typeScopeClassName } from '../../
 import { attackProfile, type AttackProfile } from '../../../lib/typeEffectiveness'
 import type { TypeName } from '../../../types/api'
 import { useTypeMatrix } from '../../typechart/hooks'
-import { Aura, Blob, Spark, Wave } from './SectionDecor'
+import { Aura, Blob, Spark } from './SectionDecor'
 import { SectionTitle } from './SectionTitle'
 
 const RADIUS_PERCENT = 42
@@ -248,7 +248,6 @@ export function TypeWheel() {
           </div>
         </div>
       </div>
-      <Wave variant="valley" className="fill-band-rose" />
     </section>
   )
 }

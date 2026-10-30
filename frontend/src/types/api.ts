@@ -90,11 +90,6 @@ export interface CompareResponse {
   }
 }
 
-export interface TypeInfo {
-  id: number
-  name: TypeName
-}
-
 export interface TypeMatrix {
   types: TypeName[]
   multipliers: number[][]
@@ -114,6 +109,11 @@ export interface EvolutionStage {
 export interface EvolutionResponse {
   chainId: number
   stages: EvolutionStage[]
+}
+
+export interface SpeedTier {
+  speed: number
+  pokemon: PokemonRef[]
 }
 
 export interface TypeMatrixRow {

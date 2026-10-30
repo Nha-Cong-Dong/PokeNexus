@@ -1,29 +1,55 @@
+import type { ComponentType } from 'react'
 import { createBrowserRouter, type RouteObject } from 'react-router'
 
-import { ComparePage } from '../pages/ComparePage'
-import { DexPage } from '../pages/DexPage'
-import { LandingPage } from '../pages/LandingPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
-import { PokemonDetailPage } from '../pages/PokemonDetailPage'
-import { SharedTeamPage } from '../pages/SharedTeamPage'
-import { TeamBuilderPage } from '../pages/TeamBuilderPage'
-import { TerrainPage } from '../pages/TerrainPage'
-import { TypeChartPage } from '../pages/TypeChartPage'
 import { AppLayout } from './layout/AppLayout'
+
+const pageFallback = (
+  <div aria-busy="true" className="min-h-[60vh]">
+    <span className="sr-only">Đang tải trang…</span>
+  </div>
+)
+
+function lazyPage(
+  load: () => Promise<ComponentType>,
+): Pick<RouteObject, 'lazy' | 'hydrateFallbackElement'> {
+  return {
+    lazy: async () => ({ Component: await load() }),
+    hydrateFallbackElement: pageFallback,
+  }
+}
 
 export const routes: RouteObject[] = [
   {
     path: '/',
     element: <AppLayout />,
     children: [
-      { index: true, element: <LandingPage /> },
-      { path: 'pokedex', element: <DexPage /> },
-      { path: 'pokemon/:idOrName', element: <PokemonDetailPage /> },
-      { path: 'types', element: <TypeChartPage /> },
-      { path: 'compare', element: <ComparePage /> },
-      { path: 'team-builder', element: <TeamBuilderPage /> },
-      { path: 'team/:shareCode', element: <SharedTeamPage /> },
-      { path: 'terrain/:terrainId?', element: <TerrainPage /> },
+      { index: true, ...lazyPage(async () => (await import('../pages/LandingPage')).LandingPage) },
+      { path: 'pokedex', ...lazyPage(async () => (await import('../pages/DexPage')).DexPage) },
+      {
+        path: 'pokemon/:idOrName',
+        ...lazyPage(async () => (await import('../pages/PokemonDetailPage')).PokemonDetailPage),
+      },
+      {
+        path: 'types',
+        ...lazyPage(async () => (await import('../pages/TypeChartPage')).TypeChartPage),
+      },
+      {
+        path: 'compare',
+        ...lazyPage(async () => (await import('../pages/ComparePage')).ComparePage),
+      },
+      {
+        path: 'team-builder',
+        ...lazyPage(async () => (await import('../pages/TeamBuilderPage')).TeamBuilderPage),
+      },
+      {
+        path: 'team/:shareCode',
+        ...lazyPage(async () => (await import('../pages/SharedTeamPage')).SharedTeamPage),
+      },
+      {
+        path: 'terrain/:terrainId?',
+        ...lazyPage(async () => (await import('../pages/TerrainPage')).TerrainPage),
+      },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

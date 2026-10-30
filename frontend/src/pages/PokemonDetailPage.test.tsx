@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { jsonResponse, renderRoute } from '../test/renderRoute'
-import type { EvolutionResponse, PokemonDetail, TypeName } from '../types/api'
+import type { EvolutionResponse, PokemonDetail, SpeedTier, TypeName } from '../types/api'
 
 const CHARIZARD_DEFENSE: [TypeName, number][] = [
   ['normal', 1],
@@ -85,10 +85,24 @@ const CHARIZARD_EVOLUTION: EvolutionResponse = {
   ],
 }
 
+const SPEED_TIERS: SpeedTier[] = [
+  { speed: 102, pokemon: [{ id: 445, name: 'garchomp', types: ['dragon', 'ground'] }] },
+  {
+    speed: 100,
+    pokemon: [
+      { id: 6, name: 'charizard', types: ['fire', 'flying'] },
+      { id: 373, name: 'salamence', types: ['dragon', 'flying'] },
+    ],
+  },
+  { speed: 30, pokemon: [{ id: 143, name: 'snorlax', types: ['normal'] }] },
+]
+
 function stubApi(detail: () => Response, evolution: () => Response) {
-  const fetchMock = vi.fn<typeof fetch>(async (input) =>
-    String(input).endsWith('/evolution') ? evolution() : detail(),
-  )
+  const fetchMock = vi.fn<typeof fetch>(async (input) => {
+    const url = String(input)
+    if (url.endsWith('/speed-tiers')) return jsonResponse(SPEED_TIERS)
+    return url.endsWith('/evolution') ? evolution() : detail()
+  })
   vi.stubGlobal('fetch', fetchMock)
   return fetchMock
 }
@@ -143,6 +157,9 @@ describe('PokemonDetailPage', () => {
       'Tấn công đặc biệt',
       'Phòng thủ đặc biệt',
       'Tốc độ',
+      'Tối thiểu',
+      'Không đầu tư',
+      'Tối đa',
       'Chiều cao',
       'Cân nặng',
       'Thế hệ',
@@ -182,6 +199,29 @@ describe('PokemonDetailPage', () => {
     expect(defenseCell('Ground')).toHaveTextContent('Groundx0')
     expect(defenseCell('Grass')).toHaveTextContent('Grassx¼')
     expect(defenseCell('Normal')).toHaveTextContent('Normalx1')
+  })
+
+  it('shows the level 50 speed spread and the nearest speed tiers', async () => {
+    stubApi(
+      () => jsonResponse(CHARIZARD),
+      () => jsonResponse(CHARIZARD_EVOLUTION),
+    )
+
+    renderRoute('/pokemon/charizard')
+
+    const speed = await screen.findByRole('region', { name: 'Tốc độ ở cấp 50' })
+    expect(within(speed).getByText('Tối thiểu').nextElementSibling).toHaveTextContent('94')
+    expect(within(speed).getByText('Không đầu tư').nextElementSibling).toHaveTextContent('120')
+    expect(within(speed).getByText('Tối đa').nextElementSibling).toHaveTextContent('167')
+    expect(await within(speed).findByText(/Nhanh hơn 33% Pokémon/)).toBeInTheDocument()
+    expect(within(speed).getByRole('link', { name: 'Garchomp' })).toHaveAttribute(
+      'href',
+      '/pokemon/garchomp',
+    )
+    expect(within(speed).getByRole('link', { name: 'Snorlax' })).toHaveAttribute(
+      'href',
+      '/pokemon/snorlax',
+    )
   })
 
   it('lists the evolution chain and the other forms as links', async () => {

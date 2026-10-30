@@ -97,14 +97,14 @@ backend/
 | | `loader` | `TypeLoader`, `GenerationLoader`, `SpeciesLoader`, `PokemonLoader`, `EvolutionLoader` | T205 |
 | `typechart` | `controller` | `TypeController` | T304 |
 | | `service` | `TypeChartService` (cache 18 x 18, tính hệ số hệ kép) | T303, T304 |
-| | `repository` | `TypeRepository`, `TypeEfficacyRepository` | T204 |
+| | `repository` | `TypeEfficacyRepository` | T204 |
 | | `entity` | `Type`, `TypeEfficacy`, `TypeEfficacyId` | T204 |
 | | `dto` | `TypeResponse`, `TypeMatrixResponse`, `DefenseEntry` | T304 |
 | `pokedex` | `controller` | `PokemonController` | T206 |
-| | `service` | `PokemonQueryService`, `CompareService`, `EvolutionService` | T206, T308 |
+| | `service` | `PokemonQueryService`, `CompareService`, `EvolutionService`, `SpeedTierService` | T206, T308, T408 |
 | | `repository` | `PokemonRepository`, `SpeciesRepository`, `PokemonSpecifications`, `EvolutionLinkRepository` | T204, T206 |
 | | `entity` | `Pokemon`, `Species`, `Generation`, `Region`, `EvolutionChain`, `EvolutionLink` | T204 |
-| | `dto` | `PokemonFilter`, `PokemonRef`, `PokemonSummary`, `PokemonDetail`, `Stats`, `PokemonCatalogEntry`, `CompareResponse`, `EvolutionResponse`, `EvolutionStage` | T206, T303 |
+| | `dto` | `PokemonFilter`, `PokemonRef`, `PokemonSummary`, `PokemonDetail`, `Stats`, `PokemonCatalogEntry`, `CompareResponse`, `EvolutionResponse`, `EvolutionStage`, `SpeedTier` | T206, T303, T408 |
 | | `mapper` | `PokemonMapper` | T206 |
 | `synergy` | `controller` | `SynergyController` | T305 |
 | | `service` | `PokemonProfileRegistry`, `SynergyAnalyzer`, `RecommendationEngine`, `ReasonBuilder` | T305 |
@@ -165,7 +165,8 @@ frontend/
     │   ├── pokemon-detail/        api.ts, hooks.ts, components/
     │   ├── typechart/             api.ts, hooks.ts, components/
     │   ├── compare/               api.ts, hooks.ts, components/
-    │   ├── team-builder/          api.ts, hooks.ts, useTeamDraft.ts, components/
+    │   ├── team-builder/          api.ts, hooks.ts, useTeamDraft.ts, showdown.ts (T409), components/
+    │   ├── speed/                 level50.ts (tốc độ cấp 50, tỷ lệ, mốc lân cận), api.ts, hooks.ts, components/ (T408)
     │   ├── terrain/               terrains.ts, api.ts, hooks.ts, whosThat.ts, components/ (T314)
     │   └── trainer/               progress.ts, useTrainerProgress.ts, components/ (BallIcon, TrainerCard; T313)
     ├── components/
@@ -177,6 +178,7 @@ frontend/
     │                              PokemonCard, PokemonSearchBox, StatRadar, statAxes.ts, multiplierStyles.ts
     ├── lib/
     │   ├── http.ts                fetch wrapper, chuyển ProblemDetail thành ApiError (kèm Retry-After)
+    │   ├── clipboard.ts           writeClipboard (link chia sẻ, văn bản Showdown)
     │   ├── queryClient.ts         Không thử lại khi lỗi 4xx, thử lại 1 lần với lỗi khác
     │   ├── typeEffectiveness.ts   Tra hệ số từ TypeMatrix, hệ số hệ kép, nhóm x2/x½/x0 của một hệ tấn công
     │   ├── assets.ts              getSpriteUrl, getArtworkUrl, sceneUrl, sceneSrcSet, sceneThumbUrl
@@ -205,11 +207,11 @@ frontend/
 |---|---|---|---|
 | `LandingPage` | `landing` | `LandingHero`, `TypeTicker`, `FeatureRegions`, `TypeWheel`, `DailyPokemon`, `TeamSteps`, `GenerationChart`, `TrainerQuiz`, `ClosingCta`, `SectionDecor` (Aura, Blob, Cloud, Spark, Wave; T316) | T311, T312 |
 | `DexPage` | `dex` | `DexFilters`, `StatRangeFields`, `DexToolbar`, `ViewToggle`, `FilterSheet`, `PokemonGrid`, `PokemonList`, `Pagination` | T301 |
-| `PokemonDetailPage` | `pokemon-detail` | `PokemonHero`, `StatPanel`, `DefenseGrid`, `FormSwitcher`, `EvolutionChain`, `DetailStates`; `evolution.ts`, `labels.ts` | T303 |
+| `PokemonDetailPage` | `pokemon-detail`, `speed` | `PokemonHero`, `StatPanel` (chứa `SpeedBenchmark`), `DefenseGrid`, `FormSwitcher`, `EvolutionChain`, `DetailStates`; `evolution.ts`, `labels.ts` | T303, T408 |
 | `TypeChartPage` | `typechart` | `TypeMatrixTable`, `DualTypePicker`, `DefenseResult`, `MatrixLegend`, `MatrixFocusPanel`; `defense.ts`, `matrixFocus.ts`, `useDefendingTypes.ts` | T304, T316 |
 | `ComparePage` | `compare` | `ComparePicker`, `CompareSlot`, `VersusBanner`, `CompareRadar`, `StatDuelTable`, `StabPanel`, `VerdictPanel`; `useCompareSearchParams.ts`, `scale.ts` | T308, T316 |
-| `TeamBuilderPage` | `team-builder` | `TeamSlots`, `TeamMemberCard`, `WeaknessHeatmap`, `TeamScoreGauge`, `CoverageAndStats`, `RecommendationList`, `RecommendationCard`, `SaveTeamDialog`, `ShareLinkField`; `useTeamDraft.ts`, `teamAnalysis.ts` | T306, T307 |
-| `SharedTeamPage` | `team-builder` | `ReadOnlyTeamSlots`, `SharedMemberCard` (trong `TeamMemberCard.tsx`), `AnalysisHeatmap` (`compact`), `ShareLinkField` | T307, T316 |
+| `TeamBuilderPage` | `team-builder` | `TeamSlots`, `TeamMemberCard`, `WeaknessHeatmap`, `TeamScoreGauge`, `CoverageAndStats`, `RecommendationList`, `RecommendationCard`, `SaveTeamDialog`, `ShareLinkField`, `ShowdownImportDialog`, `ShowdownExportDialog` (trong `ShowdownDialogs.tsx`), `TeamSpeedList` (feature `speed`); `useTeamDraft.ts`, `teamAnalysis.ts`, `showdown.ts` | T306, T307, T408, T409 |
+| `SharedTeamPage` | `team-builder` | `ReadOnlyTeamSlots`, `SharedMemberCard` (trong `TeamMemberCard.tsx`), `AnalysisHeatmap` (`compact`), `ShareLinkField`, `ShowdownExportDialog` | T307, T316, T409 |
 | `TerrainPage` | `terrain`, `trainer` | `TerrainPicker`, `TerrainPokemon`, `WhosThatPokemon`, `TrainerCard`; `terrains.ts`, `whosThat.ts` | T314 |
 
 ### III. Quy tắc đặt tên frontend

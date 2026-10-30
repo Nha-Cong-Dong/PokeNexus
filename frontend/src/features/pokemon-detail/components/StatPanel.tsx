@@ -4,6 +4,7 @@ import { StatBar } from '../../../components/pokemon/StatBar'
 import { buttonClassName } from '../../../components/ui/buttonStyles'
 import { Panel } from '../../../components/ui/Panel'
 import { formatHeight, formatWeight } from '../../../lib/formatters'
+import { SpeedBenchmark } from '../../speed/components/SpeedBenchmark'
 import type { PokemonDetail } from '../../../types/api'
 import { STAT_AXES } from '../../../components/pokemon/statAxes'
 import { FORM_LABELS, rarityLabel } from '../labels'
@@ -53,6 +54,8 @@ export function StatPanel({ detail }: StatPanelProps) {
           />
         ))}
       </dl>
+
+      <SpeedBenchmark pokemonId={detail.id} base={detail.stats.speed} />
 
       <dl className="grid grid-cols-2 gap-2.5 border-t-2 border-surface-muted pt-4.5 lg:gap-x-5 lg:gap-y-3.5">
         {facts.map((fact) => (

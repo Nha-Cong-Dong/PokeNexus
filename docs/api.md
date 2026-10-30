@@ -1,11 +1,12 @@
 # PokeNexus - Đặc tả REST API
 
-- Phiên bản: 0.6 (phạm vi MVP, cập nhật 2026-10-29; khớp code backend sau khi làm T303-T308)
+- Phiên bản: 0.7 (cập nhật 2026-10-30; thêm `GET /pokemon/speed-tiers` cho F09, [spec.md](spec.md) 1.5)
 - Tài liệu tương tác (sau khi có backend): Swagger UI tại `http://localhost:8080/swagger-ui.html`. Khi Swagger và tài liệu này lệch nhau, sửa cho khớp trong cùng PR.
 - Thay đổi so với 0.1: thêm schema DTO (Phần 3), danh mục lỗi có `code` (Phần 4), mã 429 và 503; bỏ `spriteUrl` khỏi response ([ADR 0005](adr/0005-hybrid-image-assets.md)); response đề xuất đổi từ mảng sang object.
 - Thay đổi so với 0.3: `analyze` nhận 1-6 Pokémon để chấm điểm cả đội đủ 6; `recommendations` vẫn nhận 1-5; `synergyScore` của đội đã lưu tính trên mọi thành viên ([spec.md](spec.md) 1.3).
 - Thay đổi so với 0.4: `excludeLegendary = true` của `recommendations` loại thêm 20 Pokémon Paradox (Phần 2, mục IX).
 - Thay đổi so với 0.5: `/health` trả 503 với `status = "DOWN"` khi không truy vấn được DB (review Checkpoint 2, Issue #43); bảng `pokemon` chưa tồn tại vẫn trả 200 `UP` (Phần 2, mục II).
+- Thay đổi so với 0.6: thêm `GET /api/v1/pokemon/speed-tiers` (Phần 2, mục XIII) và DTO `SpeedTier` (Phần 3, mục II) cho Bảng tốc độ cấp 50 (US-09, T408); bỏ mục "Dự kiến sau MVP". Nhập, xuất Showdown (T409) không đổi API.
 
 ---
 
@@ -59,8 +60,9 @@
 | POST | `/api/v1/teams` | Lưu đội, trả về `shareCode` | F06 |
 | GET | `/api/v1/teams/shared/{shareCode}` | Xem đội qua mã chia sẻ | F06 |
 | GET | `/api/v1/pokemon/{idOrName}/evolution` | Chuỗi tiến hóa của loài | F02 |
+| GET | `/api/v1/pokemon/speed-tiers` | Mốc tốc độ gốc của dạng thường và dạng vùng | F09 |
 
-- `/pokemon/search` và `/pokemon/compare` là đường dẫn cố định nên được Spring ưu tiên hơn mẫu `/pokemon/{idOrName}`; không có Pokémon nào tên `search` hay `compare`.
+- `/pokemon/search`, `/pokemon/compare` và `/pokemon/speed-tiers` là đường dẫn cố định nên được Spring ưu tiên hơn mẫu `/pokemon/{idOrName}`; không có Pokémon nào tên `search`, `compare` hay `speed-tiers`.
 - Synergy dùng POST vì đầu vào là danh sách có cấu trúc và có thể bổ sung tùy chọn sau này.
 
 ### II. `GET /api/v1/health`
@@ -164,11 +166,12 @@
 - Chuỗi tiến hóa của loài chứa Pokémon đó (US-08, làm sớm ngày 2026-10-26 cho trang chi tiết). Response 200: `EvolutionResponse` (Phần 3, mục II). 404 `POKEMON_NOT_FOUND`.
 - `stages` là danh sách phẳng xếp theo `speciesId`; mỗi phần tử lấy `pokemonId`, `name`, `types` của dạng mặc định; loài không có dạng mặc định bị bỏ qua. Frontend dựng cây từ `evolvesFromSpeciesId`.
 
-### XIII. Dự kiến sau MVP
+### XIII. `GET /api/v1/pokemon/speed-tiers`
 
-| Method | Endpoint | Tính năng |
-|---|---|---|
-| GET | `/api/v1/pokemon/speed-tiers` | Bảng tốc độ cấp 50 (US-09) |
+- Mốc tốc độ gốc cho Bảng tốc độ cấp 50 (US-09, T408). Không có tham số. Response 200: `SpeedTier[]` (Phần 3, mục II), header `Cache-Control: public, max-age=3600`.
+- Chỉ gồm dạng `DEFAULT` và `REGIONAL` (với bộ CSV đầy đủ: 1.083 dạng, 119 mốc). Mốc xếp theo `speed` giảm dần; Pokémon trong mỗi mốc xếp theo `id` tăng dần.
+- Bảng `pokemon` rỗng: 503 `DATA_NOT_READY`.
+- Response khoảng 59 KB chưa nén; frontend gọi một lần mỗi phiên (`staleTime` `Infinity`) và tự tính tốc độ cấp 50, tỷ lệ, mốc lân cận.
 
 ---
 
@@ -267,6 +270,11 @@ interface EvolutionStage {
 interface EvolutionResponse {
   chainId: number;
   stages: EvolutionStage[];
+}
+
+interface SpeedTier {
+  speed: number;
+  pokemon: PokemonRef[];
 }
 ```
 

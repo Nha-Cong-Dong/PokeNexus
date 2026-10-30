@@ -6,12 +6,12 @@ import { TypeGlyph } from '../../../components/pokemon/TypeGlyph'
 import { Reveal } from '../../../components/motion/Reveal'
 import { SceneBackdrop } from '../../../components/scene/SceneBackdrop'
 import { typeClassName, typeLabel, typeScopeClassName } from '../../../lib/pokemonTypes'
-import { SCENES, type SceneId } from '../../../lib/scenes'
+import { SCENES, sceneSwatch, type SceneId } from '../../../lib/scenes'
 import type { TypeName } from '../../../types/api'
 import { Aura, Blob, Cloud, Spark, Wave } from './SectionDecor'
 import { SectionTitle } from './SectionTitle'
 
-type PeekKind = 'cards' | 'matrix' | 'versus' | 'team'
+type PeekKind = 'cards' | 'matrix' | 'versus' | 'team' | 'terrain'
 
 interface FeatureIsland {
   to: string
@@ -79,11 +79,25 @@ const ISLANDS: readonly FeatureIsland[] = [
     dotClassName: 'bg-type-dragon',
     itemClassName: 'sm:mt-14 xl:mt-[124px]',
   },
+  {
+    to: '/terrain',
+    title: 'Địa hình',
+    description: '13 địa hình, Pokémon sống ở đó và trò đoán bóng Pokémon.',
+    scene: 'desert',
+    glyph: 'ground',
+    peek: 'terrain',
+    cardClassName:
+      'bg-isle-desert -rotate-2 [--glow:color-mix(in_oklab,var(--color-type-ground-deep)_45%,transparent)]',
+    kickerClassName: 'text-isle-desert-ink',
+    dotClassName: 'bg-type-ground-deep',
+    itemClassName:
+      'sm:col-span-2 sm:mx-auto sm:w-[calc(50%-1.375rem)] xl:col-span-1 xl:mx-0 xl:mt-12 xl:w-auto',
+  },
 ]
 
 const PEEK_CARDS: readonly { name: string; type: TypeName }[] = [
   { name: 'Bulbasaur', type: 'grass' },
-  { name: 'Charmander', type: 'fire' },
+  { name: 'Vulpix', type: 'fire' },
 ]
 
 const MINI_MATRIX: readonly number[] = [
@@ -92,6 +106,8 @@ const MINI_MATRIX: readonly number[] = [
 ]
 
 const PEEK_TEAM: readonly TypeName[] = ['fire', 'water', 'rock', 'fighting', 'ghost']
+
+const PEEK_TERRAINS: readonly SceneId[] = ['forest', 'snowfield', 'volcano']
 
 const TRAIL_PATH =
   'M-20 520 C 40 540, 80 490, 130 490 S 260 590, 376 582 S 520 510, 623 517 S 780 616, 870 608 S 990 540, 1030 560'
@@ -171,11 +187,31 @@ function PeekTeam() {
   )
 }
 
+function PeekTerrain() {
+  return (
+    <span className="flex items-end gap-3">
+      <span className="flex -space-x-2.5">
+        {PEEK_TERRAINS.map((scene, index) => (
+          <span
+            key={scene}
+            className={`h-[58px] w-10 rounded-[11px] border-2 border-ink shadow-[0_3px_0_color-mix(in_oklab,var(--color-ink)_25%,transparent)] ${index === 1 ? 'z-10 -translate-y-1.5' : index === 0 ? '-rotate-6' : 'rotate-6'}`}
+            style={{ backgroundImage: sceneSwatch(scene) }}
+          />
+        ))}
+      </span>
+      <span className="flex size-[58px] items-center justify-center rounded-[14px] border-2 border-ink bg-ink font-display text-[32px]/none text-dex-yellow shadow-[0_3px_0_color-mix(in_oklab,var(--color-ink)_25%,transparent)]">
+        ?
+      </span>
+    </span>
+  )
+}
+
 const PEEKS: Record<PeekKind, ComponentType> = {
   cards: PeekCards,
   matrix: PeekMatrix,
   versus: PeekVersus,
   team: PeekTeam,
+  terrain: PeekTerrain,
 }
 
 function IslandCard({ island, index }: { island: FeatureIsland; index: number }) {
@@ -295,7 +331,7 @@ export function FeatureRegions() {
       </div>
       <div className="relative mx-auto max-w-7xl">
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
-          <SectionTitle id="regions-title">Bốn vùng đất</SectionTitle>
+          <SectionTitle id="regions-title">Năm vùng đất</SectionTitle>
           <p className="max-w-[52ch] text-lg/7 text-ink-muted">
             Mỗi công cụ là một hòn đảo trên hành trình. Bấm vào đảo để đi tới công cụ đó.
           </p>
@@ -325,7 +361,7 @@ export function FeatureRegions() {
               vectorEffect="non-scaling-stroke"
             />
           </svg>
-          <ul className="relative grid items-start gap-14 pb-[70px] sm:grid-cols-2 sm:gap-x-11 sm:gap-y-16 xl:grid-cols-4 xl:gap-8">
+          <ul className="relative grid items-start gap-14 pb-[70px] sm:grid-cols-2 sm:gap-x-11 sm:gap-y-16 xl:grid-cols-5 xl:gap-6">
             {ISLANDS.map((island, index) => (
               <li key={island.to} className={`relative ${island.itemClassName}`}>
                 <IslandCard island={island} index={index} />

@@ -329,6 +329,26 @@ class PokemonControllerIT {
     }
 
     @Test
+    void groupsDefaultAndRegionalFormsIntoSpeedTiersFastestFirst() {
+        assertThat(mvc.get().uri("/api/v1/pokemon/speed-tiers"))
+                .hasStatusOk()
+                .hasHeader(HttpHeaders.CACHE_CONTROL, "public, max-age=3600")
+                .bodyJson()
+                .satisfies(json -> {
+                    assertThat(json).extractingPath("$[*].pokemon[*]").asArray().hasSize(28);
+                    assertThat(json).extractingPath("$[*].speed").asArray()
+                            .isSortedAccordingTo((a, b) -> Integer.compare((Integer) b, (Integer) a))
+                            .doesNotHaveDuplicates();
+                    assertThat(json).extractingPath("$[?(@.speed == 102)].pokemon[*].name").asArray()
+                            .containsExactly("garchomp");
+                    assertThat(json).extractingPath("$[?(@.speed == 100)].pokemon[*].name").asArray()
+                            .containsExactly("charizard", "ninetales", "mew", "salamence");
+                    assertThat(json).extractingPath("$[*].pokemon[*].name").asArray()
+                            .doesNotContain("charizard-mega-x", "garchomp-mega");
+                });
+    }
+
+    @Test
     void rejectsUnknownTypeAndNonNumericGeneration() {
         assertThat(mvc.get().uri("/api/v1/pokemon?type=stellar"))
                 .hasStatus(400)
