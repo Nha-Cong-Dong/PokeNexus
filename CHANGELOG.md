@@ -24,6 +24,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ### Changed
 
+- Trang Tổng quan: khối Bốn vùng đất thành Năm vùng đất, thêm thẻ Địa hình dẫn tới `/terrain`.
 - Pokémon hôm nay trên trang Tổng quan thành poster tràn viền (T317): bỏ thẻ viền đen, ảnh khung cảnh phủ cả khối và cắt xiên, artwork lớn tràn qua mép trên kèm tia sáng màu hệ.
 - Giao diện 8 trang khớp bản thiết kế hi-fi ngày 2026-10-24 (T316): trang Tổng quan có nền từng khối, thẻ đảo vòm, sân khấu Pokémon nổi bật; So sánh dùng khối đối đầu làm hero khi đủ 2 Pokémon, khung chọn gọn, khối "Đòn cùng hệ"; Tương khắc bấm tên hệ để làm nổi bật hàng, cột kèm khung tóm tắt, ma trận gọn trên điện thoại; Team Builder trên điện thoại hiện bảng điểm yếu theo thẻ từng hệ; trang Đội chia sẻ có hero mới và bảng điểm yếu gọn; ô x1 trong ma trận, heatmap để trống. design-system 1.0.
 - Bảng chọn địa hình thành dải 13 cột xiên có ảnh nhỏ (`{scene}-thumb.webp`, 400 x 600, tổng 254 KB): cột đang chọn nở rộng với tên lớn và nhãn hệ, hover nở nhẹ; trên mobile cuộn ngang và tự cuộn tới địa hình đang chọn.

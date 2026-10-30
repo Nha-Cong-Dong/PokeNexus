@@ -91,7 +91,7 @@
 - `dex-yellow` không dùng làm màu chữ hay viền trên nền trắng (1.44:1); chỉ dùng làm nền có chữ `ink`.
 - Cặp màu radar `primary` (xanh dương) và `accent` (cam) phân biệt được với người mù màu đỏ-lục.
 - Màu `dex-red`, `dex-yellow` lấy cảm hứng từ Pokédex trong game nhưng không sao chép logo hay hình Poké Ball ([assets.md](assets.md), Phần 7).
-- Token trang trí trang Tổng quan (thêm ngày 2026-10-30 theo bản thiết kế): `band-*` (9 màu nền chuyển của từng khối: sky, lilac, peach, rose, cream, apricot, mint, violet, ice), `isle-*` (nền nhạt và màu chữ của 4 thẻ đảo), `scrim-raised` (nền tâm vòng tương khắc), `dex-red-deep`, `dex-red-edge` (hover và gờ chip vùng đất, gờ trong khối kêu gọi), `answer-hover` (hover đáp án Thử tài Trainer). Chỉ dùng làm nền trang trí; chữ đặt lên vẫn là `ink`.
+- Token trang trí trang Tổng quan (thêm ngày 2026-10-30 theo bản thiết kế): `band-*` (9 màu nền chuyển của từng khối: sky, lilac, peach, rose, cream, apricot, mint, violet, ice), `isle-*` (nền nhạt và màu chữ của 5 thẻ đảo; `isle-desert`, `isle-desert-ink` thêm cho thẻ Địa hình, chữ 6,06:1), `scrim-raised` (nền tâm vòng tương khắc), `dex-red-deep`, `dex-red-edge` (hover và gờ chip vùng đất, gờ trong khối kêu gọi), `answer-hover` (hover đáp án Thử tài Trainer). Chỉ dùng làm nền trang trí; chữ đặt lên vẫn là `ink`.
 
 ### II. Màu 18 hệ
 
@@ -408,7 +408,7 @@
 | Component | Trang | Quy tắc chính |
 |---|---|---|
 | `LandingHero` | Tổng quan | Khung cảnh toàn màn hình đầu, artwork một Pokémon, `GameDialog` chứa lời chào và 2 nút (Phần 7, mục II); sân khấu Pokémon nổi bật có vòng 18 màu hệ, bảng quét, thẻ Chiều cao, Cân nặng |
-| `FeatureRegions` | Tổng quan | 4 thẻ đảo dạng vòm (bo 150/150/34/34 px), nền nhạt `isle-*`, xoay ±2°, xếp so le trên desktop, nối bằng đường mòn; vòm ảnh khung cảnh có hình xem trước nhỏ của tính năng; mobile 1 cột. Lớp trang trí dùng chung ở `SectionDecor.tsx` (Aura, Blob, Cloud, Spark, Wave) |
+| `FeatureRegions` | Tổng quan | 5 thẻ đảo dạng vòm (Pokédex, Tương khắc, So sánh, Xây đội, Địa hình) (bo 150/150/34/34 px), nền nhạt `isle-*`, xoay ±2°, xếp so le trên desktop (5 cột từ `xl`, 2 cột từ `sm` với thẻ thứ 5 ở giữa hàng cuối), nối bằng đường mòn; vòm ảnh khung cảnh có hình xem trước nhỏ của tính năng; mobile 1 cột. Lớp trang trí dùng chung ở `SectionDecor.tsx` (Aura, Blob, Cloud, Spark, Wave) |
 | `DailyPokemon` | Tổng quan | Một Pokémon chọn theo ngày (ID tính từ ngày hiện tại, cố định trong ngày), gọi `GET /api/v1/pokemon/{idOrName}`; dạng poster tràn viền (Phần 7, mục II.1) |
 | `DexFilters` | Omni-Dex | Chip 18 hệ `aria-pressed`, tối đa 2 (đủ 2 thì vô hiệu hóa các chip còn lại); chip thế hệ 1-9 chọn một (bấm lại để bỏ, vì API `gen` nhận một giá trị); `StatRangeFields`; chip Dạng. Mọi thay đổi ghi lên URL. Dùng chung cho cột lọc (`layout="sidebar"`, 2 cột chip) và ngăn kéo (`layout="sheet"`, 3 cột) |
 | `StatRangeFields` | Omni-Dex | Ô "Từ", "Đến" (BST 0-1530) và "Tốc độ tối thiểu" (0-255); áp dụng khi rời ô hoặc bấm `Enter`; sai định dạng hoặc "Từ" lớn hơn "Đến" thì báo lỗi dưới ô (`aria-describedby`) và không đổi URL; thanh khoảng BST minh họa thang 180-720 |
@@ -529,8 +529,8 @@ Desktop (1440 px)
 +--------------------------------------------------------------+
 |  Dải 18 nhãn hệ (TypeTicker)                                  |
 +--------------------------------------------------------------+
-|  Bốn vùng đất (FeatureRegions): 4 thẻ đảo Pokédex,            |
-|  Tương khắc, So sánh, Xây đội; nút "Khám phá"                 |
+|  Năm vùng đất (FeatureRegions): 5 thẻ đảo Pokédex,            |
+|  Tương khắc, So sánh, Xây đội, Địa hình; nút "Khám phá"       |
 +--------------------------------------------------------------+
 |  Vòng tương khắc (TypeWheel, nền ink): bảng x2, x½, x0 bên    |
 |  trái; vòng 18 hệ bên phải, hệ đang chọn ở giữa               |
@@ -553,7 +553,7 @@ Desktop (1440 px)
 - Nguồn thiết kế: bản thiết kế hi-fi "PokeNexus" (artboard "Tổng quan" và "Điện thoại · Tổng quan", 2026-10-24) trên [claude.ai](https://claude.ai/code/artifact/31b3214f-f6f7-4bc9-b7c5-8c89cca4d24a) (riêng tư của tác giả). Tiêu chí chấp nhận từng khối: [spec.md](spec.md), Phần 2, mục VII.
 - Hero chia 2 cột từ `lg` (1024 px); từ 768 đến 1023 px xếp dọc như mobile vì sân khấu Pokémon nổi bật rộng 440 px. Sân khấu gồm vòng 18 màu hệ nghiêng dưới chân artwork, bảng quét có 4 góc ngắm, 2 thẻ "Chiều cao", "Cân nặng"; mobile ẩn vòng hệ. Quanh vỏ Pokédex là ảnh khung cảnh làm mờ phủ gradient `ink`.
 - Mỗi khối có nền chuyển màu riêng (`band-*`), đốm màu trôi chậm, sóng nối giữa khối sáng và khối tối. Artwork ở hero và Thử tài Trainer đứng trên đế hình hữu cơ nhuộm màu hệ (`type-blob`). Pokémon hôm nay (T317) là poster tràn viền: ảnh khung cảnh phủ cả khối, cắt xiên (`poster-cut`), viền trên 10 px màu hệ; artwork 600 px (480 px ở 1024-1279 px, 330 px trên mobile) tràn qua mép trên, sau lưng là tia sáng màu hệ và số Pokédex viền cỡ lớn; cột chữ đặt trên `poster-scrim`, tên Pokémon bằng font display; khối Vòng tương khắc phía trên không còn sóng nối. Dải hệ xoay -1,6° và đè lên mép dưới hero.
-- Mobile (375 px): các khối xếp dọc; artwork nằm trên hộp thoại; 4 thẻ vùng đất một cột; vòng tương khắc nằm dưới bảng hệ số; biểu đồ thế hệ cuộn ngang trong khung.
+- Mobile (375 px): các khối xếp dọc; artwork nằm trên hộp thoại; 5 thẻ vùng đất một cột; vòng tương khắc nằm dưới bảng hệ số; biểu đồ thế hệ cuộn ngang trong khung.
 - Nút chính "Mở Pokédex" dùng biến thể `cta`; nút phụ "Xây đội ngay" dùng `secondary`.
 - Artwork ở hero lấy từ đường dẫn artwork của PokéAPI; mất mạng thì dùng sprite phóng to theo [assets.md](assets.md), Phần 5.
 - API dùng: `GET /api/v1/pokemon/{idOrName}` (Pokémon nổi bật, Pokémon hôm nay), `GET /api/v1/types/matrix` (vòng tương khắc, câu đố), `GET /api/v1/pokemon?gen=<n>&form=DEFAULT&size=1` (`totalElements` cho biểu đồ thế hệ).

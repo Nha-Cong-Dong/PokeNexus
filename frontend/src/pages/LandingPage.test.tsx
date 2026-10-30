@@ -128,13 +128,14 @@ describe('LandingPage', () => {
     )
   })
 
-  it('links the four regions to their tools', () => {
+  it('links the five regions to their tools', () => {
     renderRoute('/')
-    const regions = screen.getByRole('region', { name: 'Bốn vùng đất' })
+    const regions = screen.getByRole('region', { name: 'Năm vùng đất' })
     const hrefs = within(regions)
       .getAllByRole('link')
       .map((link) => link.getAttribute('href'))
-    expect(hrefs).toEqual(['/pokedex', '/types', '/compare', '/team-builder'])
+    expect(hrefs).toEqual(['/pokedex', '/types', '/compare', '/team-builder', '/terrain'])
+    expect(within(regions).getByRole('heading', { level: 3, name: 'Địa hình' })).toBeInTheDocument()
   })
 
   it('lists what Fire hits super effectively on the type wheel', async () => {

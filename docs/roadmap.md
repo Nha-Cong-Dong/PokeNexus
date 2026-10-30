@@ -210,7 +210,7 @@ gantt
 | Thứ tự | Cắt | Không ảnh hưởng |
 |---|---|---|
 | 1 | Toàn bộ E9 (tính năng mở rộng, gồm T314 Trang Địa hình) và bộ câu hỏi 2-5 của T313 | MVP; Thử tài Trainer giữ bộ Hệ số sát thương |
-| 2 | Trang Tổng quan phần 2 (T312) | Hero và 4 lối vào công cụ vẫn còn |
+| 2 | Trang Tổng quan phần 2 (T312) | Hero và 5 lối vào công cụ vẫn còn |
 | 3 | Kết luận tự động của Bàn Cân, chỉ giữ radar | F04 vẫn dùng được |
 | 4 | Chọn hệ kép ở Bảng tương khắc, chỉ giữ ma trận | Lưới phòng thủ ở trang chi tiết vẫn tính hệ kép |
 | 5 | Radar chỉ số trung bình ở Team Builder | Heatmap và đề xuất |

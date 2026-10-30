@@ -6,7 +6,7 @@
 - Thay đổi so với 1.1: thêm F07 Trang Tổng quan (Phần 2, mục VII) theo bản thiết kế giao diện ngày 2026-10-24; Omni-Dex chuyển từ `/` sang `/pokedex`. Lý do: người dùng mới cần một trang giới thiệu dẫn tới 4 công cụ, thay vì vào thẳng lưới dữ liệu. Thay đổi yêu cầu từ đây phải tăng phiên bản và ghi lý do.
 - Thay đổi so với 1.2: phân tích đội nhận 1-6 Pokémon, đề xuất vẫn nhận 1-5 (Phần 2, mục V.1); ví dụ 4 đổi thành 7 Pokémon, thêm ví dụ 5 (mục V.4). Lý do: bước "thêm đề xuất số 1, xác nhận điểm đội tăng" của kịch bản demo (Phần 4) cần chấm điểm đội đủ 6; với giới hạn 5, điểm không đổi khi thêm đề xuất vào slot 6.
 - Thay đổi so với 1.3: Thử tài Trainer có 5 bộ câu hỏi và phần thưởng (Phần 2, mục VII); thêm F08 Trang Địa hình (Phần 2, mục VIII). Lý do: chủ dự án yêu cầu ngày 2026-10-28 thêm nội dung khám phá và trò chơi nhỏ cho người mới; cả hai mức Could, không đổi API và kịch bản demo.
-- Thay đổi so với 1.4: thêm F09 Bảng tốc độ cấp 50 (US-09) và F10 Nhập, xuất đội Showdown (US-10) (Phần 2, mục IX, X). Lý do: chủ dự án chọn ngày 2026-10-30 hai tính năng mở rộng có sẵn trong roadmap cho người chơi VGC; F09 thêm endpoint `GET /pokemon/speed-tiers`, F10 không đổi API; kịch bản demo không đổi.
+- Thay đổi so với 1.4: thêm F09 Bảng tốc độ cấp 50 (US-09) và F10 Nhập, xuất đội Showdown (US-10) (Phần 2, mục IX, X). Lý do: chủ dự án chọn ngày 2026-10-30 hai tính năng mở rộng có sẵn trong roadmap cho người chơi VGC; F09 thêm endpoint `GET /pokemon/speed-tiers`, F10 không đổi API; kịch bản demo không đổi. Khối Bốn vùng đất của F07 thành Năm vùng đất, thêm thẻ dẫn tới trang Địa hình (F08) theo yêu cầu chủ dự án cùng ngày.
 
 ---
 
@@ -114,7 +114,7 @@
 |---|---|
 | Hero | Tên sản phẩm, câu mô tả, 3 nhãn (thế hệ 1-9, chạy offline, dữ liệu PokéAPI); hộp thoại "Giáo sư" có nút "Mở Pokédex" tới `/pokedex` và "Xây đội ngay" tới `/team-builder`; Pokémon nổi bật có artwork, số Pokédex, hệ, chiều cao, cân nặng; chọn được 1 trong 13 khung cảnh vùng đất |
 | Dải hệ | 18 nhãn hệ có chữ |
-| Bốn vùng đất | 4 thẻ dẫn tới `/pokedex`, `/types`, `/compare`, `/team-builder`, mỗi thẻ có tên, mô tả một câu, nút "Khám phá" |
+| Năm vùng đất | 5 thẻ dẫn tới `/pokedex`, `/types`, `/compare`, `/team-builder`, `/terrain`, mỗi thẻ có tên, mô tả một câu, nút "Khám phá" |
 | Vòng tương khắc | Chọn 1 trong 18 hệ tấn công; hiện danh sách hệ nhận x2, x½, x0 lấy từ `GET /types/matrix`; link tới `/types` |
 | Pokémon hôm nay | Cùng một ngày luôn ra cùng một Pokémon; hiện artwork, số, hệ, BST, một câu về điểm yếu x2 trở lên; nút "Xem chi tiết" tới trang chi tiết |
 | Xây đội trong 3 bước | 3 bước có minh họa tĩnh; nút "Xây đội ngay" |
