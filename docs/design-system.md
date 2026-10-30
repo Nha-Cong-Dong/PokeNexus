@@ -1,11 +1,12 @@
 # PokeNexus - Design System và UI Guidelines
 
-- Phiên bản: 1.0 (cập nhật 2026-10-30; giao diện 8 trang khớp bản thiết kế hi-fi ngày 2026-10-24 ở 1440 và 390 px; bộ chuyển động theo bản thiết kế ngày 2026-10-24: token `--animate-*`, `Reveal`, `staggerDelay`; trang Địa hình; nền khung cảnh nhiều ảnh theo [ADR 0006](adr/0006-animated-scene-backdrops.md); vùng vá do AI vẽ có Content Credentials theo [ADR 0008](adr/0008-ai-edited-scene-patches.md))
+- Phiên bản: 1.1 (cập nhật 2026-10-30; Pokémon hôm nay dạng poster tràn viền, khối tốc độ cấp 50, hộp thoại Showdown; giao diện 8 trang khớp bản thiết kế hi-fi ngày 2026-10-24 ở 1440 và 390 px; bộ chuyển động theo bản thiết kế ngày 2026-10-24: token `--animate-*`, `Reveal`, `staggerDelay`; trang Địa hình; nền khung cảnh nhiều ảnh theo [ADR 0006](adr/0006-animated-scene-backdrops.md); vùng vá do AI vẽ có Content Credentials theo [ADR 0008](adr/0008-ai-edited-scene-patches.md))
 - Phạm vi: định hướng thẩm mỹ, token, font, ảnh khung cảnh, component, pattern, bố cục trang và accessibility cho frontend.
 - Theme: **light là mặc định và bắt buộc ở MVP**. Token đã định nghĩa sẵn cặp light/dark; dark mode là mức Could, chưa xếp lịch ([roadmap.md](roadmap.md), Phần 2).
 - Mọi giá trị màu dùng cho chữ và thành phần giao diện đã được kiểm tra tỷ lệ tương phản theo công thức WCAG 2.x bằng script ngày 2026-10-24.
 - Thay đổi so với 0.2: bỏ font Be Vietnam Pro, đổi bảng màu thương hiệu, thêm trang Tổng quan, thêm nền khung cảnh theo vùng đất. Các mục cần đồng bộ sang tài liệu khác liệt kê ở Phần 11.
 - Thay đổi so với 0.3: Phần 3 trỏ thẳng tới `src/styles/index.css` và `src/main.tsx`, không chép lại mã nguồn.
+- Thay đổi so với 1.0: Pokémon hôm nay bỏ thẻ viền đen, thành poster tràn viền cắt xiên (T317, theo yêu cầu chủ dự án ngày 2026-10-30: "ngầu hơn, không gò trong một khung"); thêm utility `poster-cut`, `poster-scrim`, `poster-rays`, `type-glow`; thêm `SpeedBenchmark`, `TeamSpeedList` (T408) và hộp thoại Showdown (T409).
 - Thay đổi so với 0.9: đối chiếu 14 artboard của bản thiết kế với giao diện, làm theo bản thiết kế ở các chỗ tài liệu cũ khác (quyết định của chủ dự án ngày 2026-10-30). Ô x1 trong ma trận, heatmap và minh họa để trống (`NeutralMark`); ô hệ số đậm 700, x4 và x0 đậm 800. So sánh: khi đủ 2 Pokémon, `VersusBanner` là hero toàn chiều rộng, khung chọn gọn (`ComparePicker`), thêm "Đòn cùng hệ" (`StabPanel`). Team Builder trên mobile: heatmap thành thẻ theo hệ. Tương khắc: bấm tên hệ để làm nổi bật, khung tóm tắt `MatrixFocusPanel`. Tổng quan: nền từng khối và sóng nối, thẻ đảo vòm, sân khấu Pokémon nổi bật; hero 2 cột từ `lg`. Header mobile: nút menu chỉ có icon. Sửa mâu thuẫn cũ: panel đè lên khung cảnh 64/112/128 px (không phải 48 px), tiêu đề khối trang Tổng quan dùng `text-display`. Giữ nguyên các quyết định sau bản thiết kế: số dùng Nunito, ảnh khung cảnh thật, 3 họ font (không thêm Chakra Petch), không có `PartnerBadge`.
 - Thay đổi so với 0.8: ảnh đã sửa bằng công cụ AI có Content Credentials được dùng nếu chỉ ghép vùng đã xóa vào ảnh gốc 1920 px, chỉnh màu khớp viền và ghi nhãn trong `SOURCES.md` (Phần 4, mục I.1, I.2; [ADR 0008](adr/0008-ai-edited-scene-patches.md)); bộ ảnh lên 36 ảnh, hết ngoại lệ 1280 px.
 - Bản 0.8, bổ sung ngày 2026-10-29: khung cảnh `PageHero` cao hơn (288/480/544 px), đáy chuyển mượt sang nền trang (`scene-fade`), theo phản hồi "ảnh nền quá bé, trang bị bó lại".
@@ -110,6 +111,7 @@
 - Bảng màu nền là bảng màu hệ phổ biến trong cộng đồng; giữ nguyên ở cả light và dark để người chơi nhận ra ngay.
 - Nguồn duy nhất trong code: biến `--color-type-*` ở `src/styles/index.css`; `src/lib/pokemonTypes.ts` chỉ ánh xạ tên hệ sang tên class.
 - Nền nhạt nhuộm theo hệ (hàng ở chế độ danh sách của Omni-Dex) tạo bằng utility `type-tint`: `color-mix(in oklab, var(--color-type-<hệ>) 22%, var(--color-surface))`. Lớp nhuộm này chỉ là trang trí; chữ đặt lên phải là `ink` (tương phản tối thiểu 10:1 vì nền gần trắng).
+- Utility poster (T317, chỉ dùng ở Pokémon hôm nay): `poster-cut` (clip-path hình bình hành, độ xiên `--poster-slant`), `poster-scrim` (gradient `scrim` 18% lên 78% rồi 88%; chữ chỉ đặt ở vùng từ 78% trở lên), `poster-rays` (tia conic màu hệ, mask tỏa tròn), `type-glow` (quầng `drop-shadow` màu hệ cộng bóng đặc `scrim` 45%, thay cho bóng viết thẳng `rgb(...)`).
 
 #### 1. Màu hệ đậm (nền card Pokémon)
 
@@ -407,7 +409,7 @@
 |---|---|---|
 | `LandingHero` | Tổng quan | Khung cảnh toàn màn hình đầu, artwork một Pokémon, `GameDialog` chứa lời chào và 2 nút (Phần 7, mục II); sân khấu Pokémon nổi bật có vòng 18 màu hệ, bảng quét, thẻ Chiều cao, Cân nặng |
 | `FeatureRegions` | Tổng quan | 4 thẻ đảo dạng vòm (bo 150/150/34/34 px), nền nhạt `isle-*`, xoay ±2°, xếp so le trên desktop, nối bằng đường mòn; vòm ảnh khung cảnh có hình xem trước nhỏ của tính năng; mobile 1 cột. Lớp trang trí dùng chung ở `SectionDecor.tsx` (Aura, Blob, Cloud, Spark, Wave) |
-| `DailyPokemon` | Tổng quan | Một Pokémon chọn theo ngày (ID tính từ ngày hiện tại, cố định trong ngày), gọi `GET /api/v1/pokemon/{idOrName}` |
+| `DailyPokemon` | Tổng quan | Một Pokémon chọn theo ngày (ID tính từ ngày hiện tại, cố định trong ngày), gọi `GET /api/v1/pokemon/{idOrName}`; dạng poster tràn viền (Phần 7, mục II.1) |
 | `DexFilters` | Omni-Dex | Chip 18 hệ `aria-pressed`, tối đa 2 (đủ 2 thì vô hiệu hóa các chip còn lại); chip thế hệ 1-9 chọn một (bấm lại để bỏ, vì API `gen` nhận một giá trị); `StatRangeFields`; chip Dạng. Mọi thay đổi ghi lên URL. Dùng chung cho cột lọc (`layout="sidebar"`, 2 cột chip) và ngăn kéo (`layout="sheet"`, 3 cột) |
 | `StatRangeFields` | Omni-Dex | Ô "Từ", "Đến" (BST 0-1530) và "Tốc độ tối thiểu" (0-255); áp dụng khi rời ô hoặc bấm `Enter`; sai định dạng hoặc "Từ" lớn hơn "Đến" thì báo lỗi dưới ô (`aria-describedby`) và không đổi URL; thanh khoảng BST minh họa thang 180-720 |
 | `DexToolbar` | Omni-Dex | Nút "Bộ lọc (n)" nền `dex-yellow` (dưới `lg`) và ô "Sắp xếp". Dưới `lg` là thẻ trắng đè lên khung cảnh; từ `lg` nằm trong hàng tiêu đề kết quả |
@@ -427,6 +429,9 @@
 | `TeamScoreGauge` | Team Builder | Số điểm 0-100 `text-num-lg` và thanh ngang kiểu thanh HP trên cùng một hàng (mobile số 52 px kèm "/ 100"); màu thanh `stat-good`, `stat-mid`, `danger`; chip "+N so với lần trước" màu `success` cạnh tiêu đề |
 | `RecommendationCard` | Team Builder | Sprite, tên, nhãn hệ, điểm phù hợp, danh sách lý do, nút "Thêm vào đội"; mobile thẻ 300 px vuốt ngang (scroll-snap), ảnh tròn 104 px nổi trên thẻ |
 | `SaveTeamDialog` | Team Builder | Ô tên đội (1-60 ký tự); lưu xong hiện link chia sẻ và nút "Sao chép" |
+| `ShowdownImportDialog`, `ShowdownExportDialog` | Team Builder, Đội chia sẻ | Nhập: ô "Văn bản đội", nút "Nhập đội", nhập xong liệt kê dòng bị bỏ qua; xuất: ô chỉ đọc và nút "Sao chép" ([spec.md](spec.md), Phần 2, mục X) |
+| `TeamSpeedList` | Team Builder | Thành viên xếp từ nhanh đến chậm; mỗi dòng: sprite, tên, tốc độ gốc, "Nhanh hơn N% Pokémon" kèm thanh `primary`, 3 ô Tối thiểu, Không đầu tư, Tối đa (số căn đáy ô) |
+| `SpeedBenchmark` | Chi tiết | Trong panel chỉ số, dưới 6 thanh: 3 ô tốc độ cấp 50, tỷ lệ, mốc "Vừa thua", "Vừa vượt" có link ([spec.md](spec.md), Phần 2, mục IX) |
 
 ---
 
@@ -530,8 +535,8 @@ Desktop (1440 px)
 |  Vòng tương khắc (TypeWheel, nền ink): bảng x2, x½, x0 bên    |
 |  trái; vòng 18 hệ bên phải, hệ đang chọn ở giữa               |
 +--------------------------------------------------------------+
-|  Pokémon hôm nay (DailyPokemon): khung cảnh, artwork | số,    |
-|  tên, hệ, BST, câu nhận xét, "Xem chi tiết"                   |
+|  Pokémon hôm nay (DailyPokemon): poster tràn viền cắt xiên;   |
+|  artwork tràn mép trên | số, tên, hệ, BST, nhận xét, 2 nút    |
 +--------------------------------------------------------------+
 |  Xây đội trong 3 bước (TeamSteps): 3 thẻ có minh họa          |
 +--------------------------------------------------------------+
@@ -547,7 +552,7 @@ Desktop (1440 px)
 
 - Nguồn thiết kế: bản thiết kế hi-fi "PokeNexus" (artboard "Tổng quan" và "Điện thoại · Tổng quan", 2026-10-24) trên [claude.ai](https://claude.ai/code/artifact/31b3214f-f6f7-4bc9-b7c5-8c89cca4d24a) (riêng tư của tác giả). Tiêu chí chấp nhận từng khối: [spec.md](spec.md), Phần 2, mục VII.
 - Hero chia 2 cột từ `lg` (1024 px); từ 768 đến 1023 px xếp dọc như mobile vì sân khấu Pokémon nổi bật rộng 440 px. Sân khấu gồm vòng 18 màu hệ nghiêng dưới chân artwork, bảng quét có 4 góc ngắm, 2 thẻ "Chiều cao", "Cân nặng"; mobile ẩn vòng hệ. Quanh vỏ Pokédex là ảnh khung cảnh làm mờ phủ gradient `ink`.
-- Mỗi khối có nền chuyển màu riêng (`band-*`), đốm màu trôi chậm, sóng nối giữa khối sáng và khối tối. Artwork ở hero, Pokémon hôm nay và Thử tài Trainer đứng trên đế hình hữu cơ nhuộm màu hệ (`type-blob`). Dải hệ xoay -1,6° và đè lên mép dưới hero.
+- Mỗi khối có nền chuyển màu riêng (`band-*`), đốm màu trôi chậm, sóng nối giữa khối sáng và khối tối. Artwork ở hero và Thử tài Trainer đứng trên đế hình hữu cơ nhuộm màu hệ (`type-blob`). Pokémon hôm nay (T317) là poster tràn viền: ảnh khung cảnh phủ cả khối, cắt xiên (`poster-cut`), viền trên 10 px màu hệ; artwork 600 px (480 px ở 1024-1279 px, 330 px trên mobile) tràn qua mép trên, sau lưng là tia sáng màu hệ và số Pokédex viền cỡ lớn; cột chữ đặt trên `poster-scrim`, tên Pokémon bằng font display; khối Vòng tương khắc phía trên không còn sóng nối. Dải hệ xoay -1,6° và đè lên mép dưới hero.
 - Mobile (375 px): các khối xếp dọc; artwork nằm trên hộp thoại; 4 thẻ vùng đất một cột; vòng tương khắc nằm dưới bảng hệ số; biểu đồ thế hệ cuộn ngang trong khung.
 - Nút chính "Mở Pokédex" dùng biến thể `cta`; nút phụ "Xây đội ngay" dùng `secondary`.
 - Artwork ở hero lấy từ đường dẫn artwork của PokéAPI; mất mạng thì dùng sprite phóng to theo [assets.md](assets.md), Phần 5.
@@ -559,10 +564,10 @@ Desktop (1440 px)
 | Trang | Mobile (375 px) | Desktop (1440 px) |
 |---|---|---|
 | Omni-Dex | `PageHero` thấp; thẻ công cụ (nút "Bộ lọc (2)" mở ngăn kéo, ô sắp xếp, ô tìm ẩn nhãn) đè lên khung cảnh; dòng kết quả gọn "1.083 Pokémon" kèm "Trang 1/46" và nút đổi kiểu; ngăn kéo: thế hệ là một hàng cuộn, nút 44 px; lưới 2 cột; phân trang "Trước, 1 / 46, Sau" | Cột lọc trái 256 px; panel kết quả: số kết quả, nút đổi kiểu, sắp xếp; lưới tự chia (4 cột ở 1440 px); phân trang có số trang, ở hai đầu hiện 3 trang (1 2 3 … 46) |
-| Chi tiết | Khung cảnh cao 280 px có artwork, đường dẫn và `SceneLabel` ở góc trên, đáy chuyển mượt sang nền; panel: tên, nhãn hệ, chỉ số, 4 ô thông tin dạng thẻ 2 x 2, lưới phòng thủ 3 cột (nhóm Trung tính là một câu), tiến hóa một hàng cuộn ngang, các dạng | Vùng artwork cao 420 px, ảnh nền kéo dài 544 px rồi chuyển mượt sang nền phía sau lưới phòng thủ; artwork bên trái; số Pokédex và tên cùng một dòng; panel bên phải chứa chỉ số; lưới phòng thủ 6 cột bên dưới |
+| Chi tiết | Khung cảnh cao 280 px có artwork, đường dẫn và `SceneLabel` ở góc trên, đáy chuyển mượt sang nền; panel: tên, nhãn hệ, chỉ số, khối Tốc độ ở cấp 50, 4 ô thông tin dạng thẻ 2 x 2, lưới phòng thủ 3 cột (nhóm Trung tính là một câu), tiến hóa một hàng cuộn ngang, các dạng | Vùng artwork cao 420 px, ảnh nền kéo dài 544 px rồi chuyển mượt sang nền phía sau lưới phòng thủ; artwork bên trái; số Pokédex và tên cùng một dòng; panel bên phải chứa chỉ số; lưới phòng thủ 6 cột bên dưới |
 | Tương khắc | Chọn 1-2 hệ phòng thủ (chip 42 px, gợi ý đổi theo số hệ đã chọn), kết quả dạng danh sách; ma trận gọn (ô 32 x 28 px, cột tên 84 px) cuộn ngang trong khung, thấy khoảng 7 cột, không cuộn dọc lồng; khung tóm tắt dưới ma trận | Ma trận 18 x 18 đầy đủ (ô 36 px), bộ chọn hệ kép phía trên; bấm tên hệ ở hàng hoặc cột (`aria-pressed`) để làm nổi bật, ô khác mờ 20%; `MatrixFocusPanel` bên phải ma trận |
 | So sánh | Hai nút chọn cao 62 px "Pokémon 1", "Pokémon 2" mở ô tìm tại chỗ, nút đổi bên `dex-yellow` (khi cả hai trống thì hai ô tìm xếp dọc); đủ 2 Pokémon thì `VersusBanner` là hero 440 px; bảng chỉ số mỗi chỉ số 2 dòng, đặt trước radar; Đòn cùng hệ; kết luận; nút "Xem B" và "Đưa A vào đội" | Đủ 2 Pokémon thì `VersusBanner` là hero toàn chiều rộng 440 px, artwork 320 px ở 38% và 62% tràn xuống dưới; khung chọn gọn "Bên trái", "Bên phải" có nút "Đổi Pokémon"; bảng chỉ số và radar; "Đòn cùng hệ" cạnh kết luận (tỉ lệ 1:1,6) |
-| Team Builder | Slot dạng lưới 3 x 2; điểm đội 52 px và 2 nút "Đặt lại", "Lưu và chia sẻ" rộng toàn hàng; heatmap thành thẻ theo hệ (mặc định chỉ hệ có áp lực, nút "Xem đủ 18 hệ", chú giải 6 màu); ô "Loại huyền thoại, thần thoại và Paradox" rồi đề xuất (thẻ 300 px vuốt ngang); panel "Tấn công và chỉ số" cuối cùng | Trái: slot và điểm; giữa: heatmap; phải: ô loại huyền thoại và 3 thẻ đề xuất |
+| Team Builder | Slot dạng lưới 3 x 2, dưới slot 2 nút "Nhập Showdown", "Xuất Showdown"; điểm đội 52 px và 2 nút "Đặt lại", "Lưu và chia sẻ" rộng toàn hàng; heatmap thành thẻ theo hệ (mặc định chỉ hệ có áp lực, nút "Xem đủ 18 hệ", chú giải 6 màu); ô "Loại huyền thoại, thần thoại và Paradox" rồi đề xuất (thẻ 300 px vuốt ngang); panel "Tấn công và chỉ số" rồi "Tốc độ cấp 50" cuối cùng | Trái: slot và điểm; giữa: heatmap, "Tấn công và chỉ số", "Tốc độ cấp 50"; phải: ô loại huyền thoại và 3 thẻ đề xuất |
 | Đội chia sẻ | Hero có dải 6 màu hệ, ô "Mã đội", tên đội tối đa 3 dòng; thẻ thành viên chỉ đọc; heatmap gọn "Các hệ đội đang hở" (chỉ hàng có áp lực); nút "Mở trong Team Builder" | Như mobile, rộng hơn; hero có thêm nhãn "Đội được chia sẻ, chỉ xem"; thẻ thành viên tự chia tối thiểu 170 px |
 | Địa hình | `PageHero` theo địa hình đang chọn; bảng chọn là dải 13 cột xiên có ảnh nhỏ, cột 64 px, cột đang chọn 176 px, cuộn ngang trong khung và tự cuộn tới địa hình đang chọn; mô tả; trò chơi (bóng đen trên, 4 nút xếp dọc); lưới Pokémon 2 cột; Thẻ Trainer | Từ `lg`, 13 cột xiên trên một hàng cao 320 px: tên chạy dọc, biểu tượng hệ ở đầu cột, tam giác màu nhấn của địa hình; cột đang chọn nở rộng gấp 3,6 lần, có viền vàng, tên lớn và nhãn hệ; hover nở 1,6 lần và phóng ảnh; mô tả và trò chơi chia 2:3; lưới Pokémon 6 cột; Thẻ Trainer |
 

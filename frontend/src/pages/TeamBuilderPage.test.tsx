@@ -114,6 +114,30 @@ describe('TeamBuilderPage', () => {
     ])
   })
 
+  it('replaces the team with the Pokémon pasted from Showdown', async () => {
+    const fetchMock = routeFetch({
+      'GET /pokemon/tyranitar': () => jsonResponse(TYRANITAR),
+      'GET /pokemon/empoleon': () => jsonResponse(EMPOLEON),
+      'POST /synergy/analyze': analyzeById({}),
+      'POST /synergy/recommendations': () => jsonResponse(recommendationsOf([CHARIZARD, 80])),
+    })
+    const user = userEvent.setup()
+    const router = renderTeamRoute('/team-builder')
+
+    await user.click(screen.getByRole('button', { name: 'Nhập Showdown' }))
+    await user.click(screen.getByLabelText('Văn bản đội'))
+    await user.paste('Tyranitar @ Leftovers\n- Rock Slide\n\nEmpoleon')
+    await user.click(screen.getByRole('button', { name: 'Nhập đội' }))
+
+    expect(await screen.findByText('Đã thêm 2 Pokémon: Tyranitar, Empoleon.')).toBeInTheDocument()
+    await waitFor(() => expect(router.state.location.search).toContain('ids=248%2C395'))
+    await waitFor(() =>
+      expect(bodiesSentTo(fetchMock, '/synergy/analyze')).toContainEqual({
+        pokemonIds: [248, 395],
+      }),
+    )
+  })
+
   it('asks for recommendations without legendary and Paradox Pokémon when the box is ticked', async () => {
     const fetchMock = routeFetch({
       'POST /synergy/analyze': analyzeById({ [SPEC_IDS]: 41 }),

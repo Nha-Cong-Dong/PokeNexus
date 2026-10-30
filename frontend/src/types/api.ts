@@ -116,6 +116,11 @@ export interface EvolutionResponse {
   stages: EvolutionStage[]
 }
 
+export interface SpeedTier {
+  speed: number
+  pokemon: PokemonRef[]
+}
+
 export interface TypeMatrixRow {
   attackingType: TypeName
   multipliers: number[]

@@ -1,6 +1,7 @@
 import { useId, useRef, useState } from 'react'
 
 import { buttonClassName } from '../../../components/ui/buttonStyles'
+import { writeClipboard } from '../../../lib/clipboard'
 import { sharePath } from '../api'
 
 type ShareLinkFieldProps = {
@@ -11,17 +12,6 @@ type CopyStatus = { kind: 'idle' } | { kind: 'copied' } | { kind: 'manual' }
 
 function shareUrl(shareCode: string): string {
   return new URL(sharePath(shareCode), window.location.origin).href
-}
-
-async function writeClipboard(text: string): Promise<boolean> {
-  const clipboard = typeof navigator === 'undefined' ? undefined : navigator.clipboard
-  if (!clipboard || typeof clipboard.writeText !== 'function') return false
-  try {
-    await clipboard.writeText(text)
-    return true
-  } catch {
-    return false
-  }
 }
 
 export function ShareLinkField({ shareCode }: ShareLinkFieldProps) {

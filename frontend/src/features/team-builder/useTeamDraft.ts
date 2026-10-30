@@ -145,7 +145,10 @@ export function useTeamDraft() {
 
   const add = useCallback((id: number) => dispatch({ type: 'add', id }), [])
   const remove = useCallback((id: number) => dispatch({ type: 'remove', id }), [])
-  const replace = useCallback((ids: readonly number[]) => dispatch({ type: 'replace', ids }), [])
+  const replace = useCallback(
+    (ids: readonly number[], sixth?: number | null) => dispatch({ type: 'replace', ids, sixth }),
+    [],
+  )
   const clear = useCallback(() => dispatch({ type: 'clear' }), [])
   const setSixth = useCallback((id: number | null) => dispatch({ type: 'setSixth', id }), [])
 

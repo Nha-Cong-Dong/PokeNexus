@@ -1,6 +1,6 @@
 # PokeNexus - Lộ trình 3 tuần
 
-- Phiên bản: 0.9 (cập nhật 2026-10-30)
+- Phiên bản: 1.0 (cập nhật 2026-10-30)
 - Thay đổi so với 0.2: thêm trang Tổng quan (T311, T312) và chuyển Omni-Dex sang `/pokedex` theo [spec.md](spec.md) 1.2; thêm thứ tự cắt cho trang Tổng quan ở Phần 4.
 - Thay đổi so với 0.3: bỏ T406 (slide, video demo); ngày 14/11 thành buffer. Kịch bản demo ở [spec.md](spec.md), Phần 4 vẫn giữ và chạy trực tiếp ở T310, T403, T407.
 - Thay đổi so với 0.4: thêm T313 (Thử tài Trainer 5 bộ câu hỏi và phần thưởng) và T314 (Trang Địa hình, F08) theo [spec.md](spec.md) 1.4, mức Could, làm sớm ngày 2026-10-28; thêm vào thứ tự cắt ở Phần 4.
@@ -8,6 +8,7 @@
 - Thay đổi so với 0.6: Goal Checkpoint 4 theo chủ dự án: bản hoàn chỉnh chạy thật (không lỗi, đúng thiết kế, đủ F01-F08, thêm tính năng mở rộng nếu kịp), tiêu chí hoàn thành đo được theo ngưỡng chuẩn (Core Web Vitals, dải điểm Lighthouse, WCAG AA); T404 kiểm tra theo các ngưỡng này; quy tắc làm tính năng mở rộng 01/11 - 04/11 (Phần 4, mục I); ngày T102-T104, T201-T209 theo ngày làm thực tế; bỏ ghi chú buffer 14/11 nằm ngoài lịch.
 - Thay đổi so với 0.7: milestone GitHub chia lại theo chủ dự án: `W3 - Hoàn thiện` hạn 01/11 (MVP và triển khai production), `W4 - Demo và phát triển` hạn 08/11 (tính năng mở rộng, kiểm thử, tài liệu, tổng duyệt, demo); trước 08/11 mọi thứ phải sẵn sàng chạy thật. Issue T401-T407 là #49-#53. Hosting chốt ở [ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md).
 - Thay đổi so với 0.8: thêm T316 (giao diện 8 trang khớp bản thiết kế ngày 2026-10-24, đối chiếu 14 artboard) theo yêu cầu của chủ dự án ngày 2026-10-30, mức Should, làm trước ngày đóng băng tính năng 05/11.
+- Thay đổi so với 0.9: thêm T408 (Bảng tốc độ cấp 50, US-09), T409 (Nhập, xuất Showdown, US-10) và T317 (Pokémon hôm nay dạng poster tràn viền) theo yêu cầu chủ dự án ngày 2026-10-30. Chủ dự án quyết định làm trước T403, khác quy tắc ở Phần 4, mục I (tính năng mở rộng chỉ làm sau khi T403 đạt).
 - Thời gian: 2026-10-18 đến 2026-11-08, một người phát triển (Full-stack).
 - Mỗi tuần tương ứng một **Milestone** trên GitHub, mỗi task là một Issue ([github-setup.md](github-setup.md)).
 - Quy trình nhánh, PR, tag: [git-workflow.md](git-workflow.md).
@@ -104,9 +105,9 @@ gantt
 | Mức | Tính năng | Lý do |
 |---|---|---|
 | Should | Cây tiến hóa (US-08) | Dữ liệu `evolution_links` đã nạp ở W2, chỉ cần API và UI |
-| Should | Bảng tốc độ cấp 50 (US-09) | Tính từ chỉ số gốc, không cần dữ liệu mới |
+| Should | Bảng tốc độ cấp 50 (US-09) | Tính từ chỉ số gốc, không cần dữ liệu mới; làm ở T408 ngày 2026-10-30 |
 | Could | Dark mode | Token đã thiết kế theo cặp light/dark ([design-system.md](design-system.md)) |
-| Could | Nhập/xuất Showdown (US-10) | Hữu ích cho người chơi VGC, phụ thuộc parser văn bản |
+| Could | Nhập/xuất Showdown (US-10) | Hữu ích cho người chơi VGC, phụ thuộc parser văn bản; làm ở T409 ngày 2026-10-30, chỉ dùng tên Pokémon |
 | Could | Tính chỉ số thực theo EV, IV, Nature | Công thức rõ ràng, nhưng cần UI nhập liệu nhiều |
 | Won't | Đăng nhập, chiêu thức, Ability, tính sát thương, World Explorer | Ngoài phạm vi dự án ([product.md](product.md), Phần 4) |
 
@@ -165,8 +166,9 @@ gantt
 | T314 | 28/10 | Trang Địa hình và minigame Who's that Pokémon? | E9 | Could | [spec.md](spec.md), Phần 2, mục VIII | `TerrainPage`, `features/terrain/`, route `/terrain/:terrainId?` | 13 địa hình phủ 18 hệ; Núi lửa hiện Pokémon hệ Fire; chuỗi 5 câu đúng nhận huy hiệu; 375 px không cuộn ngang |
 | T315 | 29/10 | Hiệu ứng chuyển động theo bản thiết kế ngày 2026-10-24 | E7 | Could | Canvas thiết kế (14 artboard), [design-system.md](design-system.md), Phần 2, mục VII | Token `--animate-*` trong `index.css`, `Reveal`, `staggerDelay`, áp dụng cho 9 trang | Mỗi trang có chuyển động vào trang theo thiết kế; `prefers-reduced-motion` hiện ngay trạng thái cuối; lint, test, build xanh; 375 px không cuộn ngang |
 | T316 | 30/10 | Giao diện khớp bản thiết kế ngày 2026-10-24 | E7 | Should | Canvas thiết kế (14 artboard), [design-system.md](design-system.md) 1.0 | 8 trang ở 1440 và 390 px; `NeutralMark`, `MatrixFocusPanel`, `ComparePicker`, `StabPanel`, `SectionDecor` | Ảnh chụp từng trang đặt cạnh artboard không còn chỗ lệch mức Lớn; ô x1 để trống vẫn đọc được "x1"; lint, test, build xanh; 375 px không cuộn ngang |
+| T317 | 30/10 | Pokémon hôm nay dạng poster tràn viền | E7 | Could | `DailyPokemon` T316, yêu cầu chủ dự án "ngầu hơn, không gò trong một khung" | `DailyPokemon` mới, utility `poster-*`, `type-glow` | Không còn thẻ bao ngoài; artwork vượt mép khối; giữ đủ nội dung; chữ đạt WCAG AA; giảm chuyển động hiện ngay trạng thái cuối; 375 px không cuộn ngang |
 
-- T311, T312: thêm ngày 2026-10-26 theo bản thiết kế giao diện ngày 2026-10-24. T313, T314: thêm ngày 2026-10-28, T315 ngày 2026-10-29, T316 ngày 2026-10-30, theo yêu cầu của chủ dự án. Từ bản 0.6, cột Ngày của task đã xong là ngày làm thực tế. Ngày trong bảng là ngày dự kiến theo lộ trình; làm sớm thì ghi ngày thực tế ở `PLAN.md`.
+- T311, T312: thêm ngày 2026-10-26 theo bản thiết kế giao diện ngày 2026-10-24. T313, T314: thêm ngày 2026-10-28, T315 ngày 2026-10-29, T316 và T317 ngày 2026-10-30, theo yêu cầu của chủ dự án. Từ bản 0.6, cột Ngày của task đã xong là ngày làm thực tế. Ngày trong bảng là ngày dự kiến theo lộ trình; làm sớm thì ghi ngày thực tế ở `PLAN.md`.
 
 ### IV. Hoàn thiện và demo (30/10 - 08/11; mốc Checkpoint 4 ngày 08/11)
 
@@ -178,6 +180,8 @@ gantt
 | T404 | 03/11 | Bug bash, đo hiệu năng | E8 | Must | Danh sách lỗi | Lỗi đã sửa; số đo ghi ở `PLAN.md` | Không còn Issue `type: bug` đang mở; p95 analyze và recommendations dưới 50 ms; Lighthouse trên link thật đạt ngưỡng ở Phần 1, mục I |
 | T405 | 04/11 | README (ảnh chụp, link demo), sơ đồ, CHANGELOG | E8 | Must | [assets.md](assets.md), Phần 1 | README hoàn chỉnh | Người mới làm theo README chạy được bản local |
 | T407 | 07-08/11 | Tổng duyệt, tag `v1.0.0` | E8 | Must | | GitHub Release `v1.0.0` | Tổng duyệt 2 lần, mỗi lần đúng thời gian quy định |
+| T408 | 30/10 | Bảng tốc độ cấp 50 (US-09) | E9 | Should | `pokemon.speed`, [spec.md](spec.md), Phần 2, mục IX | `GET /pokemon/speed-tiers`; khối tốc độ ở Chi tiết và Team Builder | Garchomp cấp 50: 96, 122, 169; mốc phủ 1.083 dạng; `SpeedTierServiceTest`, `PokemonControllerIT` qua |
+| T409 | 30/10 | Nhập, xuất đội Showdown (US-10) | E9 | Could | [spec.md](spec.md), Phần 2, mục X | Hộp thoại nhập, xuất ở Team Builder; nút xuất ở Đội chia sẻ | Đội 6 con có biệt danh, vật phẩm nhận đúng dạng (`Urshifu-Rapid-Strike`, `Landorus-Therian`, `Indeedee-F`); dòng sai được liệt kê; xuất rồi nhập lại ra đúng đội |
 
 - T406 (slide, video demo): bỏ ngày 2026-10-27 vì không cần slide và video; demo chạy trực tiếp theo kịch bản ở [spec.md](spec.md), Phần 4.
 

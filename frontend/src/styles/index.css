@@ -790,6 +790,37 @@
   background-color: color-mix(in oklab, var(--type-base) 22%, var(--color-surface));
 }
 
+@utility poster-cut {
+  clip-path: polygon(
+    0 var(--poster-slant, 0px),
+    100% 0,
+    100% calc(100% - var(--poster-slant, 0px)),
+    0 100%
+  );
+}
+
+@utility poster-scrim {
+  background-image: linear-gradient(
+    var(--poster-scrim-angle, 180deg),
+    color-mix(in oklab, var(--color-scrim) 18%, transparent) var(--poster-scrim-start, 30%),
+    color-mix(in oklab, var(--color-scrim) 78%, transparent) var(--poster-scrim-solid, 60%),
+    color-mix(in oklab, var(--color-scrim) 88%, transparent)
+  );
+}
+
+@utility poster-rays {
+  background-image: repeating-conic-gradient(
+    color-mix(in oklab, var(--type-base, white) 34%, transparent) 0deg 3deg,
+    transparent 3deg 15deg
+  );
+  mask-image: radial-gradient(closest-side, black 18%, transparent);
+}
+
+@utility type-glow {
+  filter: drop-shadow(0 0 34px color-mix(in oklab, var(--type-base, white) 60%, transparent))
+    drop-shadow(0 12px 0 color-mix(in oklab, var(--color-scrim) 45%, transparent));
+}
+
 @layer components {
   .reveal {
     transition:

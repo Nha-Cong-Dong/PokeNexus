@@ -33,6 +33,8 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Integer>, JpaS
 
     List<Pokemon> findByIdIn(Collection<Integer> ids);
 
+    List<Pokemon> findByFormCategoryIn(Collection<FormCategory> formCategories);
+
     @Query("SELECT p FROM Pokemon p JOIN FETCH p.species ORDER BY p.id")
     List<Pokemon> findAllWithSpecies();
 

@@ -9,6 +9,8 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ### Added
 
+- Bảng tốc độ cấp 50 (US-09, T408): endpoint `GET /api/v1/pokemon/speed-tiers`; trang Chi tiết có khối "Tốc độ ở cấp 50" (tối thiểu, không đầu tư, tối đa, nhanh hơn N% Pokémon, mốc vừa thua, vừa vượt); Team Builder có panel xếp đội từ nhanh đến chậm.
+- Nhập, xuất đội Showdown (US-10, T409): dán đội từ Pokémon Showdown vào Team Builder (chỉ lấy tên Pokémon, báo dòng không nhận ra), xuất đội ra văn bản Showdown ở Team Builder và trang Đội chia sẻ.
 - Bộ chuyển động theo bản thiết kế hi-fi ngày 2026-10-24 cho mọi trang: card và danh sách vào lần lượt, artwork rơi xuống rồi lơ lửng, thanh chỉ số chạy dài, ma trận tương khắc hiện theo đường chéo, màn đối đầu So sánh bay vào, radar phóng từ tâm, nhãn lỗ hổng nghiêm trọng nhấp nháy, màn hình Tổng quan mở kiểu CRT, dải hệ chạy ngang, khối hiện khi cuộn tới (`Reveal`), ảnh hero lộ theo vòng tròn khi đổi khung cảnh. `prefers-reduced-motion` hiện ngay trạng thái cuối.
 - Trang Địa hình `/terrain/:terrainId?`: 13 địa hình phủ 18 hệ, mô tả, Pokémon thường gặp, minigame "Who's that Pokémon?" (bóng đen, 4 lựa chọn, chuỗi 5 câu đúng nhận huy hiệu). Header có mục thứ 5 "Địa hình".
 - Thử tài Trainer có 5 bộ, mỗi bộ 6 câu (hệ số sát thương, điểm yếu và miễn nhiễm, chỉ số gốc, hệ của Pokémon, vùng đất ra mắt); đáp án tính từ ma trận tương khắc và API chi tiết.
@@ -22,6 +24,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ### Changed
 
+- Pokémon hôm nay trên trang Tổng quan thành poster tràn viền (T317): bỏ thẻ viền đen, ảnh khung cảnh phủ cả khối và cắt xiên, artwork lớn tràn qua mép trên kèm tia sáng màu hệ.
 - Giao diện 8 trang khớp bản thiết kế hi-fi ngày 2026-10-24 (T316): trang Tổng quan có nền từng khối, thẻ đảo vòm, sân khấu Pokémon nổi bật; So sánh dùng khối đối đầu làm hero khi đủ 2 Pokémon, khung chọn gọn, khối "Đòn cùng hệ"; Tương khắc bấm tên hệ để làm nổi bật hàng, cột kèm khung tóm tắt, ma trận gọn trên điện thoại; Team Builder trên điện thoại hiện bảng điểm yếu theo thẻ từng hệ; trang Đội chia sẻ có hero mới và bảng điểm yếu gọn; ô x1 trong ma trận, heatmap để trống. design-system 1.0.
 - Bảng chọn địa hình thành dải 13 cột xiên có ảnh nhỏ (`{scene}-thumb.webp`, 400 x 600, tổng 254 KB): cột đang chọn nở rộng với tên lớn và nhãn hệ, hover nở nhẹ; trên mobile cuộn ngang và tự cuộn tới địa hình đang chọn.
 - Thanh điều hướng header canh giữa trang; bỏ ống kính tròn xanh trên vỏ Pokédex ở hero vì trùng với logo.

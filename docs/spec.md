@@ -1,11 +1,12 @@
 # PokeNexus - Đặc tả MVP
 
-- Phiên bản: 1.4 (yêu cầu chốt ở task T201 ngày 2026-10-21; cập nhật 2026-10-28)
+- Phiên bản: 1.5 (yêu cầu chốt ở task T201 ngày 2026-10-21; cập nhật 2026-10-30)
 - Tài liệu liên quan: [product.md](product.md), [architecture.md](architecture.md), [database.md](database.md), [api.md](api.md).
 - Thay đổi so với 1.0: thêm Phần 6 (truy vết và kiểm chứng, chuyển từ `SPEC.md` ở gốc repo); không đổi yêu cầu và tiêu chí chấp nhận.
 - Thay đổi so với 1.1: thêm F07 Trang Tổng quan (Phần 2, mục VII) theo bản thiết kế giao diện ngày 2026-10-24; Omni-Dex chuyển từ `/` sang `/pokedex`. Lý do: người dùng mới cần một trang giới thiệu dẫn tới 4 công cụ, thay vì vào thẳng lưới dữ liệu. Thay đổi yêu cầu từ đây phải tăng phiên bản và ghi lý do.
 - Thay đổi so với 1.2: phân tích đội nhận 1-6 Pokémon, đề xuất vẫn nhận 1-5 (Phần 2, mục V.1); ví dụ 4 đổi thành 7 Pokémon, thêm ví dụ 5 (mục V.4). Lý do: bước "thêm đề xuất số 1, xác nhận điểm đội tăng" của kịch bản demo (Phần 4) cần chấm điểm đội đủ 6; với giới hạn 5, điểm không đổi khi thêm đề xuất vào slot 6.
 - Thay đổi so với 1.3: Thử tài Trainer có 5 bộ câu hỏi và phần thưởng (Phần 2, mục VII); thêm F08 Trang Địa hình (Phần 2, mục VIII). Lý do: chủ dự án yêu cầu ngày 2026-10-28 thêm nội dung khám phá và trò chơi nhỏ cho người mới; cả hai mức Could, không đổi API và kịch bản demo.
+- Thay đổi so với 1.4: thêm F09 Bảng tốc độ cấp 50 (US-09) và F10 Nhập, xuất đội Showdown (US-10) (Phần 2, mục IX, X). Lý do: chủ dự án chọn ngày 2026-10-30 hai tính năng mở rộng có sẵn trong roadmap cho người chơi VGC; F09 thêm endpoint `GET /pokemon/speed-tiers`, F10 không đổi API; kịch bản demo không đổi.
 
 ---
 
@@ -144,6 +145,44 @@
 - Dữ liệu từ `GET /pokemon?type=<hệ>&size=100&sort=id,asc`, mỗi hệ một request, gộp và bỏ trùng; không thêm endpoint. Trò chơi chọn trong tối đa 100 Pokémon đầu theo ID của mỗi hệ.
 - Khi API lỗi, khối trò chơi và khối danh sách hiện `ErrorState` có nút thử lại; phần chọn địa hình và mô tả vẫn dùng được.
 
+### IX. F09 - Bảng tốc độ cấp 50
+
+#### 1. Mô tả
+
+- Cho người chơi VGC biết Pokémon của mình nhanh hơn bao nhiêu Pokémon khác ở cấp 50 (US-09). Thêm ngày 2026-10-30, mức Should (E9).
+- Tốc độ cấp 50 tính ở frontend theo công thức chỉ số của game: `floor((floor((2 x gốc + IV + floor(EV / 4)) x 50 / 100) + 5) x tính cách)`, tính cách là 0,9, 1,0 hoặc 1,1 (nhân số nguyên rồi chia 10 để tránh sai số dấu phẩy động).
+
+#### 2. Tiêu chí chấp nhận
+
+| Khối | Tiêu chí |
+|---|---|
+| Ba mức tốc độ | Tối thiểu (IV 0, 0 EV, tính cách giảm Tốc độ), Không đầu tư (IV 31, 0 EV, trung tính), Tối đa (IV 31, 252 EV, tính cách tăng Tốc độ). Garchomp (gốc 102): 96, 122, 169; Charizard (gốc 100): 94, 120, 167 |
+| Tỷ lệ | "Nhanh hơn N% Pokémon": số dạng `DEFAULT`, `REGIONAL` có tốc độ gốc thấp hơn chia cho tổng số dạng (bỏ chính Pokémon đó), làm tròn xuống. Cùng mức đầu tư thì thứ tự chỉ phụ thuộc tốc độ gốc |
+| Trang Chi tiết | Khối "Tốc độ ở cấp 50" trong panel chỉ số: 3 mức, tỷ lệ, số Pokémon cùng tốc độ gốc, mốc "Vừa thua" và "Vừa vượt" (tối đa 3 tên có link mỗi mốc) |
+| Team Builder | Panel "Tốc độ cấp 50": thành viên (kể cả slot 6) xếp từ nhanh đến chậm, mỗi dòng có 3 mức và tỷ lệ |
+| Lỗi | `speed-tiers` lỗi thì vẫn hiện 3 mức (tính tại chỗ) kèm câu "Chưa tải được bảng tốc độ để so sánh."; chi tiết thành viên lỗi thì panel hiện "Chưa tải được chỉ số tốc độ của đội." |
+
+- Dữ liệu: `GET /pokemon/speed-tiers` ([api.md](api.md), Phần 2, mục XIII) và `GET /pokemon/{idOrName}` cho tốc độ gốc của từng thành viên.
+
+### X. F10 - Nhập, xuất đội Showdown
+
+#### 1. Mô tả
+
+- Nhập đội từ văn bản xuất của Pokémon Showdown vào Team Builder và xuất đội ra văn bản Showdown (US-10). Thêm ngày 2026-10-30, mức Could (E9).
+- Chỉ dùng tên Pokémon; chiêu thức, vật phẩm, Ability, EV nằm ngoài phạm vi ([product.md](product.md), Phần 4, mục II) nên bị bỏ qua khi nhập và không có khi xuất.
+
+#### 2. Tiêu chí chấp nhận
+
+| Khối | Tiêu chí |
+|---|---|
+| Đọc văn bản | Các khối cách nhau bằng dòng trống; dòng bắt đầu bằng `===` bị bỏ; dòng đầu mỗi khối có dạng `Biệt danh (Loài) (M/F) @ Vật phẩm`, lấy tên loài; các dòng còn lại bị bỏ qua và có thông báo |
+| Tra tên | Chuẩn hóa: chữ thường, bỏ dấu, bỏ `.`, `'`, `’`, `:`, `%`, ký tự khác thành `-`; áp bảng ngoại lệ (ví dụ `Indeedee-F` thành `indeedee-female`, `Necrozma-Dusk-Mane` thành `necrozma-dusk`). Thử đúng tên, rồi tên đầu tiên bắt đầu bằng chuỗi đó (mọi dạng), rồi bỏ dần đoạn cuối và thử đúng tên |
+| Nhập | 5 Pokémon đầu vào đội, con thứ 6 vào slot 6; bỏ con trùng và con thứ 7 trở đi; liệt kê dòng không nhận ra. Không nhận ra con nào thì giữ nguyên đội và báo lỗi |
+| Xuất | Mỗi Pokémon một khối chỉ có tên kiểu Showdown: dạng mặc định dùng tên loài (`landorus-incarnate` thành `Landorus`), dạng khác dùng tên loài cộng hậu tố (`Landorus-Therian`), cộng bảng ngoại lệ; nút "Sao chép"; nhập lại chính văn bản đã xuất ra đúng đội |
+| Vị trí | Team Builder: nút "Nhập Showdown", "Xuất Showdown" dưới các slot; Đội chia sẻ: nút "Xuất Showdown" |
+
+- Không thêm endpoint: dùng `GET /pokemon/{idOrName}` và `GET /pokemon/search` với mọi giá trị `form`.
+
 ---
 
 ## Phần 3. Yêu cầu phi chức năng
@@ -213,6 +252,8 @@
 | F06 Lưu và chia sẻ đội | US-07 | Phần 2, mục VI | `POST /teams`, `GET /teams/shared/{shareCode}` | `/team/:shareCode`, `SharedTeamPage` | `team` | T307 | Must |
 | F07 Trang Tổng quan | | Phần 2, mục VII | `GET /pokemon/{idOrName}`, `GET /pokemon`, `GET /types/matrix` | `/`, `LandingPage` | | T311, T312, T313 | Should |
 | F08 Trang Địa hình | | Phần 2, mục VIII | `GET /pokemon` | `/terrain/:terrainId?`, `TerrainPage` | | T314 | Could |
+| F09 Bảng tốc độ cấp 50 | US-09 | Phần 2, mục IX | `GET /pokemon/speed-tiers`, `GET /pokemon/{idOrName}` | `/pokemon/:idOrName`, `/team-builder` | `pokedex` | T408 | Should |
+| F10 Nhập, xuất đội Showdown | US-10 | Phần 2, mục X | `GET /pokemon/{idOrName}`, `GET /pokemon/search` | `/team-builder`, `/team/:shareCode` | | T409 | Could |
 
 - Mọi endpoint có tiền tố `/api/v1` ([api.md](api.md), Phần 2). Route: [architecture.md](architecture.md), Phần 6. Class của từng package: [folder-structure.md](folder-structure.md), Phần 2, mục II.
 
@@ -226,6 +267,9 @@
 | [roadmap.md](roadmap.md) T205, cột Kiểm tra | Tích hợp | `IngestionRunnerIT` | T205 |
 | [roadmap.md](roadmap.md) T206, cột Kiểm tra | Tích hợp | `PokemonControllerIT` | T206 |
 | [roadmap.md](roadmap.md) T307, cột Kiểm tra | Tích hợp | `TeamControllerIT` | T307 |
+| Phần 2, mục IX (Garchomp 96, 122, 169) | Unit | `level50.test.ts`, `TeamSpeedList.test.tsx` (frontend) | T408 |
+| [roadmap.md](roadmap.md) T408, cột Kiểm tra | Unit, tích hợp | `SpeedTierServiceTest`, `PokemonControllerIT` | T408 |
+| Phần 2, mục X | Unit | `showdown.test.ts`, `ShowdownDialogs.test.tsx` (frontend) | T409 |
 
 - Tên class theo quy ước `<Class>Test`, `<Class>IT` ở [folder-structure.md](folder-structure.md), Phần 2, mục III; class của task chưa làm chốt tên khi viết test. Tầng kiểm thử: [architecture.md](architecture.md), Phần 12.
 

@@ -9,12 +9,18 @@ import { MAX_TEAM_SIZE } from '../features/team-builder/api'
 import { CoverageAndStats } from '../features/team-builder/components/CoverageAndStats'
 import { RecommendationList } from '../features/team-builder/components/RecommendationList'
 import { SaveTeamDialog } from '../features/team-builder/components/SaveTeamDialog'
+import {
+  ShowdownExportDialog,
+  ShowdownImportDialog,
+} from '../features/team-builder/components/ShowdownDialogs'
 import { ScoreDeltaChip, TeamScoreGauge } from '../features/team-builder/components/TeamScoreGauge'
 import { TeamSlots } from '../features/team-builder/components/TeamSlots'
 import { AnalysisHeatmap } from '../features/team-builder/components/WeaknessHeatmap'
 import { useRecommendations, useScoreDelta, useTeamAnalysis } from '../features/team-builder/hooks'
+import type { ImportPlan } from '../features/team-builder/showdown'
 import { analysisSummary, buildTeamMembers } from '../features/team-builder/teamAnalysis'
 import { useTeamDraft } from '../features/team-builder/useTeamDraft'
+import { TeamSpeedList } from '../features/speed/components/TeamSpeedList'
 import { formatPokemonName } from '../lib/formatters'
 import type { PokemonRef, Recommendation } from '../types/api'
 
@@ -25,6 +31,7 @@ const SCORE_TITLE_ID = 'team-score-title'
 const HEATMAP_TITLE_ID = 'team-heatmap-title'
 const ATTACK_TITLE_ID = 'team-attack-title'
 const RECOMMENDATION_TITLE_ID = 'team-recommendation-title'
+const SPEED_TITLE_ID = 'team-speed-title'
 
 const UPLOAD_ICON = (
   <svg
@@ -51,6 +58,8 @@ export function TeamBuilderPage() {
   const recommendations = useRecommendations(draft.ids, excludeLegendary)
   const [knownRefs, setKnownRefs] = useState<Record<number, PokemonRef>>({})
   const [saveOpen, setSaveOpen] = useState(false)
+  const [importOpen, setImportOpen] = useState(false)
+  const [exportOpen, setExportOpen] = useState(false)
 
   const activeSixthId =
     draft.isFull && draft.sixth !== null && !draft.ids.includes(draft.sixth) ? draft.sixth : null
@@ -96,6 +105,11 @@ export function TeamBuilderPage() {
     remember(recommendation)
     if (draft.isFull) draft.setSixth(recommendation.id)
     else draft.add(recommendation.id)
+  }
+
+  const handleImport = (plan: ImportPlan) => {
+    plan.members.forEach(remember)
+    draft.replace(plan.ids, plan.sixth)
   }
 
   const saveMembers = buildTeamMembers(draft.ids, activeSixthId)
@@ -154,6 +168,23 @@ export function TeamBuilderPage() {
               onAddSuggestion={() => suggestion && handleAddRecommendation(suggestion)}
               onAddClick={() => document.getElementById(SEARCH_INPUT_ID)?.focus()}
             />
+            <div className="flex flex-wrap gap-2 border-t-2 border-surface-muted pt-3">
+              <button
+                type="button"
+                onClick={() => setImportOpen(true)}
+                className={`flex-1 ${buttonClassName('secondary', 'sm')}`}
+              >
+                Nhập Showdown
+              </button>
+              <button
+                type="button"
+                onClick={() => setExportOpen(true)}
+                disabled={!hasMembers}
+                className={`flex-1 ${buttonClassName('secondary', 'sm')}`}
+              >
+                Xuất Showdown
+              </button>
+            </div>
           </Panel>
 
           <Panel aria-labelledby={SCORE_TITLE_ID} className="flex flex-col gap-4">
@@ -248,6 +279,22 @@ export function TeamBuilderPage() {
               <div aria-hidden="true" className="h-48 animate-pulse rounded-xl bg-surface-muted" />
             )}
           </Panel>
+
+          <Panel
+            aria-labelledby={SPEED_TITLE_ID}
+            className="order-1 flex min-w-0 flex-col gap-4 lg:order-none"
+          >
+            <h2 id={SPEED_TITLE_ID} className="text-xl font-extrabold">
+              Tốc độ cấp 50
+            </h2>
+            {hasMembers ? (
+              <TeamSpeedList ids={teamIds} />
+            ) : (
+              <p className="text-ink-muted">
+                Thêm thành viên để xem thứ tự ra đòn của đội ở cấp 50.
+              </p>
+            )}
+          </Panel>
         </div>
 
         <section
@@ -298,6 +345,12 @@ export function TeamBuilderPage() {
         members={saveMembers}
         memberNames={memberNames}
       />
+      <ShowdownImportDialog
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        onImport={handleImport}
+      />
+      <ShowdownExportDialog open={exportOpen} onClose={() => setExportOpen(false)} ids={teamIds} />
     </>
   )
 }

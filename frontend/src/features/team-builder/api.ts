@@ -3,6 +3,8 @@ import type {
   AnalyzeRequest,
   AnalyzeResponse,
   CreateTeamRequest,
+  FormCategory,
+  PokemonRef,
   RecommendationRequest,
   RecommendationResponse,
   TeamResponse,
@@ -13,6 +15,8 @@ export const MAX_TEAM_SIZE = 6
 export const TEAM_NAME_MAX_LENGTH = 60
 
 const SHARE_CODE_PATTERN = /^[A-Za-z0-9]{8}$/
+const ALL_FORMS: FormCategory[] = ['DEFAULT', 'REGIONAL', 'MEGA', 'GMAX', 'OTHER']
+const NAME_LOOKUP_LIMIT = 10
 
 export function isValidShareCode(code: string): boolean {
   return SHARE_CODE_PATTERN.test(code)
@@ -50,4 +54,12 @@ export function createTeam(request: CreateTeamRequest): Promise<TeamResponse> {
 
 export function fetchSharedTeam(shareCode: string, signal?: AbortSignal): Promise<TeamResponse> {
   return getJson<TeamResponse>(`/teams/shared/${encodeURIComponent(shareCode)}`, undefined, signal)
+}
+
+export function searchAllForms(query: string, signal?: AbortSignal): Promise<PokemonRef[]> {
+  return getJson<PokemonRef[]>(
+    '/pokemon/search',
+    { q: query, limit: NAME_LOOKUP_LIMIT, form: ALL_FORMS },
+    signal,
+  )
 }
