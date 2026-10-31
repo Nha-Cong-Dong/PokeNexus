@@ -22,16 +22,22 @@ export function TeamSpeedList({ ids }: TeamSpeedListProps) {
 
   const loaded = details.flatMap((query) => (query.data ? [query.data] : []))
   if (loaded.length < ids.length) {
-    return <div aria-hidden="true" className="h-40 animate-pulse rounded-xl bg-surface-muted" />
+    return (
+      <div
+        key="speed-loading"
+        aria-hidden="true"
+        className="h-40 animate-pulse rounded-xl bg-surface-muted"
+      />
+    )
   }
 
   const ordered = [...loaded].sort((a, b) => b.stats.speed - a.stats.speed)
 
   return (
-    <div className="flex flex-col gap-3">
+    <div key="speed-list" className="flex flex-col gap-3">
       <ol aria-label={LIST_LABEL} className="flex flex-col gap-2.5">
         {ordered.map((detail) => (
-          <SpeedRow key={detail.id} detail={detail} tiers={tiers.data} />
+          <SpeedRow key={detail.id} detail={detail} tiers={tiers.data} ranking={tiers.isPending} />
         ))}
       </ol>
       {tiers.isError && (
@@ -46,7 +52,13 @@ export function TeamSpeedList({ ids }: TeamSpeedListProps) {
   )
 }
 
-function SpeedRow({ detail, tiers }: { detail: PokemonDetail; tiers?: readonly SpeedTier[] }) {
+type SpeedRowProps = {
+  detail: PokemonDetail
+  tiers?: readonly SpeedTier[]
+  ranking: boolean
+}
+
+function SpeedRow({ detail, tiers, ranking }: SpeedRowProps) {
   const base = detail.stats.speed
   const spread = level50Spread(base)
   const rank = tiers ? rankSpeed(tiers, base, detail.id) : null
@@ -65,11 +77,18 @@ function SpeedRow({ detail, tiers }: { detail: PokemonDetail; tiers?: readonly S
           <h3 className="truncate font-extrabold">{name}</h3>
           <span className="text-sm font-bold text-ink-muted">Gốc {base}</span>
         </div>
-        {rank && (
+        {rank ? (
           <>
             <p className="text-sm font-bold">{`Nhanh hơn ${rank.percentSlower}% Pokémon`}</p>
             <SpeedPercentBar percent={rank.percentSlower} />
           </>
+        ) : (
+          ranking && (
+            <span aria-hidden="true" className="flex flex-col gap-1">
+              <span className="h-5 w-36 animate-pulse rounded-md bg-surface-muted" />
+              <span className="h-2.5 animate-pulse rounded-full bg-surface-muted" />
+            </span>
+          )
         )}
       </div>
       <dl className="col-span-2 grid grid-cols-3 gap-1.5 sm:col-span-1">

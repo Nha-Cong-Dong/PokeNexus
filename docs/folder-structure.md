@@ -172,7 +172,7 @@ frontend/
     ├── components/
     │   ├── ui/                    buttonStyles.ts, Panel, GameDialog, Card, Dialog, Skeleton, EmptyState,
     │   │                          ErrorState, Toast, Pagination, pageItems.ts
-    │   ├── motion/                Reveal (hiện khi cuộn tới, IntersectionObserver; T315)
+    │   ├── motion/                Reveal (hiện khi cuộn tới, IntersectionObserver; T315), usePauseOffscreen (dừng animation của khối ngoài màn hình)
     │   ├── scene/                 SceneBackdrop (chuyển ảnh), SceneAmbience (lớp hạt), useReducedMotion, PageHero (kèm PageBody nhuộm theo scene, `iris` khi đổi scene), SceneLabel
     │   └── pokemon/               TypeBadge, TypeGlyph, DexNumber, StatBar, MultiplierCell, NeutralMark, PokemonSprite,
     │                              PokemonCard, PokemonSearchBox, StatRadar, statAxes.ts, multiplierStyles.ts

@@ -86,15 +86,21 @@ function ScenePhotos({ scene, priority, rotating }: ScenePhotosProps) {
       image.srcset = sceneSrcSet(scene, next)
       image.src = sceneUrl(scene, next, 1920)
       image.onload = () => {
-        if (cancelled) return
-        setState((previous) => ({
-          ...previous,
-          layers: [
-            ...previous.layers.slice(-1),
-            { id: previous.nextId, photo: next, entering: true },
-          ],
-          nextId: previous.nextId + 1,
-        }))
+        const decoded =
+          typeof image.decode === 'function'
+            ? image.decode().catch(() => undefined)
+            : Promise.resolve()
+        void decoded.then(() => {
+          if (cancelled) return
+          setState((previous) => ({
+            ...previous,
+            layers: [
+              ...previous.layers.slice(-1),
+              { id: previous.nextId, photo: next, entering: true },
+            ],
+            nextId: previous.nextId + 1,
+          }))
+        })
       }
       image.onerror = () => {
         if (cancelled) return

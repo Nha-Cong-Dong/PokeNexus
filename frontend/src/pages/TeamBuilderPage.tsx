@@ -172,7 +172,7 @@ export function TeamBuilderPage() {
               <button
                 type="button"
                 onClick={() => setImportOpen(true)}
-                className={`flex-1 ${buttonClassName('secondary', 'sm')}`}
+                className={`flex-[1_1_auto] ${buttonClassName('secondary', 'sm')}`}
               >
                 Nhập Showdown
               </button>
@@ -180,7 +180,7 @@ export function TeamBuilderPage() {
                 type="button"
                 onClick={() => setExportOpen(true)}
                 disabled={!hasMembers}
-                className={`flex-1 ${buttonClassName('secondary', 'sm')}`}
+                className={`flex-[1_1_auto] ${buttonClassName('secondary', 'sm')}`}
               >
                 Xuất Showdown
               </button>
