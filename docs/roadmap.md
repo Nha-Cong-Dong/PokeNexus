@@ -1,6 +1,6 @@
 # PokeNexus - Lộ trình 3 tuần
 
-- Phiên bản: 1.0 (cập nhật 2026-10-30)
+- Phiên bản: 1.1 (cập nhật 2026-10-31)
 - Thay đổi so với 0.2: thêm trang Tổng quan (T311, T312) và chuyển Omni-Dex sang `/pokedex` theo [spec.md](spec.md) 1.2; thêm thứ tự cắt cho trang Tổng quan ở Phần 4.
 - Thay đổi so với 0.3: bỏ T406 (slide, video demo); ngày 14/11 thành buffer. Kịch bản demo ở [spec.md](spec.md), Phần 4 vẫn giữ và chạy trực tiếp ở T310, T403, T407.
 - Thay đổi so với 0.4: thêm T313 (Thử tài Trainer 5 bộ câu hỏi và phần thưởng) và T314 (Trang Địa hình, F08) theo [spec.md](spec.md) 1.4, mức Could, làm sớm ngày 2026-10-28; thêm vào thứ tự cắt ở Phần 4.
@@ -9,6 +9,7 @@
 - Thay đổi so với 0.7: milestone GitHub chia lại theo chủ dự án: `W3 - Hoàn thiện` hạn 01/11 (MVP và triển khai production), `W4 - Demo và phát triển` hạn 08/11 (tính năng mở rộng, kiểm thử, tài liệu, tổng duyệt, demo); trước 08/11 mọi thứ phải sẵn sàng chạy thật. Issue T401-T407 là #49-#53. Hosting chốt ở [ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md).
 - Thay đổi so với 0.8: thêm T316 (giao diện 8 trang khớp bản thiết kế ngày 2026-10-24, đối chiếu 14 artboard) theo yêu cầu của chủ dự án ngày 2026-10-30, mức Should, làm trước ngày đóng băng tính năng 05/11.
 - Thay đổi so với 0.9: thêm T408 (Bảng tốc độ cấp 50, US-09), T409 (Nhập, xuất Showdown, US-10) và T317 (Pokémon hôm nay dạng poster tràn viền) theo yêu cầu chủ dự án ngày 2026-10-30. Chủ dự án quyết định làm trước T403, khác quy tắc ở Phần 4, mục I (tính năng mở rộng chỉ làm sau khi T403 đạt).
+- Thay đổi so với 1.0: ghi T410 (gợi ý theo lối chơi, PR #60), T411 (Hồ sơ thế hệ, PR #63) đã làm ngày 2026-10-31 theo yêu cầu chủ dự án; thêm T412 (Tiến hóa dưới artwork ở trang Chi tiết, footer mới có thông tin liên hệ).
 - Thời gian: 2026-10-18 đến 2026-11-08, một người phát triển (Full-stack).
 - Mỗi tuần tương ứng một **Milestone** trên GitHub, mỗi task là một Issue ([github-setup.md](github-setup.md)).
 - Quy trình nhánh, PR, tag: [git-workflow.md](git-workflow.md).
@@ -182,6 +183,9 @@ gantt
 | T407 | 07-08/11 | Tổng duyệt, tag `v1.0.0` | E8 | Must | | GitHub Release `v1.0.0` | Tổng duyệt 2 lần, mỗi lần đúng thời gian quy định |
 | T408 | 30/10 | Bảng tốc độ cấp 50 (US-09) | E9 | Should | `pokemon.speed`, [spec.md](spec.md), Phần 2, mục IX | `GET /pokemon/speed-tiers`; khối tốc độ ở Chi tiết và Team Builder | Garchomp cấp 50: 96, 122, 169; mốc phủ 1.083 dạng; `SpeedTierServiceTest`, `PokemonControllerIT` qua |
 | T409 | 30/10 | Nhập, xuất đội Showdown (US-10) | E9 | Could | [spec.md](spec.md), Phần 2, mục X | Hộp thoại nhập, xuất ở Team Builder; nút xuất ở Đội chia sẻ | Đội 6 con có biệt danh, vật phẩm nhận đúng dạng (`Urshifu-Rapid-Strike`, `Landorus-Therian`, `Indeedee-F`); dòng sai được liệt kê; xuất rồi nhập lại ra đúng đội |
+| T410 | 31/10 | Gợi ý đội theo lối chơi, đánh giá điểm mạnh và điểm yếu | E5 | Could | [architecture.md](architecture.md), Phần 5, mục III, IV; yêu cầu chủ dự án | `playStyle` ở `recommendations`, `insights` ở `analyze`; nhóm chọn "Lối chơi" và panel "Đánh giá đội" | Đội mẫu loại huyền thoại: Cân bằng ra Excadrill, Trick Room ra Stakataka (tốc độ gốc 13); `playStyle` sai trả 400; 5 ví dụ spec V.4 vẫn qua |
+| T411 | 31/10 | Hồ sơ thế hệ ở trang Tổng quan | E7 | Could | [api.md](api.md), Phần 2, mục XIV | `GET /pokemon/generations`; bấm cột thế hệ xem hồ sơ | Thế hệ 1: 151 loài, BST trung bình 407,6, mạnh nhất Dragonite 600; thế hệ 2 hiện Chikorita, Cyndaquil, Totodile |
+| T412 | 31/10 | Trang Chi tiết: Tiến hóa dưới artwork; footer mới có thông tin liên hệ | E7 | Could | [design-system.md](design-system.md) 1.2, Phần 7; yêu cầu chủ dự án | Cột trái trang Chi tiết gồm artwork, Tiến hóa, Các dạng; footer có sóng, 4 Pokémon ngẫu nhiên, link 5 trang, Facebook, email, GitHub | 1440 px: Pidgeotto hết khoảng trống dưới artwork; CLS trang Chi tiết dưới 0,1 (Eevee 0); 375 và 1440 px không cuộn ngang; chuyển trang giữ nguyên Pokémon ở footer |
 
 - T406 (slide, video demo): bỏ ngày 2026-10-27 vì không cần slide và video; demo chạy trực tiếp theo kịch bản ở [spec.md](spec.md), Phần 4.
 

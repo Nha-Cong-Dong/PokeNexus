@@ -14,11 +14,12 @@ import type { PokemonDetail } from '../../../types/api'
 type PokemonHeroProps = {
   detail: PokemonDetail
   children: ReactNode
+  below?: ReactNode
 }
 
 const POKEMON_NAME_ID = 'pokemon-name'
 
-export function PokemonHero({ detail, children }: PokemonHeroProps) {
+export function PokemonHero({ detail, children, below }: PokemonHeroProps) {
   const scene = sceneForTypes(detail.types)
   const displayName = formatPokemonName(detail.name)
 
@@ -31,8 +32,11 @@ export function PokemonHero({ detail, children }: PokemonHeroProps) {
           className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 scene-fade lg:h-1/2"
         />
       </div>
-      <div className="relative z-10 mx-auto grid max-w-7xl gap-6 px-3 md:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] xl:px-8">
-        <section aria-labelledby={POKEMON_NAME_ID} className="relative min-w-0 lg:h-105">
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-6 px-3 md:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:grid-rows-[auto_1fr] xl:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] xl:px-8">
+        <section
+          aria-labelledby={POKEMON_NAME_ID}
+          className="relative min-w-0 lg:col-start-1 lg:row-start-1 lg:h-105"
+        >
           <div className="relative h-70 lg:absolute lg:inset-0 lg:h-auto">
             <div className="absolute inset-x-0 top-3 z-10 flex flex-wrap items-center gap-2 lg:top-5">
               <nav aria-label="Đường dẫn" className="max-w-[60%] min-w-0">
@@ -93,7 +97,12 @@ export function PokemonHero({ detail, children }: PokemonHeroProps) {
             </p>
           </div>
         </section>
-        {children}
+        <div className="min-w-0 lg:col-start-2 lg:row-span-2 lg:row-start-1">{children}</div>
+        {below && (
+          <div className="grid min-w-0 content-start gap-6 lg:col-start-1 lg:row-start-2">
+            {below}
+          </div>
+        )}
       </div>
     </div>
   )

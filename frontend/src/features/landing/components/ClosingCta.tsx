@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { Reveal } from '../../../components/motion/Reveal'
 
 import { buttonClassName } from '../../../components/ui/buttonStyles'
-import { Aura, Blob, Spark, Wave } from './SectionDecor'
+import { Aura, Blob, Spark } from './SectionDecor'
 
 const SPEAKER_DOTS = Array.from({ length: 24 }, (_, index) => index)
 
@@ -11,7 +11,7 @@ export function ClosingCta() {
   return (
     <section
       aria-labelledby="cta-title"
-      className="relative -mb-20 overflow-hidden bg-linear-to-b from-band-violet to-band-ice px-4 pt-8 pb-24 md:px-6 md:pt-[60px] md:pb-[180px]"
+      className="relative -mb-20 overflow-hidden bg-linear-to-b from-band-violet to-bg px-4 pt-8 pb-28 md:px-6 md:pt-[60px] md:pb-[120px]"
     >
       <Aura>
         <Blob className="top-0 -left-[30%] size-[440px] from-type-water/30 md:-top-[10%] md:left-[10%] md:size-[700px]" />
@@ -67,7 +67,6 @@ export function ClosingCta() {
           </div>
         </div>
       </Reveal>
-      <Wave variant="shore" className="fill-ink" />
     </section>
   )
 }

@@ -37,7 +37,18 @@ const METHOD_ICONS: Record<EvolutionMethod, ReactNode> = {
 }
 
 export function EvolutionChain({ detail }: EvolutionChainProps) {
-  const { data } = useEvolution(detail.id)
+  const { data, isPending } = useEvolution(detail.id)
+  if (isPending) {
+    return (
+      <div
+        role="status"
+        aria-busy="true"
+        className="h-96 animate-pulse rounded-3xl border-2 border-border bg-surface"
+      >
+        <span className="sr-only">Đang tải chuỗi tiến hóa</span>
+      </div>
+    )
+  }
   if (!data) return null
 
   const roots = buildEvolutionTree(data.stages)
@@ -49,7 +60,7 @@ export function EvolutionChain({ detail }: EvolutionChainProps) {
   roots.forEach(number)
 
   return (
-    <Panel aria-labelledby={TITLE_ID} className="min-w-0 flex-[1_1_32rem]">
+    <Panel aria-labelledby={TITLE_ID} className="min-w-0">
       <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         <h2 id={TITLE_ID} className="text-2xl font-extrabold">
           Tiến hóa

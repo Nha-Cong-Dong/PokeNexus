@@ -9,7 +9,6 @@ const SPARK_PATH =
 const WAVE_PATHS = {
   ridge: 'M0 80 V44 C 180 8, 360 6, 560 34 S 960 78, 1160 40 S 1360 12, 1440 26 V80 Z',
   valley: 'M0 80 V30 C 220 70, 420 74, 640 44 S 1060 2, 1260 30 S 1400 52, 1440 40 V80 Z',
-  shore: 'M0 80 V40 C 200 10, 420 8, 640 36 S 1060 76, 1260 44 S 1400 22, 1440 30 V80 Z',
 } as const
 
 type DecorProps = {
