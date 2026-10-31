@@ -80,18 +80,34 @@ export function analysisFor(
       specialDefense: 66,
       speed: 75,
     },
+    insights: [
+      {
+        tone: 'STRENGTH',
+        category: 'SPEED',
+        text: '3 thành viên nhanh (tốc độ gốc từ 100)',
+        types: [],
+      },
+      {
+        tone: 'WEAKNESS',
+        category: 'DEFENSE',
+        text: 'Lỗ hổng nghiêm trọng hệ Rock: 5 thành viên yếu, không ai kháng',
+        types: ['rock'],
+      },
+    ],
   }
 }
 
 export function recommendationsOf(...items: [PokemonRef, number][]): RecommendationResponse {
   return {
+    playStyle: 'BALANCE',
     candidateCount: 412,
     items: items.map(([pokemon, score]): Recommendation => ({
       ...pokemon,
       score,
-      breakdown: { defense: 0.9, offense: 0.5, stats: 0.8 },
+      breakdown: { defense: 0.9, offense: 0.5, role: 0.6, stats: 0.8 },
       baseStatTotal: 600,
-      reasons: ['Chống chịu hệ Rock (đội đang hở mức 8)'],
+      reasons: ['Kháng hệ Rock (x0,5): đội đang có 5 thành viên yếu, chưa ai kháng'],
+      cautions: ['Thêm điểm yếu hệ Ice: đội đã có 2 thành viên yếu'],
     })),
   }
 }

@@ -246,26 +246,56 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 
 #### 2. Chấm điểm
 
-| Thành phần | Trọng số | Cách tính |
-|---|---|---|
-| Phòng thủ | 60% | Cộng `pressure[a] x s` khi ứng viên kháng hệ `a`; trừ `(1 + pressure[a]) x (-s)` khi ứng viên yếu hệ `a` (`s` là `defenseScore` của ứng viên với hệ `a`) |
-| Độ phủ tấn công | 25% | Số hệ đội chưa đánh siêu hiệu quả mà ứng viên đánh được bằng hệ của nó |
-| Chỉ số | 15% | Tổng chỉ số gốc của ứng viên |
+- Bốn thành phần, mỗi thành phần chuẩn hóa min-max về 0-1 trên tập ứng viên; mọi ứng viên bằng nhau thì thành phần có giá trị dương được 1, còn lại 0. `score` = 100 x tổng có trọng số.
 
-- Mỗi thành phần được chuẩn hóa min-max về 0-1 trên tập ứng viên (mọi ứng viên bằng nhau thì thành phần đó bằng 0), cộng trọng số rồi nhân 100 để ra `score`.
+| Thành phần | Cách tính |
+|---|---|
+| Phòng thủ | Cộng `pressure[a] x s` khi ứng viên kháng hệ `a`; trừ `(1 + pressure[a]) x (-s)` khi ứng viên yếu hệ `a` (`s` là `defenseScore` của ứng viên với hệ `a`) |
+| Độ phủ tấn công | Số hệ đội chưa đánh siêu hiệu quả mà ứng viên đánh được bằng hệ của nó |
+| Vai trò chỉ số | Theo lối chơi, `RoleScorer` (bảng dưới) |
+| Sức mạnh | Tổng chỉ số gốc (BST) |
+
+| Lối chơi (`playStyle`) | Phòng thủ | Độ phủ | Vai trò | Sức mạnh | Lọc theo tốc độ gốc | Vai trò chỉ số |
+|---|---|---|---|---|---|---|
+| `BALANCE` (mặc định) | 40% | 20% | 25% | 15% | Không | 0,4 x bù lệch vật lý/đặc biệt khi tấn công + 0,3 x bù lệch phòng thủ vật lý/đặc biệt + 0,3 x nhu cầu tốc độ (đội chưa đủ 1/3 thành viên tốc độ gốc từ 100 thì ưu tiên ứng viên nhanh) |
+| `HYPER_OFFENSE` | 25% | 25% | 35% | 15% | Từ 80 | 0,55 x tốc độ (chuẩn 130) + 0,45 x chỉ số tấn công cao hơn (chuẩn 140) |
+| `BULKY` | 50% | 10% | 25% | 15% | Không | 0,6 x độ trâu ((HP + Phòng thủ + Phòng thủ đặc biệt) / 3, chuẩn 115) + 0,4 x bù lệch phòng thủ |
+| `TRICK_ROOM` | 30% | 15% | 40% | 15% | Tối đa 60 | 0,45 x độ chậm (1 - tốc độ / 80) + 0,35 x chỉ số tấn công + 0,2 x độ trâu |
+
+- Thành viên "vật lý" khi `(SpA - Atk) / max(Atk, SpA) <= -0,15`, "đặc biệt" khi `>= 0,15`, còn lại tính nửa mỗi bên (`TeamStatProfile`).
+- Nguyên tắc chọn từ các hướng dẫn xây đội: ưu tiên ứng viên kháng điểm yếu của đội, tránh để 3 thành viên cùng yếu một hệ, cân bằng vật lý và đặc biệt cả khi tấn công lẫn phòng thủ, đội Cân bằng ổn định nhất, đội Trick Room dùng Pokémon rất chậm nhưng trâu và đánh mạnh (Smogon "Synergy and Cores", VGC Guide "Trick Room", MetaVGC "How to create a team").
 - Sắp xếp giảm dần theo `score` đã làm tròn 1 chữ số; hòa điểm thì BST cao hơn đứng trước, tiếp theo là ID nhỏ hơn (để kết quả ổn định khi test).
 - Chỉ giữ ứng viên điểm cao nhất của mỗi tổ hợp hệ (không phân biệt thứ tự hệ), lấy `limit` phần tử đầu.
 - Độ phức tạp `O(N x 18 + N log N)` với `N` khoảng 1.300.
-- Trọng số là hằng số trong code (quyết định ở [spec.md](spec.md), Phần 5); được tinh chỉnh bằng các đội thử nghiệm ở spec, mục V.4.
+- Trọng số là thuộc tính của enum `PlayStyle`, cố định trong code (spec 1.6, Phần 5).
 
-#### 3. Sinh lý do
+#### 3. Sinh lý do và cảnh báo
 
 | Điều kiện | Mẫu câu |
 |---|---|
-| Ứng viên kháng hoặc miễn nhiễm hệ `a` có `pressure[a] > 0` (lấy tối đa 2 hệ có pressure cao nhất) | "Chống chịu hệ Rock (đội đang hở mức 8)" |
-| Ứng viên đánh siêu hiệu quả hệ đội chưa phủ | "Bổ sung độ phủ tấn công lên hệ Water, Fairy" |
+| Ứng viên kháng hoặc miễn nhiễm hệ `a` có `pressure[a] > 0` (tối đa 2 hệ có pressure cao nhất) | "Kháng hệ Rock (x0,25): đội đang có 5 thành viên yếu, chưa ai kháng"; "Miễn nhiễm hệ Electric: ..." |
+| Vai trò chỉ số (tối đa 2) | "Bù sát thương đặc biệt (Tấn công đặc biệt 110) cho đội đang thiên về vật lý"; "Tốc độ gốc 130 (tối đa 200 ở cấp 50): đội chưa có thành viên nhanh"; "Trâu: HP 108, ..."; "Tốc độ gốc 60 hợp Trick Room, Tấn công 110" |
+| Ứng viên đánh siêu hiệu quả hệ đội chưa phủ | "Đánh siêu hiệu quả hệ Poison, Electric mà đội chưa phủ được" |
 | BST thuộc nhóm 25% cao nhất tập ứng viên | "Tổng chỉ số cao (BST 600)" |
-| Không điều kiện nào khớp | Dùng câu về BST, bảo đảm luôn có ít nhất 1 lý do |
+| Không điều kiện nào khớp | "Tổng chỉ số BST {n}", bảo đảm luôn có ít nhất 1 lý do |
+
+- Tối đa 4 lý do. Cảnh báo (`cautions`): ứng viên yếu một hệ mà đội đã có từ 2 thành viên yếu ("Thêm điểm yếu hệ Water: đội đã có 3 thành viên yếu", tối đa 2), hoặc trùng hệ với từ 2 thành viên ("Trùng hệ Flying với 4 thành viên").
+
+### IV. Đánh giá đội (`TeamInsightBuilder`)
+
+| Loại | Điều kiện | Ví dụ |
+|---|---|---|
+| Điểm mạnh, phòng thủ | Hệ có từ `max(2, ceil(n/2))` thành viên kháng và không ai yếu | "Chịu tốt hệ Fighting, Bug: từ 3 thành viên kháng, không ai yếu" |
+| Điểm mạnh, phòng thủ | Đội từ 3 thành viên, không có lỗ hổng nghiêm trọng | "Không có lỗ hổng nghiêm trọng" |
+| Điểm mạnh, tấn công | Đánh siêu hiệu quả từ 14/18 hệ | "Độ phủ tấn công rộng: đánh siêu hiệu quả 15/18 hệ" |
+| Điểm mạnh, cân bằng | Có cả thành viên vật lý và đặc biệt | "Cân bằng sát thương: 2 vật lý, 2 đặc biệt, 1 cả hai" |
+| Điểm mạnh, tốc độ | Từ 2 thành viên tốc độ gốc từ 100; hoặc tốc độ trung bình tối đa 60 | "3 thành viên nhanh"; "Đội chậm, hợp lối chơi Trick Room" |
+| Điểm yếu, phòng thủ | Lỗ hổng nghiêm trọng (tối đa 2); từ 3 thành viên cùng yếu một hệ (tối đa 2) | "Lỗ hổng nghiêm trọng hệ Rock: 5 thành viên yếu, không ai kháng" |
+| Điểm yếu, tấn công | Đội từ 3 thành viên, độ phủ dưới 14 hệ | "Chưa đánh siêu hiệu quả được 7 hệ: Normal, ..." |
+| Điểm yếu, cân bằng | Chỉ một loại sát thương; phòng thủ một bên thấp hơn bên kia từ 20%; từ 3 thành viên cùng hệ | "Chỉ có sát thương vật lý: ..."; "4 thành viên cùng hệ Flying" |
+| Điểm yếu, tốc độ | Đội từ 3 thành viên, không ai tốc độ gốc từ 100 và trung bình trên 60 | "Chưa có thành viên nhanh (tốc độ gốc từ 100): dễ bị đánh trước" |
+
+- Các mục về vai trò (cân bằng, tốc độ, độ phủ còn thiếu, "Không có lỗ hổng nghiêm trọng") chỉ xét khi đội có từ 3 thành viên.
 
 ---
 

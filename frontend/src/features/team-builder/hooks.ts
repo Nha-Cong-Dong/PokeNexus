@@ -1,9 +1,12 @@
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
+import type { PlayStyle } from '../../types/api'
+
 import {
   analyzeTeam,
   createTeam,
+  DEFAULT_PLAY_STYLE,
   fetchRecommendations,
   fetchSharedTeam,
   isValidShareCode,
@@ -23,11 +26,12 @@ export function useTeamAnalysis(ids: readonly number[]) {
 export function useRecommendations(
   ids: readonly number[],
   excludeLegendary = false,
+  playStyle: PlayStyle = DEFAULT_PLAY_STYLE,
   limit = RECOMMENDATION_LIMIT,
 ) {
   return useQuery({
-    queryKey: ['synergy', 'recommendations', ids, limit, excludeLegendary],
-    queryFn: ({ signal }) => fetchRecommendations(ids, limit, excludeLegendary, signal),
+    queryKey: ['synergy', 'recommendations', ids, limit, excludeLegendary, playStyle],
+    queryFn: ({ signal }) => fetchRecommendations(ids, limit, excludeLegendary, playStyle, signal),
     enabled: ids.length > 0,
     staleTime: Infinity,
     placeholderData: keepPreviousData,

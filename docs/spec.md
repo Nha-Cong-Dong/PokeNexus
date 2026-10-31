@@ -73,12 +73,13 @@
 - Ma trận hệ số: 18 hệ tấn công x từng thành viên.
 - Với mỗi hệ tấn công: số thành viên yếu, số thành viên kháng hoặc miễn nhiễm, mức hở (pressure), cờ lỗ hổng nghiêm trọng.
 - Điểm phòng thủ của đội (0-100), radar chỉ số trung bình, số hệ mà đội đánh siêu hiệu quả được (theo hệ của Pokémon).
+- Đánh giá đội: danh sách điểm mạnh và điểm yếu bằng lời, mỗi mục thuộc một nhóm (phòng thủ, tấn công, tốc độ, cân bằng), ví dụ "Lỗ hổng nghiêm trọng hệ Rock: 5 thành viên yếu, không ai kháng", "Chưa có thành viên nhanh (tốc độ gốc từ 100)".
 
 #### 3. Đầu ra đề xuất
 
 - 3 Pokémon cho vị trí tiếp theo, đã tiến hóa hoàn toàn, không trùng với đội, không trùng tổ hợp hệ với nhau.
-- Mỗi đề xuất có điểm phù hợp (0-100) và ít nhất 1 lý do bằng lời.
-- Tùy chọn: loại trừ Pokémon huyền thoại, BST tối thiểu.
+- Mỗi đề xuất có điểm phù hợp (0-100), 1-4 lý do bằng lời có số liệu (hệ kháng và số thành viên đang yếu, chỉ số bù cho đội, hệ phủ thêm, BST) và cảnh báo nếu ứng viên làm chồng điểm yếu hoặc trùng hệ.
+- Tùy chọn: loại trừ Pokémon huyền thoại, BST tối thiểu, lối chơi (Cân bằng, Tấn công nhanh, Trâu bò, Trick Room); lối chơi đổi trọng số và lọc ứng viên theo tốc độ gốc.
 
 #### 4. Ví dụ có đáp án (dùng làm test)
 
@@ -227,7 +228,7 @@
 | Câu hỏi | Quyết định | Tài liệu bị ảnh hưởng |
 |---|---|---|
 | Có hiển thị các dạng đặc biệt (Mega, Gigantamax) trong Omni-Dex không? | DB lưu mọi dạng kèm `form_category`. Omni-Dex mặc định hiện `DEFAULT` và `REGIONAL`, người dùng bật thêm được. Team Builder nhận mọi dạng; ứng viên đề xuất chỉ gồm `DEFAULT` và `REGIONAL` | [database.md](database.md), Phần 1, mục IV; [api.md](api.md) |
-| Trọng số chấm điểm đề xuất cố định hay cho người dùng chỉnh? | Cố định trong MVP (60/25/15), là hằng số trong code | [architecture.md](architecture.md), Phần 5 |
+| Trọng số chấm điểm đề xuất cố định hay cho người dùng chỉnh? | Cố định trong MVP (60/25/15), là hằng số trong code. Cập nhật 2026-10-31 theo yêu cầu chủ dự án: thêm thành phần vai trò chỉ số và 4 lối chơi, mỗi lối chơi một bộ trọng số cố định (Cân bằng 40/20/25/15); người dùng chọn lối chơi, không chỉnh từng trọng số | [architecture.md](architecture.md), Phần 5, mục III |
 | Giới hạn số đội được lưu từ một địa chỉ IP? | 10 lần lưu mỗi phút mỗi IP, bộ đếm trong bộ nhớ, vượt thì trả 429 | [architecture.md](architecture.md), Phần 8; [api.md](api.md) |
 | Phân tích đội có chấm điểm cả slot 6 không? (bổ sung 2026-10-27) | Có: `analyze` nhận 1-6, `recommendations` vẫn nhận 1-5; điểm đội đã lưu tính trên mọi thành viên. Phương án khác (sửa bước demo, giữ giới hạn 5) bị loại vì làm mất bước "điểm đội tăng" | [api.md](api.md), Phần 2; [architecture.md](architecture.md), Phần 5 |
 

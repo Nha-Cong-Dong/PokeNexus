@@ -155,6 +155,6 @@ class TeamServiceTest {
     private static AnalyzeResponse analysisWithScore(double teamScore) {
         return new AnalyzeResponse(List.of(), teamScore, List.of(),
                 new AnalyzeResponse.OffensiveCoverage(0, List.of()),
-                new AnalyzeResponse.StatRadar(0, 0, 0, 0, 0, 0));
+                new AnalyzeResponse.StatRadar(0, 0, 0, 0, 0, 0), List.of());
     }
 }

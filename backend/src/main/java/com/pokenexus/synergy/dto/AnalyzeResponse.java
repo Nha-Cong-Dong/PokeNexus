@@ -9,7 +9,27 @@ public record AnalyzeResponse(
         double teamScore,
         List<TypeMatrixRow> typeMatrix,
         OffensiveCoverage offensiveCoverage,
-        StatRadar statRadar) {
+        StatRadar statRadar,
+        List<TeamInsight> insights) {
+
+    public enum InsightTone {
+        STRENGTH,
+        WEAKNESS
+    }
+
+    public enum InsightCategory {
+        DEFENSE,
+        OFFENSE,
+        SPEED,
+        BALANCE
+    }
+
+    public record TeamInsight(InsightTone tone, InsightCategory category, String text, List<String> types) {
+
+        public TeamInsight {
+            types = List.copyOf(types);
+        }
+    }
 
     public record TypeMatrixRow(
             String attackingType,

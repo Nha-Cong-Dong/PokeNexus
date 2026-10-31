@@ -16,15 +16,15 @@ import com.pokenexus.synergy.dto.RecommendationRequest;
 import com.pokenexus.synergy.dto.RecommendationResponse;
 import com.pokenexus.synergy.dto.RecommendationResponse.Breakdown;
 import com.pokenexus.synergy.dto.RecommendationResponse.Recommendation;
+import com.pokenexus.synergy.model.PlayStyle;
 import com.pokenexus.synergy.model.PokemonProfile;
 import com.pokenexus.synergy.model.TeamAnalysis;
+import com.pokenexus.synergy.model.TeamStatProfile;
+import com.pokenexus.synergy.service.RoleScorer.RoleFit;
 
 @Service
 public class RecommendationEngine {
 
-    public static final double DEFENSE_WEIGHT = 0.60;
-    public static final double OFFENSE_WEIGHT = 0.25;
-    public static final double STATS_WEIGHT = 0.15;
     public static final double HIGH_BST_SHARE = 0.25;
     public static final int SCORE_SCALE = 100;
     public static final int BREAKDOWN_DECIMALS = 3;
@@ -38,36 +38,41 @@ public class RecommendationEngine {
     private final SynergyAnalyzer synergyAnalyzer;
     private final PokemonProfileRegistry registry;
     private final ReasonBuilder reasonBuilder;
+    private final RoleScorer roleScorer;
 
     public RecommendationEngine(SynergyAnalyzer synergyAnalyzer, PokemonProfileRegistry registry,
-                                ReasonBuilder reasonBuilder) {
+                                ReasonBuilder reasonBuilder, RoleScorer roleScorer) {
         this.synergyAnalyzer = synergyAnalyzer;
         this.registry = registry;
         this.reasonBuilder = reasonBuilder;
+        this.roleScorer = roleScorer;
     }
 
     public RecommendationResponse recommend(RecommendationRequest request) {
         List<PokemonProfile> team = synergyAnalyzer.resolveTeam(request.pokemonIds(), MAX_TEAM_SIZE);
         TeamAnalysis analysis = synergyAnalyzer.evaluate(team);
+        TeamStatProfile teamStats = TeamStatProfile.of(team);
+        PlayStyle style = request.playStyle();
         Set<Integer> teamIds = team.stream().map(PokemonProfile::id).collect(Collectors.toSet());
         List<PokemonProfile> candidates = registry.all().stream()
                 .filter(profile -> isCandidate(profile, teamIds, request))
                 .toList();
         if (candidates.isEmpty()) {
-            return new RecommendationResponse(0, List.of());
+            return new RecommendationResponse(style, 0, List.of());
         }
 
         List<Scored> scored = candidates.stream()
                 .map(candidate -> new Scored(candidate, defenseValue(candidate, analysis),
-                        addedCoverage(candidate, analysis)))
+                        addedCoverage(candidate, analysis), roleScorer.score(candidate, teamStats, style)))
                 .toList();
         Range defenseRange = Range.of(scored, Scored::defense);
         Range offenseRange = Range.of(scored, scoredCandidate -> scoredCandidate.addedCoverage().size());
+        Range roleRange = Range.of(scored, scoredCandidate -> scoredCandidate.role().value());
         Range statsRange = Range.of(scored, scoredCandidate -> scoredCandidate.profile().baseStatTotal());
         int highBstThreshold = highBaseStatTotalThreshold(candidates);
 
         List<Ranked> ranked = scored.stream()
-                .map(candidate -> rank(candidate, defenseRange, offenseRange, statsRange))
+                .map(candidate -> rank(candidate, style, defenseRange, offenseRange, roleRange, statsRange))
                 .sorted(Comparator.comparingDouble(Ranked::score).reversed()
                         .thenComparing(Comparator.comparingInt(
                                 (Ranked rankedCandidate) -> rankedCandidate.scored().profile().baseStatTotal()).reversed())
@@ -85,12 +90,12 @@ public class RecommendationEngine {
                 continue;
             }
             List<String> reasons = reasonBuilder.build(profile, analysis, candidate.scored().addedCoverage(),
-                    profile.baseStatTotal() >= highBstThreshold);
+                    candidate.scored().role().reasons(), profile.baseStatTotal() >= highBstThreshold);
             PokemonRef ref = profile.toRef();
             items.add(new Recommendation(ref.id(), ref.name(), ref.types(), candidate.score(), candidate.breakdown(),
-                    profile.baseStatTotal(), reasons));
+                    profile.baseStatTotal(), reasons, reasonBuilder.cautions(profile, analysis)));
         }
-        return new RecommendationResponse(candidates.size(), List.copyOf(items));
+        return new RecommendationResponse(style, candidates.size(), List.copyOf(items));
     }
 
     private static boolean isCandidate(PokemonProfile profile, Set<Integer> teamIds, RecommendationRequest request) {
@@ -98,6 +103,9 @@ public class RecommendationEngine {
             return false;
         }
         if (Boolean.TRUE.equals(request.excludeLegendary()) && isLegendaryLike(profile)) {
+            return false;
+        }
+        if (!request.playStyle().allowsBaseSpeed(profile.stats().speed())) {
             return false;
         }
         return request.minBaseStatTotal() == null || profile.baseStatTotal() >= request.minBaseStatTotal();
@@ -140,19 +148,23 @@ public class RecommendationEngine {
         return totals.get(topCount - 1);
     }
 
-    private static Ranked rank(Scored candidate, Range defenseRange, Range offenseRange, Range statsRange) {
+    private static Ranked rank(Scored candidate, PlayStyle style, Range defenseRange, Range offenseRange,
+                               Range roleRange, Range statsRange) {
         double defense = defenseRange.normalize(candidate.defense());
         double offense = offenseRange.normalize(candidate.addedCoverage().size());
+        double role = roleRange.normalize(candidate.role().value());
         double stats = statsRange.normalize(candidate.profile().baseStatTotal());
-        double score = SCORE_SCALE * (DEFENSE_WEIGHT * defense + OFFENSE_WEIGHT * offense + STATS_WEIGHT * stats);
+        double score = SCORE_SCALE * (style.defenseWeight() * defense + style.offenseWeight() * offense
+                + style.roleWeight() * role + style.powerWeight() * stats);
         Breakdown breakdown = new Breakdown(
                 SynergyAnalyzer.roundTo(defense, BREAKDOWN_DECIMALS),
                 SynergyAnalyzer.roundTo(offense, BREAKDOWN_DECIMALS),
+                SynergyAnalyzer.roundTo(role, BREAKDOWN_DECIMALS),
                 SynergyAnalyzer.roundTo(stats, BREAKDOWN_DECIMALS));
         return new Ranked(candidate, SynergyAnalyzer.roundTo(score, 1), breakdown);
     }
 
-    private record Scored(PokemonProfile profile, double defense, List<PokemonType> addedCoverage) {
+    private record Scored(PokemonProfile profile, double defense, List<PokemonType> addedCoverage, RoleFit role) {
     }
 
     private record Ranked(Scored scored, double score, Breakdown breakdown) {
@@ -167,7 +179,10 @@ public class RecommendationEngine {
         }
 
         double normalize(double value) {
-            return max > min ? (value - min) / (max - min) : 0;
+            if (max > min) {
+                return (value - min) / (max - min);
+            }
+            return value > 0 ? 1 : 0;
         }
     }
 }
