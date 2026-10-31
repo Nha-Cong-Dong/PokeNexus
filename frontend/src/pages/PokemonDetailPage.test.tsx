@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react'
+import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -97,7 +97,7 @@ const SPEED_TIERS: SpeedTier[] = [
   { speed: 30, pokemon: [{ id: 143, name: 'snorlax', types: ['normal'] }] },
 ]
 
-function stubApi(detail: () => Response, evolution: () => Response) {
+function stubApi(detail: () => Response, evolution: () => Response | Promise<Response>) {
   const fetchMock = vi.fn<typeof fetch>(async (input) => {
     const url = String(input)
     if (url.endsWith('/speed-tiers')) return jsonResponse(SPEED_TIERS)
@@ -252,6 +252,51 @@ describe('PokemonDetailPage', () => {
       'aria-current',
       'page',
     )
+  })
+
+  it('keeps room for the evolution tree while it loads so the forms do not jump', async () => {
+    let release: (response: Response) => void = () => undefined
+    stubApi(
+      () => jsonResponse(CHARIZARD),
+      () =>
+        new Promise<Response>((resolve) => {
+          release = resolve
+        }),
+    )
+
+    renderRoute('/pokemon/6')
+
+    expect(await screen.findByText('Đang tải chuỗi tiến hóa')).toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Tiến hóa' })).not.toBeInTheDocument()
+
+    await act(async () => release(jsonResponse(CHARIZARD_EVOLUTION)))
+
+    expect(await screen.findByRole('region', { name: 'Tiến hóa' })).toBeInTheDocument()
+    expect(screen.queryByText('Đang tải chuỗi tiến hóa')).not.toBeInTheDocument()
+  })
+
+  it('reads stats, evolution, forms and defense in that order', async () => {
+    stubApi(
+      () => jsonResponse(CHARIZARD),
+      () => jsonResponse(CHARIZARD_EVOLUTION),
+    )
+
+    renderRoute('/pokemon/6')
+
+    const evolution = await screen.findByRole('region', { name: 'Tiến hóa' })
+    const order = [
+      screen.getByRole('region', { name: 'Charizard' }),
+      screen.getByRole('region', { name: 'Chỉ số cơ bản' }),
+      evolution,
+      screen.getByRole('region', { name: 'Các dạng' }),
+      screen.getByRole('region', { name: 'Phòng thủ' }),
+    ]
+    order.reduce((previous, region) => {
+      expect(
+        previous.compareDocumentPosition(region) & Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy()
+      return region
+    })
   })
 
   it('hides the evolution section when that endpoint fails', async () => {

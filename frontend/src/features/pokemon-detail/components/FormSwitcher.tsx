@@ -14,7 +14,7 @@ const TITLE_ID = 'forms-title'
 
 export function FormSwitcher({ forms, currentId }: FormSwitcherProps) {
   return (
-    <Panel aria-labelledby={TITLE_ID} className="min-w-0 flex-[1_1_26rem]">
+    <Panel aria-labelledby={TITLE_ID} className="min-w-0">
       <h2 id={TITLE_ID} className="mb-3.5 text-2xl font-extrabold">
         Các dạng
       </h2>
