@@ -359,4 +359,22 @@ class PokemonControllerIT {
                 .bodyJson()
                 .extractingPath("$.code").isEqualTo("INVALID_PARAMETER");
     }
+
+    @Test
+    void profilesEachGenerationOfTheSampleData() {
+        assertThat(mvc.get().uri("/api/v1/pokemon/generations"))
+                .hasStatusOk()
+                .hasHeader(HttpHeaders.CACHE_CONTROL, "public, max-age=3600")
+                .bodyJson()
+                .satisfies(json -> {
+                    assertThat(json).extractingPath("$[*].generation").asArray().containsExactly(1, 2, 3, 4);
+                    assertThat(json).extractingPath("$[0].speciesCount").isEqualTo(15);
+                    assertThat(json).extractingPath("$[0].legendaryCount").isEqualTo(1);
+                    assertThat(json).extractingPath("$[0].mythicalCount").isEqualTo(1);
+                    assertThat(json).extractingPath("$[0].strongest.name").isEqualTo("charizard");
+                    assertThat(json).extractingPath("$[0].strongestBaseStatTotal").isEqualTo(534);
+                    assertThat(json).extractingPath("$[0].topTypes").asArray().hasSize(3);
+                    assertThat(json).extractingPath("$[3].strongest.name").isEqualTo("garchomp");
+                });
+    }
 }

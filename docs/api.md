@@ -61,8 +61,9 @@
 | GET | `/api/v1/teams/shared/{shareCode}` | Xem đội qua mã chia sẻ | F06 |
 | GET | `/api/v1/pokemon/{idOrName}/evolution` | Chuỗi tiến hóa của loài | F02 |
 | GET | `/api/v1/pokemon/speed-tiers` | Mốc tốc độ gốc của dạng thường và dạng vùng | F09 |
+| GET | `/api/v1/pokemon/generations` | Hồ sơ 9 thế hệ: số loài, huyền thoại, BST trung bình, hệ phổ biến, Pokémon mạnh nhất | F07 |
 
-- `/pokemon/search`, `/pokemon/compare` và `/pokemon/speed-tiers` là đường dẫn cố định nên được Spring ưu tiên hơn mẫu `/pokemon/{idOrName}`; không có Pokémon nào tên `search`, `compare` hay `speed-tiers`.
+- `/pokemon/search`, `/pokemon/compare`, `/pokemon/speed-tiers` và `/pokemon/generations` là đường dẫn cố định nên được Spring ưu tiên hơn mẫu `/pokemon/{idOrName}`; không có Pokémon nào tên `search`, `compare`, `speed-tiers` hay `generations`.
 - Synergy dùng POST vì đầu vào là danh sách có cấu trúc và có thể bổ sung tùy chọn sau này.
 
 ### II. `GET /api/v1/health`
@@ -175,6 +176,13 @@
 - Bảng `pokemon` rỗng: 503 `DATA_NOT_READY`.
 - Response khoảng 59 KB chưa nén; frontend gọi một lần mỗi phiên (`staleTime` `Infinity`) và tự tính tốc độ cấp 50, tỷ lệ, mốc lân cận.
 
+### XIV. `GET /api/v1/pokemon/generations`
+
+- Hồ sơ từng thế hệ cho trang Tổng quan (F07, #62). Không có tham số. Response 200: `GenerationProfile[]` (Phần 3, mục II) xếp theo `generation` tăng dần, header `Cache-Control: public, max-age=3600`.
+- Chỉ tính dạng `DEFAULT` (mỗi loài một dạng): `speciesCount` khớp số loài mới của thế hệ (thế hệ 1 = 151). `topTypes` là 3 hệ xuất hiện nhiều nhất (tính cả hệ thứ hai), hòa thì theo tên hệ. `strongest` là Pokémon có BST cao nhất không phải huyền thoại hay thần thoại (hòa thì ID nhỏ hơn); thế hệ chỉ có huyền thoại thì lấy BST cao nhất.
+- Backend tính một lần rồi giữ trong bộ nhớ (dữ liệu tĩnh). Bảng `pokemon` rỗng: 503 `DATA_NOT_READY`.
+- Thay 9 lời gọi `GET /pokemon?gen=n&form=DEFAULT&size=1` trước đây của trang Tổng quan.
+
 ---
 
 ## Phần 3. Schema DTO
@@ -272,6 +280,17 @@ interface EvolutionStage {
 interface EvolutionResponse {
   chainId: number;
   stages: EvolutionStage[];
+}
+
+interface GenerationProfile {
+  generation: number;
+  speciesCount: number;
+  legendaryCount: number;
+  mythicalCount: number;
+  averageBaseStatTotal: number;
+  topTypes: { type: TypeName; count: number }[];
+  strongest: PokemonRef;
+  strongestBaseStatTotal: number;
 }
 
 interface SpeedTier {

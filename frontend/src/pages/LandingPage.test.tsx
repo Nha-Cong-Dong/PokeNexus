@@ -45,10 +45,28 @@ function detail(id: number): PokemonDetail {
   }
 }
 
+function generationProfiles() {
+  return GENERATION_COUNTS.map((speciesCount, index) => ({
+    generation: index + 1,
+    speciesCount,
+    legendaryCount: index === 0 ? 4 : 3,
+    mythicalCount: 1,
+    averageBaseStatTotal: 425.8,
+    topTypes: [
+      { type: 'water', count: 32 },
+      { type: 'poison', count: 33 },
+      { type: 'normal', count: 22 },
+    ],
+    strongest: { id: 149, name: 'dragonite', types: ['dragon', 'flying'] },
+    strongestBaseStatTotal: 600,
+  }))
+}
+
 function stubApi() {
   const fetchMock = vi.fn<typeof fetch>(async (input) => {
     const url = new URL(String(input))
     if (url.pathname.endsWith('/types/matrix')) return jsonResponse(matrix())
+    if (url.pathname.endsWith('/pokemon/generations')) return jsonResponse(generationProfiles())
     const detailMatch = /\/pokemon\/(\d+)$/.exec(url.pathname)
     if (detailMatch) return jsonResponse(detail(Number(detailMatch[1])))
     if (url.pathname.endsWith('/pokemon')) {
@@ -163,13 +181,36 @@ describe('LandingPage', () => {
     expect(within(electricRow).getByText('Flying')).toBeInTheDocument()
   })
 
-  it('charts species per generation and links each column to the filtered Pokédex', async () => {
+  it('charts species per generation and shows the profile of the picked generation', async () => {
     renderRoute('/')
     const chart = screen.getByRole('region', { name: '1.025 loài qua 9 thế hệ' })
 
-    const kanto = await within(chart).findByRole('link', { name: /Thế hệ 1, Kanto: 151 loài/ })
-    expect(kanto).toHaveAttribute('href', '/pokedex?gen=1')
-    expect(within(chart).getAllByRole('link')).toHaveLength(9)
+    const kanto = await within(chart).findByRole('button', { name: /Thế hệ 1, Kanto: 151 loài/ })
+    expect(kanto).toHaveAttribute('aria-pressed', 'true')
+    expect(within(chart).getAllByRole('button', { name: /Xem hồ sơ thế hệ/ })).toHaveLength(9)
+    const kantoProfile = within(chart).getByRole('article', { name: 'Thế hệ 1 · Kanto' })
+    expect(within(kantoProfile).getByText('4 + 1')).toBeInTheDocument()
+    expect(within(kantoProfile).getByRole('link', { name: 'Charmander' })).toHaveAttribute(
+      'href',
+      '/pokemon/4',
+    )
+
+    await userEvent.click(within(chart).getByRole('button', { name: /Thế hệ 2, Johto: 100 loài/ }))
+
+    const johto = within(chart).getByRole('article', { name: 'Thế hệ 2 · Johto' })
+    expect(within(johto).getByRole('link', { name: 'Chikorita' })).toHaveAttribute(
+      'href',
+      '/pokemon/152',
+    )
+    expect(within(johto).getByText('425,8')).toBeInTheDocument()
+    expect(within(johto).getByRole('link', { name: /Dragonite/ })).toHaveAttribute(
+      'href',
+      '/pokemon/149',
+    )
+    expect(within(johto).getByRole('link', { name: 'Mở Pokédex thế hệ 2' })).toHaveAttribute(
+      'href',
+      '/pokedex?gen=2',
+    )
   })
 
   it('checks a quiz answer, explains it and counts the score', async () => {

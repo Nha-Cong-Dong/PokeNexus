@@ -120,7 +120,7 @@
 | Vòng tương khắc | Chọn 1 trong 18 hệ tấn công; hiện danh sách hệ nhận x2, x½, x0 lấy từ `GET /types/matrix`; link tới `/types` |
 | Pokémon hôm nay | Cùng một ngày luôn ra cùng một Pokémon; hiện artwork, số, hệ, BST, một câu về điểm yếu x2 trở lên; nút "Xem chi tiết" tới trang chi tiết |
 | Xây đội trong 3 bước | 3 bước có minh họa tĩnh; nút "Xây đội ngay" |
-| Số loài qua 9 thế hệ | Biểu đồ cột 9 thế hệ, số liệu là số dạng `DEFAULT` của từng thế hệ từ `GET /pokemon`; bấm một cột mở `/pokedex?gen=<n>` |
+| Số loài qua 9 thế hệ | Biểu đồ cột 9 thế hệ, số liệu là số dạng `DEFAULT` của từng thế hệ từ `GET /pokemon/generations`; bấm một cột hiện hồ sơ thế hệ đó: 3 Pokémon khởi đầu, 3 hệ phổ biến, BST trung bình, số huyền thoại và thần thoại, Pokémon mạnh nhất trừ huyền thoại; nút trong hồ sơ mở `/pokedex?gen=<n>` (cập nhật 2026-10-31, #62) |
 | Thử tài Trainer | 5 bộ, mỗi bộ 6 câu, 3 lựa chọn: hệ số sát thương, điểm yếu và miễn nhiễm, chỉ số gốc, hệ của Pokémon, vùng đất ra mắt. Đáp án tính từ ma trận tương khắc hoặc `GET /pokemon/{id}`, không ghi cứng; chọn đáp án thì hiện đúng hoặc sai kèm giải thích; đếm số câu đúng; làm lại được. Phần thưởng: 10 điểm Trainer mỗi câu đúng, thêm 5 điểm từ câu đúng thứ 3 liên tiếp; hết bộ nhận Master Ball (6/6), Ultra Ball (5/6), Great Ball (4/6) hoặc Poké Ball (1-3); đúng từ 5/6 nhận huy hiệu của bộ; 6 danh hiệu theo điểm (Tân binh 0, Trainer 100, Trainer ưu tú 300, Thủ lĩnh Gym 600, Tứ Thiên Vương 1000, Nhà vô địch 1500); tiến độ lưu `localStorage` của trình duyệt |
 | Kêu gọi cuối trang | Tiêu đề, một câu, 2 nút như hero |
 

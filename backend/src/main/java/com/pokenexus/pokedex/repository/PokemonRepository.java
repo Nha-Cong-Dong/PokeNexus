@@ -35,6 +35,9 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Integer>, JpaS
 
     List<Pokemon> findByFormCategoryIn(Collection<FormCategory> formCategories);
 
+    @EntityGraph(attributePaths = {"species", "species.generation"})
+    List<Pokemon> findWithSpeciesByFormCategory(FormCategory formCategory);
+
     @Query("SELECT p FROM Pokemon p JOIN FETCH p.species ORDER BY p.id")
     List<Pokemon> findAllWithSpecies();
 
