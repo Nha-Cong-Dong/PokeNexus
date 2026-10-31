@@ -45,6 +45,7 @@
 
 - Hiển thị: tên, sprite, hệ, 6 chỉ số gốc dạng thanh, BST, chiều cao, cân nặng.
 - Lưới phòng thủ 18 hệ, mỗi ô ghi hệ số (0, 0.25, 0.5, 1, 2, 4) và tô màu theo mức.
+- Cây tiến hóa dạng dọc (T401): đủ mọi nhánh (Eevee 8 nhánh), mỗi loài ghi giai đoạn và điều kiện tiến hóa có trong dữ liệu (cấp độ, loại kích hoạt); bấm một loài mở trang chi tiết của loài đó.
 - Truy cập bằng ID hoặc tên; không tồn tại thì trả 404 và hiển thị trang "không tìm thấy".
 
 ### III. F03 - Bảng tương khắc
