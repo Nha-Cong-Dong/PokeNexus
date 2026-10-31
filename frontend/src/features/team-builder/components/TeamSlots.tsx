@@ -95,9 +95,11 @@ export function TeamSlots({
             <button
               type="button"
               onClick={onAddSuggestion}
-              className={`${buttonClassName('primary', 'sm')} w-full px-1 text-xs whitespace-nowrap max-md:h-11`}
+              className={`${buttonClassName('primary', 'sm')} w-full px-2 text-xs max-md:h-11`}
             >
-              Thêm vào đội
+              <span>
+                Thêm<span className="max-sm:sr-only"> vào đội</span>
+              </span>
             </button>
           </div>
         ) : (

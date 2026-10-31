@@ -5,7 +5,7 @@ import { NotFoundPage } from '../pages/NotFoundPage'
 import { AppLayout } from './layout/AppLayout'
 
 const pageFallback = (
-  <div aria-busy="true" className="min-h-[60vh]">
+  <div aria-busy="true" className="min-h-screen">
     <span className="sr-only">Đang tải trang…</span>
   </div>
 )

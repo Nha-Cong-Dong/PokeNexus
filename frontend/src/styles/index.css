@@ -3,6 +3,15 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant short (@media (max-height: 50rem));
 
+@font-face {
+  font-family: 'Dela Gothic One Fallback';
+  src: local('Arial Black'), local('ArialMT-Black');
+  size-adjust: 108.4%;
+  ascent-override: 107%;
+  descent-override: 26.8%;
+  line-gap-override: 0%;
+}
+
 :root {
   --pn-bg: #eef3f9;
   --pn-surface: #ffffff;
@@ -58,7 +67,8 @@
 }
 
 @theme {
-  --font-display: 'Dela Gothic One', ui-rounded, ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    'Dela Gothic One', 'Dela Gothic One Fallback', ui-rounded, ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Nunito Variable', ui-rounded, ui-sans-serif, system-ui, sans-serif;
   --font-pixel: 'Pixelify Sans Variable', ui-monospace, monospace;
 
@@ -406,13 +416,11 @@
   @keyframes title-in {
     from {
       opacity: 0;
-      letter-spacing: 0.32em;
-      filter: blur(10px);
+      transform: scaleX(1.18) translateY(6px);
     }
     to {
       opacity: 1;
-      letter-spacing: 0;
-      filter: blur(0);
+      transform: none;
     }
   }
 
@@ -547,7 +555,6 @@
   --animate-cloud: cloud 70s linear infinite;
   --animate-twinkle: twinkle 2.8s ease-in-out infinite;
   --animate-orb: orb 5s ease-in-out infinite alternate;
-  --animate-trail-flow: trail-flow 1.4s linear infinite;
   --animate-isle-shadow: float-shadow 3.4s ease-in-out infinite alternate;
   --animate-ring-in: ring-in 1500ms 550ms var(--ease-emphasized) both;
   --animate-spin-slow: spin-slow 60s linear infinite;
@@ -598,12 +605,6 @@
     }
     to {
       transform: translateY(-22px) rotate(6deg);
-    }
-  }
-
-  @keyframes trail-flow {
-    to {
-      stroke-dashoffset: -32;
     }
   }
 
@@ -1026,6 +1027,12 @@
     transform: translate3d(105cqw, var(--drift), 0);
     opacity: 0;
   }
+}
+
+[data-offscreen] *,
+[data-offscreen] *::before,
+[data-offscreen] *::after {
+  animation-play-state: paused;
 }
 
 body {

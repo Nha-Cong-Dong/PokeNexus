@@ -354,7 +354,7 @@ export function FeatureRegions() {
             <path
               d={TRAIL_PATH}
               fill="none"
-              className="stroke-white motion-safe:animate-trail-flow"
+              className="stroke-white"
               strokeWidth="5"
               strokeDasharray="1 15"
               strokeLinecap="round"

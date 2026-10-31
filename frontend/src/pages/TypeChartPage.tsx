@@ -71,6 +71,7 @@ export function TypeChartPage() {
               </div>
               {isPending ? (
                 <div
+                  key="matrix-loading"
                   role="status"
                   aria-busy="true"
                   className="h-160 animate-pulse rounded-2xl bg-surface-muted max-md:mr-4"
@@ -94,7 +95,7 @@ export function TypeChartPage() {
                   />
                 </div>
               ) : (
-                <div className="flex flex-wrap items-start gap-6">
+                <div key="matrix" className="flex flex-wrap items-start gap-6">
                   <TypeMatrixTable
                     matrix={matrix}
                     focus={focus}
