@@ -116,6 +116,17 @@ export interface SpeedTier {
   pokemon: PokemonRef[]
 }
 
+export interface GenerationProfile {
+  generation: number
+  speciesCount: number
+  legendaryCount: number
+  mythicalCount: number
+  averageBaseStatTotal: number
+  topTypes: { type: TypeName; count: number }[]
+  strongest: PokemonRef
+  strongestBaseStatTotal: number
+}
+
 export interface TypeMatrixRow {
   attackingType: TypeName
   multipliers: number[]

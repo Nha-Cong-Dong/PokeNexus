@@ -21,10 +21,12 @@ import com.pokenexus.pokedex.dto.PokemonDetail;
 import com.pokenexus.pokedex.dto.PokemonFilter;
 import com.pokenexus.pokedex.dto.PokemonRef;
 import com.pokenexus.pokedex.dto.PokemonSummary;
+import com.pokenexus.pokedex.dto.GenerationProfile;
 import com.pokenexus.pokedex.dto.SpeedTier;
 import com.pokenexus.pokedex.service.CompareService;
 import com.pokenexus.pokedex.service.EvolutionService;
 import com.pokenexus.pokedex.service.PokemonQueryService;
+import com.pokenexus.pokedex.service.GenerationProfileService;
 import com.pokenexus.pokedex.service.SpeedTierService;
 
 @RestController
@@ -38,13 +40,16 @@ public class PokemonController {
     private final CompareService compareService;
     private final EvolutionService evolutionService;
     private final SpeedTierService speedTierService;
+    private final GenerationProfileService generationProfileService;
 
     public PokemonController(PokemonQueryService pokemonQueryService, CompareService compareService,
-                             EvolutionService evolutionService, SpeedTierService speedTierService) {
+                             EvolutionService evolutionService, SpeedTierService speedTierService,
+                             GenerationProfileService generationProfileService) {
         this.pokemonQueryService = pokemonQueryService;
         this.compareService = compareService;
         this.evolutionService = evolutionService;
         this.speedTierService = speedTierService;
+        this.generationProfileService = generationProfileService;
     }
 
     @GetMapping
@@ -94,6 +99,14 @@ public class PokemonController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CACHE_CONTROL, CACHE_ONE_HOUR)
                 .body(speedTierService.findTiers());
+    }
+
+    @GetMapping("/generations")
+    @Operation(summary = "Profile of each generation: species count, legendaries, average BST, top types, strongest")
+    public ResponseEntity<List<GenerationProfile>> generations() {
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, CACHE_ONE_HOUR)
+                .body(generationProfileService.findProfiles());
     }
 
     @GetMapping("/{idOrName}")

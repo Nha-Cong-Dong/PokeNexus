@@ -303,7 +303,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | `['synergy', 'analyze', ids]` | `Infinity` | Kết quả xác định theo đầu vào |
 | `['compare', left, right]` | `Infinity` | Kết quả xác định theo cặp; không thử lại khi lỗi 4xx |
 | `['pokemon', 'search', q]` | 5 phút | Gợi ý tên khi gõ |
-| `['pokemon', 'generation-count', n]` | `Infinity` | Số loài mỗi thế hệ ở trang Tổng quan |
+| `['pokemon', 'generations']` | `Infinity` | Hồ sơ 9 thế hệ ở trang Tổng quan (`GET /pokemon/generations`) |
 | `['pokemon', 'type-pool', type]` | `Infinity` | 100 Pokémon đầu theo ID của một hệ cho trang Địa hình |
 | `['pokemon', 'speed-tiers']` | `Infinity` | Mốc tốc độ gốc cho Bảng tốc độ cấp 50 (F09); chi tiết thành viên dùng chung key `['pokemon', id]` |
 

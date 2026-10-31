@@ -101,10 +101,10 @@ backend/
 | | `entity` | `Type`, `TypeEfficacy`, `TypeEfficacyId` | T204 |
 | | `dto` | `TypeResponse`, `TypeMatrixResponse`, `DefenseEntry` | T304 |
 | `pokedex` | `controller` | `PokemonController` | T206 |
-| | `service` | `PokemonQueryService`, `CompareService`, `EvolutionService`, `SpeedTierService` | T206, T308, T408 |
+| | `service` | `PokemonQueryService`, `CompareService`, `EvolutionService`, `SpeedTierService`, `GenerationProfileService` | T206, T308, T408, #62 |
 | | `repository` | `PokemonRepository`, `SpeciesRepository`, `PokemonSpecifications`, `EvolutionLinkRepository` | T204, T206 |
 | | `entity` | `Pokemon`, `Species`, `Generation`, `Region`, `EvolutionChain`, `EvolutionLink` | T204 |
-| | `dto` | `PokemonFilter`, `PokemonRef`, `PokemonSummary`, `PokemonDetail`, `Stats`, `PokemonCatalogEntry`, `CompareResponse`, `EvolutionResponse`, `EvolutionStage`, `SpeedTier` | T206, T303, T408 |
+| | `dto` | `PokemonFilter`, `PokemonRef`, `PokemonSummary`, `PokemonDetail`, `Stats`, `PokemonCatalogEntry`, `CompareResponse`, `EvolutionResponse`, `EvolutionStage`, `SpeedTier`, `GenerationProfile` | T206, T303, T408, #62 |
 | | `mapper` | `PokemonMapper` | T206 |
 | `synergy` | `controller` | `SynergyController` | T305 |
 | | `service` | `PokemonProfileRegistry`, `SynergyAnalyzer`, `RecommendationEngine`, `ReasonBuilder` | T305 |
