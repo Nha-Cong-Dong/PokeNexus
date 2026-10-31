@@ -139,8 +139,10 @@
 | `limit` | số | 1-10 | 3 |
 | `excludeLegendary` | boolean | `true` thì loại huyền thoại, thần thoại và Pokémon Paradox ([architecture.md](architecture.md), Phần 5, mục III) | `false` |
 | `minBaseStatTotal` | số hoặc `null` | 0-1530 | `null` |
+| `playStyle` | chuỗi | `BALANCE` (Cân bằng), `HYPER_OFFENSE` (Tấn công nhanh, chỉ ứng viên tốc độ gốc từ 80), `BULKY` (Trâu bò), `TRICK_ROOM` (chỉ ứng viên tốc độ gốc tối đa 60); trọng số từng lối chơi ở [architecture.md](architecture.md), Phần 5, mục III | `BALANCE` |
 
 - Response 200: `RecommendationResponse`. `items` có thể ít hơn `limit` nếu tập ứng viên nhỏ.
+- `playStyle` ngoài 4 giá trị trên trả 400 `MALFORMED_JSON` (Jackson không đọc được enum).
 
 ### X. `POST /api/v1/teams`
 
@@ -301,16 +303,28 @@ interface AnalyzeResponse {
   typeMatrix: TypeMatrixRow[];
   offensiveCoverage: { coveredTypeCount: number; uncoveredTypes: TypeName[] };
   statRadar: Stats;
+  insights: TeamInsight[];
 }
+
+interface TeamInsight {
+  tone: "STRENGTH" | "WEAKNESS";
+  category: "DEFENSE" | "OFFENSE" | "SPEED" | "BALANCE";
+  text: string;
+  types: TypeName[];
+}
+
+type PlayStyle = "BALANCE" | "HYPER_OFFENSE" | "BULKY" | "TRICK_ROOM";
 
 interface Recommendation extends PokemonRef {
   score: number;
-  breakdown: { defense: number; offense: number; stats: number };
+  breakdown: { defense: number; offense: number; role: number; stats: number };
   baseStatTotal: number;
   reasons: string[];
+  cautions: string[];
 }
 
 interface RecommendationResponse {
+  playStyle: PlayStyle;
   candidateCount: number;
   items: Recommendation[];
 }
@@ -318,7 +332,8 @@ interface RecommendationResponse {
 
 - `typeMatrix` có 18 dòng; `multipliers` cùng thứ tự với `members` (thứ tự ID trong request).
 - `resistCount` gồm cả thành viên miễn nhiễm. `teamScore`, `score`, `statRadar` làm tròn 1 chữ số thập phân. `breakdown` là các giá trị đã chuẩn hóa 0-1 (làm tròn 3 chữ số), trước khi nhân trọng số.
-- `candidateCount` đếm ứng viên sau bộ lọc (`excludeLegendary`, `minBaseStatTotal`), trước khi loại trùng tổ hợp hệ. Lý do mặc định khi không có lý do phòng thủ, tấn công: "Tổng chỉ số BST {n}".
+- `candidateCount` đếm ứng viên sau bộ lọc (`excludeLegendary`, `minBaseStatTotal`, giới hạn tốc độ của `playStyle`), trước khi loại trùng tổ hợp hệ. Lý do mặc định khi không có lý do nào khác: "Tổng chỉ số BST {n}"; tối đa 4 lý do.
+- `insights` xếp điểm mạnh (`STRENGTH`) trước điểm yếu (`WEAKNESS`); `types` là các hệ được nhắc tới, có thể rỗng. `cautions` là cảnh báo khi chọn ứng viên (thêm điểm yếu cho hệ đội đã có từ 2 thành viên yếu, trùng hệ với từ 2 thành viên), có thể rỗng.
 
 ### IV. Đội hình
 
@@ -456,7 +471,8 @@ Content-Type: application/json
   "pokemonIds": [6, 130, 149, 663, 637],
   "limit": 3,
   "excludeLegendary": true,
-  "minBaseStatTotal": 450
+  "minBaseStatTotal": 450,
+  "playStyle": "BALANCE"
 }
 ```
 
@@ -464,6 +480,7 @@ Content-Type: application/json
 
 ```json
 {
+  "playStyle": "BALANCE",
   "candidateCount": 412,
   "items": [
     {
@@ -471,9 +488,10 @@ Content-Type: application/json
       "name": "string",
       "types": ["string"],
       "score": 0.0,
-      "breakdown": { "defense": 0.0, "offense": 0.0, "stats": 0.0 },
+      "breakdown": { "defense": 0.0, "offense": 0.0, "role": 0.0, "stats": 0.0 },
       "baseStatTotal": 0,
-      "reasons": ["Chống chịu hệ Rock (đội đang hở mức 8)"]
+      "reasons": ["Kháng hệ Rock (x0,25): đội đang có 5 thành viên yếu, chưa ai kháng"],
+      "cautions": ["Thêm điểm yếu hệ Water: đội đã có 3 thành viên yếu"]
     }
   ]
 }

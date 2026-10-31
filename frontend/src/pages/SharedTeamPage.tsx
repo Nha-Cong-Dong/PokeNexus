@@ -10,6 +10,7 @@ import { isValidShareCode } from '../features/team-builder/api'
 import { ShareLinkField } from '../features/team-builder/components/ShareLinkField'
 import { ShowdownExportDialog } from '../features/team-builder/components/ShowdownDialogs'
 import { ReadOnlyTeamSlots } from '../features/team-builder/components/TeamSlots'
+import { TeamInsights } from '../features/team-builder/components/TeamInsights'
 import { AnalysisHeatmap } from '../features/team-builder/components/WeaknessHeatmap'
 import { useSharedTeam, useTeamAnalysis } from '../features/team-builder/hooks'
 import { formatSavedDate, formatScore } from '../features/team-builder/teamAnalysis'
@@ -22,6 +23,7 @@ import { typeScopeClassName } from '../lib/pokemonTypes'
 const DEFAULT_TITLE = 'Đội được chia sẻ'
 const HEATMAP_TITLE_ID = 'shared-heatmap-title'
 const USE_TITLE_ID = 'shared-use-title'
+const INSIGHTS_TITLE_ID = 'shared-insights-title'
 
 type ShareCodeBadgeProps = {
   code: string
@@ -190,6 +192,15 @@ export function SharedTeamPage() {
                 <ShareLinkField shareCode={data.shareCode} />
               </Panel>
             </div>
+
+            {analysis.data && analysisIds.length > 0 && (
+              <Panel aria-labelledby={INSIGHTS_TITLE_ID} className="flex flex-col gap-3">
+                <h2 id={INSIGHTS_TITLE_ID} className="text-xl font-extrabold">
+                  Đánh giá đội
+                </h2>
+                <TeamInsights insights={analysis.data.insights} />
+              </Panel>
+            )}
           </>
         )}
       </PageBody>

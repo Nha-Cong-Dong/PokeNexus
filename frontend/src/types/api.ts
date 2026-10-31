@@ -135,23 +135,40 @@ export interface AnalyzeResponse {
   typeMatrix: TypeMatrixRow[]
   offensiveCoverage: { coveredTypeCount: number; uncoveredTypes: TypeName[] }
   statRadar: Stats
+  insights: TeamInsight[]
 }
+
+export type InsightTone = 'STRENGTH' | 'WEAKNESS'
+
+export type InsightCategory = 'DEFENSE' | 'OFFENSE' | 'SPEED' | 'BALANCE'
+
+export interface TeamInsight {
+  tone: InsightTone
+  category: InsightCategory
+  text: string
+  types: TypeName[]
+}
+
+export type PlayStyle = 'BALANCE' | 'HYPER_OFFENSE' | 'BULKY' | 'TRICK_ROOM'
 
 export interface RecommendationRequest {
   pokemonIds: number[]
   limit?: number
   excludeLegendary?: boolean
   minBaseStatTotal?: number | null
+  playStyle?: PlayStyle
 }
 
 export interface Recommendation extends PokemonRef {
   score: number
-  breakdown: { defense: number; offense: number; stats: number }
+  breakdown: { defense: number; offense: number; role: number; stats: number }
   baseStatTotal: number
   reasons: string[]
+  cautions: string[]
 }
 
 export interface RecommendationResponse {
+  playStyle: PlayStyle
   candidateCount: number
   items: Recommendation[]
 }

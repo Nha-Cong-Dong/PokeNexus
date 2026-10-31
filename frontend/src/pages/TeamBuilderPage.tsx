@@ -5,14 +5,16 @@ import { PageBody, PageHero } from '../components/scene/PageHero'
 import { buttonClassName } from '../components/ui/buttonStyles'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Panel } from '../components/ui/Panel'
-import { MAX_TEAM_SIZE } from '../features/team-builder/api'
+import { DEFAULT_PLAY_STYLE, MAX_TEAM_SIZE } from '../features/team-builder/api'
 import { CoverageAndStats } from '../features/team-builder/components/CoverageAndStats'
+import { PlayStylePicker } from '../features/team-builder/components/PlayStylePicker'
 import { RecommendationList } from '../features/team-builder/components/RecommendationList'
 import { SaveTeamDialog } from '../features/team-builder/components/SaveTeamDialog'
 import {
   ShowdownExportDialog,
   ShowdownImportDialog,
 } from '../features/team-builder/components/ShowdownDialogs'
+import { TeamInsights } from '../features/team-builder/components/TeamInsights'
 import { ScoreDeltaChip, TeamScoreGauge } from '../features/team-builder/components/TeamScoreGauge'
 import { TeamSlots } from '../features/team-builder/components/TeamSlots'
 import { AnalysisHeatmap } from '../features/team-builder/components/WeaknessHeatmap'
@@ -22,7 +24,7 @@ import { analysisSummary, buildTeamMembers } from '../features/team-builder/team
 import { useTeamDraft } from '../features/team-builder/useTeamDraft'
 import { TeamSpeedList } from '../features/speed/components/TeamSpeedList'
 import { formatPokemonName } from '../lib/formatters'
-import type { PokemonRef, Recommendation } from '../types/api'
+import type { PlayStyle, PokemonRef, Recommendation } from '../types/api'
 
 const SAMPLE_TEAM = [6, 130, 149, 663, 637]
 const SEARCH_INPUT_ID = 'team-search'
@@ -32,6 +34,7 @@ const HEATMAP_TITLE_ID = 'team-heatmap-title'
 const ATTACK_TITLE_ID = 'team-attack-title'
 const RECOMMENDATION_TITLE_ID = 'team-recommendation-title'
 const SPEED_TITLE_ID = 'team-speed-title'
+const INSIGHTS_TITLE_ID = 'team-insights-title'
 
 const UPLOAD_ICON = (
   <svg
@@ -55,7 +58,8 @@ function toRef({ id, name, types }: PokemonRef): PokemonRef {
 export function TeamBuilderPage() {
   const draft = useTeamDraft()
   const [excludeLegendary, setExcludeLegendary] = useState(false)
-  const recommendations = useRecommendations(draft.ids, excludeLegendary)
+  const [playStyle, setPlayStyle] = useState<PlayStyle>(DEFAULT_PLAY_STYLE)
+  const recommendations = useRecommendations(draft.ids, excludeLegendary, playStyle)
   const [knownRefs, setKnownRefs] = useState<Record<number, PokemonRef>>({})
   const [saveOpen, setSaveOpen] = useState(false)
   const [importOpen, setImportOpen] = useState(false)
@@ -235,6 +239,25 @@ export function TeamBuilderPage() {
         </div>
 
         <div className="contents lg:flex lg:min-w-0 lg:flex-col lg:gap-6">
+          {hasMembers && (
+            <Panel aria-labelledby={INSIGHTS_TITLE_ID} className="flex min-w-0 flex-col gap-3">
+              <h2 id={INSIGHTS_TITLE_ID} className="text-xl font-extrabold">
+                Đánh giá đội
+              </h2>
+              {analysisData ? (
+                <div className={analysis.isPlaceholderData ? 'opacity-60' : ''}>
+                  <TeamInsights insights={analysisData.insights} />
+                </div>
+              ) : analysis.isError ? (
+                <p className="text-ink-muted">Chưa đánh giá được đội.</p>
+              ) : (
+                <div
+                  aria-hidden="true"
+                  className="h-32 animate-pulse rounded-xl bg-surface-muted"
+                />
+              )}
+            </Panel>
+          )}
           <Panel aria-labelledby={HEATMAP_TITLE_ID} className="flex min-w-0 flex-col gap-3">
             <h2 id={HEATMAP_TITLE_ID} className="text-xl font-extrabold">
               Bản đồ điểm yếu
@@ -315,6 +338,7 @@ export function TeamBuilderPage() {
               </span>
             )}
           </div>
+          <PlayStylePicker value={playStyle} onChange={setPlayStyle} />
           <label className="flex min-h-10 cursor-pointer items-center gap-3 rounded-2xl border-2 border-border bg-surface px-4 py-2 font-bold">
             <input
               type="checkbox"

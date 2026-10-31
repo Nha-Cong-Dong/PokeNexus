@@ -2,7 +2,9 @@ package com.pokenexus.synergy.dto;
 
 import java.util.List;
 
-public record RecommendationResponse(int candidateCount, List<Recommendation> items) {
+import com.pokenexus.synergy.model.PlayStyle;
+
+public record RecommendationResponse(PlayStyle playStyle, int candidateCount, List<Recommendation> items) {
 
     public record Recommendation(
             int id,
@@ -11,9 +13,10 @@ public record RecommendationResponse(int candidateCount, List<Recommendation> it
             double score,
             Breakdown breakdown,
             int baseStatTotal,
-            List<String> reasons) {
+            List<String> reasons,
+            List<String> cautions) {
     }
 
-    public record Breakdown(double defense, double offense, double stats) {
+    public record Breakdown(double defense, double offense, double role, double stats) {
     }
 }

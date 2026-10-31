@@ -160,6 +160,52 @@ describe('TeamBuilderPage', () => {
     )
   })
 
+  it('asks for Trick Room recommendations when that play style is picked', async () => {
+    const fetchMock = routeFetch({
+      'POST /synergy/analyze': analyzeById({ [SPEC_IDS]: 41 }),
+      'POST /synergy/recommendations': () => jsonResponse(recommendationsOf([TYRANITAR, 92])),
+    })
+    renderTeamRoute(`/team-builder?ids=${SPEC_IDS}`)
+    const balance = await screen.findByRole('radio', { name: /Cân bằng/ })
+    expect(balance).toBeChecked()
+
+    await userEvent.click(screen.getByRole('radio', { name: /Trick Room/ }))
+
+    expect(screen.getByRole('radio', { name: /Trick Room/ })).toBeChecked()
+    await waitFor(() =>
+      expect(bodiesSentTo(fetchMock, '/synergy/recommendations')).toEqual([
+        { pokemonIds: [6, 130, 149, 663, 637], limit: 3 },
+        { pokemonIds: [6, 130, 149, 663, 637], limit: 3, playStyle: 'TRICK_ROOM' },
+      ]),
+    )
+  })
+
+  it('shows the team strengths, weaknesses and the cautions of a recommendation', async () => {
+    routeFetch({
+      'POST /synergy/analyze': analyzeById({ [SPEC_IDS]: 41 }),
+      'POST /synergy/recommendations': () => jsonResponse(recommendationsOf([TYRANITAR, 92])),
+    })
+    renderTeamRoute(`/team-builder?ids=${SPEC_IDS}`)
+
+    const insights = within(await screen.findByRole('region', { name: 'Đánh giá đội' }))
+    expect(
+      within(await insights.findByRole('region', { name: 'Điểm mạnh' })).getByText(
+        '3 thành viên nhanh (tốc độ gốc từ 100)',
+      ),
+    ).toBeInTheDocument()
+    expect(
+      within(insights.getByRole('region', { name: 'Điểm yếu' })).getByText(
+        'Lỗ hổng nghiêm trọng hệ Rock: 5 thành viên yếu, không ai kháng',
+      ),
+    ).toBeInTheDocument()
+    const card = await screen.findByRole('article', { name: 'Tyranitar' })
+    expect(
+      within(within(card).getByRole('list', { name: 'Lưu ý khi chọn Tyranitar' })).getByText(
+        'Thêm điểm yếu hệ Ice: đội đã có 2 thành viên yếu',
+      ),
+    ).toBeInTheDocument()
+  })
+
   it('adds recommendation number 1 to a 4-member team and shows the score increase', async () => {
     const four = [CHARIZARD, GYARADOS, DRAGONITE, TALONFLAME].map((pokemon) => pokemon.id)
     routeFetch({
@@ -175,7 +221,9 @@ describe('TeamBuilderPage', () => {
     ).toBeInTheDocument()
     const firstCard = screen.getByRole('article', { name: 'Tyranitar' })
     expect(
-      within(firstCard).getByText('Chống chịu hệ Rock (đội đang hở mức 8)'),
+      within(firstCard).getByText(
+        'Kháng hệ Rock (x0,5): đội đang có 5 thành viên yếu, chưa ai kháng',
+      ),
     ).toBeInTheDocument()
     await userEvent.click(within(firstCard).getByRole('button', { name: /Thêm vào đội/ }))
 

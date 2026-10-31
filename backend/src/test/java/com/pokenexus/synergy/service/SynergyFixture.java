@@ -94,7 +94,7 @@ final class SynergyFixture {
 
     static SynergyAnalyzer analyzer() {
         TypeChartService typeChart = typeChart();
-        return new SynergyAnalyzer(registry(typeChart));
+        return new SynergyAnalyzer(registry(typeChart), new TeamInsightBuilder());
     }
 
     private static PokemonCatalogEntry entry(int id, String name, List<PokemonType> types, FormCategory form,

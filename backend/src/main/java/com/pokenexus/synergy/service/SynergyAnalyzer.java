@@ -31,9 +31,11 @@ public class SynergyAnalyzer {
     private static final PokemonType[] TYPES = PokemonType.values();
 
     private final PokemonProfileRegistry registry;
+    private final TeamInsightBuilder insightBuilder;
 
-    public SynergyAnalyzer(PokemonProfileRegistry registry) {
+    public SynergyAnalyzer(PokemonProfileRegistry registry, TeamInsightBuilder insightBuilder) {
         this.registry = registry;
+        this.insightBuilder = insightBuilder;
     }
 
     public AnalyzeResponse analyze(List<Integer> pokemonIds) {
@@ -102,7 +104,8 @@ public class SynergyAnalyzer {
                 roundTo(analysis.teamScore(), 1),
                 List.copyOf(rows),
                 new OffensiveCoverage(PokemonType.COUNT - uncovered.size(), List.copyOf(uncovered)),
-                statRadar);
+                statRadar,
+                insightBuilder.build(analysis));
     }
 
     public static double roundTo(double value, int decimals) {

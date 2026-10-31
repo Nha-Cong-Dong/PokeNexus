@@ -87,6 +87,31 @@ export function RecommendationCard({
             </li>
           ))}
         </ul>
+        {recommendation.cautions.length > 0 && (
+          <ul className="flex flex-col gap-1.5" aria-label={`Lưu ý khi chọn ${name}`}>
+            {recommendation.cautions.map((caution) => (
+              <li
+                key={caution}
+                className="flex gap-2 text-base leading-[1.4375rem] md:text-sm md:leading-5"
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  className="mt-0.5 size-4.5 flex-none text-warning"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 4l9 16H3z" />
+                  <path d="M12 10v4.5M12 17.5v.01" />
+                </svg>
+                <span>{caution}</span>
+              </li>
+            ))}
+          </ul>
+        )}
         <button
           type="button"
           onClick={onAdd}

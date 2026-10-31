@@ -77,7 +77,7 @@
 
 ### IV. Synergy
 
-- Thuật toán, trọng số 60/25/15, quy tắc hòa điểm: [docs/architecture.md](../docs/architecture.md), Phần 5. Trọng số là hằng số `UPPER_SNAKE_CASE`.
+- Thuật toán, trọng số theo lối chơi (enum `PlayStyle`, Cân bằng 40/20/25/15), quy tắc hòa điểm, đánh giá đội: [docs/architecture.md](../docs/architecture.md), Phần 5.
 - Phân tích và đề xuất chỉ dùng dữ liệu trong bộ nhớ (`PokemonProfileRegistry`, `TypeChartService`), không truy vấn DB.
 - Kết quả phải xác định (deterministic) để test ổn định.
 

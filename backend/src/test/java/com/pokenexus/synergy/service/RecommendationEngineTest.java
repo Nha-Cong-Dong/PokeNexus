@@ -16,6 +16,7 @@ import com.pokenexus.common.exception.ErrorCode;
 import com.pokenexus.synergy.dto.RecommendationRequest;
 import com.pokenexus.synergy.dto.RecommendationResponse;
 import com.pokenexus.synergy.dto.RecommendationResponse.Recommendation;
+import com.pokenexus.synergy.model.PlayStyle;
 import com.pokenexus.typechart.service.TypeChartService;
 
 class RecommendationEngineTest {
@@ -25,21 +26,22 @@ class RecommendationEngineTest {
     private final TypeChartService typeChart = SynergyFixture.typeChart();
     private final PokemonProfileRegistry registry = SynergyFixture.registry(typeChart);
     private final RecommendationEngine engine = new RecommendationEngine(
-            new SynergyAnalyzer(registry), registry, new ReasonBuilder());
+            new SynergyAnalyzer(registry, new TeamInsightBuilder()), registry, new ReasonBuilder(), new RoleScorer());
 
     @Test
     void topRecommendationAddressesRockWeaknessFromSpecExampleTwo() {
-        RecommendationResponse response = engine.recommend(new RecommendationRequest(EXAMPLE_TEAM, null, null, null));
+        RecommendationResponse response = engine.recommend(new RecommendationRequest(EXAMPLE_TEAM, null, null, null, null));
 
         assertThat(response.items()).hasSize(3);
         Recommendation top = response.items().getFirst();
         assertThat(top.reasons()).anySatisfy(reason -> assertThat(reason).contains("Rock"));
-        assertThat(top.reasons().getFirst()).isEqualTo("Chống chịu hệ Rock (đội đang hở mức 8)");
+        assertThat(top.reasons().getFirst())
+                .isEqualTo("Kháng hệ Rock (x0,25): đội đang có 5 thành viên yếu, chưa ai kháng");
     }
 
     @Test
     void returnsFullyEvolvedDistinctTypeCombinationsOutsideTheTeam() {
-        RecommendationResponse response = engine.recommend(new RecommendationRequest(EXAMPLE_TEAM, 10, false, null));
+        RecommendationResponse response = engine.recommend(new RecommendationRequest(EXAMPLE_TEAM, 10, false, null, null));
 
         assertThat(response.candidateCount()).isEqualTo(13);
         assertThat(response.items()).hasSize(10);
@@ -55,29 +57,68 @@ class RecommendationEngineTest {
 
     @Test
     void ranksByWeightedScoreWithNormalizedBreakdown() {
-        RecommendationResponse response = engine.recommend(new RecommendationRequest(EXAMPLE_TEAM, 3, false, null));
+        RecommendationResponse response = engine.recommend(new RecommendationRequest(EXAMPLE_TEAM, 3, false, null, null));
 
         assertThat(response.items()).extracting(Recommendation::name)
-                .containsExactly("excadrill", "swampert", "garchomp");
+                .containsExactly("excadrill", "garchomp", "metagross");
+        assertThat(response.playStyle()).isEqualTo(PlayStyle.BALANCE);
         Recommendation excadrill = response.items().getFirst();
-        assertThat(excadrill.score()).isEqualTo(86.8);
+        assertThat(excadrill.score()).isEqualTo(79.4);
         assertThat(excadrill.baseStatTotal()).isEqualTo(508);
         assertThat(excadrill.breakdown().defense()).isEqualTo(1.0);
         assertThat(excadrill.breakdown().offense()).isEqualTo(1.0);
+        assertThat(excadrill.breakdown().role()).isEqualTo(0.703);
         assertThat(excadrill.breakdown().stats()).isEqualTo(0.118);
         assertThat(excadrill.reasons()).containsExactly(
-                "Chống chịu hệ Rock (đội đang hở mức 8)",
-                "Chống chịu hệ Electric (đội đang hở mức 4)",
-                "Bổ sung độ phủ tấn công lên hệ Poison, Electric, Fairy");
+                "Kháng hệ Rock (x0,25): đội đang có 5 thành viên yếu, chưa ai kháng",
+                "Miễn nhiễm hệ Electric: đội đang có 3 thành viên yếu, chưa ai kháng",
+                "Đánh siêu hiệu quả hệ Poison, Electric, Fairy mà đội chưa phủ được");
+        assertThat(excadrill.cautions()).containsExactly("Thêm điểm yếu hệ Water: đội đã có 3 thành viên yếu");
+        assertThat(response.items().get(1).cautions()).isEmpty();
         assertThat(response.items()).extracting(Recommendation::score).isSortedAccordingTo((a, b) -> Double.compare(b, a));
+    }
+
+    @Test
+    void hyperOffenseKeepsFastCandidatesAndExplainsSpeed() {
+        RecommendationResponse response = engine.recommend(
+                new RecommendationRequest(EXAMPLE_TEAM, 3, false, null, PlayStyle.HYPER_OFFENSE));
+
+        assertThat(response.playStyle()).isEqualTo(PlayStyle.HYPER_OFFENSE);
+        assertThat(response.candidateCount()).isEqualTo(9);
+        assertThat(response.items()).extracting(Recommendation::name).containsExactly("mewtwo", "excadrill", "garchomp");
+        assertThat(response.items().getFirst().reasons()).first()
+                .isEqualTo("Tốc độ gốc 130 (tối đa 200 ở cấp 50) và Tấn công đặc biệt 154: đánh trước, đánh mạnh");
+        assertThat(response.items().get(1).reasons()).contains("Tấn công 135: sát thương lớn");
+    }
+
+    @Test
+    void trickRoomKeepsOnlySlowCandidatesAndScoresALoneCandidateFully() {
+        RecommendationResponse response = engine.recommend(
+                new RecommendationRequest(EXAMPLE_TEAM, 3, false, null, PlayStyle.TRICK_ROOM));
+
+        assertThat(response.candidateCount()).isEqualTo(1);
+        Recommendation swampert = response.items().getFirst();
+        assertThat(swampert.name()).isEqualTo("swampert");
+        assertThat(swampert.score()).isEqualTo(100.0);
+        assertThat(swampert.reasons()).contains("Tốc độ gốc 60 hợp Trick Room, Tấn công 110");
+    }
+
+    @Test
+    void bulkyPrefersSturdyCandidates() {
+        RecommendationResponse response = engine.recommend(
+                new RecommendationRequest(EXAMPLE_TEAM, 3, false, null, PlayStyle.BULKY));
+
+        assertThat(response.items()).extracting(Recommendation::name).containsExactly("garchomp", "excadrill", "swampert");
+        assertThat(response.items().getFirst().reasons())
+                .contains("Trâu: HP 108, Phòng thủ 95, Phòng thủ đặc biệt 85");
     }
 
     @Test
     void appliesLegendaryAndBaseStatTotalFilters() {
         RecommendationResponse withoutLegends = engine.recommend(
-                new RecommendationRequest(EXAMPLE_TEAM, 10, true, null));
+                new RecommendationRequest(EXAMPLE_TEAM, 10, true, null, null));
         RecommendationResponse strongOnly = engine.recommend(
-                new RecommendationRequest(EXAMPLE_TEAM, 10, false, 550));
+                new RecommendationRequest(EXAMPLE_TEAM, 10, false, 550, null));
 
         assertThat(withoutLegends.candidateCount()).isEqualTo(11);
         assertThat(withoutLegends.items()).extracting(Recommendation::name).doesNotContain("mewtwo", "mew");
@@ -89,12 +130,13 @@ class RecommendationEngineTest {
     void treatsParadoxPokemonAsLegendaryWhenExcludingLegends() {
         PokemonProfileRegistry withParadox = SynergyFixture.registry(typeChart, SynergyFixture.CATALOG_WITH_PARADOX);
         RecommendationEngine paradoxEngine = new RecommendationEngine(
-                new SynergyAnalyzer(withParadox), withParadox, new ReasonBuilder());
+                new SynergyAnalyzer(withParadox, new TeamInsightBuilder()), withParadox, new ReasonBuilder(),
+                new RoleScorer());
 
         RecommendationResponse everyone = paradoxEngine.recommend(
-                new RecommendationRequest(EXAMPLE_TEAM, 10, false, null));
+                new RecommendationRequest(EXAMPLE_TEAM, 10, false, null, null));
         RecommendationResponse withoutLegends = paradoxEngine.recommend(
-                new RecommendationRequest(EXAMPLE_TEAM, 10, true, null));
+                new RecommendationRequest(EXAMPLE_TEAM, 10, true, null, null));
 
         assertThat(everyone.items().getFirst().name()).isEqualTo("iron-treads");
         assertThat(withoutLegends.candidateCount()).isEqualTo(11);
@@ -105,8 +147,8 @@ class RecommendationEngineTest {
 
     @Test
     void returnsNoItemsWhenNoCandidateMatchesAndAlwaysGivesAReason() {
-        RecommendationResponse none = engine.recommend(new RecommendationRequest(EXAMPLE_TEAM, 3, false, 1530));
-        RecommendationResponse single = engine.recommend(new RecommendationRequest(List.of(445), 10, false, null));
+        RecommendationResponse none = engine.recommend(new RecommendationRequest(EXAMPLE_TEAM, 3, false, 1530, null));
+        RecommendationResponse single = engine.recommend(new RecommendationRequest(List.of(445), 10, false, null, null));
 
         assertThat(none.candidateCount()).isZero();
         assertThat(none.items()).isEmpty();
@@ -116,22 +158,23 @@ class RecommendationEngineTest {
 
     @Test
     void rejectsAFullTeamOfSixBecauseNoSlotIsLeft() {
-        assertThatThrownBy(() -> engine.recommend(new RecommendationRequest(EXAMPLE_TEAM_WITH_SIXTH, null, null, null)))
+        assertThatThrownBy(() -> engine.recommend(new RecommendationRequest(EXAMPLE_TEAM_WITH_SIXTH, null, null, null, null)))
                 .isInstanceOfSatisfying(ApiException.class,
                         ex -> assertThat(ex.errorCode()).isEqualTo(ErrorCode.VALIDATION_FAILED));
     }
 
     @Test
     void appliesDefaultLimitAndLegendaryFlag() {
-        RecommendationRequest request = new RecommendationRequest(EXAMPLE_TEAM, null, null, null);
+        RecommendationRequest request = new RecommendationRequest(EXAMPLE_TEAM, null, null, null, null);
 
         assertThat(request.limit()).isEqualTo(3);
         assertThat(request.excludeLegendary()).isFalse();
+        assertThat(request.playStyle()).isEqualTo(PlayStyle.BALANCE);
     }
 
     @Test
     void isDeterministicAcrossCalls() {
-        RecommendationRequest request = new RecommendationRequest(EXAMPLE_TEAM, 10, false, null);
+        RecommendationRequest request = new RecommendationRequest(EXAMPLE_TEAM, 10, false, null, null);
 
         assertThat(engine.recommend(request)).isEqualTo(engine.recommend(request));
     }

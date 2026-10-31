@@ -107,8 +107,8 @@ backend/
 | | `dto` | `PokemonFilter`, `PokemonRef`, `PokemonSummary`, `PokemonDetail`, `Stats`, `PokemonCatalogEntry`, `CompareResponse`, `EvolutionResponse`, `EvolutionStage`, `SpeedTier` | T206, T303, T408 |
 | | `mapper` | `PokemonMapper` | T206 |
 | `synergy` | `controller` | `SynergyController` | T305 |
-| | `service` | `PokemonProfileRegistry`, `SynergyAnalyzer`, `RecommendationEngine`, `ReasonBuilder` | T305 |
-| | `model` | `PokemonProfile`, `DefenseScale`, `TeamAnalysis` | T305 |
+| | `service` | `PokemonProfileRegistry`, `SynergyAnalyzer`, `RecommendationEngine`, `ReasonBuilder`, `RoleScorer` (vai trò chỉ số theo lối chơi), `TeamInsightBuilder` (điểm mạnh, điểm yếu) | T305, #59 |
+| | `model` | `PokemonProfile`, `DefenseScale`, `TeamAnalysis`, `PlayStyle` (trọng số và lọc tốc độ theo lối chơi), `TeamStatProfile` (chỉ số tổng hợp của đội) | T305, #59 |
 | | `dto` | `AnalyzeRequest`, `AnalyzeResponse`, `RecommendationRequest`, `RecommendationResponse` | T305 |
 | `team` | `controller` | `TeamController` | T307 |
 | | `service` | `TeamService`, `ShareCodeGenerator`, `SaveRateLimiter` | T307 |
@@ -165,7 +165,7 @@ frontend/
     │   ├── pokemon-detail/        api.ts, hooks.ts, components/
     │   ├── typechart/             api.ts, hooks.ts, components/
     │   ├── compare/               api.ts, hooks.ts, components/
-    │   ├── team-builder/          api.ts, hooks.ts, useTeamDraft.ts, showdown.ts (T409), components/
+    │   ├── team-builder/          api.ts, hooks.ts, useTeamDraft.ts, showdown.ts (T409), components/ (có PlayStylePicker, TeamInsights)
     │   ├── speed/                 level50.ts (tốc độ cấp 50, tỷ lệ, mốc lân cận), api.ts, hooks.ts, components/ (T408)
     │   ├── terrain/               terrains.ts, api.ts, hooks.ts, whosThat.ts, components/ (T314)
     │   └── trainer/               progress.ts, useTrainerProgress.ts, components/ (BallIcon, TrainerCard; T313)

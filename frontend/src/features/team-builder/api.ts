@@ -4,6 +4,7 @@ import type {
   AnalyzeResponse,
   CreateTeamRequest,
   FormCategory,
+  PlayStyle,
   PokemonRef,
   RecommendationRequest,
   RecommendationResponse,
@@ -11,6 +12,7 @@ import type {
 } from '../../types/api'
 
 export const RECOMMENDATION_LIMIT = 3
+export const DEFAULT_PLAY_STYLE: PlayStyle = 'BALANCE'
 export const MAX_TEAM_SIZE = 6
 export const TEAM_NAME_MAX_LENGTH = 60
 
@@ -38,12 +40,14 @@ export function fetchRecommendations(
   pokemonIds: readonly number[],
   limit: number,
   excludeLegendary: boolean,
+  playStyle: PlayStyle,
   signal?: AbortSignal,
 ): Promise<RecommendationResponse> {
   const body: RecommendationRequest = {
     pokemonIds: [...pokemonIds],
     limit,
     ...(excludeLegendary ? { excludeLegendary } : {}),
+    ...(playStyle === DEFAULT_PLAY_STYLE ? {} : { playStyle }),
   }
   return postJson<RecommendationResponse>('/synergy/recommendations', body, signal)
 }

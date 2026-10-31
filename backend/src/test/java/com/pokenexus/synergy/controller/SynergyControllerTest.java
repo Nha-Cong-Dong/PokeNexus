@@ -20,6 +20,7 @@ import com.pokenexus.pokedex.dto.PokemonRef;
 import com.pokenexus.synergy.dto.AnalyzeResponse;
 import com.pokenexus.synergy.dto.RecommendationRequest;
 import com.pokenexus.synergy.dto.RecommendationResponse;
+import com.pokenexus.synergy.model.PlayStyle;
 import com.pokenexus.synergy.service.RecommendationEngine;
 import com.pokenexus.synergy.service.SynergyAnalyzer;
 
@@ -42,7 +43,9 @@ class SynergyControllerTest {
                 76.0,
                 List.of(new AnalyzeResponse.TypeMatrixRow("rock", List.of(4.0), 1, 0, 2, true)),
                 new AnalyzeResponse.OffensiveCoverage(6, List.of("normal")),
-                new AnalyzeResponse.StatRadar(78, 84, 78, 109, 85, 100)));
+                new AnalyzeResponse.StatRadar(78, 84, 78, 109, 85, 100),
+                List.of(new AnalyzeResponse.TeamInsight(AnalyzeResponse.InsightTone.WEAKNESS,
+                        AnalyzeResponse.InsightCategory.DEFENSE, "Lỗ hổng nghiêm trọng hệ Rock", List.of("rock")))));
 
         assertThat(post("/api/v1/synergy/analyze", "{\"pokemonIds\": [6]}"))
                 .hasStatusOk()
@@ -57,7 +60,9 @@ class SynergyControllerTest {
                           ],
                           "offensiveCoverage": { "coveredTypeCount": 6, "uncoveredTypes": ["normal"] },
                           "statRadar": { "hp": 78.0, "attack": 84.0, "defense": 78.0, "specialAttack": 109.0,
-                                         "specialDefense": 85.0, "speed": 100.0 }
+                                         "specialDefense": 85.0, "speed": 100.0 },
+                          "insights": [ { "tone": "WEAKNESS", "category": "DEFENSE",
+                                          "text": "Lỗ hổng nghiêm trọng hệ Rock", "types": ["rock"] } ]
                         }
                         """);
     }
@@ -67,7 +72,7 @@ class SynergyControllerTest {
         List<Integer> six = List.of(6, 130, 149, 663, 637, 530);
         when(synergyAnalyzer.analyze(six)).thenReturn(new AnalyzeResponse(List.of(), 48.0, List.of(),
                 new AnalyzeResponse.OffensiveCoverage(0, List.of()),
-                new AnalyzeResponse.StatRadar(0, 0, 0, 0, 0, 0)));
+                new AnalyzeResponse.StatRadar(0, 0, 0, 0, 0, 0), List.of()));
 
         assertThat(post("/api/v1/synergy/analyze", "{\"pokemonIds\": [6, 130, 149, 663, 637, 530]}"))
                 .hasStatusOk()
@@ -121,21 +126,25 @@ class SynergyControllerTest {
     @Test
     void recommendsWithDefaults() {
         when(recommendationEngine.recommend(any(RecommendationRequest.class))).thenReturn(
-                new RecommendationResponse(412, List.of(new RecommendationResponse.Recommendation(
+                new RecommendationResponse(PlayStyle.BALANCE, 412, List.of(new RecommendationResponse.Recommendation(
                         530, "excadrill", List.of("ground", "steel"), 86.8,
-                        new RecommendationResponse.Breakdown(1.0, 1.0, 0.118), 508,
-                        List.of("Chống chịu hệ Rock (đội đang hở mức 8)")))));
+                        new RecommendationResponse.Breakdown(1.0, 1.0, 0.4, 0.118), 508,
+                        List.of("Kháng hệ Rock (x0,5): đội đang có 5 thành viên yếu, chưa ai kháng"),
+                        List.of("Thêm điểm yếu hệ Water: đội đã có 2 thành viên yếu")))));
 
         assertThat(post("/api/v1/synergy/recommendations", "{\"pokemonIds\": [6, 130]}"))
                 .hasStatusOk()
                 .bodyJson()
                 .isLenientlyEqualTo("""
                         {
+                          "playStyle": "BALANCE",
                           "candidateCount": 412,
                           "items": [
                             { "id": 530, "name": "excadrill", "types": ["ground", "steel"], "score": 86.8,
-                              "breakdown": { "defense": 1.0, "offense": 1.0, "stats": 0.118 },
-                              "baseStatTotal": 508, "reasons": ["Chống chịu hệ Rock (đội đang hở mức 8)"] }
+                              "breakdown": { "defense": 1.0, "offense": 1.0, "role": 0.4, "stats": 0.118 },
+                              "baseStatTotal": 508,
+                              "reasons": ["Kháng hệ Rock (x0,5): đội đang có 5 thành viên yếu, chưa ai kháng"],
+                              "cautions": ["Thêm điểm yếu hệ Water: đội đã có 2 thành viên yếu"] }
                           ]
                         }
                         """);
@@ -153,6 +162,15 @@ class SynergyControllerTest {
                     .bodyJson()
                     .extractingPath("$.code").isEqualTo("VALIDATION_FAILED");
         }
+        verifyNoInteractions(recommendationEngine);
+    }
+
+    @Test
+    void rejectsAnUnknownPlayStyle() {
+        assertThat(post("/api/v1/synergy/recommendations", "{\"pokemonIds\": [6], \"playStyle\": \"STALL\"}"))
+                .hasStatus(400)
+                .bodyJson()
+                .extractingPath("$.code").isEqualTo("MALFORMED_JSON");
         verifyNoInteractions(recommendationEngine);
     }
 
