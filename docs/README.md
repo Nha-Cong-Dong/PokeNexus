@@ -1,6 +1,6 @@
 # PokeNexus - Mục lục và bản đồ tài liệu
 
-- Phiên bản: 0.2 (cập nhật 2026-10-26)
+- Phiên bản: 0.3 (cập nhật 2026-11-02; thêm `pitching/`)
 - Trả lời nhanh "tài liệu nào nói về gì" và "muốn làm việc X thì đọc file nào, sửa ở đâu". Không chép nội dung chi tiết; chi tiết nằm ở file được trỏ tới.
 - Tiến độ hiện tại: [PLAN.md](../PLAN.md). Cây thư mục và tên class: [folder-structure.md](folder-structure.md).
 
@@ -25,6 +25,7 @@
 | [github-setup.md](github-setup.md) | Thiết lập repo, nhãn, milestone, bảo vệ nhánh, Project board | Thay đổi cấu hình GitHub |
 | [adr/](adr) | Các quyết định kiến trúc (ADR) | Có quyết định quan trọng mới |
 | [wireframes/](wireframes/README.md) | Wireframe 6 trang, bản 375 px và 1440 px | Thay đổi bố cục giao diện |
+| [pitching/](pitching/PokeNexus-LuyenTap.md) | Tài liệu cho buổi pitching Checkpoint 4: tài liệu luyện tập hỏi đáp (đọc từng file code), kịch bản, slide, báo cáo | Code hoặc tài liệu được trích dẫn thay đổi; chạy lại script kiểm trích dẫn |
 
 ### II. Quy ước ADR
 
@@ -68,3 +69,4 @@
 | Gắn tag phát hành | [git-workflow.md](git-workflow.md), Phần 6 | `CHANGELOG.md` |
 | Thêm sprite, font, ảnh | [assets.md](assets.md) | `frontend/public/`, `frontend/src/assets/` |
 | Triển khai production | [architecture.md](architecture.md), Phần 11 | `backend/Dockerfile`, cấu hình hosting |
+| Chuẩn bị pitching, ôn hỏi đáp | [pitching/PokeNexus-LuyenTap.md](pitching/PokeNexus-LuyenTap.md), Phần 1 | `docs/pitching/` |

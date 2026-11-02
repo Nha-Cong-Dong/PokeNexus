@@ -1,6 +1,7 @@
 # PokeNexus - Lộ trình 3 tuần
 
-- Phiên bản: 1.1 (cập nhật 2026-10-31)
+- Phiên bản: 1.2 (cập nhật 2026-11-02)
+- Thay đổi so với 1.1: ban tổ chức yêu cầu ngày 2026-11-02 buổi Checkpoint 4 có pitching khoảng 15 phút (chưa kể demo) kèm slide, báo cáo và phần hỏi đáp chi tiết về code. Khôi phục T406 (slide và kịch bản pitch, không làm video), thêm T413 (báo cáo tổng kết `.docx`) và T414 (tài liệu luyện tập hỏi đáp); cả ba là việc loại `docs`, không vi phạm đóng băng tính năng. Issue #71-#73.
 - Thay đổi so với 0.2: thêm trang Tổng quan (T311, T312) và chuyển Omni-Dex sang `/pokedex` theo [spec.md](spec.md) 1.2; thêm thứ tự cắt cho trang Tổng quan ở Phần 4.
 - Thay đổi so với 0.3: bỏ T406 (slide, video demo); ngày 14/11 thành buffer. Kịch bản demo ở [spec.md](spec.md), Phần 4 vẫn giữ và chạy trực tiếp ở T310, T403, T407.
 - Thay đổi so với 0.4: thêm T313 (Thử tài Trainer 5 bộ câu hỏi và phần thưởng) và T314 (Trang Địa hình, F08) theo [spec.md](spec.md) 1.4, mức Could, làm sớm ngày 2026-10-28; thêm vào thứ tự cắt ở Phần 4.
@@ -29,6 +30,7 @@
   - Chất lượng trang (Lighthouse chế độ mobile trên link thật, trung vị 3 lần chạy, từng route): Accessibility và Best Practices từ 90 (dải xanh của Lighthouse); LCP không quá 2,5 s, CLS không quá 0,1 (ngưỡng "tốt" của Core Web Vitals); TBT không quá 200 ms (ngưỡng xanh trên mobile, đo thay INP vì INP chỉ đo được từ người dùng thật).
   - Hiệu năng API: `POST /api/v1/synergy/analyze` và `/recommendations` phản hồi dưới 50 ms (p95, đo local, 100 request liên tiếp).
   - Phát hành: link sản phẩm công khai mở được trên điện thoại và máy tính; bản local chạy bằng Docker; tag `v1.0.0`.
+  - Pitching: slide, kịch bản 15 phút, báo cáo `.docx` và tài liệu luyện tập nằm trong `docs/pitching/`; tổng duyệt 2 lần đúng thời gian (T406, T407, T413, T414).
 
 ### II. Các mốc
 
@@ -64,7 +66,10 @@ gantt
     section W4 Demo và phát triển
     Cây tiến hóa (kiểm tra)      :t401, 2026-11-02, 1d
     Bug bash, hiệu năng          :t404, 2026-11-03, 1d
+    Tài liệu luyện tập           :t414, 2026-11-02, 2d
     README, ảnh chụp             :t405, 2026-11-04, 1d
+    Slide, kịch bản pitch        :t406, 2026-11-04, 3d
+    Báo cáo tổng kết             :t413, 2026-11-05, 1d
     Đóng băng, buffer            :buf3, 2026-11-05, 2d
     Tổng duyệt, v1.0.0           :crit, t407, 2026-11-07, 2d
     Checkpoint 4, demo           :milestone, cp4, 2026-11-08, 0d
@@ -129,7 +134,7 @@ gantt
 | T105 | 24/10 | Trình bày ý tưởng | E8 | Must | `product.md` | Slide ý tưởng | Trình bày trong thời gian quy định |
 | T106 | 25/10 | Buffer, tổng kết tuần | E0 | | | Cập nhật bảng trạng thái ở Phần 5 | |
 
-- T105: cắt giảm ngày 2026-10-26 vì dự án không có buổi trình bày hay pitching ý tưởng nào. Không ảnh hưởng tiêu chí W1 ở mục V. Slide và video demo bỏ khỏi kế hoạch ngày 2026-10-27 (mục IV).
+- T105: cắt giảm ngày 2026-10-26 vì dự án không có buổi trình bày hay pitching ý tưởng nào. Không ảnh hưởng tiêu chí W1 ở mục V. Slide và video demo bỏ khỏi kế hoạch ngày 2026-10-27 (mục IV); slide được khôi phục ngày 2026-11-02 ở T406 khi ban tổ chức yêu cầu pitching cho Checkpoint 4.
 
 ### II. Tuần 2 - Đặc tả và khung dự án (kế hoạch gốc 26/10 - 01/11, làm 21/10 - 25/10)
 
@@ -180,14 +185,17 @@ gantt
 | T403 | 30-31/10 | Triển khai production (đóng băng tính năng tách ra từ 05/11) | E8 | Must | [architecture.md](architecture.md), Phần 11 | Frontend, backend, DB chạy trên hosting | Kịch bản demo chạy trên link thật; mở được trên điện thoại |
 | T404 | 03/11 | Bug bash, đo hiệu năng | E8 | Must | Danh sách lỗi | Lỗi đã sửa; số đo ghi ở `PLAN.md` | Không còn Issue `type: bug` đang mở; p95 analyze và recommendations dưới 50 ms; Lighthouse trên link thật đạt ngưỡng ở Phần 1, mục I |
 | T405 | 04/11 | README (ảnh chụp, link demo), sơ đồ, CHANGELOG | E8 | Must | [assets.md](assets.md), Phần 1 | README hoàn chỉnh | Người mới làm theo README chạy được bản local |
+| T406 | 04-06/11 | Slide và kịch bản pitch 15 phút (khôi phục 02/11, không làm video) | E8 | Must | `product.md`, [spec.md](spec.md) Phần 4, [design-system.md](design-system.md), ảnh production | Slide Artifact theo nhận diện web, `docs/pitching/PokeNexus-Pitch.pptx`, `docs/pitching/slides.html`; kịch bản trong file luyện tập | 19 slide chính và 8 slide phụ lục; đọc kịch bản trong 15 phút, lệch không quá 1 phút |
 | T407 | 07-08/11 | Tổng duyệt, tag `v1.0.0` | E8 | Must | | GitHub Release `v1.0.0` | Tổng duyệt 2 lần, mỗi lần đúng thời gian quy định |
 | T408 | 30/10 | Bảng tốc độ cấp 50 (US-09) | E9 | Should | `pokemon.speed`, [spec.md](spec.md), Phần 2, mục IX | `GET /pokemon/speed-tiers`; khối tốc độ ở Chi tiết và Team Builder | Garchomp cấp 50: 96, 122, 169; mốc phủ 1.083 dạng; `SpeedTierServiceTest`, `PokemonControllerIT` qua |
 | T409 | 30/10 | Nhập, xuất đội Showdown (US-10) | E9 | Could | [spec.md](spec.md), Phần 2, mục X | Hộp thoại nhập, xuất ở Team Builder; nút xuất ở Đội chia sẻ | Đội 6 con có biệt danh, vật phẩm nhận đúng dạng (`Urshifu-Rapid-Strike`, `Landorus-Therian`, `Indeedee-F`); dòng sai được liệt kê; xuất rồi nhập lại ra đúng đội |
 | T410 | 31/10 | Gợi ý đội theo lối chơi, đánh giá điểm mạnh và điểm yếu | E5 | Could | [architecture.md](architecture.md), Phần 5, mục III, IV; yêu cầu chủ dự án | `playStyle` ở `recommendations`, `insights` ở `analyze`; nhóm chọn "Lối chơi" và panel "Đánh giá đội" | Đội mẫu loại huyền thoại: Cân bằng ra Excadrill, Trick Room ra Stakataka (tốc độ gốc 13); `playStyle` sai trả 400; 5 ví dụ spec V.4 vẫn qua |
 | T411 | 31/10 | Hồ sơ thế hệ ở trang Tổng quan | E7 | Could | [api.md](api.md), Phần 2, mục XIV | `GET /pokemon/generations`; bấm cột thế hệ xem hồ sơ | Thế hệ 1: 151 loài, BST trung bình 407,6, mạnh nhất Dragonite 600; thế hệ 2 hiện Chikorita, Cyndaquil, Totodile |
 | T412 | 31/10 | Trang Chi tiết: Tiến hóa dưới artwork; footer mới có thông tin liên hệ | E7 | Could | [design-system.md](design-system.md) 1.2, Phần 7; yêu cầu chủ dự án | Cột trái trang Chi tiết gồm artwork, Tiến hóa, Các dạng; footer có sóng, 4 Pokémon ngẫu nhiên, link 5 trang, Facebook, email, GitHub | 1440 px: Pidgeotto hết khoảng trống dưới artwork; CLS trang Chi tiết dưới 0,1 (Eevee 0); 375 và 1440 px không cuộn ngang; chuyển trang giữ nguyên Pokémon ở footer |
+| T413 | 05/11 | Báo cáo tổng kết | E8 | Must | `docs/`, `PLAN.md`, số đo T404, ảnh production | `docs/pitching/PokeNexus-BaoCao.docx`, 12 chương | Mỗi số liệu có nguồn; mở được bằng Word, mục lục tự động đúng |
+| T414 | 02-03/11 | Tài liệu luyện tập pitching và hỏi đáp | E8 | Must | Code trên `main`, `docs/`, số đo API local | `docs/pitching/PokeNexus-LuyenTap.md`, một file | Phủ toàn bộ file mã nguồn, test, script, cấu hình; mọi `path:line` trỏ tới file và dòng có thật (script kiểm); số liệu đội demo đo từ API |
 
-- T406 (slide, video demo): bỏ ngày 2026-10-27 vì không cần slide và video; demo chạy trực tiếp theo kịch bản ở [spec.md](spec.md), Phần 4.
+- T406 (slide, video demo): bỏ ngày 2026-10-27 vì không cần slide và video; demo chạy trực tiếp theo kịch bản ở [spec.md](spec.md), Phần 4. Khôi phục ngày 2026-11-02 phần slide và kịch bản (không video) khi ban tổ chức yêu cầu pitching kèm slide, báo cáo và hỏi đáp chi tiết về code; thêm T413, T414 cùng lý do.
 
 ### V. Tiêu chí hoàn thành từng tuần
 
