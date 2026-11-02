@@ -9,6 +9,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ### Added
 
+- Tài liệu luyện tập pitching và hỏi đáp `docs/pitching/PokeNexus-LuyenTap.md` (T414): một file gồm lộ trình học, tổng quan hệ thống, số liệu đội demo đo từ API, từng file backend và frontend, luồng xử lý đầu cuối, khoảng 250 câu hỏi có trả lời mẫu, tra cứu nhanh. Lộ trình 1.2 khôi phục T406 (slide, không video), thêm T413 (báo cáo), T414 khi ban tổ chức yêu cầu pitching ngày 2026-11-02.
 - Bảng tốc độ cấp 50 (US-09, T408): endpoint `GET /api/v1/pokemon/speed-tiers`; trang Chi tiết có khối "Tốc độ ở cấp 50" (tối thiểu, không đầu tư, tối đa, nhanh hơn N% Pokémon, mốc vừa thua, vừa vượt); Team Builder có panel xếp đội từ nhanh đến chậm.
 - Nhập, xuất đội Showdown (US-10, T409): dán đội từ Pokémon Showdown vào Team Builder (chỉ lấy tên Pokémon, báo dòng không nhận ra), xuất đội ra văn bản Showdown ở Team Builder và trang Đội chia sẻ.
 - Bộ chuyển động theo bản thiết kế hi-fi ngày 2026-10-24 cho mọi trang: card và danh sách vào lần lượt, artwork rơi xuống rồi lơ lửng, thanh chỉ số chạy dài, ma trận tương khắc hiện theo đường chéo, màn đối đầu So sánh bay vào, radar phóng từ tâm, nhãn lỗ hổng nghiêm trọng nhấp nháy, màn hình Tổng quan mở kiểu CRT, dải hệ chạy ngang, khối hiện khi cuộn tới (`Reveal`), ảnh hero lộ theo vòng tròn khi đổi khung cảnh. `prefers-reduced-motion` hiện ngay trạng thái cuối.

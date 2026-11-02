@@ -1,6 +1,6 @@
 # PokeNexus - Cấu trúc thư mục
 
-- Phiên bản: 0.6 (cập nhật 2026-11-02; `lib/useMediaQuery.ts`. Bản 0.5 ngày 2026-10-31: `app/layout/footerPokemon.ts` cho footer (T412); Phần 4: `db-dump.sh` xuất, nhập dữ liệu cho production, script chỉ có bản Bash trừ `download-csv`. Bản 0.3: thêm `features/trainer/`, `features/terrain/`, `TerrainPage`)
+- Phiên bản: 0.7 (cập nhật 2026-11-02; thư mục `docs/pitching/`. Bản 0.6: `lib/useMediaQuery.ts`. Bản 0.5 ngày 2026-10-31: `app/layout/footerPokemon.ts` cho footer (T412); Phần 4: `db-dump.sh` xuất, nhập dữ liệu cho production, script chỉ có bản Bash trừ `download-csv`. Bản 0.3: thêm `features/trainer/`, `features/terrain/`, `TerrainPage`)
 - Đây là cấu trúc **đích** khi xong MVP. Thư mục, file nào chưa tồn tại thì được tạo ở task ghi trong cột "Tạo ở" (mã task theo [roadmap.md](roadmap.md)).
 - Thêm hoặc đổi tên package, thư mục cấp 1-2 thì cập nhật tài liệu này trong cùng PR.
 
@@ -27,6 +27,7 @@ pokenexus/
 │   ├── README.md                  Mục lục và bản đồ tài liệu
 │   ├── adr/                       NNNN-ten-quyet-dinh.md
 │   ├── images/                    Ảnh chụp màn hình, sơ đồ dùng trong README
+│   ├── pitching/                  Pitching Checkpoint 4: PokeNexus-LuyenTap.md (T414), slide (T406), báo cáo .docx (T413)
 │   ├── wireframes/                Wireframe các trang
 │   └── *.md                       Tài liệu sản phẩm, kỹ thuật, quy trình
 ├── scripts/                       Script tiện ích (Phần 4)
