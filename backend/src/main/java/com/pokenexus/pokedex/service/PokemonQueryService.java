@@ -62,7 +62,7 @@ public class PokemonQueryService {
     public PageResponse<PokemonSummary> search(PokemonFilter filter, Pageable pageable) {
         Page<Pokemon> page = pokemonRepository.findAll(PokemonSpecifications.matching(filter), pageable);
         if (page.getTotalElements() == 0) {
-            requireData();
+            requireDataLoaded();
         }
         return PageResponse.from(page, pokemonMapper::toSummary);
     }
@@ -78,7 +78,7 @@ public class PokemonQueryService {
     public Pokemon findPokemon(String idOrName) {
         Optional<Pokemon> pokemon = lookup(idOrName);
         if (pokemon.isEmpty()) {
-            requireData();
+            requireDataLoaded();
             throw new NotFoundException(ErrorCode.POKEMON_NOT_FOUND, "Pokémon '" + idOrName + "' not found");
         }
         return pokemon.get();
@@ -103,7 +103,7 @@ public class PokemonQueryService {
         List<Pokemon> matches = pokemonRepository.searchByName(
                 "%" + normalized + "%", normalized + "%", formCategories, PageRequest.of(0, maxResults));
         if (matches.isEmpty()) {
-            requireData();
+            requireDataLoaded();
         }
         return matches.stream().map(pokemonMapper::toRef).toList();
     }
@@ -136,7 +136,7 @@ public class PokemonQueryService {
         return pokemonRepository.findWithSpeciesByName(idOrName);
     }
 
-    private void requireData() {
+    public void requireDataLoaded() {
         if (pokemonRepository.count() == 0) {
             throw new ApiException(ErrorCode.DATA_NOT_READY, "Pokémon data has not been loaded yet");
         }

@@ -1,6 +1,6 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 0.8 (cập nhật 2026-10-30; Phần 6: query key `['pokemon', 'speed-tiers']` cho Bảng tốc độ cấp 50; Phần 11: chốt Railway và Cloudflare Pages theo ADR 0007, thiết lập production, nhập dữ liệu bằng `scripts/db-dump.sh`; Phần 2: thêm Lombok vào bảng công nghệ; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
+- Phiên bản: 0.9 (cập nhật 2026-11-02; Phần 6: query key chi tiết thành `['pokemon', 'detail', idOrName]`, chặn tên trùng đường dẫn API; route bọc có `errorElement`, `ScrollRestoration`; Phần 8: `RequestBodyLimitFilter` giới hạn body 16 KB; Phần 11: build Pages chặn `VITE_API_BASE_URL` sai, kiểm chứng thêm header `Forwarded`. Bản 0.8 ngày 2026-10-30: Phần 6: query key `['pokemon', 'speed-tiers']` cho Bảng tốc độ cấp 50; Phần 11: chốt Railway và Cloudflare Pages theo ADR 0007, thiết lập production, nhập dữ liệu bằng `scripts/db-dump.sh`; Phần 2: thêm Lombok vào bảng công nghệ; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
 
@@ -328,17 +328,18 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | Query key | `staleTime` | Lý do |
 |---|---|---|
 | `['types']`, `['types', 'matrix']` | `Infinity` | Dữ liệu tĩnh |
-| `['pokemon', id]` | `Infinity` | Dữ liệu tĩnh |
+| `['pokemon', 'detail', idOrName]`, `['pokemon', 'evolution', idOrName]` | `Infinity` | Dữ liệu tĩnh. Có đoạn `detail` để không trùng key `['pokemon', 'generations']`, `['pokemon', 'speed-tiers']`; tên trùng đường dẫn API (`search`, `compare`, `speed-tiers`, `generations`) trả 404 `POKEMON_NOT_FOUND` ở frontend, không gọi API |
 | `['pokemon', 'list', filter]` | 5 phút | Tránh gọi lại khi quay lại trang |
 | `['synergy', 'analyze', ids]` | `Infinity` | Kết quả xác định theo đầu vào |
 | `['compare', left, right]` | `Infinity` | Kết quả xác định theo cặp; không thử lại khi lỗi 4xx |
 | `['pokemon', 'search', q]` | 5 phút | Gợi ý tên khi gõ |
 | `['pokemon', 'generations']` | `Infinity` | Hồ sơ 9 thế hệ ở trang Tổng quan (`GET /pokemon/generations`) |
 | `['pokemon', 'type-pool', type]` | `Infinity` | 100 Pokémon đầu theo ID của một hệ cho trang Địa hình |
-| `['pokemon', 'speed-tiers']` | `Infinity` | Mốc tốc độ gốc cho Bảng tốc độ cấp 50 (F09); chi tiết thành viên dùng chung key `['pokemon', id]` |
+| `['pokemon', 'speed-tiers']` | `Infinity` | Mốc tốc độ gốc cho Bảng tốc độ cấp 50 (F09); chi tiết thành viên dùng chung key `['pokemon', 'detail', id]` |
 
 - Không thêm thư viện quản lý state toàn cục trong MVP; đội nháp là trạng thái toàn cục duy nhất. Tiến độ Trainer không phải state toàn cục: mỗi trang đọc `localStorage` khi mở và ghi lại khi thay đổi.
-- Mỗi route bọc `ErrorBoundary`; lỗi API hiển thị `ErrorState` có nút thử lại ([design-system.md](design-system.md), Phần 5).
+- Các trang nằm trong một route bọc không có `path` dưới `AppLayout`, có `errorElement` là `RouteErrorPage`: lỗi render hoặc lỗi tải chunk (ví dụ sau khi deploy bản mới) hiện trang lỗi bên trong layout, giữ Header, có nút "Tải lại trang". `AppLayout` cũng có `errorElement` để dự phòng. Lỗi API hiển thị `ErrorState` có nút thử lại ([design-system.md](design-system.md), Phần 5).
+- `AppLayout` có `ScrollRestoration`: chuyển sang trang khác thì cuộn về đầu, Back hoặc Forward thì khôi phục vị trí cũ. Hook chỉ đổi query string của trang đang mở (`useDexSearchParams`, `useCompareSearchParams`, `useTeamDraft`, `useDefendingTypes`, `TerrainPicker`) truyền `preventScrollReset` để giữ vị trí.
 
 ---
 
@@ -370,6 +371,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | Rủi ro | Biện pháp |
 |---|---|
 | Gọi API từ origin lạ | CORS chỉ cho phép `CORS_ALLOWED_ORIGINS` |
+| Body lớn làm cạn bộ nhớ | `RequestBodyLimitFilter`: body `POST`, `PUT`, `PATCH` tối đa 16 KB, đọc có giới hạn nên chặn được cả request không có `Content-Length`; vượt thì 413 `PAYLOAD_TOO_LARGE`. Body hợp lệ lớn nhất (lưu đội 6 thành viên) dưới 1 KB |
 | Spam lưu đội | `SaveRateLimiter`: 10 lần lưu mỗi phút mỗi IP (cửa sổ cố định, trong bộ nhớ); vượt thì 429. Theo dõi tối đa 10.000 IP (`MAX_TRACKED_CLIENTS`): khi đầy, IP mới chỉ được nhận sau khi dọn cửa sổ hết hạn, nếu vẫn đầy thì nhận 429 |
 | Đoán mã chia sẻ | `share_code` 8 ký tự base62 từ `SecureRandom` (62^8, khoảng 2,18 x 10^14 tổ hợp); `id` nội bộ không lộ ra API |
 | SQL injection | Chỉ dùng JPA, Specification, tham số bind; không nối chuỗi SQL |
@@ -505,6 +507,7 @@ flowchart LR
 | Biến môi trường | `NODE_VERSION=24` (`.nvmrc` nằm ở gốc repo, ngoài Root directory); `VITE_API_BASE_URL=https://<domain backend>/api/v1` |
 
 - Vite lấy `VITE_API_BASE_URL` từ biến môi trường lúc build (đã thử ngày 2026-10-29: biến môi trường ghi đè giá trị trong `.env`). Đổi domain backend thì phải build lại frontend.
+- Khi build trên Pages (biến `CF_PAGES=1` do Cloudflare đặt), `vite.config.ts` cho build thất bại nếu `VITE_API_BASE_URL` thiếu, rỗng hoặc không bắt đầu bằng `https://`, để không phát hành bản gọi `localhost`. Dấu `/` cuối URL được bỏ lúc chạy.
 
 #### 3. Nhập dữ liệu và kiểm tra
 
@@ -517,6 +520,7 @@ flowchart LR
   - `GET https://<domain backend>/api/v1/health` trả 200 `UP`, `pokemonCount` 1351.
   - Kịch bản demo ([spec.md](spec.md), Phần 4) chạy trên domain Pages, cả trên điện thoại.
   - 11 request `POST /api/v1/teams` liên tiếp, mỗi request một `X-Forwarded-For` giả khác nhau: request thứ 11 phải trả 429 ([ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md), Phần 4).
+  - Lặp lại với header `Forwarded: for=<IP giả>` (RFC 7239): `ForwardedHeaderFilter` của Spring đọc header này trước `X-Forwarded-For`. Nếu request thứ 11 không bị 429 thì edge Railway không xóa `Forwarded`; khi đó trước ngày demo, đổi `TeamController` sang lấy IP từ header do edge Railway ghi (`X-Real-IP` hoặc giá trị đầu của `X-Forwarded-For`) thay cho `getRemoteAddr()`.
 
 ---
 

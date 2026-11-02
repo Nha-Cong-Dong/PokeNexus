@@ -1,6 +1,7 @@
 # PokeNexus - Đặc tả REST API
 
-- Phiên bản: 0.7 (cập nhật 2026-10-30; thêm `GET /pokemon/speed-tiers` cho F09, [spec.md](spec.md) 1.5)
+- Phiên bản: 0.8 (cập nhật 2026-11-02; body tối đa 16 KB, mã lỗi `PAYLOAD_TOO_LARGE` 413; `page` có giới hạn trên; `GET /types` trả 503 khi chưa nạp dữ liệu; lưu đội khi DB rỗng trả 503)
+- Bản 0.7 (2026-10-30): thêm `GET /pokemon/speed-tiers` cho F09, [spec.md](spec.md) 1.5.
 - Tài liệu tương tác (sau khi có backend): Swagger UI tại `http://localhost:8080/swagger-ui.html`. Khi Swagger và tài liệu này lệch nhau, sửa cho khớp trong cùng PR.
 - Thay đổi so với 0.1: thêm schema DTO (Phần 3), danh mục lỗi có `code` (Phần 4), mã 429 và 503; bỏ `spriteUrl` khỏi response ([ADR 0005](adr/0005-hybrid-image-assets.md)); response đề xuất đổi từ mảng sang object.
 - Thay đổi so với 0.3: `analyze` nhận 1-6 Pokémon để chấm điểm cả đội đủ 6; `recommendations` vẫn nhận 1-5; `synergyScore` của đội đã lưu tính trên mọi thành viên ([spec.md](spec.md) 1.3).
@@ -22,7 +23,8 @@
 | Tên Pokémon | Định danh PokéAPI, chữ thường, gạch nối (`charizard`, `rotom-wash`). Frontend tự định dạng để hiển thị |
 | `idOrName` | Chuỗi toàn chữ số thì hiểu là ID; còn lại là tên, khớp `^[a-z0-9-]{1,60}$` |
 | Hệ số sát thương | Số thực: `0`, `0.25`, `0.5`, `1`, `2`, `4` |
-| Phân trang | `page` (bắt đầu từ 0), `size` (mặc định 24, tối thiểu 1, tối đa 100) |
+| Phân trang | `page` (bắt đầu từ 0, tối đa `2147483647 / size`, ví dụ 89.478.485 khi `size=24`), `size` (mặc định 24, tối thiểu 1, tối đa 100) |
+| Body | `POST`, `PUT`, `PATCH` có body tối đa 16 KB (`RequestBodyLimitFilter`), kể cả khi client không gửi `Content-Length`; vượt thì 413 `PAYLOAD_TOO_LARGE` trước khi đọc JSON |
 | Sắp xếp | `sort=<thuộc tính>,<asc\|desc>`. Whitelist: `id`, `name`, `baseStatTotal`, `speed`. Mặc định `id,asc` |
 | Lỗi | `ProblemDetail` (RFC 9457), `Content-Type: application/problem+json`, có thêm `code` (Phần 4) |
 | Thời gian | ISO 8601 có múi giờ, ví dụ `2026-11-06T09:30:00Z` |
@@ -391,8 +393,9 @@ interface TeamResponse {
 | `POKEMON_NOT_FOUND` | 404 | Pokémon trên đường dẫn không tồn tại |
 | `TEAM_NOT_FOUND` | 404 | Mã chia sẻ không tồn tại |
 | `ROUTE_NOT_FOUND` | 404 | Đường dẫn API không tồn tại |
+| `PAYLOAD_TOO_LARGE` | 413 | Body vượt 16 KB (Phần 1) |
 | `RATE_LIMITED` | 429 | Vượt giới hạn lưu đội (10 lần mỗi phút mỗi IP), hoặc bộ đếm đang theo dõi đủ 10.000 IP và IP gửi request là IP mới |
-| `DATA_NOT_READY` | 503 | Dữ liệu tĩnh chưa nạp; áp dụng cho mọi endpoint đọc dữ liệu Pokémon, hệ, synergy |
+| `DATA_NOT_READY` | 503 | Dữ liệu tĩnh chưa nạp; áp dụng cho mọi endpoint đọc dữ liệu Pokémon, hệ (kể cả `GET /types`), synergy, và `POST /teams` khi mọi ID trong đội đều không tìm thấy vì DB chưa có dữ liệu |
 | `INTERNAL_ERROR` | 500 | Lỗi không lường trước |
 
 - Lỗi khung Spring không có mã riêng (ví dụ 405 sai method, 415 sai `Content-Type`) giữ mã HTTP gốc và dùng `code` `INVALID_PARAMETER`; lỗi 404 khác dùng `ROUTE_NOT_FOUND`; lỗi 5xx dùng `INTERNAL_ERROR`.

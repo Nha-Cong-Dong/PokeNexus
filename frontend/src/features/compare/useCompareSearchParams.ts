@@ -21,15 +21,18 @@ export function useCompareSearchParams() {
 
   const update = useCallback(
     (next: Record<CompareSide, string | undefined>) => {
-      setSearchParams((current) => {
-        const params = new URLSearchParams(current)
-        for (const side of ['left', 'right'] as const) {
-          const value = next[side]
-          if (value === undefined) params.delete(side)
-          else params.set(side, value)
-        }
-        return params
-      })
+      setSearchParams(
+        (current) => {
+          const params = new URLSearchParams(current)
+          for (const side of ['left', 'right'] as const) {
+            const value = next[side]
+            if (value === undefined) params.delete(side)
+            else params.set(side, value)
+          }
+          return params
+        },
+        { preventScrollReset: true },
+      )
     },
     [setSearchParams],
   )

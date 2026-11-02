@@ -124,7 +124,7 @@ export function useTeamDraft() {
           next.delete(ADD_PARAM)
           return next
         },
-        { replace: true },
+        { replace: true, preventScrollReset: true },
       )
 
     const stateKey = syncKey(fromState, stateSixth)

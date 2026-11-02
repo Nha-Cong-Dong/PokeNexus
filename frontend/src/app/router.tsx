@@ -2,6 +2,7 @@ import type { ComponentType } from 'react'
 import { createBrowserRouter, type RouteObject } from 'react-router'
 
 import { NotFoundPage } from '../pages/NotFoundPage'
+import { RouteErrorPage } from '../pages/RouteErrorPage'
 import { AppLayout } from './layout/AppLayout'
 
 const pageFallback = (
@@ -23,34 +24,43 @@ export const routes: RouteObject[] = [
   {
     path: '/',
     element: <AppLayout />,
+    errorElement: <RouteErrorPage />,
     children: [
-      { index: true, ...lazyPage(async () => (await import('../pages/LandingPage')).LandingPage) },
-      { path: 'pokedex', ...lazyPage(async () => (await import('../pages/DexPage')).DexPage) },
       {
-        path: 'pokemon/:idOrName',
-        ...lazyPage(async () => (await import('../pages/PokemonDetailPage')).PokemonDetailPage),
+        errorElement: <RouteErrorPage />,
+        children: [
+          {
+            index: true,
+            ...lazyPage(async () => (await import('../pages/LandingPage')).LandingPage),
+          },
+          { path: 'pokedex', ...lazyPage(async () => (await import('../pages/DexPage')).DexPage) },
+          {
+            path: 'pokemon/:idOrName',
+            ...lazyPage(async () => (await import('../pages/PokemonDetailPage')).PokemonDetailPage),
+          },
+          {
+            path: 'types',
+            ...lazyPage(async () => (await import('../pages/TypeChartPage')).TypeChartPage),
+          },
+          {
+            path: 'compare',
+            ...lazyPage(async () => (await import('../pages/ComparePage')).ComparePage),
+          },
+          {
+            path: 'team-builder',
+            ...lazyPage(async () => (await import('../pages/TeamBuilderPage')).TeamBuilderPage),
+          },
+          {
+            path: 'team/:shareCode',
+            ...lazyPage(async () => (await import('../pages/SharedTeamPage')).SharedTeamPage),
+          },
+          {
+            path: 'terrain/:terrainId?',
+            ...lazyPage(async () => (await import('../pages/TerrainPage')).TerrainPage),
+          },
+          { path: '*', element: <NotFoundPage /> },
+        ],
       },
-      {
-        path: 'types',
-        ...lazyPage(async () => (await import('../pages/TypeChartPage')).TypeChartPage),
-      },
-      {
-        path: 'compare',
-        ...lazyPage(async () => (await import('../pages/ComparePage')).ComparePage),
-      },
-      {
-        path: 'team-builder',
-        ...lazyPage(async () => (await import('../pages/TeamBuilderPage')).TeamBuilderPage),
-      },
-      {
-        path: 'team/:shareCode',
-        ...lazyPage(async () => (await import('../pages/SharedTeamPage')).SharedTeamPage),
-      },
-      {
-        path: 'terrain/:terrainId?',
-        ...lazyPage(async () => (await import('../pages/TerrainPage')).TerrainPage),
-      },
-      { path: '*', element: <NotFoundPage /> },
     ],
   },
 ]

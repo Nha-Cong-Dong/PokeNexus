@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useSearchParams } from 'react-router'
 
 import { isTypeName } from '../../lib/pokemonTypes'
@@ -103,23 +103,44 @@ export function useDexSearchParams() {
   const [searchParams, setSearchParams] = useSearchParams()
   const filter = useMemo(() => parseDexFilter(searchParams), [searchParams])
   const view = parseDexView(searchParams)
+  const latestRef = useRef(searchParams)
+
+  useEffect(() => {
+    latestRef.current = searchParams
+  }, [searchParams])
+
+  const write = useCallback(
+    (build: (current: DexFilter, currentView: DexView) => URLSearchParams) => {
+      const base = latestRef.current
+      const next = build(parseDexFilter(base), parseDexView(base))
+      latestRef.current = next
+      setSearchParams(next, { preventScrollReset: true })
+    },
+    [setSearchParams],
+  )
 
   const updateFilter = useCallback(
     (change: DexFilterChange) =>
-      setSearchParams(toSearchParams({ ...filter, ...change, page: 0 }, view)),
-    [filter, view, setSearchParams],
+      write((current, currentView) =>
+        toSearchParams({ ...current, ...change, page: 0 }, currentView),
+      ),
+    [write],
   )
   const setPage = useCallback(
-    (page: number) => setSearchParams(toSearchParams({ ...filter, page }, view)),
-    [filter, view, setSearchParams],
+    (page: number) =>
+      write((current, currentView) => toSearchParams({ ...current, page }, currentView)),
+    [write],
   )
   const setView = useCallback(
-    (next: DexView) => setSearchParams(toSearchParams(filter, next)),
-    [filter, setSearchParams],
+    (next: DexView) => write((current) => toSearchParams(current, next)),
+    [write],
   )
   const clearFilter = useCallback(
-    () => setSearchParams(toSearchParams(parseDexFilter(new URLSearchParams()), view)),
-    [view, setSearchParams],
+    () =>
+      write((_current, currentView) =>
+        toSearchParams(parseDexFilter(new URLSearchParams()), currentView),
+      ),
+    [write],
   )
 
   return {

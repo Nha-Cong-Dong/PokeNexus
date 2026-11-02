@@ -26,6 +26,10 @@ public final class PageRequestFactory {
         if (pageSize < 1 || pageSize > MAX_SIZE) {
             throw invalid("size must be between 1 and " + MAX_SIZE);
         }
+        int maxPage = Integer.MAX_VALUE / pageSize;
+        if (pageNumber > maxPage) {
+            throw invalid("page must be <= " + maxPage + " for size " + pageSize);
+        }
         return PageRequest.of(pageNumber, pageSize, parseSort(sort, allowedProperties));
     }
 

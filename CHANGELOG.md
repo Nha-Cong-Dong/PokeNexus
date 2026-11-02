@@ -48,10 +48,22 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - `GET /api/v1/health` trả 503 với `status = "DOWN"` khi không kết nối được DB; trước đây vẫn trả 200 `UP` nên health check của hosting không phát hiện được DB chết. Bảng `pokemon` chưa tạo vẫn trả 200 `UP`.
 - Bảng task tuần 3 trong `docs/roadmap.md` bị tách đôi do dòng trống trước T313, làm T313-T315 mất header.
 - Nút đáp án đúng và sai của Thử tài Trainer hiện chữ trắng trên nền trắng, vì lớp `bg-surface` của biến thể nút được Tailwind sinh sau lớp ghi đè; bộ câu hỏi đang chọn cũng không có nền vàng.
+- Chuyển sang trang khác không cuộn về đầu trang (bấm thẻ ở cuối Pokédex thì trang Chi tiết mở ở giữa); nay đổi trang thì về đầu, Back khôi phục vị trí, lọc và đổi query trên cùng trang giữ vị trí.
+- Lỗi khi hiển thị trang hoặc tải chunk sau khi deploy bản mới hiện màn hình lỗi thô của React Router; nay hiện trang "Không hiển thị được trang" trong layout, có nút tải lại.
+- Bấm "Hủy" khi đang nhập đội Showdown vẫn thay đội sau khi tra tên xong.
+- `/pokemon/generations` và `/pokemon/speed-tiers` làm sập trang Chi tiết; nay hiện "Không tìm thấy Pokémon".
+- Gõ hoặc dán quá 30 ký tự vào ô tìm kiếm báo "Bộ lọc không hợp lệ"; ô tìm kiếm nay giới hạn 30 ký tự.
+- Bộ lọc Pokédex mất giá trị BST vừa nhập khi bấm chip hệ ngay sau đó.
+- Team Builder trên mobile: thứ tự `Tab` và trình đọc màn hình khác thứ tự hiển thị.
+- Tiến độ Trainer bị ghi đè khi mở ở hai tab.
+- `GET /api/v1/pokemon?page=` quá lớn trả 500; nay trả 400 `INVALID_PARAMETER`.
+- `GET /api/v1/types` trả 200 và `POST /api/v1/teams` trả 400 `UNKNOWN_POKEMON` khi DB chưa có dữ liệu; nay cùng trả 503 `DATA_NOT_READY`.
 
 ### Security
 
 - `SaveRateLimiter` theo dõi tối đa 10.000 IP; trước đây map trong bộ nhớ có thể tăng không giới hạn khi nhiều IP khác nhau lưu đội trong cùng một phút.
+- Body của `POST`, `PUT`, `PATCH` giới hạn 16 KB (413 `PAYLOAD_TOO_LARGE`), kể cả request không gửi `Content-Length`; trước đây body vài chục MB có thể làm backend hết bộ nhớ.
+- Build frontend trên Cloudflare Pages dừng khi `VITE_API_BASE_URL` thiếu, rỗng hoặc không phải `https://`, tránh phát hành bản gọi `localhost`.
 
 ## [0.2.0] - 2026-10-28
 

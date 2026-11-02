@@ -338,6 +338,23 @@ describe('PokemonDetailPage', () => {
     expect(memoryRouter.state.location.pathname).toBe('/pokedex')
   })
 
+  it.each(['generations', 'speed-tiers'])(
+    'treats the API path /pokemon/%s as an unknown Pokémon instead of crashing',
+    async (name) => {
+      const fetchMock = stubApi(
+        () => jsonResponse([{ generation: 1, speciesCount: 151 }]),
+        () => jsonResponse({ status: 404, code: 'POKEMON_NOT_FOUND' }, 404),
+      )
+      vi.spyOn(console, 'error').mockImplementation(() => {})
+      renderRoute(`/pokemon/${name}`)
+
+      expect(
+        await screen.findByRole('heading', { level: 1, name: 'Không tìm thấy Pokémon' }),
+      ).toBeInTheDocument()
+      expect(requestedPaths(fetchMock)).not.toContain(`/api/v1/pokemon/${name}`)
+    },
+  )
+
   it('shows a Vietnamese error with a retry button when the server fails', async () => {
     stubApi(
       () => jsonResponse({ status: 500, detail: 'boom', code: 'INTERNAL_ERROR' }, 500),

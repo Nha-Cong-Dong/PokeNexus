@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -78,6 +78,33 @@ describe('app routes', () => {
         ),
       ).toBe(true),
     )
+  })
+
+  it('scrolls to the top when moving to another page', async () => {
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+    const memoryRouter = renderAt('/types')
+    await screen.findByRole('heading', { level: 1, name: 'Bảng tương khắc' })
+    scrollTo.mockClear()
+
+    await act(() => memoryRouter.navigate('/compare'))
+
+    expect(scrollTo).toHaveBeenCalledWith(0, 0)
+  })
+
+  it('keeps the scroll position when the Pokédex filters change the query', async () => {
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+    const memoryRouter = renderAt('/pokedex')
+    await screen.findByRole('heading', { level: 1, name: 'Pokédex' })
+    scrollTo.mockClear()
+
+    await userEvent.click(
+      within(screen.getByRole('complementary', { name: 'Bộ lọc' })).getByRole('button', {
+        name: 'Dragon',
+      }),
+    )
+
+    expect(memoryRouter.state.location.search).toBe('?type=dragon')
+    expect(scrollTo).not.toHaveBeenCalled()
   })
 
   it('shows the not found page with a link home for unknown routes', async () => {

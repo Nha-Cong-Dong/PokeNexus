@@ -3,6 +3,7 @@ import { useQueries, useQuery } from '@tanstack/react-query'
 import { ApiError } from '../../lib/http'
 import type { PokemonDetail } from '../../types/api'
 import { fetchPokemonDetail } from '../pokemon-detail/api'
+import { pokemonDetailKey } from '../pokemon-detail/hooks'
 
 import { fetchGenerationProfiles } from './api'
 
@@ -24,7 +25,7 @@ export interface QuizDetails {
 export function useQuizDetails(ids: readonly number[]): QuizDetails {
   return useQueries({
     queries: ids.map((id) => ({
-      queryKey: ['pokemon', String(id)],
+      queryKey: pokemonDetailKey(id),
       queryFn: ({ signal }: { signal: AbortSignal }) => fetchPokemonDetail(id, signal),
       staleTime: Infinity,
     })),

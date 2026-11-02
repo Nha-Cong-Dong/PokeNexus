@@ -36,7 +36,7 @@ export function useDefendingTypes() {
       const base = latestRef.current
       const updated = withDefendingTypes(base, next(parseDefendingTypes(base)))
       latestRef.current = updated
-      setSearchParams(updated, { replace: true })
+      setSearchParams(updated, { replace: true, preventScrollReset: true })
     },
     [setSearchParams],
   )

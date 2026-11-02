@@ -100,6 +100,14 @@ function ImportContent({ titleId, onClose, onImport }: ImportContentProps) {
   const [state, setState] = useState<ImportState>({ kind: 'idle' })
   const inputId = useId()
   const pending = state.kind === 'pending'
+  const closedRef = useRef(false)
+
+  useEffect(() => {
+    closedRef.current = false
+    return () => {
+      closedRef.current = true
+    }
+  }, [])
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -114,6 +122,7 @@ function ImportContent({ titleId, onClose, onImport }: ImportContentProps) {
       const refs = await Promise.all(
         parsed.entries.map((entry) => resolveShowdownName(entry.species, LOOKUP)),
       )
+      if (closedRef.current) return
       const plan = planImport(parsed.entries, refs)
       if (plan.members.length === 0) {
         const names = parsed.entries.map((entry) => entry.species).join(', ')
@@ -123,6 +132,7 @@ function ImportContent({ titleId, onClose, onImport }: ImportContentProps) {
       onImport(plan)
       setState({ kind: 'done', plan, ignoredDetails: parsed.ignoredDetails })
     } catch (error) {
+      if (closedRef.current) return
       setState({
         kind: 'error',
         message: errorMessageFor(error instanceof ApiError ? error.code : undefined),

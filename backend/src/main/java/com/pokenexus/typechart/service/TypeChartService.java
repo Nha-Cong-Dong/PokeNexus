@@ -112,6 +112,7 @@ public class TypeChartService implements StaticDataCache {
     }
 
     public List<TypeResponse> types() {
+        table();
         return TYPES.stream().map(TypeResponse::from).toList();
     }
 

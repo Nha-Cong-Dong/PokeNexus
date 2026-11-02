@@ -34,7 +34,7 @@ interface Outcome {
 }
 
 function optionClassName(index: number, outcome: Outcome | null, correctIndex: number): string {
-  const base = `${buttonClassName('secondary')} h-auto min-h-11 animate-pop-in py-2 disabled:opacity-100`
+  const base = `${buttonClassName('secondary')} h-auto min-h-11 min-w-0 animate-pop-in px-3! py-2 text-center break-words whitespace-normal! disabled:opacity-100`
   if (outcome === null) return base
   if (index === correctIndex) return `${base} border-success! bg-success! text-white!`
   if (index === outcome.picked) return `${base} border-danger! bg-danger! text-white!`

@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 
-import { fetchPokemonList, SEARCH_MIN_LENGTH, searchPokemon } from './api'
+import { fetchPokemonList, SEARCH_MAX_LENGTH, SEARCH_MIN_LENGTH, searchPokemon } from './api'
 import type { DexFilter } from './useDexSearchParams'
 
 const LIST_STALE_TIME_MS = 5 * 60 * 1000
@@ -19,7 +19,7 @@ export function usePokemonSearch(query: string) {
   return useQuery({
     queryKey: ['pokemon', 'search', trimmed],
     queryFn: ({ signal }) => searchPokemon(trimmed, signal),
-    enabled: trimmed.length >= SEARCH_MIN_LENGTH,
+    enabled: trimmed.length >= SEARCH_MIN_LENGTH && trimmed.length <= SEARCH_MAX_LENGTH,
     staleTime: LIST_STALE_TIME_MS,
   })
 }

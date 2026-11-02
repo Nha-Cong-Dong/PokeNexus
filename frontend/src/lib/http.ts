@@ -1,6 +1,10 @@
 import type { ProblemDetail } from '../types/api'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api/v1'
+const DEFAULT_API_BASE_URL = 'http://localhost:8080/api/v1'
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL).replace(
+  /\/+$/,
+  '',
+)
 
 export type QueryValue = string | number | undefined | readonly (string | number)[]
 

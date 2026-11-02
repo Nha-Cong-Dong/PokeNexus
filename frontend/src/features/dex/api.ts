@@ -26,6 +26,7 @@ export function fetchPokemonList(
 }
 
 export const SEARCH_MIN_LENGTH = 2
+export const SEARCH_MAX_LENGTH = 30
 export const SEARCH_LIMIT = 8
 
 export function searchPokemon(query: string, signal?: AbortSignal): Promise<PokemonRef[]> {

@@ -96,6 +96,9 @@ class TypeChartServiceTest {
         assertThatThrownBy(() -> emptyChart.multiplier(PokemonType.FIRE, PokemonType.GRASS))
                 .isInstanceOfSatisfying(ApiException.class,
                         ex -> assertThat(ex.errorCode()).isEqualTo(ErrorCode.DATA_NOT_READY));
+        assertThatThrownBy(emptyChart::types)
+                .isInstanceOfSatisfying(ApiException.class,
+                        ex -> assertThat(ex.errorCode()).isEqualTo(ErrorCode.DATA_NOT_READY));
     }
 
     @Test
