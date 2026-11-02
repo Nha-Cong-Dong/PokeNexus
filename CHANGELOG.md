@@ -48,6 +48,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - `GET /api/v1/health` trả 503 với `status = "DOWN"` khi không kết nối được DB; trước đây vẫn trả 200 `UP` nên health check của hosting không phát hiện được DB chết. Bảng `pokemon` chưa tạo vẫn trả 200 `UP`.
 - Bảng task tuần 3 trong `docs/roadmap.md` bị tách đôi do dòng trống trước T313, làm T313-T315 mất header.
 - Nút đáp án đúng và sai của Thử tài Trainer hiện chữ trắng trên nền trắng, vì lớp `bg-surface` của biến thể nút được Tailwind sinh sau lớp ghi đè; bộ câu hỏi đang chọn cũng không có nền vàng.
+- Phím `Tab` đi khác thứ tự hiển thị ở 2 chỗ còn dùng CSS `order`: nút "Lưu và chia sẻ" và "Đặt lại" ở Team Builder dưới 768 px, thẻ công cụ (ô tìm, nút Bộ lọc, sắp xếp) và nút đổi kiểu ở Pokédex dưới 1024 px. Nay thứ tự DOM theo thứ tự hiển thị (#75).
 - Chuyển sang trang khác không cuộn về đầu trang (bấm thẻ ở cuối Pokédex thì trang Chi tiết mở ở giữa); nay đổi trang thì về đầu, Back khôi phục vị trí, lọc và đổi query trên cùng trang giữ vị trí.
 - Lỗi khi hiển thị trang hoặc tải chunk sau khi deploy bản mới hiện màn hình lỗi thô của React Router; nay hiện trang "Không hiển thị được trang" trong layout, có nút tải lại.
 - Bấm "Hủy" khi đang nhập đội Showdown vẫn thay đội sau khi tra tên xong.

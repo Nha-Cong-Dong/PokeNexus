@@ -37,6 +37,22 @@ function filterPanel() {
   return within(screen.getByRole('complementary', { name: 'Bộ lọc' }))
 }
 
+function stubViewportWidth(rem: number) {
+  vi.stubGlobal(
+    'matchMedia',
+    vi.fn((query: string) => ({
+      matches: rem >= Number(/min-width: ([\d.]+)rem/.exec(query)?.[1] ?? Infinity),
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })),
+  )
+}
+
+function comesBefore(first: HTMLElement, second: HTMLElement) {
+  return Boolean(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING)
+}
+
 describe('DexPage', () => {
   it('shows Pokémon cards from the API with sprite, number, types and BST', async () => {
     stubFetch(jsonResponse(pageOf([GARCHOMP, VULPIX_ALOLA])))
@@ -143,6 +159,34 @@ describe('DexPage', () => {
     )
     expect(screen.getByRole('link', { name: /Garchomp/ })).toHaveTextContent(/^#0445Garchomp/)
     expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('puts the search and filter toolbar before the view toggle in the DOM on mobile', async () => {
+    stubViewportWidth(24)
+    stubFetch(jsonResponse(pageOf([GARCHOMP])))
+    renderRoute('/pokedex')
+    await screen.findByRole('link', { name: /Garchomp/ })
+
+    expect(
+      comesBefore(
+        screen.getByRole('button', { name: 'Bộ lọc' }),
+        screen.getByRole('group', { name: 'Kiểu hiển thị' }),
+      ),
+    ).toBe(true)
+  })
+
+  it('keeps the view toggle before the sort control on desktop', async () => {
+    stubViewportWidth(80)
+    stubFetch(jsonResponse(pageOf([GARCHOMP])))
+    renderRoute('/pokedex')
+    await screen.findByRole('link', { name: /Garchomp/ })
+
+    expect(
+      comesBefore(
+        screen.getByRole('group', { name: 'Kiểu hiển thị' }),
+        screen.getByRole('combobox', { name: 'Sắp xếp' }),
+      ),
+    ).toBe(true)
   })
 
   it('opens the filter sheet and closes it from the results button', async () => {

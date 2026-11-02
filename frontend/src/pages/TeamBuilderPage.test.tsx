@@ -498,6 +498,22 @@ describe('TeamBuilderPage reading order', () => {
     )
   }
 
+  function stubViewportWidth(rem: number) {
+    vi.stubGlobal(
+      'matchMedia',
+      vi.fn((query: string) => ({
+        matches: rem >= Number(/min-width: ([\d.]+)rem/.exec(query)?.[1] ?? Infinity),
+        media: query,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      })),
+    )
+  }
+
+  function comesBefore(first: HTMLElement, second: HTMLElement) {
+    return Boolean(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING)
+  }
+
   function stubApi() {
     routeFetch({
       'POST /synergy/analyze': analyzeById({ [SPEC_IDS]: 41 }),
@@ -543,5 +559,23 @@ describe('TeamBuilderPage reading order', () => {
     await screen.findByRole('row', { name: /^Rock.*Lỗ hổng nghiêm trọng/ })
 
     expect(readingOrder().at(-1)).toBe('team-recommendation-title')
+  })
+
+  it('puts Reset before Save on mobile so Tab follows the visual order', async () => {
+    stubViewportWidth(24)
+    stubApi()
+    renderTeamRoute(`/team-builder?ids=${SPEC_IDS}`)
+    const save = await screen.findByRole('button', { name: /Lưu và chia sẻ/ })
+
+    expect(comesBefore(screen.getByRole('button', { name: 'Đặt lại' }), save)).toBe(true)
+  })
+
+  it('keeps Save before Reset from the md breakpoint', async () => {
+    stubViewportWidth(48)
+    stubApi()
+    renderTeamRoute(`/team-builder?ids=${SPEC_IDS}`)
+    const save = await screen.findByRole('button', { name: /Lưu đội/ })
+
+    expect(comesBefore(save, screen.getByRole('button', { name: 'Đặt lại' }))).toBe(true)
   })
 })

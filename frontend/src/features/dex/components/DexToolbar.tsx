@@ -27,7 +27,7 @@ export function DexToolbar({
   const sortId = useId()
 
   return (
-    <div className="flex flex-col gap-3 rounded-[20px] border-2 border-ink bg-surface p-3.5 shadow-block-lg max-lg:order-first lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
+    <div className="flex flex-col gap-3 rounded-[20px] border-2 border-ink bg-surface p-3.5 shadow-block-lg lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
       {search && <div className="lg:hidden">{search}</div>}
       <div className="flex items-center gap-2">
         <button

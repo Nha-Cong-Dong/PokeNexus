@@ -19,6 +19,7 @@ import { useDexSearchParams } from '../features/dex/useDexSearchParams'
 import { errorMessageFor } from '../lib/errorMessages'
 import { formatNumber } from '../lib/formatters'
 import { ApiError } from '../lib/http'
+import { LG_MEDIA_QUERY, useMediaQuery } from '../lib/useMediaQuery'
 import type { PokemonRef } from '../types/api'
 
 const SPECIES_COUNT = 1025
@@ -32,6 +33,7 @@ export function DexPage() {
     useDexSearchParams()
   const { data, error, isPending, isPlaceholderData, refetch } = usePokemonList(filter)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const isWideLayout = useMediaQuery(LG_MEDIA_QUERY)
   const navigate = useNavigate()
   const openPokemon = (pokemon: PokemonRef) => void navigate(`/pokemon/${pokemon.name}`)
 
@@ -50,6 +52,41 @@ export function DexPage() {
     <button type="button" onClick={clearFilter} className={buttonClassName('primary')}>
       Xóa bộ lọc
     </button>
+  )
+
+  const countRow = (
+    <div key="count" className="flex items-center justify-between gap-3 pl-1 lg:flex-1 lg:pl-0">
+      <h2
+        id={RESULTS_TITLE_ID}
+        aria-live="polite"
+        className="text-xl font-extrabold max-lg:sr-only lg:text-[22px] lg:leading-7"
+      >
+        {countLabel}
+      </h2>
+      <p aria-hidden="true" className="flex items-baseline gap-3 lg:hidden">
+        <span className="text-xl font-extrabold">{compactCount}</span>
+        {pageLabel && <span className="text-sm font-bold text-ink-muted">{pageLabel}</span>}
+      </p>
+      <ViewToggle view={view} onChange={setView} />
+    </div>
+  )
+
+  const toolbar = (
+    <DexToolbar
+      key="toolbar"
+      sort={filter.sort}
+      activeCount={activeCount}
+      onSortChange={(sort) => updateFilter({ sort })}
+      onOpenFilters={() => setFiltersOpen(true)}
+      search={
+        <PokemonSearchBox
+          label={SEARCH_LABEL}
+          placeholder={COMPACT_SEARCH_PLACEHOLDER}
+          onSelect={openPokemon}
+          hideLabel
+        />
+      }
+    />
   )
 
   return (
@@ -98,34 +135,7 @@ export function DexPage() {
           className="flex min-w-0 flex-1 flex-col lg:rounded-3xl lg:border-2 lg:border-ink lg:bg-surface lg:px-6 lg:pt-5 lg:pb-6 lg:shadow-block-lg"
         >
           <div className="mb-3 flex flex-col gap-4.5 lg:mb-4.5 lg:flex-row lg:items-center lg:gap-4">
-            <div className="flex items-center justify-between gap-3 pl-1 lg:flex-1 lg:pl-0">
-              <h2
-                id={RESULTS_TITLE_ID}
-                aria-live="polite"
-                className="text-xl font-extrabold max-lg:sr-only lg:text-[22px] lg:leading-7"
-              >
-                {countLabel}
-              </h2>
-              <p aria-hidden="true" className="flex items-baseline gap-3 lg:hidden">
-                <span className="text-xl font-extrabold">{compactCount}</span>
-                {pageLabel && <span className="text-sm font-bold text-ink-muted">{pageLabel}</span>}
-              </p>
-              <ViewToggle view={view} onChange={setView} />
-            </div>
-            <DexToolbar
-              sort={filter.sort}
-              activeCount={activeCount}
-              onSortChange={(sort) => updateFilter({ sort })}
-              onOpenFilters={() => setFiltersOpen(true)}
-              search={
-                <PokemonSearchBox
-                  label={SEARCH_LABEL}
-                  placeholder={COMPACT_SEARCH_PLACEHOLDER}
-                  onSelect={openPokemon}
-                  hideLabel
-                />
-              }
-            />
+            {isWideLayout ? [countRow, toolbar] : [toolbar, countRow]}
           </div>
 
           {error ? (
