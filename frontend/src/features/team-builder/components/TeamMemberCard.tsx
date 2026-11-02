@@ -57,7 +57,12 @@ export function TeamMemberCard({
         <span
           className={`absolute top-4.5 left-1/2 flex size-14.5 -translate-x-1/2 items-center justify-center rounded-full border-3 border-surface ring-2 ring-ink md:top-6 md:size-12.5 md:border-2 md:border-ink md:ring-0 ${TINT_35}`}
         >
-          <PokemonSprite id={id} alt={name} size={96} className="size-12 md:size-11" />
+          <PokemonSprite
+            id={id}
+            alt={name}
+            size={96}
+            className="size-17 max-w-none shrink-0 md:size-16"
+          />
         </span>
         <span className="flex flex-1 flex-col items-center gap-1.5 px-1.5 pt-7.5 pb-2.5 text-center md:px-2.5 md:pt-6.5">
           {badge && <span className="text-xs font-extrabold text-primary">{badge}</span>}

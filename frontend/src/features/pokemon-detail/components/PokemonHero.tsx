@@ -18,10 +18,15 @@ type PokemonHeroProps = {
 }
 
 const POKEMON_NAME_ID = 'pokemon-name'
+const LONG_NAME_LENGTH = 14
 
 export function PokemonHero({ detail, children, below }: PokemonHeroProps) {
   const scene = sceneForTypes(detail.types)
   const displayName = formatPokemonName(detail.name)
+  const nameSizeClassName =
+    displayName.length > LONG_NAME_LENGTH
+      ? 'lg:text-[2rem]/[2.25rem]'
+      : 'lg:text-[2.5rem]/[2.75rem]'
 
   return (
     <div className="relative">
@@ -35,7 +40,7 @@ export function PokemonHero({ detail, children, below }: PokemonHeroProps) {
       <div className="relative z-10 mx-auto grid max-w-7xl gap-6 px-3 md:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:grid-rows-[auto_1fr] xl:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] xl:px-8">
         <section
           aria-labelledby={POKEMON_NAME_ID}
-          className="relative min-w-0 lg:col-start-1 lg:row-start-1 lg:h-105"
+          className="relative min-w-0 lg:col-start-1 lg:row-start-1 lg:h-120"
         >
           <div className="relative h-70 lg:absolute lg:inset-0 lg:h-auto">
             <div className="absolute inset-x-0 top-3 z-10 flex flex-wrap items-center gap-2 lg:top-5">
@@ -57,7 +62,7 @@ export function PokemonHero({ detail, children, below }: PokemonHeroProps) {
               </nav>
               <SceneLabel scene={scene} inline />
             </div>
-            <div className="absolute bottom-0 left-1/2 w-56 -translate-x-1/2 lg:bottom-8 lg:left-[66%] lg:w-72 xl:w-80">
+            <div className="absolute bottom-0 left-1/2 w-56 -translate-x-1/2 lg:bottom-23 lg:left-[66%] lg:w-72 xl:w-80">
               <span
                 aria-hidden="true"
                 className="absolute inset-x-6 bottom-1 h-6 animate-float-shadow rounded-[50%] bg-scrim/40"
@@ -75,7 +80,7 @@ export function PokemonHero({ detail, children, below }: PokemonHeroProps) {
               </div>
             </div>
           </div>
-          <div className="mt-4 flex flex-col items-center gap-2 text-center lg:absolute lg:bottom-7 lg:left-0 lg:z-10 lg:mt-0 lg:max-w-[calc(100%-1rem)] lg:items-start lg:rounded-2xl lg:bg-scrim/85 lg:px-5 lg:pt-4 lg:pb-4.5 lg:text-left lg:text-white">
+          <div className="mt-4 flex flex-col items-center gap-2 text-center lg:absolute lg:-bottom-3 lg:left-0 lg:z-10 lg:mt-0 lg:max-w-[calc(100%-1rem)] lg:items-start lg:rounded-2xl lg:bg-scrim/85 lg:px-5 lg:pt-4 lg:pb-4.5 lg:text-left lg:text-white">
             <div className="flex flex-col items-center gap-2 lg:flex-row lg:items-baseline lg:gap-3">
               <DexNumber
                 id={detail.speciesId}
@@ -83,7 +88,7 @@ export function PokemonHero({ detail, children, below }: PokemonHeroProps) {
               />
               <h1
                 id={POKEMON_NAME_ID}
-                className="font-display text-display font-normal break-words lg:text-[2.5rem]/[2.75rem]"
+                className={`font-display text-display font-normal break-words ${nameSizeClassName}`}
               >
                 {displayName}
               </h1>

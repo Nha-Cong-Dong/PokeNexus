@@ -1,3 +1,6 @@
+import { act, renderHook } from '@testing-library/react'
+import { createElement, type ReactNode } from 'react'
+import { MemoryRouter, useLocation } from 'react-router'
 import { describe, expect, it } from 'vitest'
 
 import {
@@ -5,6 +8,7 @@ import {
   parseDexFilter,
   parseDexView,
   toSearchParams,
+  useDexSearchParams,
 } from './useDexSearchParams'
 
 describe('parseDexFilter', () => {
@@ -93,5 +97,25 @@ describe('countActiveFilters', () => {
 
     expect(countActiveFilters(filter)).toBe(6)
     expect(countActiveFilters(parseDexFilter(new URLSearchParams('sort=name,asc')))).toBe(0)
+  })
+})
+
+describe('useDexSearchParams', () => {
+  function renderDex(path: string) {
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      createElement(MemoryRouter, { initialEntries: [path] }, children)
+    return renderHook(() => ({ dex: useDexSearchParams(), location: useLocation() }), { wrapper })
+  }
+
+  it('keeps a BST bound committed on blur when a type chip is pressed before the next render', () => {
+    const { result } = renderDex('/pokedex?view=list')
+    const { updateFilter } = result.current.dex
+
+    act(() => {
+      updateFilter({ minBst: 500 })
+      updateFilter({ types: ['dragon'] })
+    })
+
+    expect(result.current.location.search).toBe('?type=dragon&minBst=500&view=list')
   })
 })

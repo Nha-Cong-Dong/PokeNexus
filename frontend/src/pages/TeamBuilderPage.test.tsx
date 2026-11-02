@@ -467,3 +467,81 @@ describe('TeamBuilderPage', () => {
     expect(screen.queryByText('Đang tải…')).not.toBeInTheDocument()
   })
 })
+
+describe('TeamBuilderPage reading order', () => {
+  const headingIds = [
+    'team-slots-title',
+    'team-recommendation-title',
+    'team-score-title',
+    'team-heatmap-title',
+    'team-attack-title',
+    'team-speed-title',
+  ] as const
+
+  function readingOrder(): string[] {
+    return headingIds
+      .map((id) => document.getElementById(id))
+      .filter((element): element is HTMLElement => element !== null)
+      .sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1))
+      .map((element) => element.id)
+  }
+
+  function stubDesktop(matches: boolean) {
+    vi.stubGlobal(
+      'matchMedia',
+      vi.fn((query: string) => ({
+        matches: matches && query === '(min-width: 64rem)',
+        media: query,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      })),
+    )
+  }
+
+  function stubApi() {
+    routeFetch({
+      'POST /synergy/analyze': analyzeById({ [SPEC_IDS]: 41 }),
+      'POST /synergy/recommendations': () => jsonResponse(recommendationsOf()),
+    })
+  }
+
+  it('puts the suggestions right under the team on mobile once the team has members', async () => {
+    stubDesktop(false)
+    stubApi()
+    renderTeamRoute(`/team-builder?ids=${SPEC_IDS}`)
+    await screen.findByRole('row', { name: /^Rock.*Lỗ hổng nghiêm trọng/ })
+
+    expect(readingOrder()).toEqual([
+      'team-slots-title',
+      'team-recommendation-title',
+      'team-score-title',
+      'team-heatmap-title',
+      'team-attack-title',
+      'team-speed-title',
+    ])
+  })
+
+  it('puts the suggestions after the weakness map on mobile while the team is empty', () => {
+    stubDesktop(false)
+    stubApi()
+    renderTeamRoute('/team-builder')
+
+    expect(readingOrder()).toEqual([
+      'team-slots-title',
+      'team-score-title',
+      'team-heatmap-title',
+      'team-recommendation-title',
+      'team-attack-title',
+      'team-speed-title',
+    ])
+  })
+
+  it('keeps the suggestions in the last column on desktop', async () => {
+    stubDesktop(true)
+    stubApi()
+    renderTeamRoute(`/team-builder?ids=${SPEC_IDS}`)
+    await screen.findByRole('row', { name: /^Rock.*Lỗ hổng nghiêm trọng/ })
+
+    expect(readingOrder().at(-1)).toBe('team-recommendation-title')
+  })
+})

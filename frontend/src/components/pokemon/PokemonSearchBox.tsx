@@ -1,6 +1,6 @@
 import { useEffect, useId, useState, type KeyboardEvent } from 'react'
 
-import { SEARCH_MIN_LENGTH } from '../../features/dex/api'
+import { SEARCH_MAX_LENGTH, SEARCH_MIN_LENGTH } from '../../features/dex/api'
 import { usePokemonSearch } from '../../features/dex/hooks'
 import { errorMessageFor } from '../../lib/errorMessages'
 import { formatPokemonName } from '../../lib/formatters'
@@ -132,6 +132,7 @@ export function PokemonSearchBox({
           role="combobox"
           autoComplete="off"
           spellCheck={false}
+          maxLength={SEARCH_MAX_LENGTH}
           aria-autocomplete="list"
           aria-expanded={expanded}
           aria-controls={listboxId}

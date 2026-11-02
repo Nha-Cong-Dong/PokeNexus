@@ -9,6 +9,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   TEAM_NOT_FOUND: 'Không tìm thấy đội với mã chia sẻ này.',
   RATE_LIMITED: 'Bạn lưu đội quá nhanh. Hãy đợi một phút rồi thử lại.',
   ROUTE_NOT_FOUND: 'Không tìm thấy đường dẫn.',
+  PAYLOAD_TOO_LARGE: 'Dữ liệu gửi đi quá lớn.',
   DATA_NOT_READY: 'Dữ liệu Pokémon đang được nạp. Hãy thử lại sau ít phút.',
   NETWORK_ERROR: 'Không kết nối được máy chủ. Hãy kiểm tra backend đã chạy chưa.',
   INTERNAL_ERROR: 'Máy chủ gặp lỗi không mong muốn.',

@@ -24,6 +24,7 @@ import { analysisSummary, buildTeamMembers } from '../features/team-builder/team
 import { useTeamDraft } from '../features/team-builder/useTeamDraft'
 import { TeamSpeedList } from '../features/speed/components/TeamSpeedList'
 import { formatPokemonName } from '../lib/formatters'
+import { LG_MEDIA_QUERY, useMediaQuery } from '../lib/useMediaQuery'
 import type { PlayStyle, PokemonRef, Recommendation } from '../types/api'
 
 const SAMPLE_TEAM = [6, 130, 149, 663, 637]
@@ -64,6 +65,7 @@ export function TeamBuilderPage() {
   const [saveOpen, setSaveOpen] = useState(false)
   const [importOpen, setImportOpen] = useState(false)
   const [exportOpen, setExportOpen] = useState(false)
+  const isWideLayout = useMediaQuery(LG_MEDIA_QUERY)
 
   const activeSixthId =
     draft.isFull && draft.sixth !== null && !draft.ids.includes(draft.sixth) ? draft.sixth : null
@@ -124,6 +126,50 @@ export function TeamBuilderPage() {
   const memberCount = saveMembers.length
   const nextSlot = Math.min(draft.ids.length + 1, MAX_TEAM_SIZE)
 
+  const recommendationSection = (
+    <section
+      aria-labelledby={RECOMMENDATION_TITLE_ID}
+      className="flex min-w-0 flex-col gap-4 lg:col-span-2 min-[84rem]:col-span-1"
+    >
+      <div className="flex items-baseline justify-between gap-3 px-1 md:block md:px-0">
+        <h2
+          id={RECOMMENDATION_TITLE_ID}
+          className="text-xl font-extrabold md:rounded-2xl md:bg-ink md:px-4 md:py-2.5 md:text-surface"
+        >
+          <span className="md:hidden">Gợi ý bổ sung</span>
+          <span className="hidden md:inline">Đề xuất slot thứ {nextSlot}</span>
+        </h2>
+        {hasMembers && (
+          <span aria-hidden="true" className="text-sm font-bold text-ink-muted md:hidden">
+            Vuốt ngang
+          </span>
+        )}
+      </div>
+      <PlayStylePicker value={playStyle} onChange={setPlayStyle} />
+      <label className="flex min-h-10 cursor-pointer items-center gap-3 rounded-2xl border-2 border-border bg-surface px-4 py-2 font-bold">
+        <input
+          type="checkbox"
+          checked={excludeLegendary}
+          onChange={(event) => setExcludeLegendary(event.target.checked)}
+          className="size-5 flex-none accent-primary"
+        />
+        Loại huyền thoại, thần thoại và Paradox
+      </label>
+      {hasMembers ? (
+        <RecommendationList
+          recommendations={recommendations}
+          teamIds={draft.ids}
+          sixthId={activeSixthId}
+          onAdd={handleAddRecommendation}
+        />
+      ) : (
+        <p className="rounded-2xl border-2 border-border bg-surface p-4 text-ink-muted">
+          Thêm ít nhất 1 Pokémon để nhận 3 đề xuất bù lỗ hổng của đội.
+        </p>
+      )}
+    </section>
+  )
+
   return (
     <>
       <PageHero
@@ -138,7 +184,7 @@ export function TeamBuilderPage() {
         className="grid items-start gap-4 md:gap-6 lg:grid-cols-[20rem_minmax(0,1fr)] min-[84rem]:grid-cols-[19rem_minmax(0,1fr)_18rem]"
       >
         <div className="flex min-w-0 flex-col gap-4 md:gap-6">
-          <Panel aria-labelledby={SLOTS_TITLE_ID} className="flex flex-col gap-4">
+          <Panel aria-labelledby={SLOTS_TITLE_ID} className="flex min-w-0 flex-col gap-4">
             <div className="flex items-baseline justify-between gap-3">
               <h2 id={SLOTS_TITLE_ID} className="text-xl font-extrabold">
                 Đội của bạn
@@ -191,7 +237,9 @@ export function TeamBuilderPage() {
             </div>
           </Panel>
 
-          <Panel aria-labelledby={SCORE_TITLE_ID} className="flex flex-col gap-4">
+          {!isWideLayout && hasMembers && recommendationSection}
+
+          <Panel aria-labelledby={SCORE_TITLE_ID} className="flex min-w-0 flex-col gap-4">
             <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
               <h2 id={SCORE_TITLE_ID} className="text-xl font-extrabold">
                 Điểm đội
@@ -238,7 +286,7 @@ export function TeamBuilderPage() {
           </Panel>
         </div>
 
-        <div className="contents lg:flex lg:min-w-0 lg:flex-col lg:gap-6">
+        <div className="flex min-w-0 flex-col gap-4 md:gap-6">
           {hasMembers && (
             <Panel aria-labelledby={INSIGHTS_TITLE_ID} className="flex min-w-0 flex-col gap-3">
               <h2 id={INSIGHTS_TITLE_ID} className="text-xl font-extrabold">
@@ -281,10 +329,9 @@ export function TeamBuilderPage() {
             )}
           </Panel>
 
-          <Panel
-            aria-labelledby={ATTACK_TITLE_ID}
-            className="order-1 flex min-w-0 flex-col gap-4 lg:order-none"
-          >
+          {!isWideLayout && !hasMembers && recommendationSection}
+
+          <Panel aria-labelledby={ATTACK_TITLE_ID} className="flex min-w-0 flex-col gap-4">
             <h2 id={ATTACK_TITLE_ID} className="text-xl font-extrabold">
               Tấn công và chỉ số
             </h2>
@@ -303,10 +350,7 @@ export function TeamBuilderPage() {
             )}
           </Panel>
 
-          <Panel
-            aria-labelledby={SPEED_TITLE_ID}
-            className="order-1 flex min-w-0 flex-col gap-4 lg:order-none"
-          >
+          <Panel aria-labelledby={SPEED_TITLE_ID} className="flex min-w-0 flex-col gap-4">
             <h2 id={SPEED_TITLE_ID} className="text-xl font-extrabold">
               Tốc độ cấp 50
             </h2>
@@ -320,47 +364,7 @@ export function TeamBuilderPage() {
           </Panel>
         </div>
 
-        <section
-          aria-labelledby={RECOMMENDATION_TITLE_ID}
-          className="flex min-w-0 flex-col gap-4 lg:col-span-2 min-[84rem]:col-span-1"
-        >
-          <div className="flex items-baseline justify-between gap-3 px-1 md:block md:px-0">
-            <h2
-              id={RECOMMENDATION_TITLE_ID}
-              className="text-xl font-extrabold md:rounded-2xl md:bg-ink md:px-4 md:py-2.5 md:text-surface"
-            >
-              <span className="md:hidden">Gợi ý bổ sung</span>
-              <span className="hidden md:inline">Đề xuất slot thứ {nextSlot}</span>
-            </h2>
-            {hasMembers && (
-              <span aria-hidden="true" className="text-sm font-bold text-ink-muted md:hidden">
-                Vuốt ngang
-              </span>
-            )}
-          </div>
-          <PlayStylePicker value={playStyle} onChange={setPlayStyle} />
-          <label className="flex min-h-10 cursor-pointer items-center gap-3 rounded-2xl border-2 border-border bg-surface px-4 py-2 font-bold">
-            <input
-              type="checkbox"
-              checked={excludeLegendary}
-              onChange={(event) => setExcludeLegendary(event.target.checked)}
-              className="size-5 flex-none accent-primary"
-            />
-            Loại huyền thoại, thần thoại và Paradox
-          </label>
-          {hasMembers ? (
-            <RecommendationList
-              recommendations={recommendations}
-              teamIds={draft.ids}
-              sixthId={activeSixthId}
-              onAdd={handleAddRecommendation}
-            />
-          ) : (
-            <p className="rounded-2xl border-2 border-border bg-surface p-4 text-ink-muted">
-              Thêm ít nhất 1 Pokémon để nhận 3 đề xuất bù lỗ hổng của đội.
-            </p>
-          )}
-        </section>
+        {isWideLayout && recommendationSection}
       </PageBody>
 
       <SaveTeamDialog

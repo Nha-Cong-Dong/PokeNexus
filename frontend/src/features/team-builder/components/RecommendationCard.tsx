@@ -38,7 +38,7 @@ export function RecommendationCard({
             id={recommendation.id}
             alt={name}
             size={96}
-            className="size-22 rotate-6 md:size-14 md:rotate-0"
+            className="size-22 max-w-none shrink-0 rotate-6 md:size-20 md:rotate-0"
           />
         </span>
         <div className="flex min-w-0 flex-1 flex-col gap-1">

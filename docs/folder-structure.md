@@ -1,6 +1,6 @@
 # PokeNexus - Cấu trúc thư mục
 
-- Phiên bản: 0.5 (cập nhật 2026-10-31; `app/layout/footerPokemon.ts` cho footer (T412); Phần 4: `db-dump.sh` xuất, nhập dữ liệu cho production, script chỉ có bản Bash trừ `download-csv`. Bản 0.3: thêm `features/trainer/`, `features/terrain/`, `TerrainPage`)
+- Phiên bản: 0.6 (cập nhật 2026-11-02; `lib/useMediaQuery.ts`. Bản 0.5 ngày 2026-10-31: `app/layout/footerPokemon.ts` cho footer (T412); Phần 4: `db-dump.sh` xuất, nhập dữ liệu cho production, script chỉ có bản Bash trừ `download-csv`. Bản 0.3: thêm `features/trainer/`, `features/terrain/`, `TerrainPage`)
 - Đây là cấu trúc **đích** khi xong MVP. Thư mục, file nào chưa tồn tại thì được tạo ở task ghi trong cột "Tạo ở" (mã task theo [roadmap.md](roadmap.md)).
 - Thêm hoặc đổi tên package, thư mục cấp 1-2 thì cập nhật tài liệu này trong cùng PR.
 
@@ -92,7 +92,7 @@ backend/
 | `common` | `config` | `AppProperties`, `CorsConfig`, `OpenApiConfig` | T202 |
 | | `exception` | `GlobalExceptionHandler`, `ErrorCode`, `ApiException`, `NotFoundException`, `RateLimitedException` (thêm header `Retry-After`) | T202, T307 |
 | | `domain` | `PokemonType` (enum 18 hệ), `StatType`, `FormCategory`, `PokemonTypeConverter` (JPA, ID hệ <-> `PokemonType`) | T202, T204 |
-| | `web` | `HealthController`, `HealthService`, `HealthResponse`, `PageResponse`, `PageRequestFactory` (kiểm tra `page`, `size`, `sort` theo whitelist), `StaticDataCache` (interface của các cache nạp lúc khởi động) | T202, T206, T305 |
+| | `web` | `HealthController`, `HealthService`, `HealthResponse`, `PageResponse`, `PageRequestFactory` (kiểm tra `page`, `size`, `sort` theo whitelist), `RequestBodyLimitFilter` (body tối đa 16 KB), `StaticDataCache` (interface của các cache nạp lúc khởi động) | T202, T206, T305 |
 | `ingestion` | | `IngestionRunner`, `CsvReader`, `FormCategoryResolver`; cấu hình đọc từ `AppProperties.Ingestion` | T205 |
 | | `loader` | `TypeLoader`, `GenerationLoader`, `SpeciesLoader`, `PokemonLoader`, `EvolutionLoader` | T205 |
 | `typechart` | `controller` | `TypeController` | T304 |
@@ -182,6 +182,7 @@ frontend/
     │   ├── queryClient.ts         Không thử lại khi lỗi 4xx, thử lại 1 lần với lỗi khác
     │   ├── typeEffectiveness.ts   Tra hệ số từ TypeMatrix, hệ số hệ kép, nhóm x2/x½/x0 của một hệ tấn công
     │   ├── assets.ts              getSpriteUrl, getArtworkUrl, sceneUrl, sceneSrcSet, sceneThumbUrl
+    │   ├── useMediaQuery.ts       useMediaQuery, LG_MEDIA_QUERY (đặt khối đề xuất Team Builder theo breakpoint)
     │   ├── motion.ts              staggerDelay (độ trễ vào lần lượt, tối đa 640 ms; T315)
     │   ├── scenes.ts              15 scene (tên, bảng 4 màu, số ảnh, kiểu hạt), sceneForTypes, nextPhoto, sceneGradient, sceneSwatch, sceneTintStyle
     │   ├── pokemonTypes.ts        Danh sách 18 hệ, ánh xạ hệ sang class token

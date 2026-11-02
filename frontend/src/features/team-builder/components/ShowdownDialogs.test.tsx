@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { PokemonDetail } from '../../../types/api'
@@ -43,8 +43,9 @@ const DETAILS: Record<string, PokemonDetail> = {
   '645': detailOf(645, 'landorus-incarnate', 'landorus', 'DEFAULT'),
 }
 
-function stubApi() {
+function stubApi(gate: Promise<void> = Promise.resolve()) {
   const fetchMock = vi.fn<typeof fetch>(async (input) => {
+    await gate
     const url = new URL(String(input))
     if (url.pathname.endsWith('/pokemon/search')) return jsonResponse([])
     const key = url.pathname.replace('/api/v1/pokemon/', '')
@@ -83,6 +84,30 @@ describe('ShowdownImportDialog', () => {
     expect(
       screen.getByText('Chiêu thức, vật phẩm, Ability, EV và tính cách đã được bỏ qua.'),
     ).toBeInTheDocument()
+  })
+
+  it('leaves the team alone when the dialog is cancelled while names are looked up', async () => {
+    let release = () => {}
+    const fetchMock = stubApi(new Promise<void>((resolve) => (release = resolve)))
+    const onImport = vi.fn()
+    const user = userEvent.setup()
+    function Harness() {
+      const [open, setOpen] = useState(true)
+      return <ShowdownImportDialog open={open} onClose={() => setOpen(false)} onImport={onImport} />
+    }
+    renderWithClient(<Harness />)
+
+    await user.click(screen.getByLabelText('Văn bản đội'))
+    await user.paste('Garchomp')
+    await user.click(screen.getByRole('button', { name: 'Nhập đội' }))
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled())
+    await user.click(screen.getByRole('button', { name: 'Hủy' }))
+    await act(async () => {
+      release()
+      await new Promise((resolve) => setTimeout(resolve, 0))
+    })
+
+    expect(onImport).not.toHaveBeenCalled()
   })
 
   it('keeps the current team when no line is recognised', async () => {

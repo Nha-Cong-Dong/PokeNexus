@@ -37,6 +37,21 @@ function wait(ms: number) {
 }
 
 describe('PokemonSearchBox', () => {
+  it('never sends a query longer than the 30 characters the API accepts', async () => {
+    const fetchMock = stubSearch([])
+    const { input } = renderSearchBox()
+
+    await userEvent.click(input)
+    await userEvent.paste('Chompy (Garchomp) @ Choice Scarf')
+    await wait(400)
+
+    expect(input).toHaveValue('Chompy (Garchomp) @ Choice Sca')
+    const queries = fetchMock.mock.calls.map(
+      ([request]) => new URL(String(request)).searchParams.get('q') ?? '',
+    )
+    expect(queries.every((query) => query.length <= 30)).toBe(true)
+  })
+
   it('does not select a suggestion from an older query while typing continues', async () => {
     const gastly: PokemonRef = { id: 92, name: 'gastly', types: ['ghost', 'poison'] }
     const garchomp: PokemonRef = { id: 445, name: 'garchomp', types: ['dragon', 'ground'] }

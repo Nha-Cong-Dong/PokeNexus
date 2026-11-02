@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import com.pokenexus.common.exception.ApiException;
+import com.pokenexus.common.exception.ErrorCode;
 
 class PageRequestFactoryTest {
 
@@ -32,6 +33,16 @@ class PageRequestFactoryTest {
         assertThat(request.getSort()).isEqualTo(Sort.by(Sort.Direction.DESC, "speed").and(Sort.by("id")));
         assertThat(PageRequestFactory.of(0, 1, "name", ALLOWED).getSort())
                 .isEqualTo(Sort.by("name").and(Sort.by("id")));
+    }
+
+    @Test
+    void rejectsPageWhoseOffsetDoesNotFitInAnInt() {
+        assertThatThrownBy(() -> PageRequestFactory.of(100_000_000, 24, null, ALLOWED))
+                .isInstanceOfSatisfying(ApiException.class,
+                        ex -> assertThat(ex.errorCode()).isEqualTo(ErrorCode.INVALID_PARAMETER))
+                .hasMessageContaining("page must be <= 89478485");
+        assertThat(PageRequestFactory.of(89_478_485, 24, null, ALLOWED).getOffset())
+                .isLessThanOrEqualTo(Integer.MAX_VALUE);
     }
 
     @Test

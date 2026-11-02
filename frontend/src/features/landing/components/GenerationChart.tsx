@@ -60,15 +60,15 @@ export function GenerationChart() {
               onRetry={() => void profiles.refetch()}
             />
           ) : (
-            <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-start lg:gap-6">
-              <div className="-mx-1 overflow-x-auto px-1 pt-1 pb-1">
-                <ol className="grid min-w-190 grid-cols-9 items-end gap-3">
+            <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[minmax(0,1fr)_21rem] lg:gap-6">
+              <div className="-mx-1 overflow-x-auto px-1 pt-1 pb-1 lg:flex lg:flex-col">
+                <ol className="grid min-w-190 grid-cols-9 items-end gap-3 lg:flex-1 lg:items-stretch">
                   {GENERATIONS.map((generation, index) => {
                     const count = byGeneration.get(generation.generation)?.speciesCount
                     const height = count === undefined ? 30 : Math.max((count / max) * 100, 4)
                     const isSelected = generation.generation === selected
                     return (
-                      <li key={generation.generation}>
+                      <li key={generation.generation} className="lg:flex">
                         <button
                           type="button"
                           aria-pressed={isSelected}
@@ -79,7 +79,7 @@ export function GenerationChart() {
                           <span className="text-center text-lg font-extrabold tabular-nums">
                             {count === undefined ? (profiles.isPending ? '...' : '-') : count}
                           </span>
-                          <span className="-mx-2.5 flex h-60 items-end border-b-3 border-ink px-2.5">
+                          <span className="-mx-2.5 flex h-60 items-end border-b-3 border-ink px-2.5 lg:h-auto lg:min-h-60 lg:flex-1">
                             <span
                               className={`reveal-grow-y block w-full rounded-t-xl border-2 border-b-0 border-ink transition-[filter,opacity] duration-150 group-hover:brightness-110 ${isSelected ? '' : 'opacity-55 group-hover:opacity-90'} ${count === undefined ? 'bg-surface-muted' : `bar-stripes ${generation.barClassName}`}`}
                               style={{ height: `${height}%`, animationDelay: `${index * 70}ms` }}
@@ -169,7 +169,13 @@ function GenerationProfileCard({ info, profile, pending }: GenerationProfileCard
                   to={`/pokemon/${starter.id}`}
                   className="flex flex-col items-center gap-1 rounded-xl bg-surface px-1 py-2 text-center text-sm font-extrabold text-ink transition-colors duration-150 hover:bg-surface-muted"
                 >
-                  <PokemonSprite id={starter.id} alt="" size={48} />
+                  <PokemonSprite
+                    id={starter.id}
+                    alt=""
+                    variant="artwork"
+                    size={72}
+                    className="size-18 shrink-0 object-contain"
+                  />
                   <span className="max-w-full truncate">{name}</span>
                 </Link>
               </li>
@@ -210,19 +216,25 @@ function GenerationProfileCard({ info, profile, pending }: GenerationProfileCard
           to={`/pokemon/${profile.strongest.id}`}
           className="flex items-center gap-3 rounded-xl bg-surface p-2 text-ink transition-colors duration-150 hover:bg-surface-muted"
         >
-          <PokemonSprite id={profile.strongest.id} alt="" size={48} />
+          <PokemonSprite
+            id={profile.strongest.id}
+            alt=""
+            variant="artwork"
+            size={72}
+            className="size-18 shrink-0 object-contain"
+          />
           <span className="flex min-w-0 flex-col">
             <span className="text-xs font-bold text-ink-muted">Mạnh nhất, trừ huyền thoại</span>
             <span className="truncate font-extrabold">
               {formatPokemonName(profile.strongest.name)}
             </span>
-          </span>
-          <span className="ml-auto text-sm font-extrabold tabular-nums">
-            BST {profile.strongestBaseStatTotal}
+            <span className="text-sm font-extrabold tabular-nums">
+              BST {profile.strongestBaseStatTotal}
+            </span>
           </span>
         </Link>
       ) : (
-        <div aria-hidden="true" className="h-16 animate-pulse rounded-xl bg-surface-muted" />
+        <div aria-hidden="true" className="h-22 animate-pulse rounded-xl bg-surface-muted" />
       )}
 
       <Link to={`/pokedex?gen=${info.generation}`} className={buttonClassName('primary')}>

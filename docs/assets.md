@@ -1,6 +1,7 @@
 # PokeNexus - Kế hoạch quản lý Assets
 
-- Phiên bản: 0.7 (cập nhật 2026-10-30; chiều cao `PageHero` 288/480/544 px ở Phần 5; ảnh khung cảnh có vùng vá do AI vẽ theo [ADR 0008](adr/0008-ai-edited-scene-patches.md))
+- Phiên bản: 0.8 (cập nhật 2026-11-01; hồ sơ thế hệ ở trang Tổng quan dùng artwork thay sprite, Phần 5, mục II)
+- Bản 0.7 (2026-10-30): chiều cao `PageHero` 288/480/544 px ở Phần 5; ảnh khung cảnh có vùng vá do AI vẽ theo [ADR 0008](adr/0008-ai-edited-scene-patches.md).
 - Bản 0.6 (2026-10-28): bộ nhiều ảnh cho mỗi khung cảnh, cỡ 1920 và 960, ngân sách 25 MB theo [ADR 0006](adr/0006-animated-scene-backdrops.md).
 - Chiến lược ảnh Pokémon: **Hybrid**. Sprite nhỏ được tự host; artwork lớn lấy từ đường dẫn công khai, có fallback ([ADR 0005](adr/0005-hybrid-image-assets.md)).
 - Dữ liệu CSV không thuộc phạm vi tài liệu này: xem [data/README.md](../data/README.md).
@@ -112,6 +113,7 @@
 |---|---|---|
 | Lưới Omni-Dex, kết quả tìm kiếm, slot đội, thẻ đề xuất, trang đội chia sẻ | Sprite | 96 px (lưới), 48 px (tìm kiếm) |
 | Trang chi tiết, Bàn Cân | Artwork | 240 px mobile, 320 px desktop |
+| Hồ sơ thế hệ ở trang Tổng quan: 3 Pokémon khởi đầu, Pokémon mạnh nhất | Artwork | 72 px (sprite phóng to bị vỡ hạt ở cỡ này) |
 | `PageHero` của mọi trang | Ảnh khung cảnh qua `SceneBackdrop` (`srcset` 960w, 1920w) | Tràn ngang, cao 288 px mobile, 480 px từ `md`, 544 px từ `lg` ([design-system.md](design-system.md), Phần 5) |
 
 ### III. Chuỗi fallback trong `PokemonSprite`

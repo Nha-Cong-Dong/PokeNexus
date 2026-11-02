@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -100,6 +101,16 @@ class TeamServiceTest {
                 new CreateTeamRequest("Solo", List.of(new TeamMemberRequest(1, 6, null))));
 
         assertThat(response.synergyScore()).isEqualTo(76.0);
+    }
+
+    @Test
+    void reportsDataNotReadyInsteadOfUnknownPokemonWhileThePokedexIsEmpty() {
+        doThrow(new ApiException(ErrorCode.DATA_NOT_READY, "Pokémon data has not been loaded yet"))
+                .when(pokemonQueryService).requireDataLoaded();
+
+        assertError(new CreateTeamRequest("T", List.of(new TeamMemberRequest(1, 99999, null))),
+                ErrorCode.DATA_NOT_READY);
+        verify(teamRepository, never()).save(any());
     }
 
     @Test

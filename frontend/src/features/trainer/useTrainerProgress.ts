@@ -30,6 +30,14 @@ export function useTrainerProgress(): { progress: TrainerProgress; update: Progr
     if (dirty) writeStored(progress)
   }, [dirty, progress])
 
+  useEffect(() => {
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === TRAINER_STORAGE_KEY || event.key === null) setProgress(readStored())
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
+
   const update = useCallback<ProgressUpdate>((change) => {
     setProgress((current) => change(current))
     setDirty(true)

@@ -177,4 +177,16 @@ class SynergyControllerTest {
     private MockMvcTester.MockMvcRequestBuilder post(String uri, String body) {
         return mvc.post().uri(uri).contentType(MediaType.APPLICATION_JSON).content(body);
     }
+
+    @Test
+    void rejectsBodyLargerThanSixteenKilobytesBeforeParsingIt() {
+        String body = "{\"pokemonIds\":[6],\"padding\":\"" + "x".repeat(20_000) + "\"}";
+
+        assertThat(mvc.post().uri("/api/v1/synergy/analyze")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .hasStatus(413)
+                .bodyJson().extractingPath("$.code").isEqualTo("PAYLOAD_TOO_LARGE");
+        verifyNoInteractions(synergyAnalyzer);
+    }
 }

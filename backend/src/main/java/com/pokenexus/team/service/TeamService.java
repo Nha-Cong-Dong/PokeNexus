@@ -72,6 +72,9 @@ public class TeamService {
         Map<Integer, PokemonRef> pokemonById = pokemonQueryService.findRefs(pokemonIds);
         List<Integer> unknown = pokemonIds.stream().filter(id -> !pokemonById.containsKey(id)).toList();
         if (!unknown.isEmpty()) {
+            if (pokemonById.isEmpty()) {
+                pokemonQueryService.requireDataLoaded();
+            }
             throw new ApiException(ErrorCode.UNKNOWN_POKEMON, "Unknown Pokémon id(s): " + unknown);
         }
 
