@@ -1,5 +1,6 @@
 import { useCallback, useSyncExternalStore } from 'react'
 
+export const MD_MEDIA_QUERY = '(min-width: 48rem)'
 export const LG_MEDIA_QUERY = '(min-width: 64rem)'
 
 function mediaQueryList(query: string): MediaQueryList | null {

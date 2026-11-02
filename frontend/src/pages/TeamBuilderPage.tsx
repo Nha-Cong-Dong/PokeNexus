@@ -24,7 +24,7 @@ import { analysisSummary, buildTeamMembers } from '../features/team-builder/team
 import { useTeamDraft } from '../features/team-builder/useTeamDraft'
 import { TeamSpeedList } from '../features/speed/components/TeamSpeedList'
 import { formatPokemonName } from '../lib/formatters'
-import { LG_MEDIA_QUERY, useMediaQuery } from '../lib/useMediaQuery'
+import { LG_MEDIA_QUERY, MD_MEDIA_QUERY, useMediaQuery } from '../lib/useMediaQuery'
 import type { PlayStyle, PokemonRef, Recommendation } from '../types/api'
 
 const SAMPLE_TEAM = [6, 130, 149, 663, 637]
@@ -66,6 +66,7 @@ export function TeamBuilderPage() {
   const [importOpen, setImportOpen] = useState(false)
   const [exportOpen, setExportOpen] = useState(false)
   const isWideLayout = useMediaQuery(LG_MEDIA_QUERY)
+  const isMediumLayout = useMediaQuery(MD_MEDIA_QUERY)
 
   const activeSixthId =
     draft.isFull && draft.sixth !== null && !draft.ids.includes(draft.sixth) ? draft.sixth : null
@@ -170,6 +171,31 @@ export function TeamBuilderPage() {
     </section>
   )
 
+  const saveButton = (
+    <button
+      key="save"
+      type="button"
+      onClick={() => setSaveOpen(true)}
+      disabled={!hasMembers}
+      className={`${buttonClassName('primary')} max-md:h-12.5 max-md:flex-[1.4] max-md:px-3`}
+    >
+      {UPLOAD_ICON}
+      <span className="md:hidden">Lưu và chia sẻ</span>
+      <span className="hidden md:inline">Lưu đội</span>
+    </button>
+  )
+  const resetButton = (
+    <button
+      key="reset"
+      type="button"
+      onClick={draft.clear}
+      disabled={!hasMembers}
+      className={`${buttonClassName('secondary')} max-md:h-12.5 max-md:flex-1 max-md:px-3`}
+    >
+      Đặt lại
+    </button>
+  )
+
   return (
     <>
       <PageHero
@@ -264,24 +290,7 @@ export function TeamBuilderPage() {
               </p>
             </div>
             <div className="flex gap-2.5 md:flex-wrap">
-              <button
-                type="button"
-                onClick={() => setSaveOpen(true)}
-                disabled={!hasMembers}
-                className={`${buttonClassName('primary')} max-md:order-1 max-md:h-12.5 max-md:flex-[1.4] max-md:px-3`}
-              >
-                {UPLOAD_ICON}
-                <span className="md:hidden">Lưu và chia sẻ</span>
-                <span className="hidden md:inline">Lưu đội</span>
-              </button>
-              <button
-                type="button"
-                onClick={draft.clear}
-                disabled={!hasMembers}
-                className={`${buttonClassName('secondary')} max-md:h-12.5 max-md:flex-1 max-md:px-3`}
-              >
-                Đặt lại
-              </button>
+              {isMediumLayout ? [saveButton, resetButton] : [resetButton, saveButton]}
             </div>
           </Panel>
         </div>
