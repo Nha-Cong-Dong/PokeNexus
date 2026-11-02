@@ -1,6 +1,6 @@
 # PokeNexus - Mục lục và bản đồ tài liệu
 
-- Phiên bản: 0.3 (cập nhật 2026-11-02; thêm `pitching/`)
+- Phiên bản: 0.4 (cập nhật 2026-11-02; thêm `deploy.md`. Bản 0.3: thêm `pitching/`)
 - Trả lời nhanh "tài liệu nào nói về gì" và "muốn làm việc X thì đọc file nào, sửa ở đâu". Không chép nội dung chi tiết; chi tiết nằm ở file được trỏ tới.
 - Tiến độ hiện tại: [PLAN.md](../PLAN.md). Cây thư mục và tên class: [folder-structure.md](folder-structure.md).
 
@@ -21,6 +21,7 @@
 | [folder-structure.md](folder-structure.md) | Cây thư mục repo, package và class backend, cấu trúc frontend, quy tắc đặt tên | Thêm package hoặc thư mục cấp 1-2 |
 | [design-system.md](design-system.md) | Design token, Tailwind, component, pattern, bố cục trang, accessibility | Thay đổi giao diện chung |
 | [assets.md](assets.md) | Danh mục assets, sprite, font, ảnh, dung lượng, giấy phép | Thêm loại asset mới |
+| [deploy.md](deploy.md) | Hướng dẫn triển khai production từng bước (Aiven, Render, Cloudflare Pages), kiểm tra, vận hành, khôi phục | Đổi hosting, biến môi trường hoặc cách nhập dữ liệu |
 | [git-workflow.md](git-workflow.md) | Mô hình nhánh, commit, PR, xung đột, tag, hoàn tác | Thay đổi quy trình |
 | [github-setup.md](github-setup.md) | Thiết lập repo, nhãn, milestone, bảo vệ nhánh, Project board | Thay đổi cấu hình GitHub |
 | [adr/](adr) | Các quyết định kiến trúc (ADR) | Có quyết định quan trọng mới |
@@ -68,5 +69,5 @@
 | Sửa CI | `.github/workflows/ci.yml` | `.github/workflows/` |
 | Gắn tag phát hành | [git-workflow.md](git-workflow.md), Phần 6 | `CHANGELOG.md` |
 | Thêm sprite, font, ảnh | [assets.md](assets.md) | `frontend/public/`, `frontend/src/assets/` |
-| Triển khai production | [architecture.md](architecture.md), Phần 11 | `backend/Dockerfile`, cấu hình hosting |
+| Triển khai production | [deploy.md](deploy.md); [architecture.md](architecture.md), Phần 11 | `backend/Dockerfile`, cấu hình hosting |
 | Chuẩn bị pitching, ôn hỏi đáp | [pitching/PokeNexus-LuyenTap.md](pitching/PokeNexus-LuyenTap.md), Phần 1 | `docs/pitching/` |
