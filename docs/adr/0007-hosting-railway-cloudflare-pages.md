@@ -1,6 +1,6 @@
 # ADR 0007 - Hosting production: Railway và Cloudflare Pages
 
-- Trạng thái: Đã chấp nhận
+- Trạng thái: Đã thay thế một phần bởi [ADR 0009](0009-hosting-render-aiven.md) (2026-11-02): backend và MySQL chuyển sang Render và Aiven vì Railway dừng nhận đăng ký mới; Cloudflare Pages cho frontend giữ nguyên
 - Ngày: 2026-10-29
 
 ## Phần 1. Bối cảnh

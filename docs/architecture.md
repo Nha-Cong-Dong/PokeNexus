@@ -1,6 +1,7 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 0.9 (cập nhật 2026-11-02; Phần 6: query key chi tiết thành `['pokemon', 'detail', idOrName]`, chặn tên trùng đường dẫn API; route bọc có `errorElement`, `ScrollRestoration`; Phần 8: `RequestBodyLimitFilter` giới hạn body 16 KB; Phần 11: build Pages chặn `VITE_API_BASE_URL` sai, kiểm chứng thêm header `Forwarded`. Bản 0.8 ngày 2026-10-30: Phần 6: query key `['pokemon', 'speed-tiers']` cho Bảng tốc độ cấp 50; Phần 11: chốt Railway và Cloudflare Pages theo ADR 0007, thiết lập production, nhập dữ liệu bằng `scripts/db-dump.sh`; Phần 2: thêm Lombok vào bảng công nghệ; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
+- Phiên bản: 1.0 (cập nhật 2026-11-02; Phần 11: backend chuyển sang Render, MySQL sang Aiven vì Railway dừng nhận đăng ký mới ([ADR 0009](adr/0009-hosting-render-aiven.md)); thao tác từng bước ở [deploy.md](deploy.md))
+- Bản 0.9 (2026-11-02; Phần 6: query key chi tiết thành `['pokemon', 'detail', idOrName]`, chặn tên trùng đường dẫn API; route bọc có `errorElement`, `ScrollRestoration`; Phần 8: `RequestBodyLimitFilter` giới hạn body 16 KB; Phần 11: build Pages chặn `VITE_API_BASE_URL` sai, kiểm chứng thêm header `Forwarded`. Bản 0.8 ngày 2026-10-30: Phần 6: query key `['pokemon', 'speed-tiers']` cho Bảng tốc độ cấp 50; Phần 11: chốt Railway và Cloudflare Pages theo ADR 0007, thiết lập production, nhập dữ liệu bằng `scripts/db-dump.sh`; Phần 2: thêm Lombok vào bảng công nghệ; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
 
@@ -379,7 +380,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | XSS qua tên đội, biệt danh | React escape mặc định; không dùng `dangerouslySetInnerHTML`; giới hạn độ dài ở backend |
 | Lộ bí mật | Bí mật chỉ ở `.env` hoặc biến môi trường hosting; bật Secret scanning ([github-setup.md](github-setup.md)) |
 
-- Sau reverse proxy của hosting, IP thật nằm ở header `X-Forwarded-For`. Bật `server.forward-headers-strategy=framework` ở profile `prod`; chấp nhận rủi ro header bị giả mạo vì đây chỉ là biện pháp chống spam cơ bản. Trên Railway, edge proxy ghi đè header do client gửi; kiểm chứng sau deploy theo [ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md), Phần 4.
+- Sau reverse proxy của hosting, IP thật nằm ở header `X-Forwarded-For`. Bật `server.forward-headers-strategy=framework` ở profile `prod`; chấp nhận rủi ro header bị giả mạo vì đây chỉ là biện pháp chống spam cơ bản. Chưa biết proxy của Render có xóa header do client gửi hay không; kiểm chứng sau deploy theo [deploy.md](deploy.md), Phần 8, mục III ([ADR 0009](adr/0009-hosting-render-aiven.md), Phần 4).
 
 ---
 
@@ -475,26 +476,29 @@ flowchart LR
 | Ngủ đông | Biết rõ thời gian cold start để làm nóng trước demo |
 
 - Ứng viên tham khảo: Render, Railway, Fly.io (backend); Vercel, Netlify, Cloudflare Pages (frontend); Aiven, Railway (MySQL). Gói miễn phí và giá thay đổi thường xuyên, phải tra cứu lại tại thời điểm chốt và ghi kết quả vào ADR mới.
-- Đã chốt ngày 2026-10-29: Railway (backend, MySQL) và Cloudflare Pages (frontend), lý do và rủi ro ở [ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md).
+- Chốt ngày 2026-10-29: Railway (backend, MySQL) và Cloudflare Pages (frontend) ([ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md)).
+- Đổi ngày 2026-11-02 vì Railway dừng nhận đăng ký mới: Render Free (backend), Aiven Free (MySQL), giữ Cloudflare Pages; ưu tiên miễn phí, không cần thẻ ([ADR 0009](adr/0009-hosting-render-aiven.md)).
 
 ### III. Thiết lập production
 
-#### 1. Railway (backend và MySQL)
+- Bảng dưới là cấu hình đích; thao tác từng bước, cách kiểm tra và xử lý lỗi ở [deploy.md](deploy.md).
+
+#### 1. Aiven (MySQL) và Render (backend)
 
 | Mục | Giá trị |
 |---|---|
-| Project | Một project, vùng Southeast Asia (Singapore); chọn vùng trước khi tạo MySQL vì service có volume bị khóa vùng |
-| Service MySQL | Template MySQL chính thức, tên service `MySQL` |
-| Service backend | Nguồn GitHub `Nha-Cong-Dong/PokeNexus`, nhánh `main`, Root Directory `backend` (Railway build bằng `backend/Dockerfile`) |
-| Healthcheck Path | `/api/v1/health`: Railway chỉ chuyển traffic sang bản deploy mới khi endpoint trả 200 |
-| Domain | Generate Domain, cổng đích 8080 |
+| Aiven | Service MySQL gói Free, tên `pokenexus-db`; vùng do Aiven gán; kết nối TLS; mặc định cho phép mọi IP |
+| Render service | Web Service gói Free, tên `pokenexus-api`, Language Docker, nguồn GitHub `Nha-Cong-Dong/PokeNexus`, nhánh `main`, Root Directory `backend` (build bằng `backend/Dockerfile`) |
+| Render region | Cùng hoặc gần vùng Aiven gán (Singapore, Frankfurt, Virginia, Ohio, Oregon) |
+| Health Check Path | `/api/v1/health`: Render chỉ chuyển traffic sang bản deploy mới khi endpoint trả 2xx |
+| Build Filters | Included Paths `backend/**` |
 
 | Biến của backend | Giá trị |
 |---|---|
 | `SPRING_PROFILES_ACTIVE` | `prod` |
-| `DB_HOST`, `DB_PORT` | `${{MySQL.MYSQLHOST}}`, `${{MySQL.MYSQLPORT}}` |
-| `DB_NAME` | `${{MySQL.MYSQLDATABASE}}` |
-| `DB_USERNAME`, `DB_PASSWORD` | `${{MySQL.MYSQLUSER}}`, `${{MySQL.MYSQLPASSWORD}}` |
+| `BACKEND_PORT` | `10000` (cổng mặc định Render chuyển traffic vào) |
+| `DB_HOST`, `DB_PORT`, `DB_NAME` | Host, Port, Database name ở trang Overview của service Aiven (database thường là `defaultdb`) |
+| `DB_USERNAME`, `DB_PASSWORD` | User, Password ở trang Overview của service Aiven |
 | `CORS_ALLOWED_ORIGINS` | Domain production của Pages, ví dụ `https://pokenexus.pages.dev` |
 
 #### 2. Cloudflare Pages (frontend)
@@ -513,14 +517,13 @@ flowchart LR
 
 - Nhập dữ liệu trước lần deploy backend đầu tiên:
   - Ở máy dev: `bash scripts/db-dump.sh export` (ghi `data/dumps/pokenexus.sql`, không gồm đội đã lưu).
-  - Trên Railway: service MySQL > Settings > Networking, bật Public Networking (TCP Proxy), lấy `MYSQL_PUBLIC_URL`.
-  - `TARGET_DB_URL='<MYSQL_PUBLIC_URL>' bash scripts/db-dump.sh import`: in `pokemon rows: 1351`, `flyway migrations: 3`. Script từ chối nhập nếu DB đích đã có bảng; đặt `FORCE=1` để thay toàn bộ.
-  - Tắt Public Networking sau khi nhập.
+  - `TARGET_DB_URL='mysql://<user>:<password>@<host>:<port>/<database>' bash scripts/db-dump.sh import` với thông tin của Aiven: in `pokemon rows: 1351`, `flyway migrations: 3`. Script từ chối nhập nếu DB đích đã có bảng; đặt `FORCE=1` để thay toàn bộ.
 - Kiểm tra sau deploy:
   - `GET https://<domain backend>/api/v1/health` trả 200 `UP`, `pokemonCount` 1351.
   - Kịch bản demo ([spec.md](spec.md), Phần 4) chạy trên domain Pages, cả trên điện thoại.
-  - 11 request `POST /api/v1/teams` liên tiếp, mỗi request một `X-Forwarded-For` giả khác nhau: request thứ 11 phải trả 429 ([ADR 0007](adr/0007-hosting-railway-cloudflare-pages.md), Phần 4).
-  - Lặp lại với header `Forwarded: for=<IP giả>` (RFC 7239): `ForwardedHeaderFilter` của Spring đọc header này trước `X-Forwarded-For`. Nếu request thứ 11 không bị 429 thì edge Railway không xóa `Forwarded`; khi đó trước ngày demo, đổi `TeamController` sang lấy IP từ header do edge Railway ghi (`X-Real-IP` hoặc giá trị đầu của `X-Forwarded-For`) thay cho `getRemoteAddr()`.
+  - 11 request `POST /api/v1/teams` liên tiếp, mỗi request một `X-Forwarded-For` giả khác nhau: request thứ 11 phải trả 429 ([deploy.md](deploy.md), Phần 8, mục III).
+  - Lặp lại với header `Forwarded: for=<IP giả>` (RFC 7239): `ForwardedHeaderFilter` của Spring đọc header này trước `X-Forwarded-For`. Nếu request thứ 11 không bị 429 thì proxy của Render không xóa header do client gửi; khi đó trước ngày demo, đổi `TeamController` sang lấy IP từ giá trị do proxy Render ghi thay cho `getRemoteAddr()`.
+  - Nên bật lịch gọi `/api/v1/health` mỗi 10 phút để backend Free không ngủ ([deploy.md](deploy.md), Phần 9).
 
 ---
 
