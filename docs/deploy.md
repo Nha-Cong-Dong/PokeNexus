@@ -1,6 +1,6 @@
 # PokeNexus - Hướng dẫn triển khai production
 
-- Phiên bản: 1.1 (cập nhật 2026-11-05; Phần 9 mục II: keep-alive bằng GitHub Actions đã bật; Phần 8 mục III: kiểm chứng giới hạn lưu đội bằng body có ID Pokémon không tồn tại để không ghi DB, thêm vòng `CF-Connecting-IP`, ghi kết quả 04/11)
+- Phiên bản: 1.1 (cập nhật 2026-11-05; Phần 8: script nghiệm thu `scripts/acceptance-check.mjs`; Phần 9 mục II: keep-alive bằng GitHub Actions đã bật; Phần 8 mục III: kiểm chứng giới hạn lưu đội bằng body có ID Pokémon không tồn tại để không ghi DB, thêm vòng `CF-Connecting-IP`, ghi kết quả 04/11)
 - Bản 1.0 (2026-11-02)
 - Nền tảng: backend trên Render (gói Free), MySQL trên Aiven (gói Free), frontend trên Cloudflare Pages. Lý do chọn và rủi ro: [ADR 0009](adr/0009-hosting-render-aiven.md). Thiết kế triển khai: [architecture.md](architecture.md), Phần 11.
 - Tài liệu này là hướng dẫn thao tác từng bước để một người tự làm từ đầu đến khi có link chạy thật. Giao diện các trang web có thể đổi tên nút đôi chút; nếu không thấy đúng tên, tìm mục có ý nghĩa tương đương.
@@ -398,6 +398,17 @@ curl -si -X OPTIONS "$BACKEND_URL/api/v1/synergy/analyze" \
 ---
 
 ## Phần 8. Bước 7: Kiểm tra toàn bộ
+
+- Kiểm tra tự động: một lệnh kiểm phần lớn mục dưới đây (cần Node 22+ và Chrome; mất khoảng 3 phút, thêm khoảng 4 phút với `--rate-limit`):
+
+```bash
+node scripts/acceptance-check.mjs --rate-limit
+node scripts/acceptance-check.mjs --base http://localhost:4173 --api http://localhost:8080/api/v1
+```
+
+- Lệnh đầu chạy trên link thật (mặc định `https://pokenexus.pages.dev` và backend Render); lệnh sau chạy trên bản local (`npm run build` rồi `npm run preview`, `CORS_ALLOWED_ORIGINS` phải có origin của preview). Không dùng `--rate-limit` ở local vì không có edge Cloudflare.
+- Đạt khi dòng cuối là `N/N checks passed` và mã thoát 0. Mỗi dòng `FAIL` ghi rõ mục và giá trị đo được.
+- Vẫn tự làm mục II (điện thoại thật) vì script chỉ giả lập.
 
 ### I. Kịch bản demo trên máy tính
 
