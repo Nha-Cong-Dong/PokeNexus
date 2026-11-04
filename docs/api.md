@@ -1,6 +1,7 @@
 # PokeNexus - Đặc tả REST API
 
-- Phiên bản: 0.8 (cập nhật 2026-11-02; body tối đa 16 KB, mã lỗi `PAYLOAD_TOO_LARGE` 413; `page` có giới hạn trên; `GET /types` trả 503 khi chưa nạp dữ liệu; lưu đội khi DB rỗng trả 503)
+- Phiên bản: 0.9 (cập nhật 2026-11-05; 16 dạng trùng hệ, chỉ số và ảnh với dạng khác của cùng loài (Totem, Zygarde Power Construct, Greninja Battle Bond, Rockruff Own Tempo) bị ẩn khỏi danh sách, tìm kiếm và `forms`)
+- Bản 0.8 (2026-11-02; body tối đa 16 KB, mã lỗi `PAYLOAD_TOO_LARGE` 413; `page` có giới hạn trên; `GET /types` trả 503 khi chưa nạp dữ liệu; lưu đội khi DB rỗng trả 503)
 - Bản 0.7 (2026-10-30): thêm `GET /pokemon/speed-tiers` cho F09, [spec.md](spec.md) 1.5.
 - Tài liệu tương tác (sau khi có backend): Swagger UI tại `http://localhost:8080/swagger-ui.html`. Khi Swagger và tài liệu này lệch nhau, sửa cho khớp trong cùng PR.
 - Thay đổi so với 0.1: thêm schema DTO (Phần 3), danh mục lỗi có `code` (Phần 4), mã 429 và 503; bỏ `spriteUrl` khỏi response ([ADR 0005](adr/0005-hybrid-image-assets.md)); response đề xuất đổi từ mảng sang object.
@@ -109,6 +110,7 @@
 | `form` | Như `GET /pokemon` | Mặc định `DEFAULT` và `REGIONAL` |
 
 - Response 200: mảng `PokemonRef`, có thể rỗng.
+- Dạng ẩn (xem `GET /pokemon/{idOrName}`) không xuất hiện trong kết quả của `GET /pokemon` và `GET /pokemon/search`.
 - Chuẩn hóa `q`: chữ thường, khoảng trắng bên trong đổi thành `-`; `q` chứa ký tự ngoài `[a-z0-9-]` trả mảng rỗng, không báo lỗi. Trong mỗi nhóm (khớp đầu tên, chứa `q`) xếp theo `id` tăng dần.
 
 ### VI. `GET /api/v1/pokemon/compare`
@@ -301,7 +303,7 @@ interface SpeedTier {
 }
 ```
 
-- `defense` có đúng 18 phần tử. `forms` liệt kê mọi dạng cùng loài, kể cả dạng đang xem.
+- `defense` có đúng 18 phần tử. `forms` liệt kê mọi dạng cùng loài, kể cả dạng đang xem, trừ dạng ẩn (`HiddenForms`: 12 dạng Totem, `zygarde-10-power-construct`, `zygarde-50-power-construct`, `greninja-battle-bond`, `rockruff-own-tempo`; cùng hệ, chỉ số và ảnh với dạng khác của loài, chỉ khác Ability hoặc là bản NPC). Gọi thẳng ID hoặc tên của dạng ẩn vẫn trả 200, khi đó `forms` có thêm chính dạng đó.
 - `typeAdvantage`: hệ số cao nhất mà đòn cùng hệ (theo hệ của Pokémon) của mỗi bên gây lên bên kia.
 - `difference` luôn `>= 0` (giá trị tuyệt đối); bên hơn xem ở `winner`. `summary` gồm 3 câu tiếng Việt về hệ, tổng chỉ số, tốc độ, ví dụ "Garchomp nhanh hơn (102 so với 100)."
 - `TypeMatrix.multipliers[i][j]`: hệ tấn công `types[i]` đánh hệ phòng thủ `types[j]`.

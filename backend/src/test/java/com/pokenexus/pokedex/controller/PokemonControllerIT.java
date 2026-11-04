@@ -138,6 +138,30 @@ class PokemonControllerIT {
     }
 
     @Test
+    void hidesDuplicateFormsFromListsButKeepsDirectLookup() {
+        assertThat(mvc.get().uri("/api/v1/pokemon/raticate"))
+                .hasStatusOk()
+                .bodyJson()
+                .extractingPath("$.forms[*].name").asArray()
+                .containsExactly("raticate", "raticate-alola");
+        assertThat(mvc.get().uri("/api/v1/pokemon?form=OTHER&size=100"))
+                .hasStatusOk()
+                .bodyJson()
+                .extractingPath("$.content[*].name").asArray()
+                .doesNotContain("raticate-totem-alola");
+        assertThat(mvc.get().uri("/api/v1/pokemon/search?q=raticate&form=DEFAULT&form=REGIONAL&form=OTHER"))
+                .hasStatusOk()
+                .bodyJson()
+                .extractingPath("$[*].name").asArray()
+                .containsExactly("raticate", "raticate-alola");
+        assertThat(mvc.get().uri("/api/v1/pokemon/raticate-totem-alola"))
+                .hasStatusOk()
+                .bodyJson()
+                .extractingPath("$.forms[*].name").asArray()
+                .containsExactly("raticate", "raticate-alola", "raticate-totem-alola");
+    }
+
+    @Test
     void rejectsInvalidSearchParameters() {
         for (String uri : new String[] {"/api/v1/pokemon/search?q=c", "/api/v1/pokemon/search",
                 "/api/v1/pokemon/search?q=char&limit=11", "/api/v1/pokemon/search?q=" + "a".repeat(31),

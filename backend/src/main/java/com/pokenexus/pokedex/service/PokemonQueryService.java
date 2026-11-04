@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pokenexus.common.domain.FormCategory;
+import com.pokenexus.common.domain.HiddenForms;
 import com.pokenexus.common.exception.ApiException;
 import com.pokenexus.common.exception.ErrorCode;
 import com.pokenexus.common.exception.NotFoundException;
@@ -70,7 +71,9 @@ public class PokemonQueryService {
     @Transactional(readOnly = true)
     public PokemonDetail findDetail(String idOrName) {
         Pokemon pokemon = findPokemon(idOrName);
-        List<Pokemon> forms = pokemonRepository.findBySpeciesIdOrderByIdAsc(pokemon.getSpecies().getId());
+        List<Pokemon> forms = pokemonRepository.findBySpeciesIdOrderByIdAsc(pokemon.getSpecies().getId()).stream()
+                .filter(form -> form.getId().equals(pokemon.getId()) || !HiddenForms.isHidden(form.getId()))
+                .toList();
         return pokemonMapper.toDetail(pokemon, typeChartService.defenseOf(pokemonMapper.typesOf(pokemon)), forms);
     }
 
@@ -101,7 +104,8 @@ public class PokemonQueryService {
             return List.of();
         }
         List<Pokemon> matches = pokemonRepository.searchByName(
-                "%" + normalized + "%", normalized + "%", formCategories, PageRequest.of(0, maxResults));
+                "%" + normalized + "%", normalized + "%", formCategories, HiddenForms.POKEMON_IDS,
+                PageRequest.of(0, maxResults));
         if (matches.isEmpty()) {
             requireDataLoaded();
         }

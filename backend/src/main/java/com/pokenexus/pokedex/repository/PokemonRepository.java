@@ -43,8 +43,9 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Integer>, JpaS
 
     @Query("""
             SELECT p FROM Pokemon p
-            WHERE p.name LIKE :contains AND p.formCategory IN :forms
+            WHERE p.name LIKE :contains AND p.formCategory IN :forms AND p.id NOT IN :excludedIds
             ORDER BY CASE WHEN p.name LIKE :prefix THEN 0 ELSE 1 END, p.id
             """)
-    List<Pokemon> searchByName(String contains, String prefix, Collection<FormCategory> forms, Pageable pageable);
+    List<Pokemon> searchByName(String contains, String prefix, Collection<FormCategory> forms,
+                               Collection<Integer> excludedIds, Pageable pageable);
 }
