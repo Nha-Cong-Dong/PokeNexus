@@ -5,10 +5,17 @@ import { usePokemonSearch } from '../../features/dex/hooks'
 import { errorMessageFor } from '../../lib/errorMessages'
 import { formatPokemonName } from '../../lib/formatters'
 import { ApiError } from '../../lib/http'
-import type { PokemonRef } from '../../types/api'
+import type { FormCategory, PokemonRef } from '../../types/api'
 import { DexNumber } from './DexNumber'
 import { PokemonSprite } from './PokemonSprite'
 import { TypeBadge } from './TypeBadge'
+
+const FORM_TAGS: Partial<Record<FormCategory, string>> = {
+  REGIONAL: 'Vùng miền',
+  MEGA: 'Mega',
+  GMAX: 'Gmax',
+  OTHER: 'Dạng khác',
+}
 
 type PokemonSearchBoxProps = {
   label: string
@@ -163,6 +170,7 @@ export function PokemonSearchBox({
         >
           {options.map((pokemon, index) => {
             const displayName = formatPokemonName(pokemon.name)
+            const formTag = FORM_TAGS[pokemon.formCategory]
             return (
               <li
                 key={pokemon.id}
@@ -177,7 +185,17 @@ export function PokemonSearchBox({
                 <PokemonSprite id={pokemon.id} alt="" size={40} className="size-10 flex-none" />
                 <span className="flex min-w-0 flex-1 flex-col leading-5">
                   <span className="truncate font-extrabold">{displayName}</span>
-                  <DexNumber id={pokemon.id} className="text-xs text-ink-muted" />
+                  <span className="flex items-center gap-1.5">
+                    <DexNumber id={pokemon.id} className="text-xs text-ink-muted" />
+                    {formTag && (
+                      <span
+                        data-testid="search-form-tag"
+                        className="rounded-full border border-ink px-1.5 text-[0.6875rem] leading-4 font-extrabold text-ink"
+                      >
+                        {formTag}
+                      </span>
+                    )}
+                  </span>
                 </span>
                 <span className="flex flex-none flex-wrap justify-end gap-1">
                   {pokemon.types.map((type) => (

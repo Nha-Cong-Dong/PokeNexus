@@ -1,6 +1,7 @@
 # PokeNexus - Đặc tả REST API
 
-- Phiên bản: 0.9 (cập nhật 2026-11-05; 16 dạng trùng hệ, chỉ số và ảnh với dạng khác của cùng loài (Totem, Zygarde Power Construct, Greninja Battle Bond, Rockruff Own Tempo) bị ẩn khỏi danh sách, tìm kiếm và `forms`)
+- Phiên bản: 0.10 (cập nhật 2026-11-05; kết quả `GET /pokemon/search` có thêm `formCategory` (`PokemonSuggestion`); frontend luôn gửi đủ 5 giá trị `form` để ô tìm kiếm ra cả Mega, Gmax, dạng khác)
+- Bản 0.9 (2026-11-05): 16 dạng trùng hệ, chỉ số và ảnh với dạng khác của cùng loài (Totem, Zygarde Power Construct, Greninja Battle Bond, Rockruff Own Tempo) bị ẩn khỏi danh sách, tìm kiếm và `forms`)
 - Bản 0.8 (2026-11-02; body tối đa 16 KB, mã lỗi `PAYLOAD_TOO_LARGE` 413; `page` có giới hạn trên; `GET /types` trả 503 khi chưa nạp dữ liệu; lưu đội khi DB rỗng trả 503)
 - Bản 0.7 (2026-10-30): thêm `GET /pokemon/speed-tiers` cho F09, [spec.md](spec.md) 1.5.
 - Tài liệu tương tác (sau khi có backend): Swagger UI tại `http://localhost:8080/swagger-ui.html`. Khi Swagger và tài liệu này lệch nhau, sửa cho khớp trong cùng PR.
@@ -109,7 +110,8 @@
 | `limit` | 1-10, mặc định 10 | Số kết quả tối đa |
 | `form` | Như `GET /pokemon` | Mặc định `DEFAULT` và `REGIONAL` |
 
-- Response 200: mảng `PokemonRef`, có thể rỗng.
+- Response 200: mảng `PokemonSuggestion` (`PokemonRef` cộng `formCategory`), có thể rỗng.
+- Ô tìm kiếm của frontend (`PokemonSearchBox` ở Pokédex, So sánh, Xây đội) gửi đủ `form=DEFAULT&form=REGIONAL&form=MEGA&form=GMAX&form=OTHER` và hiện nhãn Vùng miền, Mega, Gmax, Dạng khác cạnh số Pokédex của gợi ý không phải dạng mặc định.
 - Dạng ẩn (xem `GET /pokemon/{idOrName}`) không xuất hiện trong kết quả của `GET /pokemon` và `GET /pokemon/search`.
 - Chuẩn hóa `q`: chữ thường, khoảng trắng bên trong đổi thành `-`; `q` chứa ký tự ngoài `[a-z0-9-]` trả mảng rỗng, không báo lỗi. Trong mỗi nhóm (khớp đầu tên, chứa `q`) xếp theo `id` tăng dần.
 
@@ -226,6 +228,10 @@ interface PokemonRef {
 ### II. Bách khoa
 
 ```typescript
+interface PokemonSuggestion extends PokemonRef {
+  formCategory: FormCategory;
+}
+
 interface PokemonSummary extends PokemonRef {
   generation: number;
   formCategory: FormCategory;
