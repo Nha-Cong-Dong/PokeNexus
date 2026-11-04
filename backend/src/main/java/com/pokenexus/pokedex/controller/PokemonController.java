@@ -19,7 +19,7 @@ import com.pokenexus.pokedex.dto.CompareResponse;
 import com.pokenexus.pokedex.dto.EvolutionResponse;
 import com.pokenexus.pokedex.dto.PokemonDetail;
 import com.pokenexus.pokedex.dto.PokemonFilter;
-import com.pokenexus.pokedex.dto.PokemonRef;
+import com.pokenexus.pokedex.dto.PokemonSuggestion;
 import com.pokenexus.pokedex.dto.PokemonSummary;
 import com.pokenexus.pokedex.dto.GenerationProfile;
 import com.pokenexus.pokedex.dto.SpeedTier;
@@ -75,7 +75,7 @@ public class PokemonController {
 
     @GetMapping("/search")
     @Operation(summary = "Name suggestions: prefix matches first, then names containing the query")
-    public List<PokemonRef> search(
+    public List<PokemonSuggestion> search(
             @Parameter(description = "2-30 characters after trimming, case-insensitive")
             @RequestParam String q,
             @Parameter(description = "1-10, defaults to 10")

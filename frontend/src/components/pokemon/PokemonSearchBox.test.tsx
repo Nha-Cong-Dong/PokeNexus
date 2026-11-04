@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { jsonResponse } from '../../test/renderRoute'
-import type { PokemonRef } from '../../types/api'
+import type { PokemonRef, PokemonSuggestion } from '../../types/api'
 import { PokemonSearchBox } from './PokemonSearchBox'
 
 const CHARMANDER: PokemonRef = { id: 4, name: 'charmander', types: ['fire'] }
@@ -15,7 +15,7 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-function stubSearch(results: PokemonRef[]) {
+function stubSearch(results: readonly PokemonRef[]) {
   const fetchMock = vi.fn<typeof fetch>(() => Promise.resolve(jsonResponse(results)))
   vi.stubGlobal('fetch', fetchMock)
   return fetchMock
@@ -102,6 +102,37 @@ describe('PokemonSearchBox', () => {
     const url = new URL(String(fetchMock.mock.calls.at(-1)?.[0]))
     expect(url.pathname).toBe('/api/v1/pokemon/search')
     expect(url.searchParams.get('q')).toBe('char')
+  })
+
+  it('asks for every form and tags Mega, Gmax and other forms beside the number', async () => {
+    const results: PokemonSuggestion[] = [
+      { id: 6, name: 'charizard', types: ['fire', 'flying'], formCategory: 'DEFAULT' },
+      { id: 10034, name: 'charizard-mega-x', types: ['fire', 'dragon'], formCategory: 'MEGA' },
+      { id: 10196, name: 'charizard-gmax', types: ['fire', 'flying'], formCategory: 'GMAX' },
+      { id: 10091, name: 'rattata-alola', types: ['dark', 'normal'], formCategory: 'REGIONAL' },
+    ]
+    const fetchMock = stubSearch(results)
+    const { onSelect, input } = renderSearchBox()
+
+    await userEvent.type(input, 'chariz')
+
+    const options = await screen.findAllByRole('option')
+    expect(options).toHaveLength(4)
+    expect(options[0]?.querySelector('[data-testid="search-form-tag"]')).toBeNull()
+    expect(options[1]).toHaveTextContent('Mega')
+    expect(options[2]).toHaveTextContent('Gmax')
+    expect(options[3]).toHaveTextContent('Vùng miền')
+    const url = new URL(String(fetchMock.mock.calls.at(-1)?.[0]))
+    expect(url.searchParams.getAll('form')).toEqual([
+      'DEFAULT',
+      'REGIONAL',
+      'MEGA',
+      'GMAX',
+      'OTHER',
+    ])
+
+    await userEvent.click(options[1] as HTMLElement)
+    expect(onSelect).toHaveBeenCalledWith(results[1])
   })
 
   it('wraps around with ArrowUp, closes with Escape and selects with a click', async () => {

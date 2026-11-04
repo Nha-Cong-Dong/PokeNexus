@@ -10,6 +10,7 @@ import com.pokenexus.common.domain.PokemonType;
 import com.pokenexus.pokedex.dto.PokemonCatalogEntry;
 import com.pokenexus.pokedex.dto.PokemonDetail;
 import com.pokenexus.pokedex.dto.PokemonRef;
+import com.pokenexus.pokedex.dto.PokemonSuggestion;
 import com.pokenexus.pokedex.dto.PokemonSummary;
 import com.pokenexus.pokedex.dto.Stats;
 import com.pokenexus.pokedex.entity.Pokemon;
@@ -32,6 +33,11 @@ public class PokemonMapper {
 
     public PokemonRef toRef(Pokemon pokemon) {
         return new PokemonRef(pokemon.getId(), pokemon.getName(), typeNames(pokemon));
+    }
+
+    public PokemonSuggestion toSuggestion(Pokemon pokemon) {
+        return new PokemonSuggestion(pokemon.getId(), pokemon.getName(), typeNames(pokemon),
+                pokemon.getFormCategory());
     }
 
     public PokemonDetail toDetail(Pokemon pokemon, List<DefenseEntry> defense, List<Pokemon> forms) {

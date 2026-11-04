@@ -1,5 +1,5 @@
 import { getJson } from '../../lib/http'
-import type { PageResponse, PokemonRef, PokemonSummary } from '../../types/api'
+import type { FormCategory, PageResponse, PokemonSuggestion, PokemonSummary } from '../../types/api'
 import type { DexFilter } from './useDexSearchParams'
 
 export const DEX_PAGE_SIZE = 24
@@ -29,6 +29,12 @@ export const SEARCH_MIN_LENGTH = 2
 export const SEARCH_MAX_LENGTH = 30
 export const SEARCH_LIMIT = 8
 
-export function searchPokemon(query: string, signal?: AbortSignal): Promise<PokemonRef[]> {
-  return getJson<PokemonRef[]>('/pokemon/search', { q: query.trim(), limit: SEARCH_LIMIT }, signal)
+export const SEARCH_FORMS: FormCategory[] = ['DEFAULT', 'REGIONAL', 'MEGA', 'GMAX', 'OTHER']
+
+export function searchPokemon(query: string, signal?: AbortSignal): Promise<PokemonSuggestion[]> {
+  return getJson<PokemonSuggestion[]>(
+    '/pokemon/search',
+    { q: query.trim(), limit: SEARCH_LIMIT, form: SEARCH_FORMS },
+    signal,
+  )
 }

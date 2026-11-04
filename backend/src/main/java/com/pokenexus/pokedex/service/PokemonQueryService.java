@@ -26,6 +26,7 @@ import com.pokenexus.pokedex.dto.PokemonCatalogEntry;
 import com.pokenexus.pokedex.dto.PokemonDetail;
 import com.pokenexus.pokedex.dto.PokemonFilter;
 import com.pokenexus.pokedex.dto.PokemonRef;
+import com.pokenexus.pokedex.dto.PokemonSuggestion;
 import com.pokenexus.pokedex.dto.PokemonSummary;
 import com.pokenexus.pokedex.entity.Pokemon;
 import com.pokenexus.pokedex.mapper.PokemonMapper;
@@ -88,7 +89,7 @@ public class PokemonQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<PokemonRef> searchByName(String query, Integer limit, List<String> forms) {
+    public List<PokemonSuggestion> searchByName(String query, Integer limit, List<String> forms) {
         String trimmed = query == null ? "" : query.strip();
         if (trimmed.length() < MIN_QUERY_LENGTH || trimmed.length() > MAX_QUERY_LENGTH) {
             throw invalid("q must be between " + MIN_QUERY_LENGTH + " and " + MAX_QUERY_LENGTH
@@ -109,7 +110,7 @@ public class PokemonQueryService {
         if (matches.isEmpty()) {
             requireDataLoaded();
         }
-        return matches.stream().map(pokemonMapper::toRef).toList();
+        return matches.stream().map(pokemonMapper::toSuggestion).toList();
     }
 
     @Transactional(readOnly = true)

@@ -102,8 +102,8 @@ class PokemonControllerIT {
                 .bodyJson()
                 .isStrictlyEqualTo("""
                         [
-                          { "id": 4, "name": "charmander", "types": ["fire"] },
-                          { "id": 5, "name": "charmeleon", "types": ["fire"] }
+                          { "id": 4, "name": "charmander", "types": ["fire"], "formCategory": "DEFAULT" },
+                          { "id": 5, "name": "charmeleon", "types": ["fire"], "formCategory": "DEFAULT" }
                         ]
                         """);
     }
@@ -131,6 +131,11 @@ class PokemonControllerIT {
                 .bodyJson()
                 .extractingPath("$[*].name").asArray()
                 .containsExactly("charizard-mega-x", "charizard-mega-y", "charizard-gmax");
+        assertThat(mvc.get().uri("/api/v1/pokemon/search?q=charizard&form=DEFAULT&form=REGIONAL&form=MEGA&form=GMAX&form=OTHER"))
+                .hasStatusOk()
+                .bodyJson()
+                .extractingPath("$[*].formCategory").asArray()
+                .containsExactly("DEFAULT", "MEGA", "MEGA", "GMAX");
         assertThat(mvc.get().uri("/api/v1/pokemon/search?q=zzz"))
                 .hasStatusOk()
                 .bodyJson()

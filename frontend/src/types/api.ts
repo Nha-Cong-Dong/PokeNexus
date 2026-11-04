@@ -34,6 +34,10 @@ export interface PokemonRef {
   types: TypeName[]
 }
 
+export interface PokemonSuggestion extends PokemonRef {
+  formCategory: FormCategory
+}
+
 export interface PokemonSummary extends PokemonRef {
   generation: number
   formCategory: FormCategory
