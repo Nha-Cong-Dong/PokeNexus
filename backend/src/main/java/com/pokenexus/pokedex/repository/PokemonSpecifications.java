@@ -6,6 +6,7 @@ import java.util.List;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
+import com.pokenexus.common.domain.HiddenForms;
 import com.pokenexus.common.domain.PokemonType;
 import com.pokenexus.pokedex.dto.PokemonFilter;
 import com.pokenexus.pokedex.entity.Pokemon;
@@ -36,6 +37,7 @@ public final class PokemonSpecifications {
                 predicates.add(cb.greaterThanOrEqualTo(root.get("speed"), filter.minSpeed()));
             }
             predicates.add(root.get("formCategory").in(filter.forms()));
+            predicates.add(cb.not(root.get("id").in(HiddenForms.POKEMON_IDS)));
             return cb.and(predicates.toArray(Predicate[]::new));
         };
     }

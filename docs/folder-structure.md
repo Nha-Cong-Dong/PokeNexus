@@ -92,7 +92,7 @@ backend/
 |---|---|---|---|
 | `common` | `config` | `AppProperties`, `CorsConfig`, `OpenApiConfig` | T202 |
 | | `exception` | `GlobalExceptionHandler`, `ErrorCode`, `ApiException`, `NotFoundException`, `RateLimitedException` (thêm header `Retry-After`) | T202, T307 |
-| | `domain` | `PokemonType` (enum 18 hệ), `StatType`, `FormCategory`, `PokemonTypeConverter` (JPA, ID hệ <-> `PokemonType`) | T202, T204 |
+| | `domain` | `PokemonType` (enum 18 hệ), `StatType`, `FormCategory`, `PokemonTypeConverter` (JPA, ID hệ <-> `PokemonType`), `HiddenForms` (16 ID dạng trùng bị ẩn khỏi danh sách) | T202, T204, #81 |
 | | `web` | `HealthController`, `HealthService`, `HealthResponse`, `PageResponse`, `PageRequestFactory` (kiểm tra `page`, `size`, `sort` theo whitelist), `RequestBodyLimitFilter` (body tối đa 16 KB), `StaticDataCache` (interface của các cache nạp lúc khởi động) | T202, T206, T305 |
 | `ingestion` | | `IngestionRunner`, `CsvReader`, `FormCategoryResolver`; cấu hình đọc từ `AppProperties.Ingestion` | T205 |
 | | `loader` | `TypeLoader`, `GenerationLoader`, `SpeciesLoader`, `PokemonLoader`, `EvolutionLoader` | T205 |
