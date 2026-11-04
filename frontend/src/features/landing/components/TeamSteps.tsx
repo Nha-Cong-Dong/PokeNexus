@@ -12,6 +12,7 @@ import { TypeGlyph } from '../../../components/pokemon/TypeGlyph'
 import { buttonClassName } from '../../../components/ui/buttonStyles'
 import { formatMultiplier } from '../../../lib/formatters'
 import { typeClassName } from '../../../lib/pokemonTypes'
+import { MD_MEDIA_QUERY, useMediaQuery } from '../../../lib/useMediaQuery'
 import type { TypeName } from '../../../types/api'
 import { Aura, Blob } from './SectionDecor'
 import { SectionTitle } from './SectionTitle'
@@ -113,10 +114,11 @@ const STEPS = [
 ]
 
 export function TeamSteps() {
+  const isStrip = !useMediaQuery(MD_MEDIA_QUERY)
   return (
     <section
       aria-labelledby="steps-title"
-      className="relative overflow-hidden bg-linear-to-b from-band-cream to-band-apricot px-4 pt-8 pb-14 md:px-6 md:pt-[60px] md:pb-[110px]"
+      className="relative overflow-hidden bg-linear-to-b from-band-cream to-band-apricot px-4 pt-6 pb-10 md:px-6 md:pt-[60px] md:pb-[110px]"
     >
       <Aura>
         <span className="dot-field absolute inset-0" />
@@ -133,7 +135,7 @@ export function TeamSteps() {
             Xây đội ngay
           </Link>
         </div>
-        <div className="relative mt-6 md:mt-10">
+        <div className="relative mt-5 md:mt-10">
           <Reveal
             variant="zoom"
             className="pointer-events-none absolute inset-x-0 top-10 hidden h-50 md:block"
@@ -156,33 +158,37 @@ export function TeamSteps() {
               />
             </svg>
           </Reveal>
-          <ol className="relative grid gap-[22px] pl-[58px] before:absolute before:top-5 before:bottom-[30px] before:left-6 before:w-1 before:rounded-sm before:bg-primary md:grid-cols-3 md:gap-7 md:pl-0 md:before:hidden">
+          <ol
+            aria-label="Các bước xây đội"
+            tabIndex={isStrip ? 0 : undefined}
+            className="relative -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pt-1 pb-3 [scrollbar-color:var(--color-border-strong)_transparent] [scrollbar-width:thin] focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-focus-ring md:mx-0 md:grid md:snap-none md:grid-cols-3 md:gap-7 md:overflow-visible md:p-0"
+          >
             {STEPS.map((step, index) => (
-              <li key={step.title} className="flex min-w-0">
+              <li
+                key={step.title}
+                className="flex w-[84%] max-w-80 min-w-0 flex-none snap-start md:w-auto md:max-w-none"
+              >
                 <Reveal
                   variant="up"
                   delay={index * 140}
-                  className="relative flex min-w-0 flex-1 flex-col gap-3.5 rounded-[18px] border-3 border-ink bg-surface p-4 shadow-[0_4px_0_rgb(22_33_62/0.2)] transition-[translate,rotate] duration-200 ease-out hover:-translate-y-1 hover:-rotate-[0.5deg] md:rounded-3xl md:p-[22px] md:shadow-block-lg"
+                  className="relative flex min-w-0 flex-1 flex-col gap-3 rounded-[18px] border-3 border-ink bg-surface p-4 shadow-[0_4px_0_rgb(22_33_62/0.2)] transition-[translate,rotate] duration-200 ease-out hover:-translate-y-1 hover:-rotate-[0.5deg] md:gap-3.5 md:rounded-3xl md:p-[22px] md:shadow-block-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex size-[46px] flex-none items-center justify-center rounded-full border-3 border-ink bg-dex-yellow text-[22px] font-extrabold tabular-nums max-md:absolute max-md:top-0 max-md:-left-[58px] md:size-12 md:text-2xl">
+                    <span className="flex size-10 flex-none items-center justify-center rounded-full border-3 border-ink bg-dex-yellow text-xl font-extrabold tabular-nums md:size-12 md:text-2xl">
                       {index + 1}
                     </span>
-                    <h3 className="text-[21px]/[26px] font-extrabold md:text-2xl/7">
-                      {step.title}
-                    </h3>
+                    <h3 className="text-xl/6 font-extrabold md:text-2xl/7">{step.title}</h3>
                   </div>
-                  <p className="text-ink-muted md:text-[17px]/[26px]">{step.description}</p>
+                  <p className="text-[15px]/[22px] text-ink-muted md:text-[17px]/[26px]">
+                    {step.description}
+                  </p>
                   <div className="mt-auto">{step.illustration}</div>
                 </Reveal>
               </li>
             ))}
           </ol>
         </div>
-        <Link
-          to="/team-builder"
-          className={`${buttonClassName('primary')} mt-[22px] w-full md:hidden`}
-        >
+        <Link to="/team-builder" className={`${buttonClassName('primary')} mt-4 w-full md:hidden`}>
           Xây đội ngay
         </Link>
       </div>

@@ -81,7 +81,7 @@ export function TypeWheel() {
   return (
     <section
       aria-labelledby="wheel-title"
-      className={`relative overflow-hidden bg-scrim bg-radial-[at_72%_50%] from-(--type-base)/32 to-transparent to-55% px-4 pt-16 pb-24 text-white md:px-6 md:pt-[70px] md:pb-[170px] ${typeScopeClassName(selected)}`}
+      className={`relative overflow-hidden bg-scrim bg-radial-[at_72%_50%] from-(--type-base)/32 to-transparent to-55% px-4 pt-10 pb-14 text-white md:px-6 md:pt-[70px] md:pb-[170px] ${typeScopeClassName(selected)}`}
     >
       <Aura>
         <Blob
@@ -117,18 +117,18 @@ export function TypeWheel() {
           <circle cx="100" cy="100" r="70" />
         </svg>
       </div>
-      <div className="relative mx-auto flex max-w-7xl flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex max-w-130 flex-col gap-5">
+      <div className="relative mx-auto flex max-w-7xl flex-col gap-6 md:gap-10 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex max-w-130 flex-col gap-4 md:gap-5">
           <SectionTitle id="wheel-title" tone="dark">
             Vòng tương khắc
           </SectionTitle>
-          <p className="text-lg/7 text-white/85">
+          <p className="text-base/6 text-white/85 md:text-lg/7">
             Chọn một hệ trên vòng. Đường cam nối tới những hệ nó gây x2; các hệ chặn được đòn hiện
             nhãn xanh.
           </p>
           <div
             aria-live="polite"
-            className="rounded-[20px] border-3 border-ink bg-surface px-[22px] py-5 text-ink shadow-[0_6px_0_rgb(0_0_0/0.3)]"
+            className="rounded-[20px] border-3 border-ink bg-surface px-4 py-4 text-ink shadow-[0_6px_0_rgb(0_0_0/0.3)] md:px-[22px] md:py-5"
           >
             <p className="flex items-center gap-2.5 text-lg font-extrabold">
               <TypeBadge type={selected} size="md" />
@@ -139,7 +139,7 @@ export function TypeWheel() {
             ) : isPending || !profile ? (
               <p className="mt-4 text-ink-muted">Đang tải bảng tương khắc...</p>
             ) : (
-              <dl className="mt-4 flex flex-col gap-3">
+              <dl className="mt-3 flex flex-col gap-2.5 md:mt-4 md:gap-3">
                 <EffectRow multiplier={2} types={profile.superEffective} />
                 <EffectRow multiplier={0.5} types={profile.notVeryEffective} />
                 <EffectRow multiplier={0} types={profile.noEffect} />
@@ -147,14 +147,14 @@ export function TypeWheel() {
             )}
             <Link
               to="/types"
-              className="mt-4 inline-flex min-h-10 items-center font-extrabold text-primary underline"
+              className="mt-2 inline-flex min-h-10 items-center font-extrabold text-primary underline md:mt-4"
             >
               Mở bảng tương khắc đầy đủ
             </Link>
           </div>
         </div>
 
-        <div className="mx-auto w-full max-w-140 lg:mx-0">
+        <div className="mx-auto w-full max-w-[18.75rem] md:max-w-140 lg:mx-0">
           <div role="group" aria-label="Chọn hệ tấn công" className="relative aspect-square w-full">
             <svg
               aria-hidden="true"
@@ -224,9 +224,9 @@ export function TypeWheel() {
                   style={{ left: `${position.left}%`, top: `${position.top}%` }}
                 >
                   <span
-                    className={`relative flex size-11 items-center justify-center rounded-full border-3 transition-[opacity,box-shadow] duration-300 group-hover:opacity-100 group-hover:shadow-[0_0_0_4px_rgb(255_255_255/0.35)] group-focus-visible:opacity-100 md:size-13 ${typeClassName(type)} ${ring} ${dimmed ? 'opacity-40' : ''}`}
+                    className={`relative flex size-10 items-center justify-center rounded-full border-3 transition-[opacity,box-shadow] duration-300 group-hover:opacity-100 group-hover:shadow-[0_0_0_4px_rgb(255_255_255/0.35)] group-focus-visible:opacity-100 md:size-13 ${typeClassName(type)} ${ring} ${dimmed ? 'opacity-40' : ''}`}
                   >
-                    <TypeGlyph type={type} className="size-5.5 md:size-6.5" strokeWidth={1.9} />
+                    <TypeGlyph type={type} className="size-5 md:size-6.5" strokeWidth={1.9} />
                     {badge !== undefined && (
                       <span
                         aria-hidden="true"

@@ -2,6 +2,7 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant short (@media (max-height: 50rem));
+@custom-variant shorter (@media (max-height: 42rem));
 
 @font-face {
   font-family: 'Dela Gothic One Fallback';

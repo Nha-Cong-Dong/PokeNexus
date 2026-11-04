@@ -31,7 +31,7 @@ export function GenerationChart() {
   return (
     <section
       aria-labelledby="gens-title"
-      className="relative overflow-hidden bg-linear-to-b from-band-apricot to-band-mint px-4 pt-8 pb-14 md:px-6 md:pt-[70px] md:pb-[110px]"
+      className="relative overflow-hidden bg-linear-to-b from-band-apricot to-band-mint px-4 pt-6 pb-10 md:px-6 md:pt-[70px] md:pb-[110px]"
     >
       <Aura>
         <Blob className="top-[20%] -left-[50%] size-[440px] from-type-grass/30 md:top-[10%] md:-left-[10%] md:size-[680px]" />
@@ -47,20 +47,20 @@ export function GenerationChart() {
       <div className="relative mx-auto max-w-7xl">
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
           <SectionTitle id="gens-title">{`${formatNumber(total)} loài qua 9 thế hệ`}</SectionTitle>
-          <p className="max-w-[50ch] text-lg/7 text-ink-muted">
+          <p className="max-w-[50ch] text-base/6 text-ink-muted md:text-lg/7">
             Mỗi cột là số loài mới của một thế hệ. Bấm một cột để xem hồ sơ thế hệ: Pokémon khởi
             đầu, hệ phổ biến, sức mạnh trung bình.
           </p>
         </div>
 
-        <Reveal className="mt-7 rounded-3xl border-3 border-ink bg-surface px-4 pt-5 pb-4 shadow-block-lg md:px-6 md:pt-7 md:pb-[22px]">
+        <Reveal className="mt-5 rounded-3xl border-3 border-ink bg-surface px-4 pt-4 pb-4 shadow-block-lg md:mt-7 md:px-6 md:pt-7 md:pb-[22px]">
           {profiles.isError ? (
             <ErrorState
               message={errorMessageFor(errorCode)}
               onRetry={() => void profiles.refetch()}
             />
           ) : (
-            <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[minmax(0,1fr)_21rem] lg:gap-6">
+            <div className="flex flex-col gap-4 md:gap-5 lg:grid lg:grid-cols-[minmax(0,1fr)_21rem] lg:gap-6">
               <div className="-mx-1 overflow-x-auto px-1 pt-1 pb-1 lg:flex lg:flex-col">
                 <ol className="grid min-w-190 grid-cols-9 items-end gap-3 lg:flex-1 lg:items-stretch">
                   {GENERATIONS.map((generation, index) => {
@@ -74,12 +74,12 @@ export function GenerationChart() {
                           aria-pressed={isSelected}
                           aria-label={`Thế hệ ${generation.generation}, ${generation.region}: ${count === undefined ? 'đang tải' : `${count} loài`}. Xem hồ sơ thế hệ`}
                           onClick={() => setSelected(generation.generation)}
-                          className="group flex w-full cursor-pointer flex-col items-stretch gap-2 rounded-xl p-1 text-ink focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
+                          className="group flex w-full cursor-pointer flex-col items-stretch gap-1.5 rounded-xl p-1 text-ink focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus-ring md:gap-2"
                         >
-                          <span className="text-center text-lg font-extrabold tabular-nums">
+                          <span className="text-center text-base font-extrabold tabular-nums md:text-lg">
                             {count === undefined ? (profiles.isPending ? '...' : '-') : count}
                           </span>
-                          <span className="-mx-2.5 flex h-60 items-end border-b-3 border-ink px-2.5 lg:h-auto lg:min-h-60 lg:flex-1">
+                          <span className="-mx-2.5 flex h-24 items-end border-b-3 border-ink px-2.5 md:h-60 lg:h-auto lg:min-h-60 lg:flex-1">
                             <span
                               className={`reveal-grow-y block w-full rounded-t-xl border-2 border-b-0 border-ink transition-[filter,opacity] duration-150 group-hover:brightness-110 ${isSelected ? '' : 'opacity-55 group-hover:opacity-90'} ${count === undefined ? 'bg-surface-muted' : `bar-stripes ${generation.barClassName}`}`}
                               style={{ height: `${height}%`, animationDelay: `${index * 70}ms` }}
@@ -93,7 +93,7 @@ export function GenerationChart() {
                           >
                             {generation.region}
                           </span>
-                          <span className="text-center text-xs font-bold text-ink-muted">
+                          <span className="text-center text-xs font-bold text-ink-muted max-md:hidden">
                             Thế hệ {generation.generation}
                           </span>
                         </button>
@@ -127,7 +127,7 @@ function GenerationProfileCard({ info, profile, pending }: GenerationProfileCard
     <article
       aria-labelledby={PROFILE_TITLE_ID}
       aria-busy={pending}
-      className="flex min-w-0 flex-col gap-4 rounded-2xl border-2 border-ink bg-bg p-4"
+      className="flex min-w-0 flex-col gap-2.5 rounded-2xl border-2 border-ink bg-bg p-3.5 md:gap-4 md:p-4"
     >
       <div className="flex items-baseline justify-between gap-3">
         <h3 id={PROFILE_TITLE_ID} className="text-xl font-extrabold">
@@ -167,14 +167,14 @@ function GenerationProfileCard({ info, profile, pending }: GenerationProfileCard
               <li key={starter.id}>
                 <Link
                   to={`/pokemon/${starter.id}`}
-                  className="flex flex-col items-center gap-1 rounded-xl bg-surface px-1 py-2 text-center text-sm font-extrabold text-ink transition-colors duration-150 hover:bg-surface-muted"
+                  className="flex flex-col items-center gap-1 rounded-xl bg-surface px-1 py-1.5 text-center text-sm font-extrabold text-ink transition-colors duration-150 hover:bg-surface-muted md:py-2"
                 >
                   <PokemonSprite
                     id={starter.id}
                     alt=""
                     variant="artwork"
                     size={72}
-                    className="size-18 shrink-0 object-contain"
+                    className="size-12 shrink-0 object-contain md:size-18"
                   />
                   <span className="max-w-full truncate">{name}</span>
                 </Link>
@@ -221,7 +221,7 @@ function GenerationProfileCard({ info, profile, pending }: GenerationProfileCard
             alt=""
             variant="artwork"
             size={72}
-            className="size-18 shrink-0 object-contain"
+            className="size-12 shrink-0 object-contain md:size-18"
           />
           <span className="flex min-w-0 flex-col">
             <span className="text-xs font-bold text-ink-muted">Mạnh nhất, trừ huyền thoại</span>

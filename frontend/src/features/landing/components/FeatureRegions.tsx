@@ -51,7 +51,7 @@ const ISLANDS: readonly FeatureIsland[] = [
       'bg-isle-sea rotate-2 [--glow:color-mix(in_oklab,var(--color-type-water-deep)_45%,transparent)]',
     kickerClassName: 'text-primary',
     dotClassName: 'bg-primary',
-    itemClassName: 'sm:mt-14 xl:mt-24',
+    itemClassName: 'sm:mt-14 lg:mt-24',
   },
   {
     to: '/compare',
@@ -64,7 +64,7 @@ const ISLANDS: readonly FeatureIsland[] = [
       'bg-isle-volcano -rotate-[1.5deg] [--glow:color-mix(in_oklab,var(--color-type-fire-deep)_45%,transparent)]',
     kickerClassName: 'text-isle-volcano-ink',
     dotClassName: 'bg-type-fire-deep',
-    itemClassName: 'xl:mt-7',
+    itemClassName: 'lg:mt-7',
   },
   {
     to: '/team-builder',
@@ -77,7 +77,7 @@ const ISLANDS: readonly FeatureIsland[] = [
       'bg-isle-stadium rotate-[2.5deg] [--glow:color-mix(in_oklab,var(--color-type-dragon)_42%,transparent)]',
     kickerClassName: 'text-isle-stadium-ink',
     dotClassName: 'bg-type-dragon',
-    itemClassName: 'sm:mt-14 xl:mt-[124px]',
+    itemClassName: 'sm:mt-14 lg:mt-[124px]',
   },
   {
     to: '/terrain',
@@ -91,7 +91,7 @@ const ISLANDS: readonly FeatureIsland[] = [
     kickerClassName: 'text-isle-desert-ink',
     dotClassName: 'bg-type-ground-deep',
     itemClassName:
-      'sm:col-span-2 sm:mx-auto sm:w-[calc(50%-1.375rem)] xl:col-span-1 xl:mx-0 xl:mt-12 xl:w-auto',
+      'sm:col-span-2 sm:mx-auto sm:w-[calc(50%-1.375rem)] lg:col-span-1 lg:mx-0 lg:mt-12 lg:w-auto',
   },
 ]
 
@@ -226,13 +226,13 @@ function IslandCard({ island, index }: { island: FeatureIsland; index: number })
         >
           <span
             aria-hidden="true"
-            className="absolute top-[174px] -left-3 z-30 flex size-[46px] items-center justify-center rounded-full border-3 border-ink bg-dex-yellow text-lg font-extrabold text-ink tabular-nums shadow-[0_3px_0_var(--color-ink)] sm:top-[226px] sm:-left-[18px]"
+            className="absolute top-[110px] -left-3 z-30 flex size-[46px] items-center justify-center rounded-full border-3 border-ink bg-dex-yellow text-lg font-extrabold text-ink tabular-nums shadow-[0_3px_0_var(--color-ink)] sm:top-[226px] sm:-left-[18px]"
           >
             {number}
           </span>
           <div
             aria-hidden="true"
-            className="relative isolate h-52 overflow-hidden rounded-[141px_141px_24px_24px] border-[2.5px] border-ink sm:h-[260px]"
+            className="relative isolate h-36 overflow-hidden rounded-[141px_141px_24px_24px] border-[2.5px] border-ink sm:h-[260px]"
           >
             <SceneBackdrop scene={island.scene} />
             <span className="shine-sweep w-1/2" />
@@ -246,15 +246,17 @@ function IslandCard({ island, index }: { island: FeatureIsland; index: number })
           >
             <TypeGlyph type={island.glyph} className="size-9 sm:size-[50px]" strokeWidth={1.5} />
           </span>
-          <div className="flex flex-col gap-1.5 px-3 pt-[18px] pb-[22px]">
+          <div className="flex flex-col gap-1 px-3 pt-3.5 pb-4 sm:gap-1.5 sm:pt-[18px] sm:pb-[22px]">
             <span
               className={`text-[13px]/[18px] font-extrabold tracking-[0.06em] uppercase ${island.kickerClassName}`}
             >
               Vùng {number} · {SCENES[island.scene].name}
             </span>
-            <h3 className="text-[1.75rem]/8 font-extrabold">{island.title}</h3>
-            <p className="text-[17px]/[25px] text-ink-muted">{island.description}</p>
-            <span className="mt-2 inline-flex items-center gap-2.5 font-extrabold">
+            <h3 className="text-2xl/7 font-extrabold sm:text-[1.75rem]/8">{island.title}</h3>
+            <p className="text-[15px]/[22px] text-ink-muted sm:text-[17px]/[25px]">
+              {island.description}
+            </p>
+            <span className="mt-1 inline-flex items-center gap-2.5 font-extrabold sm:mt-2">
               Khám phá
               <span
                 aria-hidden="true"
@@ -289,7 +291,7 @@ export function FeatureRegions() {
   return (
     <section
       aria-labelledby="regions-title"
-      className="relative -mt-10 overflow-hidden bg-linear-to-b from-band-sky via-band-lilac via-48% to-band-peach px-4 pt-[84px] pb-[70px] md:px-6 md:pt-[140px] md:pb-[120px]"
+      className="relative -mt-10 overflow-hidden bg-linear-to-b from-band-sky via-band-lilac via-48% to-band-peach px-4 pt-[68px] pb-11 sm:pt-[84px] sm:pb-[70px] md:px-6 md:pt-[140px] md:pb-[120px]"
     >
       <Aura>
         <Blob className="-top-[6%] -left-[40%] size-[460px] from-type-grass/42 md:-left-[10%] md:size-[760px]" />
@@ -332,16 +334,16 @@ export function FeatureRegions() {
       <div className="relative mx-auto max-w-7xl">
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
           <SectionTitle id="regions-title">Năm vùng đất</SectionTitle>
-          <p className="max-w-[52ch] text-lg/7 text-ink-muted">
+          <p className="max-w-[52ch] text-base/6 text-ink-muted sm:text-lg/7">
             Mỗi công cụ là một hòn đảo trên hành trình. Bấm vào đảo để đi tới công cụ đó.
           </p>
         </div>
-        <div className="relative mt-12 md:mt-[72px]">
+        <div className="relative mt-5 sm:mt-12 md:mt-[72px] lg:max-xl:[zoom:0.8]">
           <svg
             aria-hidden="true"
             viewBox="0 0 1000 640"
             preserveAspectRatio="none"
-            className="pointer-events-none absolute top-0 -left-6 hidden h-full w-[calc(100%+48px)] overflow-visible xl:block"
+            className="pointer-events-none absolute top-0 -left-6 hidden h-full w-[calc(100%+48px)] overflow-visible lg:block"
           >
             <path
               d={TRAIL_PATH}
@@ -361,9 +363,12 @@ export function FeatureRegions() {
               vectorEffect="non-scaling-stroke"
             />
           </svg>
-          <ul className="relative grid items-start gap-14 pb-[70px] sm:grid-cols-2 sm:gap-x-11 sm:gap-y-16 xl:grid-cols-5 xl:gap-6">
+          <ul className="relative -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pt-4 pb-11 [scrollbar-color:var(--color-border-strong)_transparent] [scrollbar-width:thin] sm:mx-0 sm:grid sm:snap-none sm:items-start sm:gap-x-11 sm:gap-y-16 sm:overflow-visible sm:px-0 sm:pt-0 sm:pb-[70px] sm:grid-cols-2 lg:grid-cols-5 lg:gap-6">
             {ISLANDS.map((island, index) => (
-              <li key={island.to} className={`relative ${island.itemClassName}`}>
+              <li
+                key={island.to}
+                className={`relative max-sm:w-[78%] max-sm:max-w-72 max-sm:flex-none max-sm:snap-start ${island.itemClassName}`}
+              >
                 <IslandCard island={island} index={index} />
               </li>
             ))}

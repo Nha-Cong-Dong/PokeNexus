@@ -71,8 +71,10 @@ function initialState(setIndex: number): QuizState {
   }
 }
 
+const SHORT_OPTION_LENGTH = 4
+
 function optionClassName(index: number, picked: number | null, correctIndex: number): string {
-  const base = `${buttonClassName('secondary')} h-auto min-h-[54px] rounded-xl! py-2 text-lg! not-disabled:hover:-translate-y-0.5 not-disabled:hover:bg-answer-hover!`
+  const base = `${buttonClassName('secondary')} h-auto min-h-12 rounded-xl! py-2 text-lg! not-disabled:hover:-translate-y-0.5 not-disabled:hover:bg-answer-hover! max-sm:px-2 sm:min-h-[54px]`
   if (picked === null) return base
   if (index === correctIndex) return `${base} border-success! bg-success! text-white! opacity-100!`
   if (index === picked) return `${base} border-danger! bg-danger! text-white! opacity-100!`
@@ -137,7 +139,7 @@ export function TrainerQuiz() {
   return (
     <section
       aria-labelledby="quiz-title"
-      className="relative overflow-hidden bg-linear-to-b from-band-mint to-band-violet px-4 pt-8 pb-14 md:px-6 md:pt-[90px] md:pb-[110px]"
+      className="relative overflow-hidden bg-linear-to-b from-band-mint to-band-violet px-4 pt-6 pb-10 md:px-6 md:pt-[90px] md:pb-[110px]"
     >
       <Aura>
         <Blob
@@ -157,47 +159,53 @@ export function TrainerQuiz() {
           </span>
         ))}
       </div>
-      <div className="relative mx-auto flex max-w-7xl flex-col gap-10 lg:flex-row lg:items-center">
-        <div className="flex flex-col gap-5 lg:w-2/5">
+      <div className="relative mx-auto flex max-w-7xl flex-col gap-6 md:gap-10 lg:flex-row lg:items-center">
+        <div className="flex flex-col gap-4 md:gap-5 lg:w-2/5">
           <SectionTitle id="quiz-title">Thử tài Trainer</SectionTitle>
-          <p className="max-w-[40ch] text-lg/7 text-ink-muted">
+          <p className="max-w-[40ch] text-base/6 text-ink-muted md:text-lg/7">
             {QUIZ_SETS.length} bộ câu hỏi, mỗi bộ {total} câu: hệ số, điểm yếu, chỉ số, hệ và vùng
             đất ra mắt. Trả lời đúng để nhận điểm Trainer, Ball và huy hiệu.
           </p>
-          <div className="relative size-48 md:size-60">
-            <div className="relative flex size-full animate-float items-center justify-center">
-              <span
-                aria-hidden="true"
-                className={`type-blob absolute inset-2.5 -rotate-5 rounded-[46%_54%_50%_50%/52%_46%_54%_48%] border-6 border-white shadow-[0_0_0_3px_var(--color-ink),8px_10px_0_0_rgb(22_33_62/0.3)] md:border-7 md:shadow-[0_0_0_3px_var(--color-ink),10px_14px_0_0_rgb(22_33_62/0.3)] ${typeScopeClassName(question.subject.type)}`}
-              />
-              <PokemonSprite
-                id={question.subject.id}
-                alt={`Artwork ${question.subject.name}`}
-                size={160}
-                variant="artwork"
-                className="relative size-36 object-contain md:size-44"
-              />
+          <div className="flex items-center gap-6 md:flex-col md:items-start md:gap-5">
+            <div className="relative size-24 flex-none md:size-60">
+              <div className="relative flex size-full animate-float items-center justify-center">
+                <span
+                  aria-hidden="true"
+                  className={`type-blob absolute inset-1.5 -rotate-5 rounded-[46%_54%_50%_50%/52%_46%_54%_48%] border-5 border-white shadow-[0_0_0_3px_var(--color-ink),6px_8px_0_0_rgb(22_33_62/0.3)] md:inset-2.5 md:border-7 md:shadow-[0_0_0_3px_var(--color-ink),10px_14px_0_0_rgb(22_33_62/0.3)] ${typeScopeClassName(question.subject.type)}`}
+                />
+                <PokemonSprite
+                  id={question.subject.id}
+                  alt={`Artwork ${question.subject.name}`}
+                  size={160}
+                  variant="artwork"
+                  className="relative size-20 object-contain md:size-44"
+                />
+              </div>
+              <span className="absolute -right-4 -bottom-1 rotate-3 rounded-lg border-2 border-ink bg-dex-yellow px-2 py-0.5 text-xs font-extrabold whitespace-nowrap md:bottom-4 md:px-2.5 md:py-1">
+                {question.subject.name} <DexNumber id={question.subject.id} />
+              </span>
             </div>
-            <span className="absolute -right-4 bottom-4 rotate-3 rounded-lg border-2 border-ink bg-dex-yellow px-2.5 py-1 text-xs font-extrabold">
-              {question.subject.name} <DexNumber id={question.subject.id} />
-            </span>
+            <p className="text-[15px]/[22px] md:text-base">
+              Thích nhận diện bóng đen hơn?{' '}
+              <Link
+                to="/terrain"
+                className="font-extrabold text-primary underline underline-offset-4"
+              >
+                Chơi Who&apos;s that Pokémon? ở trang Địa hình
+              </Link>
+            </p>
           </div>
-          <p className="text-base">
-            Thích nhận diện bóng đen hơn?{' '}
-            <Link
-              to="/terrain"
-              className="font-extrabold text-primary underline underline-offset-4"
-            >
-              Chơi Who&apos;s that Pokémon? ở trang Địa hình
-            </Link>
-          </p>
         </div>
 
-        <GameDialog speaker="Giáo sư" className="flex-1">
+        <GameDialog speaker="Giáo sư" className="flex-1 max-sm:px-4 max-sm:pt-6 max-sm:pb-5">
           <span className="absolute -top-4 right-5 rounded-full border-2 border-ink bg-dex-yellow px-3 py-0.5 text-sm font-extrabold">
             Câu <span className="tabular-nums font-bold">{`${state.index + 1}/${total}`}</span>
           </span>
-          <div role="group" aria-label="Bộ câu hỏi" className="mb-5 flex flex-wrap gap-2">
+          <div
+            role="group"
+            aria-label="Bộ câu hỏi"
+            className="-mx-1.5 mb-3 flex gap-2 overflow-x-auto px-1.5 pt-1 pb-2 [scrollbar-color:var(--color-border-strong)_transparent] [scrollbar-width:thin] sm:mx-0 sm:mb-5 sm:flex-wrap sm:overflow-visible sm:p-0"
+          >
             {QUIZ_SETS.map((quizSet, setIndex) => {
               const owned = progress.badges.includes(quizBadgeId(quizSet.id))
               const active = setIndex === state.setIndex
@@ -207,7 +215,7 @@ export function TrainerQuiz() {
                   type="button"
                   aria-pressed={active}
                   onClick={() => chooseSet(setIndex)}
-                  className={`${buttonClassName('secondary', 'sm')} ${active ? 'bg-dex-yellow!' : ''}`}
+                  className={`${buttonClassName('secondary', 'sm')} flex-none ${active ? 'bg-dex-yellow!' : ''}`}
                 >
                   {quizSet.title}
                   {owned && (
@@ -277,10 +285,14 @@ export function TrainerQuiz() {
           ) : (
             <div
               key={`${state.setIndex}-${state.index}`}
-              className="flex animate-slide-in-right flex-col gap-5"
+              className="flex animate-slide-in-right flex-col gap-4 sm:gap-5"
             >
-              <p className="text-xl/8 font-bold">{evaluated.prompt}</p>
-              <div role="group" aria-label="Các đáp án" className="grid gap-2.5 sm:grid-cols-3">
+              <p className="text-base/6 font-bold sm:text-xl/8">{evaluated.prompt}</p>
+              <div
+                role="group"
+                aria-label="Các đáp án"
+                className={`grid gap-2 sm:grid-cols-3 sm:gap-2.5 ${evaluated.options.every((option) => option.length <= SHORT_OPTION_LENGTH) ? 'grid-cols-3' : ''}`}
+              >
                 {evaluated.options.map((option, index) => (
                   <button
                     key={option}
@@ -308,7 +320,7 @@ export function TrainerQuiz() {
                   </button>
                 ))}
               </div>
-              <p aria-live="polite" className="min-h-14 text-lg/7">
+              <p aria-live="polite" className="min-h-12 text-base/6 sm:min-h-14 sm:text-lg/7">
                 {state.picked === null ? (
                   'Chọn một đáp án để xem giải thích.'
                 ) : (
@@ -328,7 +340,7 @@ export function TrainerQuiz() {
                   </>
                 )}
               </p>
-              <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-border pt-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-border pt-3 sm:pt-4">
                 <p className="text-sm font-bold text-ink-muted">
                   Đúng{' '}
                   <span className="tabular-nums font-bold text-lg text-ink">{state.correct}</span>{' '}
@@ -338,7 +350,7 @@ export function TrainerQuiz() {
                   type="button"
                   onClick={next}
                   disabled={state.picked === null}
-                  className={buttonClassName('primary')}
+                  className={`${buttonClassName('primary')} max-sm:h-10 max-sm:px-4`}
                 >
                   {isLast ? 'Xem kết quả' : 'Câu tiếp'}
                 </button>
@@ -351,7 +363,7 @@ export function TrainerQuiz() {
         progress={progress}
         badges={QUIZ_BADGES}
         badgeTitle="Huy hiệu bộ câu hỏi"
-        className="relative mx-auto mt-10 max-w-7xl"
+        className="relative mx-auto mt-6 max-w-7xl max-md:p-4 md:mt-10"
       />
     </section>
   )

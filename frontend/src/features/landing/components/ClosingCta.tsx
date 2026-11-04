@@ -11,7 +11,7 @@ export function ClosingCta() {
   return (
     <section
       aria-labelledby="cta-title"
-      className="relative -mb-20 overflow-hidden bg-linear-to-b from-band-violet to-bg px-4 pt-8 pb-28 md:px-6 md:pt-[60px] md:pb-[120px]"
+      className="relative -mb-20 overflow-hidden bg-linear-to-b from-band-violet to-bg px-4 pt-6 pb-20 md:px-6 md:pt-[60px] md:pb-[120px]"
     >
       <Aura>
         <Blob className="top-0 -left-[30%] size-[440px] from-type-water/30 md:-top-[10%] md:left-[10%] md:size-[700px]" />
@@ -32,7 +32,7 @@ export function ClosingCta() {
       </div>
       <Reveal
         variant="zoom"
-        className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.75rem] border-3 border-ink bg-dex-red px-5 pt-9 pb-6 text-white shadow-[inset_0_-6px_0_var(--color-dex-red-hover),0_6px_0_rgb(22_33_62/0.25)] md:rounded-[40px] md:border-4 md:px-12 md:py-16 md:shadow-[inset_0_-8px_0_var(--color-dex-red-hover),0_8px_0_rgb(22_33_62/0.25)]"
+        className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.75rem] border-3 border-ink bg-dex-red px-5 pt-8 pb-6 text-white shadow-[inset_0_-6px_0_var(--color-dex-red-hover),0_6px_0_rgb(22_33_62/0.25)] md:rounded-[40px] md:border-4 md:px-12 md:py-16 md:shadow-[inset_0_-8px_0_var(--color-dex-red-hover),0_8px_0_rgb(22_33_62/0.25)]"
       >
         <span
           aria-hidden="true"
@@ -53,11 +53,11 @@ export function ClosingCta() {
           >
             Sẵn sàng cho trận tới?
           </h2>
-          <p className="mt-4 max-w-[46ch] text-lg/7">
+          <p className="mt-3 max-w-[46ch] text-base/6 md:mt-4 md:text-lg/7">
             Tra cứu một Pokémon, kiểm tra lỗ hổng của đội, rồi gửi link đội cho đồng đội trước giờ
             thi đấu.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-wrap gap-3 md:mt-6">
             <Link to="/pokedex" className={buttonClassName('cta')}>
               Mở Pokédex
             </Link>
