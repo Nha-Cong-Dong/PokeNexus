@@ -1,6 +1,7 @@
 # PokeNexus - Hướng dẫn triển khai production
 
-- Phiên bản: 1.0 (cập nhật 2026-11-02)
+- Phiên bản: 1.1 (cập nhật 2026-11-05; Phần 8 mục III: kiểm chứng giới hạn lưu đội bằng body có ID Pokémon không tồn tại để không ghi DB, thêm vòng `CF-Connecting-IP`, ghi kết quả 04/11)
+- Bản 1.0 (2026-11-02)
 - Nền tảng: backend trên Render (gói Free), MySQL trên Aiven (gói Free), frontend trên Cloudflare Pages. Lý do chọn và rủi ro: [ADR 0009](adr/0009-hosting-render-aiven.md). Thiết kế triển khai: [architecture.md](architecture.md), Phần 11.
 - Tài liệu này là hướng dẫn thao tác từng bước để một người tự làm từ đầu đến khi có link chạy thật. Giao diện các trang web có thể đổi tên nút đôi chút; nếu không thấy đúng tên, tìm mục có ý nghĩa tương đương.
 - Ký hiệu `<AIVEN_HOST>`, `<BACKEND_URL>`... là giá trị bạn tự thay. Lệnh `bash` chạy trong Git Bash, đứng ở thư mục gốc repo.
@@ -419,25 +420,32 @@ curl -si -X OPTIONS "$BACKEND_URL/api/v1/synergy/analyze" \
 ### III. Kiểm chứng giới hạn lưu đội (lỗi B3)
 
 - Mục đích: xác nhận người dùng không vượt được giới hạn 10 lần lưu mỗi phút bằng cách tự gửi header IP giả.
+- Body dùng ID Pokémon không tồn tại: request vẫn bị tính vào giới hạn (giới hạn kiểm trước khi kiểm ID) nhưng trả 400 `UNKNOWN_POKEMON` và không tạo đội nào trong DB production.
 
 ```bash
-BACKEND_URL=https://pokenexus-api.onrender.com
-BODY='{"name":"rate-limit-test","members":[{"slot":1,"pokemonId":6}]}'
-for i in $(seq 1 11); do
-  curl -s -o /dev/null -w "lan $i: %{http_code}\n" -X POST "$BACKEND_URL/api/v1/teams" \
-    -H "Content-Type: application/json" -H "X-Forwarded-For: 203.0.113.$i" -d "$BODY"
+BACKEND_URL=https://pokenexus-api-s6g6.onrender.com
+BODY='{"name":"rate-limit-probe","members":[{"slot":1,"pokemonId":999999}]}'
+for header in "X-Forwarded-For" "CF-Connecting-IP" "Forwarded"; do
+  for i in $(seq 1 11); do
+    value="203.0.113.$i"; [ "$header" = "Forwarded" ] && value="for=203.0.113.$i"
+    curl -s -o /dev/null -w "$header lan $i: %{http_code}
+" -X POST "$BACKEND_URL/api/v1/teams"       -H "Content-Type: application/json" -H "$header: $value" -d "$BODY"
+  done
+  sleep 65
 done
 ```
 
-- Chờ ít nhất 65 giây (để hết cửa sổ 1 phút), rồi chạy lại vòng lặp, đổi header thành `-H "Forwarded: for=203.0.113.$i"`.
-
 | Kết quả mỗi vòng | Ý nghĩa |
 |---|---|
-| Lần 1-10 trả `201`, lần 11 trả `429` | **Đạt**: proxy của Render không để header giả quyết định IP |
-| Cả 11 lần trả `201` | **Không đạt**: header giả vượt được giới hạn (lỗi B3 có thật). Ghi lại vòng nào không đạt và báo để sửa `TeamController` trước ngày demo |
+| Lần 1-10 trả `400`, lần 11 trả `429` | **Đạt**: header giả không quyết định IP |
+| Cả 11 lần trả `400` | **Không đạt**: header giả vượt được giới hạn. Kiểm tra header IP mà edge của Render đang gửi, đặt biến `CLIENT_IP_HEADER` trên Render cho đúng rồi chạy lại |
 | Lần 1 đã trả `429` | Chưa hết cửa sổ 1 phút từ lần thử trước; chờ thêm rồi chạy lại |
 
+- Kết quả 04/11 (trước Issue #89): vòng `X-Forwarded-For` không đạt (11/11 lần `400`), còn cùng body không có header giả thì lần 11 trả `429`. Từ Issue #89, profile `prod` lấy IP từ `CF-Connecting-IP`.
+
 ### IV. Dọn đội thử
+
+- Chỉ cần khi đã chạy bài kiểm chứng bằng body có ID Pokémon thật (bản cũ của mục III).
 
 - 2 vòng trên tạo tối đa 20 đội tên `rate-limit-test` trong DB production. Xóa (thành viên đội tự xóa theo khóa ngoại `ON DELETE CASCADE`):
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pokenexus.common.web.ClientIpResolver;
 import com.pokenexus.team.dto.CreateTeamRequest;
 import com.pokenexus.team.dto.TeamResponse;
 import com.pokenexus.team.service.SaveRateLimiter;
@@ -28,17 +29,20 @@ public class TeamController {
 
     private final TeamService teamService;
     private final SaveRateLimiter saveRateLimiter;
+    private final ClientIpResolver clientIpResolver;
 
-    public TeamController(TeamService teamService, SaveRateLimiter saveRateLimiter) {
+    public TeamController(TeamService teamService, SaveRateLimiter saveRateLimiter,
+                          ClientIpResolver clientIpResolver) {
         this.teamService = teamService;
         this.saveRateLimiter = saveRateLimiter;
+        this.clientIpResolver = clientIpResolver;
     }
 
     @PostMapping
     @Operation(summary = "Save a team of 1-6 Pokémon and get a share code")
     public ResponseEntity<TeamResponse> create(@Valid @RequestBody CreateTeamRequest request,
                                                HttpServletRequest httpRequest) {
-        saveRateLimiter.acquire(httpRequest.getRemoteAddr());
+        saveRateLimiter.acquire(clientIpResolver.resolve(httpRequest));
         TeamResponse team = teamService.create(request);
         return ResponseEntity.created(URI.create(SHARED_PATH + team.shareCode())).body(team);
     }

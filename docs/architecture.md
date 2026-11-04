@@ -1,6 +1,7 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 1.0 (cập nhật 2026-11-02; Phần 11: backend chuyển sang Render, MySQL sang Aiven vì Railway dừng nhận đăng ký mới ([ADR 0009](adr/0009-hosting-render-aiven.md)); thao tác từng bước ở [deploy.md](deploy.md))
+- Phiên bản: 1.1 (cập nhật 2026-11-05; Phần 8, 11: giới hạn lưu đội lấy IP client từ header `CF-Connecting-IP` do edge Cloudflare của Render ghi (`ClientIpResolver`, `app.team.client-ip-header`), vì kiểm chứng ngày 04/11 cho thấy `X-Forwarded-For` giả vượt được giới hạn (lỗi B3, Issue #89))
+- Bản 1.0 (2026-11-02; Phần 11: backend chuyển sang Render, MySQL sang Aiven vì Railway dừng nhận đăng ký mới ([ADR 0009](adr/0009-hosting-render-aiven.md)); thao tác từng bước ở [deploy.md](deploy.md))
 - Bản 0.9 (2026-11-02; Phần 6: query key chi tiết thành `['pokemon', 'detail', idOrName]`, chặn tên trùng đường dẫn API; route bọc có `errorElement`, `ScrollRestoration`; Phần 8: `RequestBodyLimitFilter` giới hạn body 16 KB; Phần 11: build Pages chặn `VITE_API_BASE_URL` sai, kiểm chứng thêm header `Forwarded`. Bản 0.8 ngày 2026-10-30: Phần 6: query key `['pokemon', 'speed-tiers']` cho Bảng tốc độ cấp 50; Phần 11: chốt Railway và Cloudflare Pages theo ADR 0007, thiết lập production, nhập dữ liệu bằng `scripts/db-dump.sh`; Phần 2: thêm Lombok vào bảng công nghệ; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
 - Cây thư mục và tên class cụ thể: [folder-structure.md](folder-structure.md). Đặc tả endpoint: [api.md](api.md). Schema: [database.md](database.md).
@@ -380,7 +381,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | XSS qua tên đội, biệt danh | React escape mặc định; không dùng `dangerouslySetInnerHTML`; giới hạn độ dài ở backend |
 | Lộ bí mật | Bí mật chỉ ở `.env` hoặc biến môi trường hosting; bật Secret scanning ([github-setup.md](github-setup.md)) |
 
-- Sau reverse proxy của hosting, IP thật nằm ở header `X-Forwarded-For`. Bật `server.forward-headers-strategy=framework` ở profile `prod`; chấp nhận rủi ro header bị giả mạo vì đây chỉ là biện pháp chống spam cơ bản. Chưa biết proxy của Render có xóa header do client gửi hay không; kiểm chứng sau deploy theo [deploy.md](deploy.md), Phần 8, mục III ([ADR 0009](adr/0009-hosting-render-aiven.md), Phần 4).
+- Sau reverse proxy của hosting, `X-Forwarded-For` có giá trị đầu do client tự đặt: kiểm chứng trên Render ngày 04/11, 11 request với `X-Forwarded-For` giả khác nhau đều qua giới hạn (lỗi B3). Edge của Render là Cloudflare, ghi đè header `CF-Connecting-IP` bằng IP thật, nên `ClientIpResolver` lấy IP từ header cấu hình ở `app.team.client-ip-header` (profile `prod`: `CF-Connecting-IP`, đổi được bằng biến `CLIENT_IP_HEADER`), header vắng thì dùng `getRemoteAddr()`. Kiểm chứng sau deploy theo [deploy.md](deploy.md), Phần 8, mục III.
 
 ---
 
@@ -431,6 +432,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | `app.ingestion.csv-dir` | `../data/csv` | | Thư mục CSV |
 | `app.cors.allowed-origins` | `${CORS_ALLOWED_ORIGINS}` | `${CORS_ALLOWED_ORIGINS}` | |
 | `app.team.save-limit-per-minute` | `10` | `10` | Giới hạn lưu đội mỗi IP |
+| `app.team.client-ip-header` | rỗng (`${CLIENT_IP_HEADER:}`) | `${CLIENT_IP_HEADER:CF-Connecting-IP}` | Header do proxy ghi, dùng làm IP client cho giới hạn lưu đội; rỗng hoặc header vắng thì dùng `getRemoteAddr()` |
 | `spring.jpa.hibernate.ddl-auto` | `validate` | `validate` | Schema do Flyway quản lý, Hibernate chỉ kiểm tra |
 | `spring.jpa.open-in-view` | `false` | `false` | Tránh truy vấn lười ở tầng web |
 | `spring.datasource.hikari.connection-timeout` | mặc định (30 s) | `5000` | Thời gian chờ lấy kết nối; `/health` trả 503 sau 5 s khi mất DB |
@@ -500,6 +502,7 @@ flowchart LR
 | `DB_HOST`, `DB_PORT`, `DB_NAME` | Host, Port, Database name ở trang Overview của service Aiven (database thường là `defaultdb`) |
 | `DB_USERNAME`, `DB_PASSWORD` | User, Password ở trang Overview của service Aiven |
 | `CORS_ALLOWED_ORIGINS` | Domain production của Pages, ví dụ `https://pokenexus.pages.dev` |
+| `CLIENT_IP_HEADER` | Không cần đặt: profile `prod` mặc định `CF-Connecting-IP`. Chỉ đặt khi Render đổi edge và kiểm chứng ở [deploy.md](deploy.md), Phần 8, mục III không đạt |
 
 #### 2. Cloudflare Pages (frontend)
 

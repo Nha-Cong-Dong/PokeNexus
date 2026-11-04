@@ -27,6 +27,7 @@ app:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
   team:
     save-limit-per-minute: 10
+    client-ip-header: ${CLIENT_IP_HEADER:}
 
 springdoc:
   paths-to-match: /api/**

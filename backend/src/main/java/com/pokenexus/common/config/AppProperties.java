@@ -21,6 +21,7 @@ public record AppProperties(
     }
 
     public record Team(
-            @DefaultValue("10") int saveLimitPerMinute) {
+            @DefaultValue("10") int saveLimitPerMinute,
+            @DefaultValue("") String clientIpHeader) {
     }
 }

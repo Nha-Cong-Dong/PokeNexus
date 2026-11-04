@@ -9,3 +9,5 @@ spring:
 app:
   ingestion:
     enabled: false
+  team:
+    client-ip-header: ${CLIENT_IP_HEADER:CF-Connecting-IP}
