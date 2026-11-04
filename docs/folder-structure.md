@@ -15,6 +15,7 @@ pokenexus/
 ├── .github/
 │   ├── ISSUE_TEMPLATE/            bug_report.yml, feature_request.yml, config.yml
 │   ├── workflows/ci.yml           CI backend và frontend
+│   ├── workflows/keep-alive.yml   Gọi /api/v1/health mỗi 10 phút để backend Render không ngủ
 │   ├── dependabot.yml
 │   └── pull_request_template.md
 ├── backend/                       Spring Boot API (Phần 2)

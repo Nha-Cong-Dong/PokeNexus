@@ -1,6 +1,6 @@
 # PokeNexus - Hướng dẫn triển khai production
 
-- Phiên bản: 1.1 (cập nhật 2026-11-05; Phần 8 mục III: kiểm chứng giới hạn lưu đội bằng body có ID Pokémon không tồn tại để không ghi DB, thêm vòng `CF-Connecting-IP`, ghi kết quả 04/11)
+- Phiên bản: 1.1 (cập nhật 2026-11-05; Phần 9 mục II: keep-alive bằng GitHub Actions đã bật; Phần 8 mục III: kiểm chứng giới hạn lưu đội bằng body có ID Pokémon không tồn tại để không ghi DB, thêm vòng `CF-Connecting-IP`, ghi kết quả 04/11)
 - Bản 1.0 (2026-11-02)
 - Nền tảng: backend trên Render (gói Free), MySQL trên Aiven (gói Free), frontend trên Cloudflare Pages. Lý do chọn và rủi ro: [ADR 0009](adr/0009-hosting-render-aiven.md). Thiết kế triển khai: [architecture.md](architecture.md), Phần 11.
 - Tài liệu này là hướng dẫn thao tác từng bước để một người tự làm từ đầu đến khi có link chạy thật. Giao diện các trang web có thể đổi tên nút đôi chút; nếu không thấy đúng tên, tìm mục có ý nghĩa tương đương.
@@ -472,32 +472,12 @@ docker exec -e MYSQL_PWD="$AIVEN_PASSWORD" pokenexus-mysql \
 - Gọi `/api/v1/health` mỗi 10 phút giữ backend thức, và vì endpoint này truy vấn DB nên cũng giữ Aiven hoạt động.
 - Ngân sách: Render Free có 750 giờ mỗi tháng cho cả workspace; một service chạy liên tục hết 720-744 giờ. Không tạo thêm service Free khác trong cùng workspace.
 
-### II. Cách A: GitHub Actions (khuyến nghị, không cần tài khoản mới)
+### II. Cách A: GitHub Actions (đã bật từ Issue #90)
 
-1. GitHub, repo `PokeNexus`, **Settings**, **Secrets and variables**, **Actions**, tab **Variables**, **New repository variable**: Name `BACKEND_HEALTH_URL`, Value `<BACKEND_URL>/api/v1/health`.
-2. Tạo nhánh `chore/<số Issue>-keep-alive`, thêm file `.github/workflows/keep-alive.yml`:
-
-```yaml
-name: Keep backend awake
-
-on:
-  schedule:
-    - cron: '*/10 * * * *'
-  workflow_dispatch:
-
-jobs:
-  ping:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Call the health endpoint
-        run: curl -fsS --retry 3 --retry-delay 30 --max-time 150 "${{ vars.BACKEND_HEALTH_URL }}"
-```
-
-3. Commit `chore(ci): ping the backend every 10 minutes to keep it awake`, mở PR, merge sau khi CI xanh.
-4. Tab **Actions**, chọn workflow **Keep backend awake**, bấm **Run workflow** để chạy thử: job xanh là đạt.
-
-- GitHub có thể chạy lịch trễ vài phút; chu kỳ 10 phút để còn dư so với ngưỡng ngủ 15 phút.
+- File `.github/workflows/keep-alive.yml` gọi `/api/v1/health` mỗi 10 phút (`cron: '*/10 * * * *'`) và cho phép chạy tay (`workflow_dispatch`).
+- URL mặc định ghi trong file là backend production `https://pokenexus-api-s6g6.onrender.com/api/v1/health` (URL công khai, đã nằm trong bundle frontend). Đổi backend thì tạo repository variable `BACKEND_HEALTH_URL` (**Settings**, **Secrets and variables**, **Actions**, tab **Variables**), không cần sửa file.
+- Kiểm tra: tab **Actions**, workflow **Keep backend awake**, **Run workflow**; job xanh là đạt.
+- GitHub có thể chạy lịch trễ vài phút; chu kỳ 10 phút để còn dư so với ngưỡng ngủ 15 phút của Render.
 
 ### III. Cách B: cron-job.org (không sửa repo)
 

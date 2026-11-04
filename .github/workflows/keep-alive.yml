@@ -1,0 +1,18 @@
+name: Keep backend awake
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Call the health endpoint
+        env:
+          HEALTH_URL: ${{ vars.BACKEND_HEALTH_URL || 'https://pokenexus-api-s6g6.onrender.com/api/v1/health' }}
+        run: curl -fsS --retry 3 --retry-delay 30 --max-time 150 "$HEALTH_URL"
