@@ -27,6 +27,7 @@
 ## Phần 4. Hệ quả
 
 - Thêm task T207 (script tải sprite) vào Tuần 2; thêm `scripts/download-sprites.sh` và `.ps1`.
+  - Ghi chú 2026-11-05 (Issue #74): repo chỉ có bản `download-sprites.sh`, không làm bản `.ps1` ([folder-structure.md](../folder-structure.md), Phần 4). Quyết định của ADR không đổi.
 - Ở chế độ offline, trang chi tiết hiển thị sprite phóng to (dùng `image-rendering: pixelated`) thay cho artwork.
 - Bỏ `spriteUrl` khỏi response API; đổi nguồn ảnh chỉ cần sửa `src/lib/assets.ts`, không đổi schema hay API.
 - Nếu thư mục sprite vượt 15 MB, chuyển sang tải sprite bằng script lúc build và ghi ADR mới thay thế ADR này.

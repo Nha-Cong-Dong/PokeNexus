@@ -64,7 +64,7 @@ https://github.com/Nha-Cong-Dong/PokeNexus
 
 | Tầng     | Công nghệ                                                                                                               |
 | -------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Frontend | React, TypeScript, Vite, Tailwind CSS, TanStack Query, React Router, Recharts                                           |
+| Frontend | React, TypeScript, Vite, Tailwind CSS, TanStack Query, React Router; biểu đồ vẽ bằng SVG (không dùng Recharts)          |
 | Backend  | Java 25 (LTS), Spring Boot 4.1, Spring Web MVC, Spring Data JPA (Hibernate), Bean Validation, Flyway, springdoc-openapi |
 | Database | MySQL 8.4 (LTS)                                                                                                         |
 | Dữ liệu  | PokéAPI (nạp một lần từ bộ CSV công khai, không gọi API lúc chạy)                                                       |

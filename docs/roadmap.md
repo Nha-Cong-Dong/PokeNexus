@@ -1,6 +1,7 @@
 # PokeNexus - Lộ trình 3 tuần
 
-- Phiên bản: 1.2 (cập nhật 2026-11-02)
+- Phiên bản: 1.3 (cập nhật 2026-11-05)
+- Thay đổi so với 1.2 (Issue #74): nhật ký và số đo chuyển từ `PLAN.md` sang [worklog.md](worklog.md); cột Đầu ra của T404 trỏ theo. Không đổi task, ngày hay tiêu chí.
 - Thay đổi so với 1.1: ban tổ chức yêu cầu ngày 2026-11-02 buổi Checkpoint 4 có pitching khoảng 15 phút (chưa kể demo) kèm slide, báo cáo và phần hỏi đáp chi tiết về code. Khôi phục T406 (slide và kịch bản pitch, không làm video), thêm T413 (báo cáo tổng kết `.docx`) và T414 (tài liệu luyện tập hỏi đáp); cả ba là việc loại `docs`, không vi phạm đóng băng tính năng. Issue #71-#73.
 - Thay đổi so với 0.2: thêm trang Tổng quan (T311, T312) và chuyển Omni-Dex sang `/pokedex` theo [spec.md](spec.md) 1.2; thêm thứ tự cắt cho trang Tổng quan ở Phần 4.
 - Thay đổi so với 0.3: bỏ T406 (slide, video demo); ngày 14/11 thành buffer. Kịch bản demo ở [spec.md](spec.md), Phần 4 vẫn giữ và chạy trực tiếp ở T310, T403, T407.
@@ -183,7 +184,7 @@ gantt
 | T401 | 02/11 | Cây tiến hóa (chuỗi tiến hóa đã làm sớm 26/10 ở T303): kiểm tra và hoàn thiện | E9 | Should | `evolution_links`, chỉ số gốc | API và UI cho 1 tính năng | Eevee hiện đủ 8 nhánh (nếu làm Cây tiến hóa) |
 | T402 | | Cắt giảm 29/10: thay bằng T313, T314, T315 | E9 | Could | | | |
 | T403 | 30-31/10 | Triển khai production (đóng băng tính năng tách ra từ 05/11) | E8 | Must | [architecture.md](architecture.md), Phần 11 | Frontend, backend, DB chạy trên hosting | Kịch bản demo chạy trên link thật; mở được trên điện thoại |
-| T404 | 03/11 | Bug bash, đo hiệu năng | E8 | Must | Danh sách lỗi | Lỗi đã sửa; số đo ghi ở `PLAN.md` | Không còn Issue `type: bug` đang mở; p95 analyze và recommendations dưới 50 ms; Lighthouse trên link thật đạt ngưỡng ở Phần 1, mục I |
+| T404 | 03/11 | Bug bash, đo hiệu năng | E8 | Must | Danh sách lỗi | Lỗi đã sửa; số đo ghi ở `docs/worklog.md` | Không còn Issue `type: bug` đang mở; p95 analyze và recommendations dưới 50 ms; Lighthouse trên link thật đạt ngưỡng ở Phần 1, mục I |
 | T405 | 04/11 | README (ảnh chụp, link demo), sơ đồ, CHANGELOG | E8 | Must | [assets.md](assets.md), Phần 1 | README hoàn chỉnh | Người mới làm theo README chạy được bản local |
 | T406 | 04-06/11 | Slide và kịch bản pitch 15 phút (khôi phục 02/11, không làm video) | E8 | Must | `product.md`, [spec.md](spec.md) Phần 4, [design-system.md](design-system.md), ảnh production | Slide Artifact theo nhận diện web, `docs/pitching/PokeNexus-Pitch.pptx`, `docs/pitching/slides.html`; kịch bản trong file luyện tập | 19 slide chính và 8 slide phụ lục; đọc kịch bản trong 15 phút, lệch không quá 1 phút |
 | T407 | 07-08/11 | Tổng duyệt, tag `v1.0.0` | E8 | Must | | GitHub Release `v1.0.0` | Tổng duyệt 2 lần, mỗi lần đúng thời gian quy định |

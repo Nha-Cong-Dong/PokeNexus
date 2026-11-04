@@ -1,7 +1,8 @@
 # PokeNexus - Cấu trúc thư mục
 
-- Phiên bản: 0.7 (cập nhật 2026-11-02; thư mục `docs/pitching/`. Bản 0.6: `lib/useMediaQuery.ts`. Bản 0.5 ngày 2026-10-31: `app/layout/footerPokemon.ts` cho footer (T412); Phần 4: `db-dump.sh` xuất, nhập dữ liệu cho production, script chỉ có bản Bash trừ `download-csv`. Bản 0.3: thêm `features/trainer/`, `features/terrain/`, `TerrainPage`)
-- Đây là cấu trúc **đích** khi xong MVP. Thư mục, file nào chưa tồn tại thì được tạo ở task ghi trong cột "Tạo ở" (mã task theo [roadmap.md](roadmap.md)).
+- Phiên bản: 0.8 (cập nhật 2026-11-05, Issue #74; đối chiếu với cây file trên `main`: bỏ các mục không có và không làm nữa (`components/ui` `Card`, `Dialog`, `Skeleton`, `Toast`; `src/assets/logo.svg`; `maven-wrapper.jar`), đánh dấu `og-image.png`, `docs/images/` chờ T405; thêm `docs/worklog.md`, service `backend` của Docker Compose, `RouteErrorPage`, file còn thiếu trong `features/`; CSV mẫu 62 dạng; `renderRoute` dùng `createMemoryRouter`)
+- Bản 0.7 (2026-11-02; thư mục `docs/pitching/`. Bản 0.6: `lib/useMediaQuery.ts`. Bản 0.5 ngày 2026-10-31: `app/layout/footerPokemon.ts` cho footer (T412); Phần 4: `db-dump.sh` xuất, nhập dữ liệu cho production, script chỉ có bản Bash trừ `download-csv`. Bản 0.3: thêm `features/trainer/`, `features/terrain/`, `TerrainPage`)
+- Từ bản 0.8, tài liệu mô tả cây thư mục **thực tế** trên `main` (ngày 2026-11-05). Mục chưa tồn tại ghi rõ "chưa tạo" kèm task sẽ tạo (mã task theo [roadmap.md](roadmap.md)).
 - Thêm hoặc đổi tên package, thư mục cấp 1-2 thì cập nhật tài liệu này trong cùng PR.
 
 ---
@@ -27,15 +28,16 @@ pokenexus/
 ├── docs/
 │   ├── README.md                  Mục lục và bản đồ tài liệu
 │   ├── adr/                       NNNN-ten-quyet-dinh.md
-│   ├── images/                    Ảnh chụp màn hình, sơ đồ dùng trong README
+│   ├── images/                    Ảnh chụp màn hình, sơ đồ dùng trong README (chưa tạo, T405)
 │   ├── pitching/                  Pitching Checkpoint 4: PokeNexus-LuyenTap.md (T414), slide (T406), báo cáo .docx (T413)
 │   ├── wireframes/                Wireframe các trang
+│   ├── worklog.md                 Nhật ký làm việc, blocker đã xử lý (chuyển từ PLAN.md, #74)
 │   └── *.md                       Tài liệu sản phẩm, kỹ thuật, quy trình
 ├── scripts/                       Script tiện ích (Phần 4)
 ├── .claude/
 │   ├── settings.json              Quyền lệnh dùng chung cho Claude Code
 │   └── commands/                  Slash command: task.md, adr.md, done.md
-├── docker-compose.yml             MySQL, Adminer
+├── docker-compose.yml             MySQL, Adminer; service `backend` chạy bằng profile `app`
 ├── .env.example
 ├── .editorconfig, .gitattributes, .gitignore, .nvmrc
 ├── CHANGELOG.md, CONTRIBUTING.md, LICENSE, README.md
@@ -60,7 +62,7 @@ pokenexus/
 
 ```text
 backend/
-├── .mvn/wrapper/                  maven-wrapper.properties, maven-wrapper.jar
+├── .mvn/wrapper/                  maven-wrapper.properties (`distributionType=only-script`, không có maven-wrapper.jar)
 ├── mvnw, mvnw.cmd
 ├── pom.xml
 ├── Dockerfile                     Multi-stage: JDK 25 build, JRE 25 runtime
@@ -84,7 +86,7 @@ backend/
         ├── java/com/pokenexus/    Cùng cấu trúc package với main
         └── resources/
             ├── application-test.yml
-            └── csv/               CSV mẫu khoảng 20 Pokémon cho test tích hợp
+            └── csv/               CSV mẫu cho test tích hợp: 62 dạng (23 loài), 12 file
 ```
 
 ### II. Package và class
@@ -146,7 +148,7 @@ frontend/
 ├── .prettierrc, .prettierignore
 ├── public/
 │   ├── favicon.svg
-│   ├── og-image.png               Ảnh xem trước khi chia sẻ link
+│   ├── og-image.png               Ảnh xem trước khi chia sẻ link (chưa tạo, T405)
 │   ├── scenes/                    {scene}-{n}-1920.webp, {scene}-{n}-960.webp, SOURCES.md (T301, ADR 0006)
 │   └── sprites/
 │       ├── placeholder.svg
@@ -159,21 +161,22 @@ frontend/
     │   ├── providers.tsx          QueryClientProvider
     │   └── layout/                AppLayout.tsx, Header.tsx, Footer.tsx, navItems.ts, footerPokemon.ts (Pokémon ngẫu nhiên ở footer; T412)
     ├── pages/                     LandingPage, DexPage, PokemonDetailPage, TypeChartPage, ComparePage,
-    │                              TeamBuilderPage, SharedTeamPage, TerrainPage, NotFoundPage (.tsx)
+    │                              TeamBuilderPage, SharedTeamPage, TerrainPage, NotFoundPage, RouteErrorPage (.tsx)
     ├── features/
     │   ├── landing/               api.ts, hooks.ts, regions.ts (vùng đất, Pokémon hôm nay), quiz.ts,
     │   │                          generations.ts, describeDefense.ts, components/ (T311, T312)
     │   ├── dex/                   api.ts, hooks.ts, useDexSearchParams.ts, emptyMessage.ts, components/
-    │   ├── pokemon-detail/        api.ts, hooks.ts, components/
-    │   ├── typechart/             api.ts, hooks.ts, components/
-    │   ├── compare/               api.ts, hooks.ts, components/
-    │   ├── team-builder/          api.ts, hooks.ts, useTeamDraft.ts, showdown.ts (T409), components/ (có PlayStylePicker, TeamInsights)
+    │   ├── pokemon-detail/        api.ts, hooks.ts, evolution.ts (dựng cây tiến hóa), labels.ts, components/
+    │   ├── typechart/             api.ts, hooks.ts, defense.ts, matrixFocus.ts, useDefendingTypes.ts,
+    │   │                          typeMatrixFixture.ts (ma trận mẫu cho test), components/
+    │   ├── compare/               api.ts, hooks.ts, useCompareSearchParams.ts, scale.ts, components/
+    │   ├── team-builder/          api.ts, hooks.ts, useTeamDraft.ts, teamAnalysis.ts, showdown.ts (T409),
+    │   │                          testing.tsx (dữ liệu và `routeFetch` cho test), components/ (có PlayStylePicker, TeamInsights)
     │   ├── speed/                 level50.ts (tốc độ cấp 50, tỷ lệ, mốc lân cận), api.ts, hooks.ts, components/ (T408)
     │   ├── terrain/               terrains.ts, api.ts, hooks.ts, whosThat.ts, components/ (T314)
     │   └── trainer/               progress.ts, useTrainerProgress.ts, components/ (BallIcon, TrainerCard; T313)
     ├── components/
-    │   ├── ui/                    buttonStyles.ts, Panel, GameDialog, Card, Dialog, Skeleton, EmptyState,
-    │   │                          ErrorState, Toast, Pagination, pageItems.ts
+    │   ├── ui/                    buttonStyles.ts, Panel, GameDialog, EmptyState, ErrorState, Pagination, pageItems.ts
     │   ├── motion/                Reveal (hiện khi cuộn tới, IntersectionObserver; T315), usePauseOffscreen (dừng animation của khối ngoài màn hình)
     │   ├── scene/                 SceneBackdrop (chuyển ảnh), SceneAmbience (lớp hạt), useReducedMotion, PageHero (kèm PageBody nhuộm theo scene, `iris` khi đổi scene), SceneLabel
     │   └── pokemon/               TypeBadge, TypeGlyph, DexNumber, StatBar, MultiplierCell, NeutralMark, PokemonSprite,
@@ -192,29 +195,28 @@ frontend/
     │   └── formatters.ts          Tên, chiều cao, cân nặng, hệ số
     ├── styles/
     │   └── index.css              @import "tailwindcss", @theme token, font
-    ├── assets/
-    │   └── logo.svg
     ├── test/
     │   ├── setup.ts               Nạp matcher jest-dom, polyfill showModal/close cho <dialog> của jsdom, dọn DOM
-    │   └── renderRoute.tsx        Render route với QueryClient và MemoryRouter; giả lập fetch
+    │   └── renderRoute.tsx        Render route bằng createMemoryRouter với QueryClient mới; giả lập fetch
     └── types/
         └── api.ts                 Kiểu DTO khớp docs/api.md Phần 3
 ```
 
-- File test đặt cạnh file được test: `TypeBadge.tsx` và `TypeBadge.test.tsx`.
+- File test đặt cạnh file được test: `StatBar.tsx` và `StatBar.test.tsx`.
+- Không có thư mục `src/assets/`: logo ở Header là một `span` vẽ bằng CSS cạnh chữ "PokeNexus" (`app/layout/Header.tsx`), favicon nằm ở `public/`. Không có component `Card`, `Dialog`, `Skeleton`, `Toast` dùng chung: thẻ là `PokemonCard`, hộp thoại dùng `<dialog>` trong từng component (`FilterSheet`, `SaveTeamDialog`, `ShowdownDialogs`), skeleton viết riêng trong từng tính năng.
 - `features/<tên>/components/` chứa component chỉ dùng trong tính năng đó. Component dùng ở từ 2 tính năng trở lên thì chuyển lên `components/`. Ngoại lệ: `features/trainer/` là tính năng tiến độ Trainer (dữ liệu, hook và component đi cùng nhau), được Thử tài Trainer và trang Địa hình dùng chung.
 
 ### II. Ánh xạ trang và tính năng
 
 | Trang | Feature folder | Component chính | Tạo ở |
 |---|---|---|---|
-| `LandingPage` | `landing` | `LandingHero`, `TypeTicker`, `FeatureRegions`, `TypeWheel`, `DailyPokemon`, `TeamSteps`, `GenerationChart`, `TrainerQuiz`, `ClosingCta`, `SectionDecor` (Aura, Blob, Cloud, Spark, Wave; T316) | T311, T312 |
+| `LandingPage` | `landing` | `LandingHero`, `TypeTicker`, `FeatureRegions`, `TypeWheel`, `DailyPokemon`, `TeamSteps`, `GenerationChart`, `TrainerQuiz`, `ClosingCta`, `SectionTitle`, `SectionDecor` (Aura, Blob, Cloud, Spark, Wave; T316) | T311, T312 |
 | `DexPage` | `dex` | `DexFilters`, `StatRangeFields`, `DexToolbar`, `ViewToggle`, `FilterSheet`, `PokemonGrid`, `PokemonList`, `Pagination` | T301 |
-| `PokemonDetailPage` | `pokemon-detail`, `speed` | `PokemonHero`, `StatPanel` (chứa `SpeedBenchmark`), `DefenseGrid`, `FormSwitcher`, `EvolutionChain`, `DetailStates`; `evolution.ts`, `labels.ts` | T303, T408 |
+| `PokemonDetailPage` | `pokemon-detail`, `speed` | `PokemonHero`, `StatPanel` (chứa `SpeedBenchmark`, dùng `SpeedPercentBar` chung với `TeamSpeedList`), `DefenseGrid`, `FormSwitcher`, `EvolutionChain`, `DetailStates`; `evolution.ts`, `labels.ts` | T303, T408 |
 | `TypeChartPage` | `typechart` | `TypeMatrixTable`, `DualTypePicker`, `DefenseResult`, `MatrixLegend`, `MatrixFocusPanel`; `defense.ts`, `matrixFocus.ts`, `useDefendingTypes.ts` | T304, T316 |
 | `ComparePage` | `compare` | `ComparePicker`, `CompareSlot`, `VersusBanner`, `CompareRadar`, `StatDuelTable`, `StabPanel`, `VerdictPanel`; `useCompareSearchParams.ts`, `scale.ts` | T308, T316 |
 | `TeamBuilderPage` | `team-builder` | `TeamSlots`, `TeamMemberCard`, `MemberDetailPopover`, `WeaknessHeatmap`, `TeamScoreGauge`, `CoverageAndStats`, `RecommendationList`, `RecommendationCard`, `SaveTeamDialog`, `ShareLinkField`, `ShowdownImportDialog`, `ShowdownExportDialog` (trong `ShowdownDialogs.tsx`), `TeamSpeedList` (feature `speed`); `useTeamDraft.ts`, `teamAnalysis.ts`, `showdown.ts` | T306, T307, T408, T409 |
-| `SharedTeamPage` | `team-builder` | `ReadOnlyTeamSlots`, `SharedMemberCard` (trong `TeamMemberCard.tsx`, bọc `MemberDetailPopover`), `AnalysisHeatmap` (`compact`), `ShareLinkField`, `ShowdownExportDialog` | T307, T316, T409 |
+| `SharedTeamPage` | `team-builder` | `ReadOnlyTeamSlots`, `SharedMemberCard` (trong `TeamMemberCard.tsx`, bọc `MemberDetailPopover`), `AnalysisHeatmap` (`compact`), `TeamInsights`, `ShareLinkField`, `ShowdownExportDialog` | T307, T316, T409, T410 |
 | `TerrainPage` | `terrain`, `trainer` | `TerrainPicker`, `TerrainPokemon`, `WhosThatPokemon`, `TrainerCard`; `terrains.ts`, `whosThat.ts` | T314 |
 
 ### III. Quy tắc đặt tên frontend

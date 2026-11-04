@@ -15,7 +15,7 @@ npm run dev
 npm run lint
 npm run test
 npm run build
-npx vitest run src/components/pokemon/TypeBadge.test.tsx
+npx vitest run src/components/pokemon/StatBar.test.tsx
 ```
 
 - Node.js theo `.nvmrc` ở thư mục gốc (24).
