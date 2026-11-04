@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react'
+import { fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -76,9 +76,19 @@ describe('SharedTeamPage', () => {
     expect(hero.getAllByText('a1B2c3D4')).toHaveLength(2)
 
     const members = within(screen.getByRole('region', { name: 'Thành viên' }))
-    const links = members.getAllByRole('link')
-    expect(links).toHaveLength(6)
-    expect(links.map((link) => link.getAttribute('href'))).toEqual([
+    const cards = members.getAllByTestId('member-detail-trigger')
+    expect(cards).toHaveLength(6)
+    expect(members.queryByRole('link')).not.toBeInTheDocument()
+    expect(cards[1]).toHaveTextContent('“Gyara”')
+    expect(cards[5]).toHaveTextContent('#0248Tyranitar')
+    expect(cards[5]).toHaveTextContent('Vách núi đá')
+    const hrefs = []
+    for (const card of cards) {
+      fireEvent.pointerEnter(card, { pointerType: 'mouse' })
+      hrefs.push(within(card).getByRole('link').getAttribute('href'))
+      fireEvent.pointerLeave(card, { pointerType: 'mouse' })
+    }
+    expect(hrefs).toEqual([
       '/pokemon/charizard',
       '/pokemon/gyarados',
       '/pokemon/dragonite',
@@ -86,9 +96,6 @@ describe('SharedTeamPage', () => {
       '/pokemon/volcarona',
       '/pokemon/tyranitar',
     ])
-    expect(links[1]).toHaveTextContent('“Gyara”')
-    expect(links[5]).toHaveTextContent('#0248Tyranitar')
-    expect(links[5]).toHaveTextContent('Vách núi đá')
     expect(members.queryByRole('heading')).not.toBeInTheDocument()
     expect(members.queryByRole('button')).not.toBeInTheDocument()
 

@@ -54,7 +54,7 @@ export function TeamSlots({
         return (
           <li
             key={id ?? `empty-${index}`}
-            className={`flex ${id !== undefined ? 'animate-pop-in' : ''}`}
+            className={`flex has-[[data-popover-open=true]]:z-30 ${id !== undefined ? 'animate-pop-in' : ''}`}
           >
             {id !== undefined ? (
               <TeamMemberCard
@@ -77,7 +77,7 @@ export function TeamSlots({
           </li>
         )
       })}
-      <li className="flex">
+      <li className="flex has-[[data-popover-open=true]]:z-30">
         {sixthId !== null ? (
           <TeamMemberCard
             id={sixthId}
@@ -123,7 +123,11 @@ export function ReadOnlyTeamSlots({ members }: ReadOnlyTeamSlotsProps) {
   return (
     <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(8.5rem,100%),1fr))] gap-3 md:grid-cols-[repeat(auto-fit,minmax(min(10.625rem,100%),1fr))] md:gap-3.5">
       {members.map((member, index) => (
-        <li key={member.slot} className="flex animate-card-in" style={staggerDelay(index, 90, 200)}>
+        <li
+          key={member.slot}
+          className="flex animate-card-in has-[[data-popover-open=true]]:z-30"
+          style={staggerDelay(index, 90, 200)}
+        >
           <SharedMemberCard member={member} />
         </li>
       ))}

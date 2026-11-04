@@ -212,8 +212,8 @@ frontend/
 | `PokemonDetailPage` | `pokemon-detail`, `speed` | `PokemonHero`, `StatPanel` (chứa `SpeedBenchmark`), `DefenseGrid`, `FormSwitcher`, `EvolutionChain`, `DetailStates`; `evolution.ts`, `labels.ts` | T303, T408 |
 | `TypeChartPage` | `typechart` | `TypeMatrixTable`, `DualTypePicker`, `DefenseResult`, `MatrixLegend`, `MatrixFocusPanel`; `defense.ts`, `matrixFocus.ts`, `useDefendingTypes.ts` | T304, T316 |
 | `ComparePage` | `compare` | `ComparePicker`, `CompareSlot`, `VersusBanner`, `CompareRadar`, `StatDuelTable`, `StabPanel`, `VerdictPanel`; `useCompareSearchParams.ts`, `scale.ts` | T308, T316 |
-| `TeamBuilderPage` | `team-builder` | `TeamSlots`, `TeamMemberCard`, `WeaknessHeatmap`, `TeamScoreGauge`, `CoverageAndStats`, `RecommendationList`, `RecommendationCard`, `SaveTeamDialog`, `ShareLinkField`, `ShowdownImportDialog`, `ShowdownExportDialog` (trong `ShowdownDialogs.tsx`), `TeamSpeedList` (feature `speed`); `useTeamDraft.ts`, `teamAnalysis.ts`, `showdown.ts` | T306, T307, T408, T409 |
-| `SharedTeamPage` | `team-builder` | `ReadOnlyTeamSlots`, `SharedMemberCard` (trong `TeamMemberCard.tsx`), `AnalysisHeatmap` (`compact`), `ShareLinkField`, `ShowdownExportDialog` | T307, T316, T409 |
+| `TeamBuilderPage` | `team-builder` | `TeamSlots`, `TeamMemberCard`, `MemberDetailPopover`, `WeaknessHeatmap`, `TeamScoreGauge`, `CoverageAndStats`, `RecommendationList`, `RecommendationCard`, `SaveTeamDialog`, `ShareLinkField`, `ShowdownImportDialog`, `ShowdownExportDialog` (trong `ShowdownDialogs.tsx`), `TeamSpeedList` (feature `speed`); `useTeamDraft.ts`, `teamAnalysis.ts`, `showdown.ts` | T306, T307, T408, T409 |
+| `SharedTeamPage` | `team-builder` | `ReadOnlyTeamSlots`, `SharedMemberCard` (trong `TeamMemberCard.tsx`, bọc `MemberDetailPopover`), `AnalysisHeatmap` (`compact`), `ShareLinkField`, `ShowdownExportDialog` | T307, T316, T409 |
 | `TerrainPage` | `terrain`, `trainer` | `TerrainPicker`, `TerrainPokemon`, `WhosThatPokemon`, `TrainerCard`; `terrains.ts`, `whosThat.ts` | T314 |
 
 ### III. Quy tắc đặt tên frontend
