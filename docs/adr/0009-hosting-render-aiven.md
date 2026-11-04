@@ -36,6 +36,7 @@
 - Cold start: lần gọi đầu sau 15 phút không có request chờ 1-3 phút. Làm nóng trước demo và trước khi đo Lighthouse; nên bật lịch gọi `/api/v1/health` mỗi 10 phút. Một service chạy liên tục dùng 720-744 trong 750 giờ Free mỗi tháng của workspace.
 - Độ trễ: mỗi request tra cứu chạy vài truy vấn DB, nên Render đặt cùng hoặc gần vùng Aiven gán. Nếu Aiven gán vùng ngoài châu Á, cân nhắc chuyển DB sang TiDB Singapore sau khi kiểm tương thích (V1-V3, Flyway validate, nhập dump).
 - IP client cho giới hạn lưu đội: chưa biết proxy của Render có xóa `X-Forwarded-For`, `Forwarded` do client gửi hay không. Bước kiểm chứng 11 request ([deploy.md](../deploy.md), Phần 8, mục III) quyết định có phải sửa `TeamController` trước demo (lỗi B3) hay không.
+- Ghi chú ngày 2026-11-05: kiểm chứng ngày 04/11 không đạt, proxy Render chỉ nối IP vào cuối `X-Forwarded-For`. Sửa ở Issue #89: lấy IP từ `CF-Connecting-IP` do edge Cloudflare của Render ghi đè ([architecture.md](../architecture.md), Phần 8).
 - Kết nối DB dùng chế độ TLS mặc định `PREFERRED` của MySQL Connector/J: có mã hóa nhưng không xác minh chứng chỉ. Chấp nhận vì dữ liệu công khai; muốn chặt hơn thì thêm `sslMode=VERIFY_CA` và CA của Aiven.
 - Giới hạn Aiven Free: 76 kết nối, đủ cho pool mặc định 10 của HikariCP.
 - Hết hạn: Aiven Free và Render Free không có hạn dùng; link giữ được sau hackathon nếu lịch gọi health tiếp tục chạy hoặc chấp nhận cold start.
