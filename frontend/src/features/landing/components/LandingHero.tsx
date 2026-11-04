@@ -58,7 +58,7 @@ function FeaturedPokemon({ region }: FeaturedPokemonProps) {
   const primaryType = data?.types[0]
 
   return (
-    <figure className="relative mx-auto h-[330px] w-full max-w-[340px] perspective-[900px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mx-0 lg:h-[500px] lg:w-[440px] lg:max-w-none lg:self-center lg:short:[zoom:0.8]">
+    <figure className="relative mx-auto h-[264px] w-full max-w-[340px] perspective-[900px] md:h-[330px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mx-0 lg:h-[500px] lg:w-[440px] lg:max-w-none lg:self-center lg:short:[zoom:0.8] lg:shorter:[zoom:0.65]">
       <span
         aria-hidden="true"
         className="type-ring absolute -bottom-28 left-1/2 hidden size-90 [transform:translateX(-50%)_rotateX(74deg)] motion-safe:animate-ring-in lg:block"
@@ -69,7 +69,7 @@ function FeaturedPokemon({ region }: FeaturedPokemonProps) {
       />
       <div
         key={region.pokemonId}
-        className="pointer-events-none absolute top-0 left-1/2 z-20 size-[220px] -translate-x-1/2 animate-pop-in [animation-delay:600ms] lg:-top-2 lg:size-[300px]"
+        className="pointer-events-none absolute top-0 left-1/2 z-20 size-44 -translate-x-1/2 animate-pop-in [animation-delay:600ms] md:size-[220px] lg:-top-2 lg:size-[300px] lg:short:top-6 lg:shorter:top-10"
       >
         <div className="absolute inset-0 animate-float [animation-delay:1300ms]">
           <span
@@ -90,29 +90,29 @@ function FeaturedPokemon({ region }: FeaturedPokemonProps) {
           <StatCallout
             label="Chiều cao"
             value={formatHeight(data.heightDm)}
-            className="top-[150px] left-0 [animation-delay:1500ms] lg:top-[214px]"
+            className="top-[116px] left-0 [animation-delay:1500ms] md:top-[150px] lg:top-[214px]"
           />
           <StatCallout
             label="Cân nặng"
             value={formatWeight(data.weightHg)}
-            className="top-6 right-0 [animation-delay:1650ms] lg:top-[330px]"
+            className="top-3 right-0 [animation-delay:1650ms] md:top-6 lg:top-[330px]"
           />
         </>
       )}
-      <figcaption className="absolute top-[124px] left-1/2 h-[190px] w-60 -translate-x-1/2 text-white lg:top-[150px] lg:h-80 lg:w-[270px]">
+      <figcaption className="absolute top-24 left-1/2 h-[164px] w-60 -translate-x-1/2 text-white md:top-[124px] md:h-[190px] lg:top-[150px] lg:h-80 lg:w-[270px]">
         <span
           aria-hidden="true"
           className="scan-grid absolute inset-0 rounded-[14px] bg-scrim/80 lg:rounded-2xl"
         />
         <span
           key={region.pokemonId}
-          className="relative flex h-full animate-fade-up flex-col items-center justify-end gap-1.5 p-4 text-center [animation-delay:900ms] lg:gap-2 lg:p-[22px]"
+          className="relative flex h-full animate-fade-up flex-col items-center justify-end gap-1 p-3 text-center [animation-delay:900ms] md:gap-1.5 md:p-4 lg:gap-2 lg:p-[22px]"
         >
           <DexNumber
             id={region.pokemonId}
-            className="text-[1.625rem]/[1.625rem] text-dex-yellow lg:text-[2.125rem]/[2.125rem]"
+            className="text-[1.375rem]/[1.375rem] text-dex-yellow md:text-[1.625rem]/[1.625rem] lg:text-[2.125rem]/[2.125rem]"
           />
-          <span className="max-w-full text-2xl/7 font-extrabold break-words lg:text-[1.625rem]/8">
+          <span className="max-w-full text-xl/6 font-extrabold break-words md:text-2xl/7 lg:text-[1.625rem]/8">
             {name}
           </span>
           {isError && (
@@ -151,7 +151,7 @@ export function LandingHero() {
   return (
     <section
       aria-labelledby={LANDING_TITLE_ID}
-      className="relative overflow-hidden bg-scrim px-3 pt-4 pb-12 md:px-6 md:pt-5 lg:h-[calc(100svh-3.75rem)] lg:min-h-140 lg:pb-12"
+      className="relative overflow-hidden bg-scrim px-3 pt-3 pb-10 md:px-6 md:pt-5 md:pb-12 lg:flex lg:min-h-[calc(100svh-3.75rem)] lg:flex-col lg:shorter:pt-3 lg:shorter:pb-10"
     >
       <div aria-hidden="true" className="absolute -inset-6 blur-[5px] saturate-[1.15]">
         <SceneBackdrop scene={region.scene} />
@@ -160,10 +160,10 @@ export function LandingHero() {
         aria-hidden="true"
         className="absolute inset-0 bg-linear-to-b from-scrim/20 to-scrim/55"
       />
-      <div className="relative mx-auto flex max-w-348 flex-col rounded-[2rem] bg-dex-red p-3 shadow-[inset_0_-6px_0_var(--color-dex-red-hover),0_8px_0_rgb(22_33_62/0.22)] md:rounded-[2.5rem] md:p-4 lg:h-full">
+      <div className="relative mx-auto flex w-full max-w-348 flex-col rounded-[2rem] bg-dex-red p-3 shadow-[inset_0_-6px_0_var(--color-dex-red-hover),0_8px_0_rgb(22_33_62/0.22)] md:rounded-[2.5rem] md:p-4 lg:flex-1 lg:shorter:p-3">
         <div
           aria-hidden="true"
-          className="flex flex-none items-center gap-3 px-1 pb-3 md:gap-4 md:short:pb-2"
+          className="flex flex-none items-center gap-3 px-1 pb-2 md:gap-4 md:pb-3 md:short:pb-2 lg:shorter:pb-1.5"
         >
           <span className="flex gap-2">
             <span className="size-3 rounded-full border-2 border-ink bg-danger md:size-3.5" />
@@ -173,7 +173,7 @@ export function LandingHero() {
           <span className="ml-2 h-1 flex-1 rounded-full bg-dex-red-hover" />
         </div>
 
-        <div className="relative isolate animate-boot overflow-hidden rounded-3xl border-4 border-ink bg-scrim lg:min-h-0 lg:flex-1">
+        <div className="relative isolate animate-boot overflow-clip rounded-3xl border-4 border-ink bg-scrim lg:flex lg:flex-1 lg:flex-col">
           <div
             key={region.scene}
             className={`absolute inset-0 ${region.scene === initialScene ? '' : 'animate-iris'}`}
@@ -186,22 +186,22 @@ export function LandingHero() {
           />
           <SceneLabel scene={region.scene} />
 
-          <div className="relative grid gap-6 px-4 pt-8 pb-5 md:px-10 lg:h-full lg:grid-cols-[minmax(0,1fr)_auto] lg:content-center lg:gap-x-10 lg:px-14 lg:py-8 lg:short:gap-y-4 lg:short:py-5">
-            <div className="w-fit max-w-full animate-rise self-start rounded-3xl bg-scrim/75 p-5 text-white [animation-delay:380ms] md:p-7 lg:self-end md:short:p-5">
+          <div className="relative grid gap-3 px-3 pt-5 pb-4 md:gap-6 md:px-10 md:pt-8 md:pb-5 lg:flex-1 lg:grid-cols-[minmax(0,1fr)_auto] lg:content-center lg:gap-x-10 lg:px-14 lg:py-8 lg:short:gap-y-4 lg:short:py-5 lg:shorter:gap-y-3 lg:shorter:py-3">
+            <div className="w-fit max-w-full animate-rise self-start rounded-3xl bg-scrim/75 p-4 text-white [animation-delay:380ms] md:p-7 lg:self-end md:short:p-5 lg:shorter:p-4">
               <h1
                 id={LANDING_TITLE_ID}
-                className="animate-title-in font-display text-[2.25rem]/[2.5rem] font-normal sm:text-[2.75rem]/[3rem] [animation-delay:700ms] [text-shadow:4px_4px_0_var(--color-dex-red)] md:text-[3.5rem]/[3.75rem] md:short:text-[2.75rem]/[3rem]"
+                className="animate-title-in font-display text-[2.25rem]/[2.5rem] font-normal sm:text-[2.75rem]/[3rem] [animation-delay:700ms] [text-shadow:4px_4px_0_var(--color-dex-red)] md:text-[3.5rem]/[3.75rem] md:short:text-[2.75rem]/[3rem] lg:shorter:text-[2.5rem]/[2.75rem]"
               >
                 PokeNexus
               </h1>
-              <p className="mt-3 max-w-[26ch] text-lg/7 text-white/90 md:text-xl/[1.875rem] md:short:mt-2 md:short:text-lg/7">
+              <p className="mt-2 max-w-[26ch] text-base/6 text-white/90 md:mt-3 md:text-xl/[1.875rem] md:short:mt-2 md:short:text-lg/7 lg:shorter:mt-1.5 lg:shorter:max-w-none lg:shorter:text-base/6">
                 Bách khoa Pokémon và công cụ phân tích đội hình VGC
               </p>
-              <ul className="mt-5 flex flex-wrap gap-2 text-sm font-bold md:short:mt-3">
+              <ul className="mt-3 flex flex-wrap gap-1.5 text-xs font-bold sm:gap-2 sm:text-sm md:mt-5 md:short:mt-3 lg:shorter:mt-2.5">
                 {TAGS.map((tag, index) => (
                   <li
                     key={tag}
-                    className="animate-pop-in rounded-full border border-white/35 bg-white/12 px-3 py-1.5"
+                    className="animate-pop-in rounded-full border border-white/35 bg-white/12 px-2.5 py-1 sm:px-3 sm:py-1.5 lg:shorter:py-1"
                     style={staggerDelay(index, 90, 1000)}
                   >
                     {tag}
@@ -214,21 +214,21 @@ export function LandingHero() {
 
             <GameDialog
               speaker="Giáo sư"
-              className="max-w-160 animate-rise [animation-delay:480ms] lg:col-start-1 lg:row-start-2 lg:self-start md:short:pt-6 md:short:pb-5"
+              className="max-w-160 animate-rise [animation-delay:480ms] max-md:px-4 max-md:pt-6 max-md:pb-4 lg:col-start-1 lg:row-start-2 lg:self-start md:short:pt-6 md:short:pb-5 lg:shorter:pt-5 lg:shorter:pb-4"
             >
-              <p className="text-lg/7 font-semibold md:text-xl/[1.875rem] md:short:text-lg/7">
+              <p className="text-base/6 font-semibold md:text-xl/[1.875rem] md:short:text-lg/7 lg:shorter:text-base/6">
                 {GREETING}
               </p>
-              <div className="mt-5 flex flex-wrap gap-3 md:short:mt-4">
+              <div className="mt-3 flex flex-wrap gap-2 md:mt-5 md:gap-3 md:short:mt-4 lg:shorter:mt-3">
                 <Link
                   to="/pokedex"
-                  className={`${buttonClassName('cta')} animate-fade-up [animation-delay:1100ms]`}
+                  className={`${buttonClassName('cta')} animate-fade-up [animation-delay:1100ms] max-sm:px-3.5 max-sm:text-sm`}
                 >
                   Mở Pokédex
                 </Link>
                 <Link
                   to="/team-builder"
-                  className={`${buttonClassName('secondary')} animate-fade-up [animation-delay:1250ms]`}
+                  className={`${buttonClassName('secondary')} animate-fade-up [animation-delay:1250ms] max-sm:px-3.5 max-sm:text-sm`}
                 >
                   Xây đội ngay
                 </Link>
@@ -237,14 +237,17 @@ export function LandingHero() {
           </div>
         </div>
 
-        <div className="flex flex-none flex-col gap-2 px-1 pt-4 md:flex-row md:items-center md:gap-4 md:short:pt-3">
-          <p id="region-picker-label" className="flex-none text-base font-extrabold text-white">
+        <div className="flex flex-none items-center gap-3 px-1 pt-3 md:gap-4 md:pt-4 md:short:pt-3 lg:shorter:pt-2">
+          <p
+            id="region-picker-label"
+            className="flex-none text-sm font-extrabold text-white md:text-base"
+          >
             Chọn vùng đất
           </p>
           <div
             role="group"
             aria-labelledby="region-picker-label"
-            className="flex min-w-0 snap-x snap-proximity gap-2 overflow-x-auto px-0.5 pt-1 pb-3 [scrollbar-color:var(--color-dex-yellow)_transparent] [scrollbar-width:thin]"
+            className="flex min-w-0 snap-x snap-proximity gap-2 overflow-x-auto px-0.5 pt-1 pb-3 [scrollbar-color:var(--color-dex-yellow)_transparent] [scrollbar-width:thin] lg:shorter:pb-2"
           >
             {LANDING_REGIONS.map((item) => {
               const scene = SCENES[item.scene]
@@ -255,7 +258,7 @@ export function LandingHero() {
                   type="button"
                   aria-pressed={active}
                   onClick={() => setRegion(item)}
-                  className={`chip-pop flex h-11 flex-none cursor-pointer snap-start items-center gap-2 rounded-full border-2 pr-3.5 pl-1 text-sm font-extrabold whitespace-nowrap shadow-[0_3px_0_var(--color-dex-red-edge)] transition-[translate,background-color] duration-150 ease-out hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${active ? 'border-ink bg-dex-yellow text-ink' : 'border-white/35 bg-dex-red-hover text-white hover:bg-dex-red-deep'}`}
+                  className={`chip-pop flex h-10 flex-none cursor-pointer snap-start items-center gap-2 rounded-full border-2 pr-3.5 pl-1 text-sm font-extrabold whitespace-nowrap shadow-[0_3px_0_var(--color-dex-red-edge)] transition-[translate,background-color] duration-150 ease-out hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:h-11 ${active ? 'border-ink bg-dex-yellow text-ink' : 'border-white/35 bg-dex-red-hover text-white hover:bg-dex-red-deep'}`}
                 >
                   <span
                     aria-hidden="true"

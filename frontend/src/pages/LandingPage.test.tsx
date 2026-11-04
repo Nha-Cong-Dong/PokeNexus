@@ -156,6 +156,15 @@ describe('LandingPage', () => {
     expect(within(regions).getByRole('heading', { level: 3, name: 'Địa hình' })).toBeInTheDocument()
   })
 
+  it('lets keyboard users scroll the three team steps on phones', () => {
+    renderRoute('/')
+    const steps = screen.getByRole('region', { name: 'Xây đội trong 3 bước' })
+    const strip = within(steps).getByRole('list', { name: 'Các bước xây đội' })
+
+    expect(strip).toHaveAttribute('tabindex', '0')
+    expect(within(strip).getAllByRole('listitem')).toHaveLength(3)
+  })
+
   it('lists what Fire hits super effectively on the type wheel', async () => {
     renderRoute('/')
     const wheel = screen.getByRole('region', { name: 'Vòng tương khắc' })
@@ -256,6 +265,18 @@ describe('LandingPage', () => {
     expect(within(quiz).getByText(/câu đã trả lời/)).toHaveTextContent(
       'Đúng 0 trên 1 câu đã trả lời',
     )
+  })
+
+  it('lines short answers up in one row and stacks longer answers on phones', async () => {
+    renderRoute('/')
+    const quiz = screen.getByRole('region', { name: 'Thử tài Trainer' })
+    await within(quiz).findByRole('button', { name: 'x4' })
+    expect(within(quiz).getByRole('group', { name: 'Các đáp án' })).toHaveClass('grid-cols-3')
+
+    await userEvent.click(within(quiz).getByRole('button', { name: 'Điểm yếu và miễn nhiễm' }))
+
+    expect(await within(quiz).findByRole('button', { name: 'Fighting' })).toBeInTheDocument()
+    expect(within(quiz).getByRole('group', { name: 'Các đáp án' })).not.toHaveClass('grid-cols-3')
   })
 
   it('shows per-block errors with the API reason when data is not ready', async () => {
