@@ -239,6 +239,7 @@ frontend/
 | `scripts/download-sprites.sh` | Tải sprite vào `frontend/public/sprites/pokemon/` ([assets.md](assets.md), Phần 4) | T207 |
 | `scripts/db-dump.sh` | `export`: xuất dữ liệu tĩnh và schema rỗng của bảng đội từ container MySQL local vào `data/dumps/`; `import`: nhập vào DB đích theo `TARGET_DB_URL` ([architecture.md](architecture.md), Phần 11, mục III) | T403 |
 | `scripts/bench-synergy.sh` | Gọi 100 lần endpoint synergy, in p50, p95 | T305 |
+| `scripts/acceptance-check.mjs` | Nghiệm thu bản đã deploy: API theo kịch bản demo, 6 lỗi sửa ngày 05/11, B3 (`--rate-limit`), 9 route ở 375 và 1440 px bằng Chrome headless; `--base`, `--api` để chạy với stack khác ([deploy.md](deploy.md), Phần 8) | #94 |
 | `scripts/check-image-provenance.mjs` | Tìm dấu vết AI (C2PA, IPTC `DigitalSourceType`, tên công cụ AI) trong metadata ảnh đã sửa ([design-system.md](design-system.md), Phần 4, mục I, 2) | ADR 0006 |
 
 - Script Bash chạy được trên macOS, Linux và Git Bash (Windows). Chỉ `download-csv` có thêm bản PowerShell vì nằm trong mục "Chạy nhanh" của README.
