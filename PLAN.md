@@ -41,7 +41,7 @@
 | # | Vấn đề | Ảnh hưởng | Việc cần làm |
 |---|---|---|---|
 | 1 | Cloudflare Pages và Render chưa tự build lại từ `main`: bundle Pages vẫn `index-oap3lK_N.js` của 04/11, API chưa có thay đổi của #86, #87, #91 | Link thật thiếu các bản sửa ngày 05/11 và bản sửa B3; `acceptance-check` trên production 25/33 | Chủ dự án deploy lại từ dashboard Pages và Render, rồi chạy `node scripts/acceptance-check.mjs --rate-limit` (đạt khi 36/36: 33 mục thường và 3 vòng B3) |
-| 2 | Lighthouse trên link thật chưa đo | Thiếu phần còn lại của cột Kiểm tra T404 | Đo sau blocker 1, ghi số vào `docs/worklog.md` |
+| 2 | Lighthouse mobile trên link thật (bản 04/11, đo 05/11): 0/9 route đạt, chỉ vì LCP 3,6-7,1 s (ngưỡng 2,5 s); A11y, Best Practices, CLS, TBT đạt | T404 chưa đạt cột Kiểm tra | Chủ dự án chọn: chấp nhận và ghi lệch ngưỡng, hoặc sửa nhỏ ảnh hero rồi đo lại sau blocker 1 (số đo ở `docs/worklog.md`, 05/11) |
 
 - Mở từ trước, không chặn demo: Node trên máy là 25, `.nvmrc` là 24 (CI dùng 24); trang So sánh gọi 3 request mỗi cặp (2 chi tiết và `compare`).
 
