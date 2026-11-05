@@ -45,7 +45,7 @@
 |---|---|
 | Backend | Java 25, Spring Boot 4.1.x (Spring Framework 7, Jakarta EE 11), Maven Wrapper |
 | Database | MySQL 8.4 (Docker), Flyway |
-| Frontend | Node.js 24 (`.nvmrc`), React + TypeScript + Vite, Tailwind CSS 4, TanStack Query 5, React Router, Recharts 3 |
+| Frontend | Node.js 24 (`.nvmrc`), React + TypeScript + Vite, Tailwind CSS 4, TanStack Query 5, React Router; biểu đồ vẽ bằng SVG, không cài Recharts |
 | Test | JUnit 5, AssertJ, Mockito, Testcontainers; Vitest, React Testing Library |
 
 - Spring Boot 4 khác Boot 3 ở nhiều điểm. Không làm theo hướng dẫn viết cho Boot 3; đối chiếu tài liệu chính thức bản 4.1 ([ADR 0004](docs/adr/0004-java-25-spring-boot-4.md)).
@@ -93,7 +93,7 @@ cd frontend && npm run lint && npm run test && npm run build
 - Trình bày kế hoạch: Goal, tiêu chí hoàn thành, file sẽ tạo hoặc sửa, test sẽ viết. Chờ xác nhận nếu ảnh hưởng nhiều file.
 - Làm theo layer (Entity, Repository, Service, Controller, rồi UI). Sau mỗi layer chạy build hoặc test và báo kết quả thật.
 - Đổi API, schema, cấu trúc thư mục thì sửa `docs/api.md`, `docs/database.md`, `docs/folder-structure.md` trong cùng thay đổi.
-- Cập nhật `PLAN.md` (trạng thái task, nhật ký). Đề xuất tiêu đề PR theo Phần 5.
+- Cập nhật trạng thái task trong `PLAN.md` và thêm dòng nhật ký vào [docs/worklog.md](docs/worklog.md). Đề xuất tiêu đề PR theo Phần 5.
 - Slash command hỗ trợ: `/task <mã task>`, `/adr <tiêu đề>`, `/done` (trong `.claude/commands/`).
 
 ### II. Definition of Done

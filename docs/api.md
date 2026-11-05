@@ -1,6 +1,7 @@
 # PokeNexus - Đặc tả REST API
 
-- Phiên bản: 0.10 (cập nhật 2026-11-05; kết quả `GET /pokemon/search` có thêm `formCategory` (`PokemonSuggestion`); frontend luôn gửi đủ 5 giá trị `form` để ô tìm kiếm ra cả Mega, Gmax, dạng khác)
+- Phiên bản: 0.11 (cập nhật 2026-11-05, Issue #74; sửa cho khớp code: `/compare` và `/evolution` trả 400 `INVALID_PARAMETER` khi `idOrName` sai định dạng; mảng `errors` của `VALIDATION_FAILED` chỉ có khi lỗi Bean Validation của body; ví dụ `analyze` ở Phần 5 dùng số liệu thật đo trên production: `teamScore` 20, 11 hệ phủ)
+- Bản 0.10 (2026-11-05; kết quả `GET /pokemon/search` có thêm `formCategory` (`PokemonSuggestion`); frontend luôn gửi đủ 5 giá trị `form` để ô tìm kiếm ra cả Mega, Gmax, dạng khác)
 - Bản 0.9 (2026-11-05): 16 dạng trùng hệ, chỉ số và ảnh với dạng khác của cùng loài (Totem, Zygarde Power Construct, Greninja Battle Bond, Rockruff Own Tempo) bị ẩn khỏi danh sách, tìm kiếm và `forms`)
 - Bản 0.8 (2026-11-02; body tối đa 16 KB, mã lỗi `PAYLOAD_TOO_LARGE` 413; `page` có giới hạn trên; `GET /types` trả 503 khi chưa nạp dữ liệu; lưu đội khi DB rỗng trả 503)
 - Bản 0.7 (2026-10-30): thêm `GET /pokemon/speed-tiers` cho F09, [spec.md](spec.md) 1.5.
@@ -122,7 +123,7 @@
 | `left`, `right` | Bắt buộc, dạng `idOrName`, hai giá trị khác nhau |
 
 - Response 200: `CompareResponse`.
-- 400 `INVALID_PARAMETER`: thiếu tham số hoặc `left = right`. 404 `POKEMON_NOT_FOUND`.
+- 400 `INVALID_PARAMETER`: thiếu tham số, `left = right`, hoặc một trong hai giá trị sai định dạng `idOrName` (như `GET /pokemon/{idOrName}`). 404 `POKEMON_NOT_FOUND`.
 
 ### VII. `GET /api/v1/types` và `GET /api/v1/types/matrix`
 
@@ -172,7 +173,7 @@
 
 ### XII. `GET /api/v1/pokemon/{idOrName}/evolution`
 
-- Chuỗi tiến hóa của loài chứa Pokémon đó (US-08, làm sớm ngày 2026-10-26 cho trang chi tiết). Response 200: `EvolutionResponse` (Phần 3, mục II). 404 `POKEMON_NOT_FOUND`.
+- Chuỗi tiến hóa của loài chứa Pokémon đó (US-08, làm sớm ngày 2026-10-26 cho trang chi tiết). Response 200: `EvolutionResponse` (Phần 3, mục II). 400 `INVALID_PARAMETER`: `idOrName` sai định dạng. 404 `POKEMON_NOT_FOUND`.
 - `stages` là danh sách phẳng xếp theo `speciesId`; mỗi phần tử lấy `pokemonId`, `name`, `types` của dạng mặc định; loài không có dạng mặc định bị bỏ qua. Frontend dựng cây từ `evolvesFromSpeciesId`.
 
 ### XIII. `GET /api/v1/pokemon/speed-tiers`
@@ -392,7 +393,7 @@ interface TeamResponse {
 
 | `code` | HTTP | Khi nào |
 |---|---|---|
-| `VALIDATION_FAILED` | 400 | Body vi phạm ràng buộc Bean Validation; có thêm mảng `errors` |
+| `VALIDATION_FAILED` | 400 | Body vi phạm ràng buộc Bean Validation. Có mảng `errors` khi lỗi là `MethodArgumentNotValidException` (trường hợp thường gặp, ví dụ ở mục II); nhánh `HandlerMethodValidationException` của body và kiểm tra dự phòng số thành viên trong `SynergyAnalyzer` (qua HTTP không gặp vì DTO đã chặn trước) trả cùng mã nhưng không có `errors` |
 | `INVALID_PARAMETER` | 400 | Query hoặc path sai kiểu, sai định dạng, ngoài whitelist |
 | `MALFORMED_JSON` | 400 | Body không phải JSON hợp lệ |
 | `DUPLICATE_POKEMON` | 400 | ID Pokémon trùng trong một yêu cầu |
@@ -457,7 +458,7 @@ Content-Type: application/json
 }
 ```
 
-#### 2. Response (rút gọn, số liệu minh họa)
+#### 2. Response (rút gọn, số liệu thật)
 
 ```json
 {
@@ -465,7 +466,7 @@ Content-Type: application/json
     { "id": 6, "name": "charizard", "types": ["fire", "flying"] },
     { "id": 130, "name": "gyarados", "types": ["water", "flying"] }
   ],
-  "teamScore": 41.0,
+  "teamScore": 20.0,
   "typeMatrix": [
     {
       "attackingType": "rock",
@@ -477,17 +478,31 @@ Content-Type: application/json
     }
   ],
   "offensiveCoverage": {
-    "coveredTypeCount": 12,
-    "uncoveredTypes": ["normal", "water", "fairy"]
+    "coveredTypeCount": 11,
+    "uncoveredTypes": ["normal", "flying", "poison", "ghost", "water", "electric", "fairy"]
   },
   "statRadar": {
-    "hp": 72, "attack": 81, "defense": 60,
-    "specialAttack": 78, "specialDefense": 66, "speed": 75
-  }
+    "hp": 85.4, "attack": 96.8, "defense": 77.6,
+    "specialAttack": 95.6, "specialDefense": 91.8, "speed": 97.4
+  },
+  "insights": [
+    {
+      "tone": "STRENGTH",
+      "category": "BALANCE",
+      "text": "Cân bằng sát thương: 2 vật lý, 2 đặc biệt, 1 cả hai",
+      "types": []
+    },
+    {
+      "tone": "WEAKNESS",
+      "category": "DEFENSE",
+      "text": "Lỗ hổng nghiêm trọng hệ Rock: 5 thành viên yếu, không ai kháng",
+      "types": ["rock"]
+    }
+  ]
 }
 ```
 
-- Dòng `rock` là số liệu thật của đội ví dụ; `members` rút gọn còn 2; `teamScore`, `offensiveCoverage`, `statRadar` chỉ minh họa cấu trúc.
+- Số liệu đo trên production ngày 2026-11-05 với đội ví dụ ở [spec.md](spec.md), Phần 2, mục V.4 (dòng `rock` khớp ví dụ 1, `teamScore` 20 khớp ví dụ 5, cùng kiểm ở `SynergyAnalyzerTest`). Rút gọn: `members` còn 2 trên 5, `typeMatrix` còn dòng `rock` trên 18, `insights` còn 2 trên 8.
 
 ### II. Đề xuất
 

@@ -71,9 +71,9 @@
 
 ### III. Ingestion
 
-- Chỉ chạy khi `app.ingestion.enabled=true` và bảng `pokemon` rỗng; toàn bộ trong một transaction, lỗi thì rollback và dừng với log nêu rõ file và dòng.
+- Chỉ chạy khi `app.ingestion.enabled=true` và bảng `pokemon` rỗng; toàn bộ trong một transaction, lỗi thì rollback và dừng. Lỗi giá trị trong dòng (`CsvReader.Row.error`) nêu file, dòng, cột; lỗi đếm của `TypeLoader` chỉ nêu tên file; thiếu file nêu đường dẫn.
 - Thứ tự bước, lọc hệ 1-18, quy tắc `form_category`: [docs/database.md](../docs/database.md), Phần 1 mục IV và Phần 5.
-- Đọc CSV bằng Apache Commons CSV; ghi bằng JDBC batch.
+- Đọc CSV bằng Apache Commons CSV; ghi bằng `JdbcTemplate.batchUpdate` trong các loader, `ingestion` không có Repository. Chỉ số gốc ánh xạ theo enum `StatType`, không đọc `stats.csv`.
 
 ### IV. Synergy
 
@@ -88,7 +88,7 @@
 ### I. Kiểm thử
 
 - Unit test: `<Class>Test`. Tích hợp: `<Class>IT` với `@SpringBootTest` và Testcontainers MySQL.
-- CSV mẫu khoảng 20 Pokémon ở `src/test/resources/csv/`; CI không dùng bộ CSV đầy đủ.
+- CSV mẫu ở `src/test/resources/csv/`: 62 dạng (23 loài), `IngestionRunnerIT` kiểm đúng 62; CI không dùng bộ CSV đầy đủ. Unit test Synergy dùng `SynergyFixture`, không đọc CSV.
 - 5 ví dụ có đáp án ở [docs/spec.md](../docs/spec.md), Phần 2, mục V.4 là test bắt buộc. Danh sách test: [docs/spec.md](../docs/spec.md), Phần 6, mục II.
 - Mỗi logic mới có ít nhất 1 case thường và 1 case biên (rỗng, trùng, vượt giới hạn, ID không tồn tại).
 

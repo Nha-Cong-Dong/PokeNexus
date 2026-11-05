@@ -1,6 +1,7 @@
 # PokeNexus - Thiết kế cơ sở dữ liệu
 
-- Phiên bản: 0.3 (phạm vi MVP, cập nhật 2026-10-21; chỉnh quy tắc `form_category` và chọn dòng tiến hóa theo khảo sát T102)
+- Phiên bản: 0.4 (cập nhật 2026-11-05, Issue #74; Phần 5, mục II sửa cho khớp code: bước 6 không đọc `stats.csv`; chỉ lỗi giá trị trong dòng nêu file, dòng, cột, lỗi đếm dòng chỉ nêu tên file)
+- Bản 0.3 (phạm vi MVP, 2026-10-21; chỉnh quy tắc `form_category` và chọn dòng tiến hóa theo khảo sát T102)
 - Hệ quản trị: MySQL 8.4, bộ mã `utf8mb4`, collation `utf8mb4_0900_ai_ci`.
 - Schema được tạo bằng Flyway; tài liệu này là nguồn tham chiếu khi viết migration.
 - Thay đổi so với 0.1: thêm cột `pokemon.form_category`; bỏ `pokemon.sprite_url` (URL ảnh sinh từ ID ở frontend, xem [ADR 0005](adr/0005-hybrid-image-assets.md)); thêm Phần 4 (index) và Phần 5 (migration, ingestion).
@@ -302,12 +303,13 @@ erDiagram
 | 3 | `regions`, `generations` | `regions.csv`, `generations.csv` | |
 | 4 | `evolution_chains` | `evolution_chains.csv` | Chỉ lấy `id` |
 | 5 | `species` | `pokemon_species.csv` | Tính `is_fully_evolved` |
-| 6 | `pokemon` | `pokemon.csv`, `pokemon_types.csv`, `pokemon_stats.csv`, `stats.csv` | Gom hệ theo `slot`, gom 6 chỉ số; tính `form_category` |
+| 6 | `pokemon` | `pokemon.csv`, `pokemon_types.csv`, `pokemon_stats.csv` | Gom hệ theo `slot`, gom 6 chỉ số theo `stat_id` 1-6 (ánh xạ cố định trong enum `StatType`, không đọc `stats.csv`; `stat_id` khác thì báo lỗi); tính `form_category` |
 | 7 | `evolution_links` | `pokemon_evolution.csv`, `evolution_triggers.csv`, `pokemon_species.csv` | Lấy loài gốc từ `evolves_from_species_id`; mỗi loài một dòng: chọn dòng `is_default = 1` có `id` nhỏ nhất (48 loài có nhiều dòng mặc định); `item_name` để NULL trong MVP |
 
 - Chi tiết cột và lưu ý của từng file: [data/README.md](../data/README.md).
 - `evolution_links.item_name` để NULL trong MVP: bộ 12 file CSV không có `items.csv` để tra tên vật phẩm từ `trigger_item_id`, và chưa trang nào hiển thị vật phẩm tiến hóa (quyết định 2026-10-23, T205).
-- Toàn bộ quá trình nạp chạy trong một transaction. Lỗi ở bất kỳ bước nào thì rollback và dừng ứng dụng với log nêu rõ file, dòng.
+- `stats.csv` vẫn được script tải và có trong CSV mẫu cho test, nhưng ingestion không đọc file này.
+- Toàn bộ quá trình nạp chạy trong một transaction. Lỗi ở bất kỳ bước nào thì rollback và dừng ứng dụng. Lỗi giá trị trong một dòng (`CsvReader.Row.error`) nêu file, dòng và cột; lỗi đếm của bước 1-2 (không đủ 18 hệ hoặc 324 dòng) chỉ nêu tên file; thiếu file thì nêu đường dẫn file.
 - Idempotent: chỉ nạp khi bảng `pokemon` rỗng. Bật tắt bằng thuộc tính `app.ingestion.enabled` (mặc định `true` ở profile `dev`).
 - Sau khi nạp thành công lần đầu, xuất `mysqldump` vào `data/dumps/` (không commit) để dựng lại DB nhanh.
 

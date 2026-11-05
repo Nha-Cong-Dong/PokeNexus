@@ -1,6 +1,7 @@
 # PokeNexus - Design System và UI Guidelines
 
-- Phiên bản: 1.5 (cập nhật 2026-11-05, Issue #84; trang Tổng quan: hero không còn cắt nội dung trên màn hình thấp, thêm variant `shorter`; Năm vùng đất 5 cột từ `lg`; mobile rút từ 11.327 px xuống dưới 7.000 px, Phần 7, mục II.1)
+- Phiên bản: 1.6 (cập nhật 2026-11-05, Issue #74; sửa cho khớp code: lề trang mobile 12 px; `fetchpriority` ảnh khung cảnh; Phần 5: `Card`, `Dialog`, `Skeleton`, `Toast` chưa có component riêng, `ErrorState` một dạng, `DexNumber` từ 4 chữ số, `MultiplierCell` không có `title`, props `PokemonSprite`, `TypeMatrixTable` cả hàng và cột là nút, huy hiệu "VS", ô lọc của `WeaknessHeatmap`, chip điểm âm; Phần 6: skeleton 12 thẻ, không có thanh tiến trình, lỗi 429 hiện trong hộp thoại lưu; Phần 7: Header 56/60 px, Thử tài Trainer 5 bộ x 6 câu, biểu đồ thế hệ gọi `/pokemon/generations`, bố cục Team Builder từ `lg` và từ 84 rem)
+- Bản 1.5 (2026-11-05, Issue #84; trang Tổng quan: hero không còn cắt nội dung trên màn hình thấp, thêm variant `shorter`; Năm vùng đất 5 cột từ `lg`; mobile rút từ 11.327 px xuống dưới 7.000 px, Phần 7, mục II.1)
 - Bản 1.4 (2026-11-02): Omni-Dex dưới `lg` và 2 nút cuối khối điểm đội ở Team Builder dưới `md` được đặt theo thứ tự hiển thị trong DOM bằng `useMediaQuery`, bỏ CSS `order`, để thứ tự `Tab` khớp thứ tự nhìn
 - Bản 1.3 (2026-11-01): trang Chi tiết: vùng artwork cao 480 px, khung tên hạ xuống mép dưới để không che artwork, tên trên 14 ký tự dùng cỡ 32 px; Xây đội trên mobile: đề xuất nằm ngay dưới slot đội, thứ tự DOM khớp thứ tự hiển thị)
 - Bản 1.2 (2026-10-31): trang Chi tiết: Tiến hóa và Các dạng chuyển vào cột trái dưới artwork; footer mới có sóng, 4 Pokémon ngẫu nhiên, link trang và thông tin liên hệ; Pokémon hôm nay dạng poster tràn viền, khối tốc độ cấp 50, hộp thoại Showdown; giao diện 8 trang khớp bản thiết kế hi-fi ngày 2026-10-24 ở 1440 và 390 px; bộ chuyển động theo bản thiết kế ngày 2026-10-24: token `--animate-*`, `Reveal`, `staggerDelay`; trang Địa hình; nền khung cảnh nhiều ảnh theo [ADR 0006](adr/0006-animated-scene-backdrops.md); vùng vá do AI vẽ có Content Credentials theo [ADR 0008](adr/0008-ai-edited-scene-patches.md))
@@ -247,7 +248,7 @@
 | Nhóm | Token |
 |---|---|
 | Khoảng cách | Thang 4 px mặc định của Tailwind. Dùng chủ yếu: 1 (4), 2 (8), 3 (12), 4 (16), 6 (24), 8 (32), 12 (48), 20 (80) |
-| Lề trang | 16 px ở mobile, 24 px từ `md`, 32 px từ `xl` |
+| Lề trang | Nội dung trang (`PageHero`, `PageBody`): 12 px ở mobile (`px-3`), 24 px từ `md`, 32 px từ `xl`. Header: 16 px ở mobile, 24 px từ `md` |
 | Bo góc | Phân cấp theo độ lớn: `rounded-full` (nhãn hệ), `rounded-[10px]` (nút, ô nhập), `rounded-2xl` 16 px (card), `rounded-3xl` 24 px (panel lớn đặt trên khung cảnh), `rounded-xl` 12 px (hộp thoại game) |
 | Đổ bóng | Bóng đặc lệch xuống thay cho bóng mờ: `--shadow-block: 0 4px 0 rgb(22 33 62 / 0.16)` cho card, `--shadow-block-lg: 0 6px 0 rgb(22 33 62 / 0.22)` cho panel; dialog, dropdown dùng `shadow-xl` |
 | Nút bấm | Gờ dưới 3 px màu `primary-hover`; khi nhấn dịch xuống 2 px và mất gờ, như nút phần cứng |
@@ -356,7 +357,7 @@
 - Component `SceneBackdrop` render `<img>` với `srcset` hai cỡ, `sizes="100vw"`, `alt=""` (ảnh trang trí), `object-fit: cover`, `object-position: center 60%`. Ảnh đầu tiên chọn ngẫu nhiên trong bộ ảnh của scene.
 - Prop `animated` (chỉ bật ở hero: `PageHero`, `LandingHero`, `PokemonHero`): sau mỗi 12 giây tải trước ảnh kế tiếp rồi chuyển mờ 1,2 giây; ảnh phóng chậm 2-10% trong 24 giây (`animate-scene-drift`, `animate-scene-enter`); thêm `SceneAmbience` với 18 hạt (9 hạt dưới `md`) theo `ambience` của scene. Tab bị ẩn thì không chuyển ảnh. Ảnh lỗi bị bỏ khỏi vòng.
 - `prefers-reduced-motion: reduce` (hook `useReducedMotion`): một ảnh tĩnh, không phóng chậm, không lớp hạt.
-- Ảnh scene ở trang Tổng quan và trang chi tiết đặt `fetchpriority="high"`; trang khác dùng `loading="lazy"` nếu nằm dưới màn hình đầu.
+- Prop `priority` đặt `fetchpriority="high"` cho ảnh đang hiện; bật ở mọi hero: `PageHero` (nên mọi trang dùng `PageHero` đều `high`), ảnh động của `LandingHero`, `PokemonHero`, `VersusBanner`. Ảnh scene khác (ảnh mờ quanh vỏ Pokédex ở `LandingHero`, `FeatureRegions`, `DailyPokemon`, `DetailStates`) dùng `auto`. `SceneBackdrop` không đặt `loading="lazy"`.
 - Khi đang tải hoặc lỗi: hiển thị gradient màu dự phòng (Phần 2, mục VI); không hiển thị icon ảnh vỡ.
 - Chữ trên ảnh luôn đặt trên lớp phủ màu `--color-scrim` với độ mờ tối thiểu 65%. Từ bản 0.6, tiêu đề `PageHero` và khối tên ứng dụng ở `LandingHero` nằm trong tấm nền bo góc `bg-scrim/75` vừa khít chữ (chữ trắng trên scrim 75% đè lên điểm ảnh trắng đạt khoảng 7:1), phần còn lại của ảnh chỉ có dải tối 45-50% ở mép dưới. Đo bằng script: chữ trắng trên scrim 65% đè lên điểm ảnh trắng tuyệt đối vẫn đạt 5.02:1. Không giảm độ đậm scrim dưới 65% ở vùng có chữ.
 - Bảng dữ liệu không bao giờ đặt trực tiếp lên ảnh; luôn nằm trong panel `surface` đặc (không dùng nền mờ kiểu kính).
@@ -371,13 +372,13 @@
 |---|---|---|---|
 | `Button` | `primary`, `secondary` (nền trắng, viền `ink` 2 px), `ghost`, `danger`, `cta` (nền `dex-yellow`, chữ `ink`, chỉ dùng ở trang Tổng quan); cỡ `sm` (40 px trên mobile, 36 px từ breakpoint `md`), `md` (44 px) | hover, focus, pressed, disabled, loading | `loading` giữ nguyên độ rộng, đặt `aria-busy`; nút chỉ có icon phải có `aria-label`. Hiện thực bằng hàm `buttonClassName(variant, size)` trong `buttonStyles.ts` để dùng chung cho `<button>` và `<Link>`; đã có `primary`, `secondary`, `ghost`, `cta`, còn `danger` và `loading` làm khi cần |
 | `Panel` | | | Khung nội dung đặt trên khung cảnh: nền `surface`, viền `ink` 2 px, bo 24 px, `shadow-block-lg`; là `<section>`, cần `aria-label` hoặc `aria-labelledby` |
-| `Card` | `default`, `interactive` (có hover, toàn card là link) | hover, focus | Card dạng link dùng thẻ `<a>`, không gắn `onClick` lên `<div>` |
+| `Card` | `default`, `interactive` (có hover, toàn card là link) | hover, focus | Chưa có component dùng chung; quy tắc áp dụng cho `PokemonCard` và các thẻ trong từng tính năng. Card dạng link dùng thẻ `<a>`, không gắn `onClick` lên `<div>` |
 | `GameDialog` | `default`, `speaker` (có tên người nói ở góc trên trái) | | Hộp thoại kiểu game (Phần 2, mục VII). Dùng cho: lời chào trang Tổng quan, `VerdictPanel`, `EmptyState`, `ErrorState`. Không dùng cho nội dung khác |
-| `Dialog` | `default`, `confirm` | open, closing | Bẫy focus, `Esc` để đóng, trả focus về nút mở |
-| `Skeleton` | `text`, `rect`, `circle` | | `aria-hidden`; vùng cha đặt `aria-busy="true"` |
+| `Dialog` | `default`, `confirm` | open, closing | Chưa có component dùng chung; `FilterSheet`, `SaveTeamDialog`, `ShowdownDialogs` tự dùng `<dialog>` mở bằng `showModal()`. Bẫy focus, `Esc` để đóng, trả focus về nút mở |
+| `Skeleton` | `text`, `rect`, `circle` | | Chưa có component dùng chung; mỗi tính năng tự vẽ khối `animate-pulse` (`PokemonGridSkeleton`, `DetailSkeleton`, `WeaknessHeatmapSkeleton`...). `aria-hidden`; vùng cha đặt `aria-busy="true"` |
 | `EmptyState` | | | Bọc trong `GameDialog`; tiêu đề, mô tả, tối đa 1 hành động |
-| `ErrorState` | `inline`, `page` | | Bọc trong `GameDialog`; thông điệp từ `errorMessages.ts`, nút "Thử lại" |
-| `Toast` | `success`, `error` | | `role="status"`, tự ẩn sau 4 giây, có nút đóng |
+| `ErrorState` | Một dạng (props `message`, `onRetry`) | | Bọc trong `GameDialog` có `role="alert"`; thông điệp từ `errorMessages.ts`, nút "Thử lại" |
+| `Toast` | `success`, `error` | | Chưa làm, không có trong code (Phần 6, mục I: lỗi 429 hiện trong hộp thoại lưu đội) |
 | `Pagination` | | trang hiện tại, disabled | `nav` có `aria-label="Phân trang"`, trang hiện tại có `aria-current="page"` |
 
 ### II. Component khung cảnh và bố cục (`components/scene`)
@@ -396,11 +397,11 @@
 | Component | Props chính | Hiển thị | Quy tắc |
 |---|---|---|---|
 | `TypeBadge` | `type`, `size: sm \| md` | Viên thuốc màu hệ, chữ tên hệ | Màu chữ theo Phần 2, mục II; luôn có chữ |
-| `DexNumber` | `id` | `#0006` bằng font Text 800, `tabular-nums` | Luôn 4 chữ số |
+| `DexNumber` | `id` | `#0006` bằng font Text 800, `tabular-nums` | Đệm tối thiểu 4 chữ số; ID từ 10000 (dạng khác, ví dụ `#10034`) hiện 5 chữ số |
 | `StatBar` | `label`, `value`, `max = 255` | Nhãn, số (`text-num`), thanh ngang kiểu thanh HP có viền `ink` 2 px | Số luôn hiển thị; thanh chỉ là minh họa. Màu thanh: dưới 60 cam (`stat-low` #FB923C), 60-89 vàng (`stat-mid` #FACC15), 90-119 xanh lục (`stat-good` #22C55E), từ 120 xanh dương (`stat-high` #3B82F6); token khai báo ở `src/styles/index.css` |
-| `MultiplierCell` | `multiplier` | Ô vuông 40 px có nhãn `x2`; x4, x0 đậm 800, ô khác 700 | Màu theo Phần 2, mục III; `title` mô tả đầy đủ, ví dụ "Rock gây x4" |
+| `MultiplierCell` | `multiplier`, `className?` | Ô rộng tối thiểu 40 px có nhãn `x2`; x4, x0 đậm 800, ô khác 700 | Màu theo Phần 2, mục III; không có `title`: ý nghĩa ô đọc từ tiêu đề hàng, cột hoặc nhãn nhóm ở nơi dùng (heatmap, `DefenseResult`, `MatrixFocusPanel`, `MatrixLegend`) |
 | `NeutralMark` | `className?` | Chấm mờ 6 px màu `border` và chữ "x1" chỉ cho trình đọc màn hình | Dùng cho ô x1 trong ma trận, heatmap, minh họa (Phần 2, mục III) |
-| `PokemonSprite` | `id`, `name`, `variant: sprite \| artwork`, `size` | Ảnh Pokémon đứng trên đế bóng elip | Đặt sẵn `width`, `height`; `loading="lazy"`; `alt` là tên Pokémon; fallback theo [assets.md](assets.md), Phần 5 |
+| `PokemonSprite` | `id`, `alt`, `variant: sprite \| artwork`, `size` (mặc định 96), `className?` | Chỉ thẻ `<img>`; đế bên dưới do component cha vẽ (ví dụ `PokemonCard`) | Đặt sẵn `width`, `height`; luôn `loading="lazy"`; nơi gọi truyền `alt` (tên Pokémon, hoặc `""` khi tên đã có cạnh ảnh); sprite dùng `image-rendering: pixelated`; fallback theo [assets.md](assets.md), Phần 5 |
 | `PokemonCard` | `pokemon: PokemonSummary` | Nền màu hệ đậm của slot 1, chữ trắng (Phần 2, mục II, 1); `TypeGlyph` mờ ở góc trên phải; tên, `DexNumber`, nhãn hệ, BST `text-num`; sprite đứng trên đế trắng bo hữu cơ | Toàn card là link; hover: card nhấc 4 px, đế nghiêng, sprite nhảy 1 lần (4 px, 200 ms) |
 | `TypeGlyph` | `type`, `className?` | Icon SVG nét đơn cho 18 hệ, `aria-hidden` | Chỉ trang trí; không thay cho tên hệ |
 | `PokemonSearchBox` | `label`, `onSelect`, `excludeIds`, `placeholder?`, `hideLabel?` | Ô nhập và danh sách gợi ý có sprite nhỏ | `hideLabel` giữ nhãn cho trình đọc màn hình (thẻ công cụ Omni-Dex trên mobile); mẫu ARIA combobox; debounce 250 ms; từ 2 ký tự; điều khiển bằng mũi tên, `Enter`, `Esc` |
@@ -421,17 +422,17 @@
 | `PokemonList` | Omni-Dex | Chế độ danh sách: mỗi hàng nền `type-tint`, sprite trên đế màu hệ đậm, số Pokédex, tên, `TypeBadge`, BST. Dưới `sm`: lưới 2 dòng, dòng 1 là số, tên và `TypeBadge` luôn bên phải, dòng 2 là BST; từ `sm` một dòng |
 | `EvolutionChain` | Chi tiết | Cây dọc: loài gốc ở trên, mỗi nhánh nối bằng thân dọc và khuỷu ngang (`ink/25`, 2 px), nhánh tách tiếp thì lồng vào trong, thụt 28 px mỗi tầng; thẻ cao tối thiểu 72 px gồm sprite trong vòng nhuộm màu hệ, `DexNumber` kèm giai đoạn (Cơ bản, Giai đoạn 1, 2), chip điều kiện có biểu tượng (lên cấp, vật phẩm, trao đổi, đặc biệt), tên, nhãn hệ; loài đang xem nhuộm màu hệ, viền đậm; cạnh tiêu đề là tóm tắt "3 giai đoạn, 2 nhánh tiến hóa"; các nhánh hiện lần lượt bằng `fade-up` |
 | `DefenseGrid` | Chi tiết | Nhóm theo mức: Yếu, Kháng, Miễn nhiễm (chip hệ ghép hệ số), Trung tính x1 (chip có chấm màu hệ từ `md`, mobile là một câu); lưới 18 ô "Hệ số nhận từ 18 hệ" |
-| `TypeMatrixTable` | Tương khắc | `<table>`, hàng là hệ tấn công, cột là hệ phòng thủ; hàng và cột tiêu đề cố định khi cuộn; tên hệ ở hàng, cột là nút `aria-pressed` để làm nổi bật; ô x1 dùng `NeutralMark`, hover tô cả hàng |
+| `TypeMatrixTable` | Tương khắc | `<table>`, hàng là hệ tấn công, cột là hệ phòng thủ; hàng và cột tiêu đề cố định khi cuộn; tên hệ ở cả tiêu đề hàng và tiêu đề cột là nút `aria-pressed` để làm nổi bật; ô x1 dùng `NeutralMark`, hover tô cả hàng |
 | `MatrixFocusPanel` | Tương khắc | Khung tóm tắt hệ đang chọn: hàng thì "Gây x2 lên", "Bị giảm còn x½ khi đánh", "Không tác dụng lên"; cột thì "Yếu trước", "Kháng", "Miễn nhiễm"; nút "Bỏ chọn". Logic thuần ở `matrixFocus.ts` |
-| `VersusBanner` | So sánh | Khi đủ 2 Pokémon là hero toàn chiều rộng 440 px ngay dưới header, `<h1>` ẩn "So sánh A và B"; khung cảnh hai bên ghép chéo, dải vàng viền `ink`, artwork 320 px tràn xuống dưới banner, chữ "VS" font Display 104 px |
+| `VersusBanner` | So sánh | Khi đủ 2 Pokémon là hero toàn chiều rộng 440 px ngay dưới header, `<h1>` ẩn "So sánh A và B"; khung cảnh hai bên ghép chéo, dải vàng viền `ink`, artwork 320 px tràn xuống dưới banner; huy hiệu tròn "VS" font Display: 76 px chữ 28 px trên mobile, 104 px chữ 40 px từ `md` |
 | `CompareRadar` | So sánh | Lớp bọc của `StatRadar` (`components/pokemon`, SVG, dùng chung với Team Builder): 6 trục; series trái `primary` (phủ 16%), series phải `accent` (phủ 12%); có chú thích tên hai Pokémon, trên mobile đặt trên biểu đồ (`StatRadar` có prop `fill`, `legendAboveOnMobile`; mặc định giữ như Team Builder) |
 | `VerdictPanel` | So sánh | Bọc trong `GameDialog`; 3 dòng kết luận, mỗi dòng nêu bên thắng và con số |
 | `ComparePicker` | So sánh | Khung chọn 2 bên gọn: "Bên trái", "Bên phải" (desktop), nút "Pokémon 1", "Pokémon 2" cao 62 px (mobile); nút "Đổi Pokémon" (`aria-expanded`) mở `PokemonSearchBox` tại chỗ, `Esc` đóng và trả focus; nút đổi bên |
 | `StabPanel` | So sánh | "Đòn cùng hệ": mỗi hàng "A đánh B", chip ghép hệ và hệ số cao 36 px, viền `ink` 2 px |
 | `TeamSlots` | Team Builder | 5 slot chọn và 1 slot đề xuất; slot có thành viên hiển thị dải màu khung cảnh của Pokémon đó, vòng ảnh nhuộm 35% màu hệ, nút xóa nằm trong thẻ; mobile thẻ cao 136 px nhuộm 30% màu hệ; slot trống có nút "Thêm Pokémon", slot 6 đang khóa ghi "Ô trống" |
 | `MemberDetailPopover` | Team Builder, Đội chia sẻ | Bọc thẻ thành viên đội. Bấm thẻ không chuyển trang. Chuột rê lên thẻ, `Tab` tới thẻ hoặc giữ ngón tay 1,5 giây (`LONG_PRESS_MS`, kéo quá 10 px hoặc nhả sớm thì hủy) thì hiện bảng nhỏ dưới thẻ có link "Xem thông tin chi tiết" tới `/pokemon/<tên>`; bảng tự dịch vào trong màn hình (cách mép 8 px), đóng khi rời chuột, chạm ra ngoài hoặc `Esc`; `li` chứa bảng nâng `z-30` để không bị thẻ hàng dưới che |
-| `WeaknessHeatmap` | Team Builder, Đội chia sẻ | Từ `md`: `<table>` 18 hàng; cột: hệ, từng thành viên (có chấm màu hệ), số yếu, số kháng, mức hở; ô x1 dùng `NeutralMark`, ghi chú "Ô trống là x1". Dưới `md`: mỗi hệ một thẻ, mặc định chỉ hệ có áp lực, nút "Xem đủ 18 hệ", chú giải 6 màu. `compact` (trang Đội chia sẻ): chỉ hàng có áp lực, không cột Yếu, Kháng. Hàng `criticalHole` có nhãn "Lỗ hổng" |
-| `TeamScoreGauge` | Team Builder | Số điểm 0-100 `text-num-lg` và thanh ngang kiểu thanh HP trên cùng một hàng (mobile số 52 px kèm "/ 100"); màu thanh `stat-good`, `stat-mid`, `danger`; chip "+N so với lần trước" màu `success` cạnh tiêu đề |
+| `WeaknessHeatmap` | Team Builder, Đội chia sẻ | Từ `md`: `<table>` 18 hàng; cột: hệ, từng thành viên (có chấm màu hệ), số yếu, số kháng, mức hở; ô x1 dùng `NeutralMark`, ghi chú "Ô trống là x1"; ô chọn "Chỉ hiện N hệ đang gây áp lực" để rút bảng còn các hệ có áp lực. Dưới `md`: mỗi hệ một thẻ, mặc định chỉ hệ có áp lực, nút "Xem đủ 18 hệ", chú giải 6 màu. `compact` (trang Đội chia sẻ): chỉ hàng có áp lực, không cột Yếu, Kháng. Hàng `criticalHole` có nhãn "Lỗ hổng" |
+| `TeamScoreGauge` | Team Builder | Số điểm 0-100 `text-num-lg` và thanh ngang kiểu thanh HP trên cùng một hàng (mobile số 52 px kèm "/ 100"); màu thanh `stat-good`, `stat-mid`, `danger`; chip "+N so với lần trước" màu `success` (điểm giảm thì "-N" màu `danger`, bằng 0 thì ẩn) cạnh tiêu đề |
 | `RecommendationCard` | Team Builder | Sprite, tên, nhãn hệ, điểm phù hợp, danh sách lý do, nút "Thêm vào đội"; mobile thẻ 300 px vuốt ngang (scroll-snap), ảnh tròn 104 px nổi trên thẻ |
 | `SaveTeamDialog` | Team Builder | Ô tên đội (1-60 ký tự); lưu xong hiện link chia sẻ và nút "Sao chép" |
 | `ShowdownImportDialog`, `ShowdownExportDialog` | Team Builder, Đội chia sẻ | Nhập: ô "Văn bản đội", nút "Nhập đội", nhập xong liệt kê dòng bị bỏ qua; xuất: ô chỉ đọc và nút "Sao chép" ([spec.md](spec.md), Phần 2, mục X) |
@@ -446,12 +447,12 @@
 
 | Trạng thái | Cách hiển thị | Không làm |
 |---|---|---|
-| Đang tải lần đầu | `Skeleton` cùng bố cục với nội dung thật (ví dụ 24 card xám); khung cảnh hiện gradient dự phòng | Spinner giữa trang trắng |
-| Đang tải lại (đổi bộ lọc) | Giữ dữ liệu cũ, giảm độ mờ còn 60%, thanh tiến trình mảnh dưới header | Xóa trắng lưới |
+| Đang tải lần đầu | Skeleton cùng bố cục với nội dung thật (ví dụ lưới Omni-Dex 12 thẻ xám, `PokemonGridSkeleton`); khung cảnh hiện gradient dự phòng | Spinner giữa trang trắng |
+| Đang tải lại (đổi bộ lọc) | Giữ dữ liệu cũ (`placeholderData`), giảm độ mờ còn 60%; không có thanh tiến trình | Xóa trắng lưới |
 | Rỗng | `EmptyState`: "Không có Pokémon nào khớp bộ lọc" và nút "Xóa bộ lọc" | Để vùng trống không giải thích |
 | Lỗi mạng hoặc 5xx | `ErrorState` kèm nút "Thử lại" | Hiển thị `detail` kỹ thuật |
 | 404 | `NotFoundPage` khung cảnh `lab`, có link về Pokédex | Trang trắng |
-| 429 | Toast: "Bạn lưu quá nhanh, thử lại sau N giây" (N lấy từ `Retry-After`) | |
+| 429 | Dòng `role="alert"` trong `SaveTeamDialog`: "Bạn lưu đội quá nhanh. Hãy thử lại sau N giây." (N lấy từ `Retry-After`; thiếu header thì "Hãy đợi một phút rồi thử lại.") | |
 
 ### II. Form và hành động
 
@@ -489,7 +490,7 @@
 
 ```text
 +--------------------------------------------------------------+
-| PokeNexus    Pokédex  Tương khắc  So sánh  Xây đội  Địa hình    |  Header 60 px, nền dex-red, cố định
+| PokeNexus    Pokédex  Tương khắc  So sánh  Xây đội  Địa hình    |  Header 56 px (60 px từ md), nền dex-red, cố định
 +--------------------------------------------------------------+
 | ~~~~~~~~~~~~~ PageHero: khung cảnh tràn ngang ~~~~~~~~~~~~~ |
 | ~~~~~~~~ Tiêu đề trang (Display) trên scrim ~~~~~~~~~~~~~~ |
@@ -550,7 +551,7 @@ Desktop (1440 px)
 +--------------------------------------------------------------+
 |  1025 loài qua 9 thế hệ (GenerationChart): 9 cột màu          |
 +--------------------------------------------------------------+
-|  Thử tài Trainer (TrainerQuiz): 5 câu, 3 đáp án mỗi câu       |
+|  Thử tài Trainer (TrainerQuiz): 5 bộ, mỗi bộ 6 câu, 3 đáp án  |
 +--------------------------------------------------------------+
 |  Kêu gọi cuối trang (ClosingCta) trên nền dex-red             |
 +--------------------------------------------------------------+
@@ -571,7 +572,7 @@ Desktop (1440 px)
   - Thử tài Trainer: đế artwork 96 px nằm cạnh link trang Địa hình; 5 bộ câu hỏi là một hàng cuộn ngang; đáp án tối đa 4 ký tự (x1, x½, Fire...) xếp 3 cột, đáp án dài hơn xếp dọc.
 - Nút chính "Mở Pokédex" dùng biến thể `cta`; nút phụ "Xây đội ngay" dùng `secondary`.
 - Artwork ở hero lấy từ đường dẫn artwork của PokéAPI; mất mạng thì dùng sprite phóng to theo [assets.md](assets.md), Phần 5.
-- API dùng: `GET /api/v1/pokemon/{idOrName}` (Pokémon nổi bật, Pokémon hôm nay), `GET /api/v1/types/matrix` (vòng tương khắc, câu đố), `GET /api/v1/pokemon?gen=<n>&form=DEFAULT&size=1` (`totalElements` cho biểu đồ thế hệ).
+- API dùng: `GET /api/v1/pokemon/{idOrName}` (Pokémon nổi bật, Pokémon hôm nay), `GET /api/v1/types/matrix` (vòng tương khắc, câu đố), `GET /api/v1/pokemon/generations` (số loài và hồ sơ 9 thế hệ cho biểu đồ thế hệ, [api.md](api.md), Phần 2, mục XIV).
 - Chuyển động trong bản thiết kế (chữ hiện dần, dải hệ chạy ngang, đảo nổi, đường nối trên vòng tương khắc) không bắt buộc ở MVP.
 
 #### 2. Các trang dữ liệu
@@ -582,7 +583,7 @@ Desktop (1440 px)
 | Chi tiết | Khung cảnh cao 280 px có artwork, đường dẫn và `SceneLabel` ở góc trên, đáy chuyển mượt sang nền; panel: tên, nhãn hệ, chỉ số, khối Tốc độ ở cấp 50, 4 ô thông tin dạng thẻ 2 x 2, cây tiến hóa dọc, các dạng, lưới phòng thủ 3 cột (nhóm Trung tính là một câu) | Vùng artwork cao 480 px, ảnh nền kéo dài 544 px rồi chuyển mượt sang nền phía sau lưới phòng thủ; artwork bên trái; số Pokédex và tên cùng một dòng, khung tên thò 12 px xuống dưới vùng artwork, tên trên 14 ký tự dùng cỡ 32 px thay cho 40 px; ngay dưới artwork là khối Tiến hóa rồi Các dạng (T412, lấp khoảng trống cạnh panel chỉ số); panel bên phải chứa chỉ số; lưới phòng thủ 6 cột bên dưới. Lúc chờ API tiến hóa, khối Tiến hóa giữ chỗ bằng skeleton cao 384 px (bằng chuỗi 3 giai đoạn) để khối Các dạng không bị đẩy xuống |
 | Tương khắc | Chọn 1-2 hệ phòng thủ (chip 42 px, gợi ý đổi theo số hệ đã chọn), kết quả dạng danh sách; ma trận gọn (ô 32 x 28 px, cột tên 84 px) cuộn ngang trong khung, thấy khoảng 7 cột, không cuộn dọc lồng; khung tóm tắt dưới ma trận | Ma trận 18 x 18 đầy đủ (ô 36 px), bộ chọn hệ kép phía trên; bấm tên hệ ở hàng hoặc cột (`aria-pressed`) để làm nổi bật, ô khác mờ 20%; `MatrixFocusPanel` bên phải ma trận |
 | So sánh | Hai nút chọn cao 62 px "Pokémon 1", "Pokémon 2" mở ô tìm tại chỗ, nút đổi bên `dex-yellow` (khi cả hai trống thì hai ô tìm xếp dọc); đủ 2 Pokémon thì `VersusBanner` là hero 440 px; bảng chỉ số mỗi chỉ số 2 dòng, đặt trước radar; Đòn cùng hệ; kết luận; nút "Xem B" và "Đưa A vào đội" | Đủ 2 Pokémon thì `VersusBanner` là hero toàn chiều rộng 440 px, artwork 320 px ở 38% và 62% tràn xuống dưới; khung chọn gọn "Bên trái", "Bên phải" có nút "Đổi Pokémon"; bảng chỉ số và radar; "Đòn cùng hệ" cạnh kết luận (tỉ lệ 1:1,6) |
-| Team Builder | Slot dạng lưới 3 x 2, dưới slot 2 nút "Nhập Showdown", "Xuất Showdown"; khi đội có thành viên, khối "Gợi ý bổ sung" (lối chơi, ô "Loại huyền thoại, thần thoại và Paradox", thẻ đề xuất 300 px vuốt ngang) nằm ngay dưới slot để so với đội, đội trống thì khối này xuống sau heatmap; điểm đội 52 px và 2 nút "Đặt lại", "Lưu và chia sẻ" rộng toàn hàng, đúng thứ tự này trong DOM (từ `md` là "Lưu đội" rồi "Đặt lại"); heatmap thành thẻ theo hệ (mặc định chỉ hệ có áp lực, nút "Xem đủ 18 hệ", chú giải 6 màu); panel "Tấn công và chỉ số" rồi "Tốc độ cấp 50" cuối cùng. Khối đề xuất được đặt vào đúng vị trí trong DOM theo `useMediaQuery` (dưới `lg`: sau slot hoặc sau heatmap; từ `lg`: cột cuối), không dùng CSS `order`, để thứ tự `Tab` và trình đọc màn hình khớp thứ tự hiển thị | Trái: slot và điểm; giữa: heatmap, "Tấn công và chỉ số", "Tốc độ cấp 50"; phải: ô loại huyền thoại và 3 thẻ đề xuất |
+| Team Builder | Slot dạng lưới 3 x 2, dưới slot 2 nút "Nhập Showdown", "Xuất Showdown"; khi đội có thành viên, khối "Gợi ý bổ sung" (lối chơi, ô "Loại huyền thoại, thần thoại và Paradox", thẻ đề xuất 300 px vuốt ngang) nằm ngay dưới slot để so với đội, đội trống thì khối này xuống sau heatmap; điểm đội 52 px và 2 nút "Đặt lại", "Lưu và chia sẻ" rộng toàn hàng, đúng thứ tự này trong DOM (từ `md` là "Lưu đội" rồi "Đặt lại"); heatmap thành thẻ theo hệ (mặc định chỉ hệ có áp lực, nút "Xem đủ 18 hệ", chú giải 6 màu); panel "Tấn công và chỉ số" rồi "Tốc độ cấp 50" cuối cùng. Khối đề xuất được đặt vào đúng vị trí trong DOM theo `useMediaQuery` (dưới `lg`: sau slot hoặc sau heatmap; từ `lg`: cuối lưới), không dùng CSS `order`, để thứ tự `Tab` và trình đọc màn hình khớp thứ tự hiển thị | Từ `lg` (1024 px) lưới 2 cột: trái là slot và điểm; giữa là "Đánh giá đội" (khi đội có thành viên), heatmap, "Tấn công và chỉ số", "Tốc độ cấp 50"; khối đề xuất (lối chơi, ô loại huyền thoại, 3 thẻ) trải hết 2 cột ở cuối. Từ 84 rem (1344 px, có 1440 px) lưới 3 cột, khối đề xuất thành cột phải |
 | Đội chia sẻ | Hero có dải 6 màu hệ, ô "Mã đội", tên đội tối đa 3 dòng; thẻ thành viên chỉ đọc; heatmap gọn "Các hệ đội đang hở" (chỉ hàng có áp lực); nút "Mở trong Team Builder" | Như mobile, rộng hơn; hero có thêm nhãn "Đội được chia sẻ, chỉ xem"; thẻ thành viên tự chia tối thiểu 170 px |
 | Địa hình | `PageHero` theo địa hình đang chọn; bảng chọn là dải 13 cột xiên có ảnh nhỏ, cột 64 px, cột đang chọn 176 px, cuộn ngang trong khung và tự cuộn tới địa hình đang chọn; mô tả; trò chơi (bóng đen trên, 4 nút xếp dọc); lưới Pokémon 2 cột; Thẻ Trainer | Từ `lg`, 13 cột xiên trên một hàng cao 320 px: tên chạy dọc, biểu tượng hệ ở đầu cột, tam giác màu nhấn của địa hình; cột đang chọn nở rộng gấp 3,6 lần, có viền vàng, tên lớn và nhãn hệ; hover nở 1,6 lần và phóng ảnh; mô tả và trò chơi chia 2:3; lưới Pokémon 6 cột; Thẻ Trainer |
 

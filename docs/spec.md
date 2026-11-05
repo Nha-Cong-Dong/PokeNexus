@@ -1,12 +1,13 @@
 # PokeNexus - Đặc tả MVP
 
-- Phiên bản: 1.5 (yêu cầu chốt ở task T201 ngày 2026-10-21; cập nhật 2026-10-30)
+- Phiên bản: 1.6 (yêu cầu chốt ở task T201 ngày 2026-10-21; cập nhật 2026-11-05)
 - Tài liệu liên quan: [product.md](product.md), [architecture.md](architecture.md), [database.md](database.md), [api.md](api.md).
 - Thay đổi so với 1.0: thêm Phần 6 (truy vết và kiểm chứng, chuyển từ `SPEC.md` ở gốc repo); không đổi yêu cầu và tiêu chí chấp nhận.
 - Thay đổi so với 1.1: thêm F07 Trang Tổng quan (Phần 2, mục VII) theo bản thiết kế giao diện ngày 2026-10-24; Omni-Dex chuyển từ `/` sang `/pokedex`. Lý do: người dùng mới cần một trang giới thiệu dẫn tới 4 công cụ, thay vì vào thẳng lưới dữ liệu. Thay đổi yêu cầu từ đây phải tăng phiên bản và ghi lý do.
 - Thay đổi so với 1.2: phân tích đội nhận 1-6 Pokémon, đề xuất vẫn nhận 1-5 (Phần 2, mục V.1); ví dụ 4 đổi thành 7 Pokémon, thêm ví dụ 5 (mục V.4). Lý do: bước "thêm đề xuất số 1, xác nhận điểm đội tăng" của kịch bản demo (Phần 4) cần chấm điểm đội đủ 6; với giới hạn 5, điểm không đổi khi thêm đề xuất vào slot 6.
 - Thay đổi so với 1.3: Thử tài Trainer có 5 bộ câu hỏi và phần thưởng (Phần 2, mục VII); thêm F08 Trang Địa hình (Phần 2, mục VIII). Lý do: chủ dự án yêu cầu ngày 2026-10-28 thêm nội dung khám phá và trò chơi nhỏ cho người mới; cả hai mức Could, không đổi API và kịch bản demo.
 - Thay đổi so với 1.4: thêm F09 Bảng tốc độ cấp 50 (US-09) và F10 Nhập, xuất đội Showdown (US-10) (Phần 2, mục IX, X). Lý do: chủ dự án chọn ngày 2026-10-30 hai tính năng mở rộng có sẵn trong roadmap cho người chơi VGC; F09 thêm endpoint `GET /pokemon/speed-tiers`, F10 không đổi API; kịch bản demo không đổi. Khối Bốn vùng đất của F07 thành Năm vùng đất, thêm thẻ dẫn tới trang Địa hình (F08) theo yêu cầu chủ dự án cùng ngày.
+- Thay đổi so với 1.5 (Issue #74): chỉ sửa cột Endpoint ở Phần 6, mục I cho khớp các API frontend thật sự gọi (F02 thêm `/evolution`, `/speed-tiers`; F04 thêm chi tiết và tìm kiếm; F07 dùng `GET /pokemon/generations` thay cho `GET /pokemon`); không đổi yêu cầu, tiêu chí chấp nhận hay kịch bản demo.
 
 ---
 
@@ -247,12 +248,12 @@
 | Tính năng | User Story | Tiêu chí | Endpoint | Route, trang | Package backend | Task | MoSCoW |
 |---|---|---|---|---|---|---|---|
 | F01 Omni-Dex | US-01 | Phần 2, mục I | `GET /pokemon`, `GET /pokemon/search` | `/pokedex`, `DexPage` | `pokedex` | T206, T301, T302 | Must |
-| F02 Chi tiết Pokémon | US-02 | Phần 2, mục II | `GET /pokemon/{idOrName}` | `/pokemon/:idOrName`, `PokemonDetailPage` | `pokedex`, `typechart` | T303 | Must |
+| F02 Chi tiết Pokémon | US-02 | Phần 2, mục II | `GET /pokemon/{idOrName}`, `GET /pokemon/{idOrName}/evolution`, `GET /pokemon/speed-tiers` | `/pokemon/:idOrName`, `PokemonDetailPage` | `pokedex`, `typechart` | T303 | Must |
 | F03 Bảng tương khắc | US-03 | Phần 2, mục III | `GET /types`, `GET /types/matrix` | `/types`, `TypeChartPage` | `typechart` | T304 | Must |
-| F04 Bàn Cân Sức Mạnh | US-04 | Phần 2, mục IV | `GET /pokemon/compare` | `/compare`, `ComparePage` | `pokedex` | T308 | Should |
+| F04 Bàn Cân Sức Mạnh | US-04 | Phần 2, mục IV | `GET /pokemon/compare`, `GET /pokemon/{idOrName}` (mỗi bên), `GET /pokemon/search` | `/compare`, `ComparePage` | `pokedex` | T308 | Should |
 | F05 Team Builder, Synergy | US-05, US-06 | Phần 2, mục V | `POST /synergy/analyze`, `POST /synergy/recommendations` | `/team-builder`, `TeamBuilderPage` | `synergy` | T305, T306 | Must |
 | F06 Lưu và chia sẻ đội | US-07 | Phần 2, mục VI | `POST /teams`, `GET /teams/shared/{shareCode}` | `/team/:shareCode`, `SharedTeamPage` | `team` | T307 | Must |
-| F07 Trang Tổng quan | | Phần 2, mục VII | `GET /pokemon/{idOrName}`, `GET /pokemon`, `GET /types/matrix` | `/`, `LandingPage` | | T311, T312, T313 | Should |
+| F07 Trang Tổng quan | | Phần 2, mục VII | `GET /pokemon/{idOrName}`, `GET /pokemon/generations`, `GET /types/matrix` | `/`, `LandingPage` | | T311, T312, T313 | Should |
 | F08 Trang Địa hình | | Phần 2, mục VIII | `GET /pokemon` | `/terrain/:terrainId?`, `TerrainPage` | | T314 | Could |
 | F09 Bảng tốc độ cấp 50 | US-09 | Phần 2, mục IX | `GET /pokemon/speed-tiers`, `GET /pokemon/{idOrName}` | `/pokemon/:idOrName`, `/team-builder` | `pokedex` | T408 | Should |
 | F10 Nhập, xuất đội Showdown | US-10 | Phần 2, mục X | `GET /pokemon/{idOrName}`, `GET /pokemon/search` | `/team-builder`, `/team/:shareCode` | | T409 | Could |

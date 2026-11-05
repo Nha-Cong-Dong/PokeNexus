@@ -1,6 +1,7 @@
 # PokeNexus - Kế hoạch quản lý Assets
 
-- Phiên bản: 0.8 (cập nhật 2026-11-01; hồ sơ thế hệ ở trang Tổng quan dùng artwork thay sprite, Phần 5, mục II)
+- Phiên bản: 0.9 (cập nhật 2026-11-05, Issue #74; sửa cho khớp code: logo vẽ bằng CSS trong Header, không có `src/assets/`; sprite ở ô tìm kiếm 40 px; ảnh OG và `docs/images/` chưa tạo, chờ T405)
+- Bản 0.8 (2026-11-01; hồ sơ thế hệ ở trang Tổng quan dùng artwork thay sprite, Phần 5, mục II)
 - Bản 0.7 (2026-10-30): chiều cao `PageHero` 288/480/544 px ở Phần 5; ảnh khung cảnh có vùng vá do AI vẽ theo [ADR 0008](adr/0008-ai-edited-scene-patches.md).
 - Bản 0.6 (2026-10-28): bộ nhiều ảnh cho mỗi khung cảnh, cỡ 1920 và 960, ngân sách 25 MB theo [ADR 0006](adr/0006-animated-scene-backdrops.md).
 - Chiến lược ảnh Pokémon: **Hybrid**. Sprite nhỏ được tự host; artwork lớn lấy từ đường dẫn công khai, có fallback ([ADR 0005](adr/0005-hybrid-image-assets.md)).
@@ -19,10 +20,11 @@
 | Ảnh dự phòng | Tự vẽ | SVG, dưới 2 KB | `frontend/public/sprites/placeholder.svg` | Có | T207 |
 | Ảnh khung cảnh (scene) | Ảnh chụp từ game Pokémon 3D: Bulbagarden Archives và trang chính thức của game ([design-system.md](design-system.md), Phần 4) | WebP 1920 x 1080 (tối đa 260 KB) và 960 x 540 (tối đa 80 KB), 1-5 ảnh mỗi scene; số liệu hiện tại ở `SOURCES.md` | `frontend/public/scenes/`, nguồn từng ảnh ở `SOURCES.md` | Có | T301 |
 | Font | Dela Gothic One (`@fontsource/dela-gothic-one`), Nunito và Pixelify Sans (`@fontsource-variable/...`) | WOFF2; Dela Gothic One weight 400, hai font còn lại dạng variable | `node_modules`, Vite đóng gói vào `dist/assets` | Không (chỉ `package.json`) | T203, T301 |
-| Logo, favicon | Tự thiết kế | SVG | `frontend/src/assets/logo.svg`, `frontend/public/favicon.svg` | Có | T203 |
-| Ảnh xem trước link (Open Graph) | Chụp và thiết kế | PNG 1200 x 630, dưới 300 KB | `frontend/public/og-image.png` | Có | T405 |
-| Ảnh chụp màn hình cho README | Chụp từ bản production | PNG hoặc WebP, rộng tối đa 1600 px, dưới 500 KB | `docs/images/` | Có | T405 |
-| Sơ đồ kiến trúc dạng ảnh | Xuất từ Mermaid trong `docs/` | PNG hoặc SVG | `docs/images/` | Có | T405 |
+| Logo | Tự thiết kế | Không có file: vòng tròn vẽ bằng CSS (`span` trong `app/layout/Header.tsx`) cạnh chữ "PokeNexus" | | | T203 |
+| Favicon | Tự thiết kế | SVG | `frontend/public/favicon.svg` | Có | T203 |
+| Ảnh xem trước link (Open Graph) | Chụp và thiết kế | PNG 1200 x 630, dưới 300 KB | `frontend/public/og-image.png` (chưa tạo) | Có | T405 |
+| Ảnh chụp màn hình cho README | Chụp từ bản production | PNG hoặc WebP, rộng tối đa 1600 px, dưới 500 KB | `docs/images/` (chưa tạo) | Có | T405 |
+| Sơ đồ kiến trúc dạng ảnh | Xuất từ Mermaid trong `docs/` | PNG hoặc SVG | `docs/images/` (chưa tạo) | Có | T405 |
 | Wireframe | Công cụ vẽ (Excalidraw, Figma...) | PNG kèm file nguồn nếu có | `docs/wireframes/` | Có | T103 |
 | Icon hệ | | | Không dùng ở MVP; nhãn hệ chỉ dùng chữ | | |
 
@@ -43,9 +45,9 @@
 | Ảnh trong `docs/images/` | `<trang>-<thiết bị>.<đuôi>`, chữ thường, gạch nối | `dex-desktop.png`, `team-builder-mobile.png` |
 | Sơ đồ | `diagram-<tên>.<đuôi>` | `diagram-container.svg` |
 | Wireframe | `<trang>-<thiết bị>.png` | `pokemon-detail-mobile.png` |
-| Asset trong `src/assets/` | `kebab-case` | `logo.svg` |
+| Asset trong `src/assets/` (chưa có thư mục này) | `kebab-case` | `ten-asset.svg` |
 
-- `public/` chứa file phục vụ nguyên tên (sprite, favicon, ảnh OG). `src/assets/` chứa file được import trong code, Vite sẽ gắn hash vào tên file khi build.
+- `public/` chứa file phục vụ nguyên tên (sprite, favicon, ảnh khung cảnh). Nếu sau này cần file được import trong code thì đặt ở `src/assets/`, Vite sẽ gắn hash vào tên file khi build.
 
 ---
 
@@ -111,7 +113,7 @@
 
 | Vị trí | Loại ảnh | Kích thước hiển thị |
 |---|---|---|
-| Lưới Omni-Dex, kết quả tìm kiếm, slot đội, thẻ đề xuất, trang đội chia sẻ | Sprite | 96 px (lưới), 48 px (tìm kiếm) |
+| Lưới Omni-Dex, kết quả tìm kiếm, slot đội, thẻ đề xuất, trang đội chia sẻ | Sprite | 96 px (lưới), 40 px (gợi ý của ô tìm kiếm `PokemonSearchBox`) |
 | Trang chi tiết, Bàn Cân | Artwork | 240 px mobile, 320 px desktop |
 | Hồ sơ thế hệ ở trang Tổng quan: 3 Pokémon khởi đầu, Pokémon mạnh nhất | Artwork | 72 px (sprite phóng to bị vỡ hạt ở cỡ này) |
 | `PageHero` của mọi trang | Ảnh khung cảnh qua `SceneBackdrop` (`srcset` 960w, 1920w) | Tràn ngang, cao 288 px mobile, 480 px từ `md`, 544 px từ `lg` ([design-system.md](design-system.md), Phần 5) |
@@ -136,7 +138,7 @@ flowchart LR
 
 | Loại file | `Cache-Control` đề xuất | Lý do |
 |---|---|---|
-| `dist/assets/*` (JS, CSS, font, logo có hash) | `public, max-age=31536000, immutable` | Tên file đổi khi nội dung đổi |
+| `dist/assets/*` (JS, CSS, font có hash) | `public, max-age=31536000, immutable` | Tên file đổi khi nội dung đổi |
 | `/sprites/**` | `public, max-age=604800` | Tên file cố định, hiếm khi đổi |
 | `index.html` | `no-cache` | Luôn lấy phiên bản mới nhất |
 

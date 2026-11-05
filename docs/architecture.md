@@ -1,6 +1,7 @@
 # PokeNexus - Kiến trúc hệ thống
 
-- Phiên bản: 1.1 (cập nhật 2026-11-05; Phần 8, 11: giới hạn lưu đội lấy IP client từ header `CF-Connecting-IP` do edge Cloudflare của Render ghi (`ClientIpResolver`, `app.team.client-ip-header`), vì kiểm chứng ngày 04/11 cho thấy `X-Forwarded-For` giả vượt được giới hạn (lỗi B3, Issue #89))
+- Phiên bản: 1.2 (cập nhật 2026-11-05, Issue #74; sửa cho khớp code: Phần 3 `ingestion` ghi bằng `JdbcTemplate`; Phần 4 lý do cache nạp sau ingestion, tên DTO, sơ đồ đề xuất gọi `resolveTeam`, `evaluate`, frontend không debounce và gọi đề xuất ngay, vòng sinh mã chia sẻ; Phần 5 nguồn trọng số; Phần 6 tham số `view`, slot 6 và `localStorage`, đồng bộ tiến độ Trainer giữa các tab, query key đề xuất và đội chia sẻ, `TerrainPicker` đổi path; Phần 7 mức log; Phần 9 Cache HTTP thêm `/speed-tiers`, `/generations`; Phần 11 kiểm chứng B3 theo `ClientIpResolver`; Phần 12 test frontend thật, CSV mẫu 62 dạng, 5 ví dụ có đáp án)
+- Bản 1.1 (2026-11-05; Phần 8, 11: giới hạn lưu đội lấy IP client từ header `CF-Connecting-IP` do edge Cloudflare của Render ghi (`ClientIpResolver`, `app.team.client-ip-header`), vì kiểm chứng ngày 04/11 cho thấy `X-Forwarded-For` giả vượt được giới hạn (lỗi B3, Issue #89))
 - Bản 1.0 (2026-11-02; Phần 11: backend chuyển sang Render, MySQL sang Aiven vì Railway dừng nhận đăng ký mới ([ADR 0009](adr/0009-hosting-render-aiven.md)); thao tác từng bước ở [deploy.md](deploy.md))
 - Bản 0.9 (2026-11-02; Phần 6: query key chi tiết thành `['pokemon', 'detail', idOrName]`, chặn tên trùng đường dẫn API; route bọc có `errorElement`, `ScrollRestoration`; Phần 8: `RequestBodyLimitFilter` giới hạn body 16 KB; Phần 11: build Pages chặn `VITE_API_BASE_URL` sai, kiểm chứng thêm header `Forwarded`. Bản 0.8 ngày 2026-10-30: Phần 6: query key `['pokemon', 'speed-tiers']` cho Bảng tốc độ cấp 50; Phần 11: chốt Railway và Cloudflare Pages theo ADR 0007, thiết lập production, nhập dữ liệu bằng `scripts/db-dump.sh`; Phần 2: thêm Lombok vào bảng công nghệ; Phần 6: route `/terrain/:terrainId?`, tiến độ Trainer trong `localStorage`; Phần 5: độ phủ tấn công tính sẵn khi nạp, `excludeLegendary` loại cả Pokémon Paradox; Phần 8: giới hạn số client theo dõi khi lưu đội; Phần 9-11: script đo p95, `backend/Dockerfile`, service `backend` trong Docker Compose)
 - Các quyết định quan trọng được ghi chi tiết trong [adr/](adr).
@@ -108,7 +109,7 @@ flowchart LR
 
 - Mũi tên A -> B nghĩa là A được phép dùng **Service hoặc DTO công khai** của B. Không dùng Repository hay Entity của package khác.
 - `common` không phụ thuộc package tính năng nào.
-- `ingestion` chỉ ghi DB qua Repository của chính nó (dùng JDBC batch), không phụ thuộc package tính năng.
+- `ingestion` không có Repository: các loader trong `ingestion/loader` ghi DB thẳng bằng `JdbcTemplate.batchUpdate`; không phụ thuộc package tính năng.
 - Danh sách class từng package: [folder-structure.md](folder-structure.md), Phần 2.
 
 ---
@@ -137,7 +138,7 @@ sequenceDiagram
     App-->>App: sẵn sàng nhận request, /health trả dataLoaded = true
 ```
 
-- Cache được nạp sau ingestion: hai bean cache lắng nghe `ApplicationReadyEvent`, còn `IngestionRunner` chạy trước ở `ApplicationRunner` có `@Order` nhỏ hơn.
+- Cache được nạp sau ingestion: `IngestionRunner` là một `ApplicationRunner`, mà Spring Boot gọi mọi `ApplicationRunner` trước khi phát `ApplicationReadyEvent`; hai bean cache (`TypeChartService`, `PokemonProfileRegistry`) nạp khi nhận sự kiện này. `@Order(0)` của `IngestionRunner` chỉ sắp thứ tự giữa các runner, không quyết định thứ tự với cache.
 - DB rỗng và ingestion bị tắt: ứng dụng vẫn chạy, `/health` trả `dataLoaded = false`, các API dữ liệu trả 503.
 
 ### II. Omni-Dex
@@ -153,7 +154,7 @@ sequenceDiagram
     C->>S: search(filter, pageable)
     S->>R: findAll(Specification, Pageable)
     R-->>S: Page<Pokemon>
-    S-->>C: PageResponse<PokemonSummaryResponse>
+    S-->>C: PageResponse<PokemonSummary>
     C-->>UI: 200 JSON
 ```
 
@@ -173,13 +174,14 @@ sequenceDiagram
     C-->>UI: 200
     UI->>C: POST /synergy/recommendations
     C->>E: recommend(ids, options)
-    E->>A: analyze(ids) lấy pressure
+    E->>A: resolveTeam(ids), evaluate(team) lấy pressure
     E->>PR: duyệt toàn bộ ứng viên
     E-->>C: top N, khác tổ hợp hệ
     C-->>UI: 200
 ```
 
-- Hai luồng này không truy vấn DB. Frontend gọi lại `analyze` mỗi khi đội thay đổi (debounce 300 ms) và chỉ gọi `recommendations` khi người dùng mở khu vực đề xuất.
+- Hai luồng này không truy vấn DB. `RecommendationEngine` chỉ gọi `resolveTeam` và `evaluate` của `SynergyAnalyzer`, không dựng `AnalyzeResponse` hay `insights`.
+- Frontend gọi `analyze` ngay mỗi khi đội nháp đổi (không debounce; kết quả cũ giữ trên màn hình bằng `placeholderData` cho tới khi có kết quả mới) và gọi `recommendations` ngay khi đội có từ 1 thành viên, cùng lúc với `analyze`. Debounce duy nhất là 250 ms ở ô tìm kiếm (`PokemonSearchBox`).
 
 ### IV. Lưu và chia sẻ đội
 
@@ -198,13 +200,16 @@ sequenceDiagram
     end
     C->>S: create(request)
     S->>S: tính synergyScore qua SynergyAnalyzer
-    loop tối đa 3 lần khi trùng share_code
+    loop tối đa 3 lần khi mã đã có
         S->>G: next()
-        S->>DB: INSERT teams, team_members
+        S->>DB: existsByShareCode(mã)
     end
+    S->>DB: INSERT teams, team_members (một lần)
     S-->>C: TeamResponse
     C-->>UI: 201 + Location
 ```
+
+- `clientIp` do `ClientIpResolver` lấy (Phần 8). Mã được kiểm tra trùng trước khi ghi: 3 mã liên tiếp đều đã có thì trả 500. Hai request cùng sinh một mã chưa có trong DB thì request ghi sau vi phạm ràng buộc `UNIQUE` của `share_code` và nhận 500, không thử lại (xác suất rất nhỏ với 62^8 tổ hợp).
 
 ---
 
@@ -269,7 +274,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 - Sắp xếp giảm dần theo `score` đã làm tròn 1 chữ số; hòa điểm thì BST cao hơn đứng trước, tiếp theo là ID nhỏ hơn (để kết quả ổn định khi test).
 - Chỉ giữ ứng viên điểm cao nhất của mỗi tổ hợp hệ (không phân biệt thứ tự hệ), lấy `limit` phần tử đầu.
 - Độ phức tạp `O(N x 18 + N log N)` với `N` khoảng 1.300.
-- Trọng số là thuộc tính của enum `PlayStyle`, cố định trong code (spec 1.6, Phần 5).
+- Trọng số là thuộc tính của enum `PlayStyle`, cố định trong code; người dùng chọn lối chơi, không chỉnh từng trọng số ([spec.md](spec.md), Phần 5, mục II).
 
 #### 3. Sinh lý do và cảnh báo
 
@@ -308,11 +313,11 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | Route | Trang | Trạng thái trên URL |
 |---|---|---|
 | `/` | `LandingPage` | |
-| `/pokedex` | `DexPage` | `type`, `gen`, `minBst`, `maxBst`, `minSpeed`, `form`, `sort`, `page` |
+| `/pokedex` | `DexPage` | `type`, `gen`, `minBst`, `maxBst`, `minSpeed`, `form`, `sort`, `page`, `view` (`view=list` khi xem dạng danh sách; dạng thẻ là mặc định, không ghi) |
 | `/pokemon/:idOrName` | `PokemonDetailPage` | |
 | `/types` | `TypeChartPage` | `def` (1-2 hệ phòng thủ đang chọn) |
 | `/compare` | `ComparePage` | `left`, `right` |
-| `/team-builder` | `TeamBuilderPage` | `ids` (đội nháp, ví dụ `ids=6,130,149`); `add` (thêm một Pokémon vào đội nháp đang có rồi tự xóa khỏi URL, dùng cho nút "Thêm vào đội"); `six` (thành viên slot 6: đề xuất đã chọn hoặc thành viên thứ 6 của đội chia sẻ; chỉ có hiệu lực khi đội nháp đủ 5, reload vẫn giữ) |
+| `/team-builder` | `TeamBuilderPage` | `ids` (đội nháp, ví dụ `ids=6,130,149`); `add` (thêm một Pokémon vào đội nháp đang có rồi tự xóa khỏi URL, dùng cho nút "Thêm vào đội"); `six` (thành viên slot 6: đề xuất đã chọn hoặc thành viên thứ 6 của đội chia sẻ; chỉ có hiệu lực khi đội nháp đủ 5; reload cùng URL vẫn giữ, nhưng `localStorage` chỉ lưu `ids` nên vào lại `/team-builder` không có `six` trên URL thì mất slot 6) |
 | `/team/:shareCode` | `SharedTeamPage` | |
 | `/terrain/:terrainId?` | `TerrainPage` | `terrainId` trên đường dẫn (13 địa hình; ID lạ chuyển về `/terrain`) |
 | `*` | `NotFoundPage` | |
@@ -323,8 +328,8 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 |---|---|---|
 | Dữ liệu từ server | TanStack Query | Danh sách Pokémon, ma trận hệ, kết quả phân tích |
 | Trạng thái chia sẻ được | Query string trên URL | Bộ lọc Omni-Dex, cặp so sánh |
-| Đội nháp | Hook `useTeamDraft` (`useReducer`), đồng bộ URL và `localStorage` | 5 slot Team Builder |
-| Tiến độ Trainer | Hook `useTrainerProgress`, `localStorage` khóa `pokenexus.trainer`; mỗi trang giữ một bản và truyền xuống component con | Điểm, chuỗi đúng dài nhất, Ball, huy hiệu của Thử tài Trainer và Who's that Pokémon? |
+| Đội nháp | Hook `useTeamDraft` (`useReducer`), đồng bộ URL (`ids`, `six`) và `localStorage` (chỉ `ids`) | 5 slot Team Builder |
+| Tiến độ Trainer | Hook `useTrainerProgress`, `localStorage` khóa `pokenexus.trainer`; mỗi trang giữ một bản và truyền xuống component con; nghe sự kiện `storage` để nạp lại khi tab khác ghi | Điểm, chuỗi đúng dài nhất, Ball, huy hiệu của Thử tài Trainer và Who's that Pokémon? |
 | Trạng thái giao diện cục bộ | `useState` trong component | Mở hoặc đóng dialog; ô loại huyền thoại ở Team Builder (không lên URL vì `useTeamDraft` quản lý query string của trang) |
 
 | Query key | `staleTime` | Lý do |
@@ -333,15 +338,17 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | `['pokemon', 'detail', idOrName]`, `['pokemon', 'evolution', idOrName]` | `Infinity` | Dữ liệu tĩnh. Có đoạn `detail` để không trùng key `['pokemon', 'generations']`, `['pokemon', 'speed-tiers']`; tên trùng đường dẫn API (`search`, `compare`, `speed-tiers`, `generations`) trả 404 `POKEMON_NOT_FOUND` ở frontend, không gọi API |
 | `['pokemon', 'list', filter]` | 5 phút | Tránh gọi lại khi quay lại trang |
 | `['synergy', 'analyze', ids]` | `Infinity` | Kết quả xác định theo đầu vào |
+| `['synergy', 'recommendations', ids, limit, excludeLegendary, playStyle]` | `Infinity` | Kết quả xác định theo đầu vào |
+| `['teams', 'shared', shareCode]` | `Infinity` | Đội đã lưu không sửa được |
 | `['compare', left, right]` | `Infinity` | Kết quả xác định theo cặp; không thử lại khi lỗi 4xx |
 | `['pokemon', 'search', q]` | 5 phút | Gợi ý tên khi gõ |
 | `['pokemon', 'generations']` | `Infinity` | Hồ sơ 9 thế hệ ở trang Tổng quan (`GET /pokemon/generations`) |
 | `['pokemon', 'type-pool', type]` | `Infinity` | 100 Pokémon đầu theo ID của một hệ cho trang Địa hình |
 | `['pokemon', 'speed-tiers']` | `Infinity` | Mốc tốc độ gốc cho Bảng tốc độ cấp 50 (F09); chi tiết thành viên dùng chung key `['pokemon', 'detail', id]` |
 
-- Không thêm thư viện quản lý state toàn cục trong MVP; đội nháp là trạng thái toàn cục duy nhất. Tiến độ Trainer không phải state toàn cục: mỗi trang đọc `localStorage` khi mở và ghi lại khi thay đổi.
+- Không thêm thư viện quản lý state toàn cục trong MVP; đội nháp là trạng thái toàn cục duy nhất. Tiến độ Trainer không phải state toàn cục: mỗi trang đọc `localStorage` khi mở, ghi lại khi thay đổi, và đọc lại khi nhận sự kiện `storage` (tab khác cùng trình duyệt vừa ghi).
 - Các trang nằm trong một route bọc không có `path` dưới `AppLayout`, có `errorElement` là `RouteErrorPage`: lỗi render hoặc lỗi tải chunk (ví dụ sau khi deploy bản mới) hiện trang lỗi bên trong layout, giữ Header, có nút "Tải lại trang". `AppLayout` cũng có `errorElement` để dự phòng. Lỗi API hiển thị `ErrorState` có nút thử lại ([design-system.md](design-system.md), Phần 5).
-- `AppLayout` có `ScrollRestoration`: chuyển sang trang khác thì cuộn về đầu, Back hoặc Forward thì khôi phục vị trí cũ. Hook chỉ đổi query string của trang đang mở (`useDexSearchParams`, `useCompareSearchParams`, `useTeamDraft`, `useDefendingTypes`, `TerrainPicker`) truyền `preventScrollReset` để giữ vị trí.
+- `AppLayout` có `ScrollRestoration`: chuyển sang trang khác thì cuộn về đầu, Back hoặc Forward thì khôi phục vị trí cũ. Hook chỉ đổi query string của trang đang mở (`useDexSearchParams`, `useCompareSearchParams`, `useTeamDraft`, `useDefendingTypes`) truyền `preventScrollReset` để giữ vị trí; link trong `TerrainPicker` đổi path param (`/terrain/{id}`) và cũng truyền `preventScrollReset`.
 
 ---
 
@@ -361,7 +368,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 ### III. Logging
 
 - SLF4J với Logback mặc định của Spring Boot. Mức `INFO` cho `com.pokenexus`, `WARN` cho thư viện.
-- Ghi log: tóm tắt ingestion (số dòng từng bảng, thời gian), thời gian nạp cache, lỗi 4xx ở mức `DEBUG`, lỗi 5xx ở mức `ERROR` kèm stack trace.
+- Ghi log: tóm tắt ingestion (số dòng từng bảng, thời gian), thời gian nạp cache. `GlobalExceptionHandler` ghi lỗi `ApiException` (mọi mã 4xx và cả 503 `DATA_NOT_READY`) và lỗi 4xx của Spring ở mức `DEBUG`, nên không hiện với mức `INFO` hiện tại; lỗi không lường trước (500) và lỗi 5xx của Spring ghi mức `ERROR` kèm stack trace.
 - Không ghi địa chỉ IP vào log lâu dài; bộ giới hạn tần suất chỉ giữ IP trong bộ nhớ.
 
 ---
@@ -403,7 +410,7 @@ statRadar        = trung bình từng chỉ số gốc của các thành viên
 | Endpoint | `Cache-Control` |
 |---|---|
 | `GET /types`, `GET /types/matrix` | `public, max-age=86400` |
-| `GET /pokemon/{idOrName}` | `public, max-age=3600` |
+| `GET /pokemon/{idOrName}`, `GET /pokemon/speed-tiers`, `GET /pokemon/generations` | `public, max-age=3600` |
 | Các endpoint còn lại | Không đặt (mặc định) |
 | Sprite `/sprites/pokemon/*.png` | Cấu hình ở static hosting ([assets.md](assets.md), Phần 6) |
 
@@ -524,8 +531,7 @@ flowchart LR
 - Kiểm tra sau deploy:
   - `GET https://<domain backend>/api/v1/health` trả 200 `UP`, `pokemonCount` 1351.
   - Kịch bản demo ([spec.md](spec.md), Phần 4) chạy trên domain Pages, cả trên điện thoại.
-  - 11 request `POST /api/v1/teams` liên tiếp, mỗi request một `X-Forwarded-For` giả khác nhau: request thứ 11 phải trả 429 ([deploy.md](deploy.md), Phần 8, mục III).
-  - Lặp lại với header `Forwarded: for=<IP giả>` (RFC 7239): `ForwardedHeaderFilter` của Spring đọc header này trước `X-Forwarded-For`. Nếu request thứ 11 không bị 429 thì proxy của Render không xóa header do client gửi; khi đó trước ngày demo, đổi `TeamController` sang lấy IP từ giá trị do proxy Render ghi thay cho `getRemoteAddr()`.
+  - 11 request `POST /api/v1/teams` liên tiếp, mỗi request một IP giả khác nhau, lặp lại lần lượt với `X-Forwarded-For`, `CF-Connecting-IP` và `Forwarded: for=<IP giả>`: request thứ 11 của mỗi vòng phải trả 429 ([deploy.md](deploy.md), Phần 8, mục III). Không đạt thì đặt biến `CLIENT_IP_HEADER` theo header IP mà edge của Render thật sự ghi (Phần 8).
   - Nên bật lịch gọi `/api/v1/health` mỗi 10 phút để backend Free không ngủ ([deploy.md](deploy.md), Phần 9).
 
 ---
@@ -536,13 +542,13 @@ flowchart LR
 
 | Tầng | Công cụ | Phạm vi | Chạy khi |
 |---|---|---|---|
-| Unit backend | JUnit 5, AssertJ, Mockito | `SynergyAnalyzer`, `RecommendationEngine`, `TypeChartService`, `FormCategoryResolver`, `ShareCodeGenerator`, mapper CSV | Mỗi PR (CI) |
+| Unit backend | JUnit 5, AssertJ, Mockito | `SynergyAnalyzer`, `RecommendationEngine`, `TypeChartService`, `FormCategoryResolver`, `ShareCodeGenerator`, `CsvReader` | Mỗi PR (CI) |
 | Web slice | `@WebMvcTest` | Validation, định dạng `ProblemDetail`, mã HTTP | Mỗi PR |
 | Tích hợp | `@SpringBootTest` + Testcontainers MySQL | Migration, ingestion với CSV mẫu, Specification lọc, lưu đội | Mỗi PR |
-| Unit frontend | Vitest, React Testing Library | `TypeBadge`, `MultiplierCell`, `useDexSearchParams`, `useTeamDraft`, formatter | Mỗi PR |
+| Unit frontend | Vitest, React Testing Library | Hàm thuần (`formatters`, `typeEffectiveness`, `quiz`, `showdown`, `teamAnalysis`, `level50`...), hook (`useDexSearchParams`, `useTeamDraft`, `useTrainerProgress`), component (`StatBar`, `StatRadar`, `PokemonSearchBox`, `WeaknessHeatmap`...) và trang render qua route với `fetch` giả (`src/test/renderRoute.tsx`) | Mỗi PR |
 | End-to-end | Kịch bản thủ công ([spec.md](spec.md), Phần 4) | Toàn bộ luồng demo | Trước mỗi tag |
 | Phi chức năng | Script đo thời gian, DevTools, Lighthouse | Hiệu năng, responsive, accessibility | T309, T404 |
 
-- CSV mẫu cho test (khoảng 20 Pokémon, gồm 5 thành viên của đội ví dụ ở spec V.4 và các ứng viên liên quan) được commit vào `backend/src/test/resources/csv/`, nên CI không phụ thuộc bộ CSV đầy đủ.
-- Bốn ví dụ có đáp án ở spec, mục V.4 là test bắt buộc của package `synergy`.
+- CSV mẫu cho test (62 dòng `pokemon.csv` thuộc 23 loài, gồm 5 thành viên của đội ví dụ ở spec V.4 và các ứng viên liên quan; `IngestionRunnerIT` kiểm đúng 62) được commit vào `backend/src/test/resources/csv/`, nên CI không phụ thuộc bộ CSV đầy đủ. Unit test Synergy không đọc CSV mà dùng danh mục viết tay `SynergyFixture`.
+- Năm ví dụ có đáp án ở spec, Phần 2, mục V.4 là test bắt buộc (`SynergyAnalyzerTest`, `RecommendationEngineTest`, `TypeChartServiceTest`; [spec.md](spec.md), Phần 6, mục II).
 - Mục tiêu độ phủ: package `synergy` tối thiểu 90% dòng (JaCoCo, mức Should); các package khác không đặt ngưỡng.

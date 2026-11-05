@@ -1,8 +1,8 @@
 # PokeNexus - Mục lục và bản đồ tài liệu
 
-- Phiên bản: 0.4 (cập nhật 2026-11-02; thêm `deploy.md`. Bản 0.3: thêm `pitching/`)
+- Phiên bản: 0.5 (cập nhật 2026-11-05, Issue #74; thêm `worklog.md` (nhật ký chuyển từ `PLAN.md`); bỏ `frontend/src/assets/` khỏi Phần 2 vì thư mục không tồn tại. Bản 0.4 ngày 2026-11-02: thêm `deploy.md`. Bản 0.3: thêm `pitching/`)
 - Trả lời nhanh "tài liệu nào nói về gì" và "muốn làm việc X thì đọc file nào, sửa ở đâu". Không chép nội dung chi tiết; chi tiết nằm ở file được trỏ tới.
-- Tiến độ hiện tại: [PLAN.md](../PLAN.md). Cây thư mục và tên class: [folder-structure.md](folder-structure.md).
+- Tiến độ hiện tại: [PLAN.md](../PLAN.md). Nhật ký từng ngày: [worklog.md](worklog.md). Cây thư mục và tên class: [folder-structure.md](folder-structure.md).
 
 ---
 
@@ -15,6 +15,7 @@
 | [product.md](product.md) | Tầm nhìn, persona, user story, phạm vi | Thay đổi phạm vi sản phẩm |
 | [spec.md](spec.md) | Đặc tả MVP, tiêu chí chấp nhận, kịch bản kiểm chứng, truy vết tính năng và test | Chốt hoặc thay đổi yêu cầu; đổi tên endpoint, trang, class test |
 | [roadmap.md](roadmap.md) | Lộ trình 3 tuần theo lịch hackathon: Epic, task theo ngày, MoSCoW, buffer, rủi ro | Cuối mỗi tuần |
+| [worklog.md](worklog.md) | Nhật ký làm việc theo ngày kèm kết quả kiểm tra, blocker đã xử lý, trạng thái task W1-W3 (chuyển từ `PLAN.md` ngày 2026-11-05). Không thuộc thứ tự đọc đầu phiên | Kết thúc mỗi phiên làm việc: thêm một dòng nhật ký |
 | [architecture.md](architecture.md) | Kiến trúc C4, luồng xử lý, thuật toán, bảo mật, triển khai, chiến lược test | Thay đổi kiến trúc |
 | [database.md](database.md) | ERD, từ điển dữ liệu, index, migration, ingestion | Thêm hoặc sửa migration |
 | [api.md](api.md) | Quy ước, đặc tả từng endpoint, schema DTO, danh mục lỗi | Thêm hoặc sửa endpoint |
@@ -68,6 +69,6 @@
 | Ghi quyết định kiến trúc | Phần 1, mục II | `docs/adr/NNNN-ten-quyet-dinh.md` |
 | Sửa CI | `.github/workflows/ci.yml` | `.github/workflows/` |
 | Gắn tag phát hành | [git-workflow.md](git-workflow.md), Phần 6 | `CHANGELOG.md` |
-| Thêm sprite, font, ảnh | [assets.md](assets.md) | `frontend/public/`, `frontend/src/assets/` |
+| Thêm sprite, font, ảnh | [assets.md](assets.md) | `frontend/public/` |
 | Triển khai production | [deploy.md](deploy.md); [architecture.md](architecture.md), Phần 11 | `backend/Dockerfile`, cấu hình hosting |
 | Chuẩn bị pitching, ôn hỏi đáp | [pitching/PokeNexus-LuyenTap.md](pitching/PokeNexus-LuyenTap.md), Phần 1 | `docs/pitching/` |
