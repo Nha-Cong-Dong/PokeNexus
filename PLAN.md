@@ -24,13 +24,13 @@
 |---|---|---|---|---|
 | T403 (#49) | 30-31/10 | Triển khai production | Đang làm | Deploy 04/11 trên Render, Aiven, Cloudflare Pages; còn deploy lại từ `main` (blocker 1) |
 | T404 (#51) | 03/11 | Bug bash, đo hiệu năng | Đang làm | 6 lỗi chủ dự án báo đã sửa (PR #85-#88, #92), B3 sửa ở PR #91; còn Lighthouse trên link thật |
-| T405 (#52) | 04/11 | README: link demo, ảnh chụp, sơ đồ, CHANGELOG | Chưa làm | README chưa có link demo, ảnh chụp |
-| T406 (#72) | 04-06/11 | Slide và kịch bản pitch 15 phút | Đang làm | |
+| T405 (#52) | 04/11 | README: link demo, ảnh chụp, sơ đồ, CHANGELOG | Đang làm | PR #99: bảng link (dùng thử, API, video, báo cáo, nghiệm thu), CHANGELOG `[Unreleased]`; còn ảnh chụp sau blocker 1 |
+| T406 (#72) | 04-06/11 | Slide và kịch bản pitch 15 phút | Xong | PR #101: `docs/pitching/slides.html`, `PokeNexus-Pitch.pptx` (27 slide), kịch bản Phần 10 của file luyện tập (khoảng 15 phút); bấm giờ thật ở T407 |
 | T407 (#53) | 07-08/11 | Tổng duyệt 2 lần, tag `v1.0.0` | Chưa làm | Làm sau khi link thật chạy bản mới |
 | T413 (#73) | 05/11 | Báo cáo tổng kết `.docx` | Xong | PR #96 |
-| T414 (#71) | 02-03/11 | Tài liệu luyện tập hỏi đáp | Xong | PR #77; đang cập nhật theo code sau 02/11 |
-| #74 | 05/11 | Sửa tài liệu lệch code, rút gọn `PLAN.md` | Đang làm | Nhánh `docs/74-docs-drift-plan` |
-| #97 | 05-07/11 | Video demo cho buổi pitching | Đang làm | |
+| T414 (#71) | 02-03/11 | Tài liệu luyện tập hỏi đáp | Xong | PR #77; cập nhật theo code sau 02/11 ở PR #101 (bản 0.2) |
+| #74 | 05/11 | Sửa tài liệu lệch code, rút gọn `PLAN.md` | Xong | PR #98 |
+| #97 | 05/11 | Video demo cho buổi pitching | Xong | PR #100: `docs/pitching/PokeNexus-Demo.mp4` 04:40, quay từ bản `main` chạy local |
 
 - Giá trị cột Trạng thái: Chưa làm, Đang làm, Bị chặn, Xong, Cắt giảm.
 
