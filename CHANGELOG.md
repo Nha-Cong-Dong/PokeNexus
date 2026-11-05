@@ -9,6 +9,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ### Added
 
+- README Phần 2 mục IV: 7 ảnh chụp (Tổng quan, Omni-Dex, Chi tiết, Tương khắc, So sánh, Xây đội trên desktop và điện thoại) trong `docs/images/` (T405).
 - Script nghiệm thu `scripts/acceptance-check.mjs` (#94): kịch bản demo qua API, 9 route ở 375 và 1440 px bằng Chrome headless, các lỗi sửa ngày 2026-11-05, tùy chọn `--rate-limit` kiểm giới hạn lưu đội mà không ghi DB.
 - Workflow `keep-alive.yml` gọi `/api/v1/health` mỗi 10 phút để backend Render Free không ngủ (#90).
 - Báo cáo tổng kết `docs/pitching/PokeNexus-BaoCao.docx` (T413) và video demo `docs/pitching/PokeNexus-Demo.mp4` (#97).

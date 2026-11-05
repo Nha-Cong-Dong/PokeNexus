@@ -23,7 +23,7 @@
 | Logo | Tự thiết kế | Không có file: vòng tròn vẽ bằng CSS (`span` trong `app/layout/Header.tsx`) cạnh chữ "PokeNexus" | | | T203 |
 | Favicon | Tự thiết kế | SVG | `frontend/public/favicon.svg` | Có | T203 |
 | Ảnh xem trước link (Open Graph) | Chụp và thiết kế | PNG 1200 x 630, dưới 300 KB | `frontend/public/og-image.png` (chưa tạo) | Có | T405 |
-| Ảnh chụp màn hình cho README | Chụp từ bản production | PNG hoặc WebP, rộng tối đa 1600 px, dưới 500 KB | `docs/images/` (chưa tạo) | Có | T405 |
+| Ảnh chụp màn hình cho README | Chụp từ bản `main` (local hoặc production) bằng Chrome headless | WebP 1440 x 900 (điện thoại 780 x 1688), 57-121 KB, 7 file | `docs/images/` | Có | T405 |
 | Sơ đồ kiến trúc dạng ảnh | Xuất từ Mermaid trong `docs/` | PNG hoặc SVG | `docs/images/` (chưa tạo) | Có | T405 |
 | Wireframe | Công cụ vẽ (Excalidraw, Figma...) | PNG kèm file nguồn nếu có | `docs/wireframes/` | Có | T103 |
 | Icon hệ | | | Không dùng ở MVP; nhãn hệ chỉ dùng chữ | | |

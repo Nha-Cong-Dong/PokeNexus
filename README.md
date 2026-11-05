@@ -67,6 +67,20 @@ https://github.com/Nha-Cong-Dong/PokeNexus
 - Chiêu thức và độ phủ tấn công theo chiêu thực tế, tính sát thương.
 - World Explorer: vùng đất, Gym Leader.
 
+### IV. Ảnh chụp
+
+| Trang | Ảnh |
+|---|---|
+| Tổng quan `/` | ![Trang Tổng quan](docs/images/landing.webp) |
+| Omni-Dex `/pokedex` | ![Omni-Dex](docs/images/pokedex.webp) |
+| Chi tiết `/pokemon/garchomp` | ![Chi tiết Garchomp](docs/images/pokemon-detail.webp) |
+| Bảng tương khắc `/types` | ![Ma trận tương khắc 18 x 18](docs/images/type-chart.webp) |
+| So sánh `/compare?left=garchomp&right=salamence` | ![So sánh Garchomp và Salamence](docs/images/compare.webp) |
+| Xây đội, đội demo `/team-builder?ids=6,130,149,663,637` | ![Đánh giá đội, bản đồ điểm yếu và đề xuất slot 6](docs/images/team-builder.webp) |
+| Xây đội trên điện thoại (390 px) | ![Xây đội ở màn hình 390 px](docs/images/team-builder-mobile.webp) |
+
+- Chụp ngày 2026-11-05 từ bản `main` (commit `c621d36`) chạy local, Chrome 1440 x 900; ảnh điện thoại 390 x 844 ở tỉ lệ điểm ảnh 2.
+
 ---
 
 ## Phần 3. Công nghệ
