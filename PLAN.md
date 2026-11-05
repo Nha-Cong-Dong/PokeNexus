@@ -24,7 +24,7 @@
 |---|---|---|---|---|
 | T403 (#49) | 30-31/10 | Triển khai production | Đang làm | Deploy 04/11 trên Render, Aiven, Cloudflare Pages; còn deploy lại từ `main` (blocker 1) |
 | T404 (#51) | 03/11 | Bug bash, đo hiệu năng | Đang làm | 6 lỗi chủ dự án báo đã sửa (PR #85-#88, #92), B3 sửa ở PR #91; còn Lighthouse trên link thật |
-| T405 (#52) | 04/11 | README: link demo, ảnh chụp, sơ đồ, CHANGELOG | Đang làm | PR #99: bảng link (dùng thử, API, video, báo cáo, nghiệm thu), CHANGELOG `[Unreleased]`; còn ảnh chụp sau blocker 1 |
+| T405 (#52) | 04/11 | README: link demo, ảnh chụp, sơ đồ, CHANGELOG | Xong | PR #99: bảng link (dùng thử, API, video, báo cáo, nghiệm thu), CHANGELOG `[Unreleased]`; 7 ảnh chụp `docs/images/` ở README Phần 2 mục IV, chụp từ `main` chạy local (cùng mã với bản sẽ deploy) |
 | T406 (#72) | 04-06/11 | Slide và kịch bản pitch 15 phút | Xong | PR #101: `docs/pitching/slides.html`, `PokeNexus-Pitch.pptx` (27 slide), kịch bản Phần 10 của file luyện tập (khoảng 15 phút); bấm giờ thật ở T407 |
 | T407 (#53) | 07-08/11 | Tổng duyệt 2 lần, tag `v1.0.0` | Chưa làm | Làm sau khi link thật chạy bản mới |
 | T413 (#73) | 05/11 | Báo cáo tổng kết `.docx` | Xong | PR #96 |
@@ -42,7 +42,6 @@
 |---|---|---|---|
 | 1 | Cloudflare Pages và Render chưa tự build lại từ `main`: bundle Pages vẫn `index-oap3lK_N.js` của 04/11, API chưa có thay đổi của #86, #87, #91 | Link thật thiếu các bản sửa ngày 05/11 và bản sửa B3; `acceptance-check` trên production 25/33 | Chủ dự án deploy lại từ dashboard Pages và Render, rồi chạy `node scripts/acceptance-check.mjs --rate-limit` (đạt khi 36/36: 33 mục thường và 3 vòng B3) |
 | 2 | Lighthouse trên link thật chưa đo | Thiếu phần còn lại của cột Kiểm tra T404 | Đo sau blocker 1, ghi số vào `docs/worklog.md` |
-| 3 | README chưa có link demo, ảnh chụp | T405 chưa đạt | Làm sau blocker 1 để ảnh chụp đúng bản mới |
 
 - Mở từ trước, không chặn demo: Node trên máy là 25, `.nvmrc` là 24 (CI dùng 24); trang So sánh gọi 3 request mỗi cặp (2 chi tiết và `compare`).
 
@@ -51,5 +50,5 @@
 ## Phần 3. Ba việc kế tiếp
 
 1. Deploy lại Pages và Render từ `main`, chạy `node scripts/acceptance-check.mjs --rate-limit` tới 36/36 (đóng blocker 1, kiểm chứng B3 trên link thật).
-2. Đo Lighthouse trên link thật (T404); thêm link demo, ảnh chụp vào README (T405).
-3. Hoàn thành slide, kịch bản (T406) và video demo (#97); tổng duyệt 2 lần trên link thật rồi tag `v1.0.0` (T407).
+2. Đo Lighthouse mobile trên link thật ở 9 route (T404), ghi số vào `docs/worklog.md`.
+3. Tổng duyệt 2 lần trên link thật (bấm giờ 15 phút theo slide và video), rồi tag `v1.0.0` (T407).
