@@ -1,11 +1,12 @@
 # PokeNexus - Tài liệu luyện tập pitching và hỏi đáp
 
-- Phiên bản: 0.1 (cập nhật 2026-11-02)
+- Phiên bản: 0.2 (cập nhật 2026-11-05; thêm Phần 10 kịch bản pitching 15 phút (T406, Issue #72); Phần 5 sửa 2 chỗ lệch code: custom variant `shorter`, `useMediaQuery` dùng ở 3 nơi; các câu mô tả hosting hiện tại đổi Railway thành Render và Aiven, giới hạn lưu đội lấy IP từ `CF-Connecting-IP` theo PR #91)
+- Bản 0.1 (2026-11-02): Phần 1 đến Phần 9.
 - Mục đích: chuẩn bị cho buổi pitching Checkpoint 4 ngày 08/11: hiểu và tự giải thích được từng phần code, luồng dữ liệu, quyết định thiết kế; trả lời câu hỏi chi tiết của giám khảo (T414, Issue #71).
 - Trích dẫn `path:line` tính từ gốc repo, khớp nhánh `main` ngày 2026-11-02 sau PR #76 và PR của T414. Code đổi thì chạy lại bước kiểm trích dẫn (mục Kiểm tra trong mô tả PR của T414).
 - Cách soạn: Phần 3 đến Phần 7 do 5 agent đọc toàn bộ file trong phạm vi của mình và soạn; script đã kiểm mọi trích dẫn trỏ tới file có thật và dòng nằm trong file. Phần thuật toán Synergy và số liệu đội demo được đối chiếu thêm với code và API chạy thật. Phần 1, 2, 8, 9 soạn sau cùng để nối các phần.
-- Kịch bản lời thoại 15 phút sẽ được thêm vào file này ở T406 (Issue #72).
-- Hosting đổi ngày 2026-11-02: backend chạy trên Render, MySQL trên Aiven, frontend vẫn Cloudflare Pages ([ADR 0009](../adr/0009-hosting-render-aiven.md)), vì Railway dừng nhận đăng ký mới. Các đoạn còn nhắc Railway sẽ được sửa sau khi deploy xong; khi trả lời, dùng Render và Aiven.
+- Phần 10 là kịch bản lời thoại 15 phút cho [slides.html](slides.html) và [PokeNexus-Pitch.pptx](PokeNexus-Pitch.pptx) (T406, Issue #72).
+- Hosting từ ngày 2026-11-02: backend chạy trên Render, MySQL trên Aiven, frontend vẫn Cloudflare Pages ([ADR 0009](../adr/0009-hosting-render-aiven.md)), vì Railway dừng nhận đăng ký mới. Câu còn nhắc Railway chỉ nói về kế hoạch ban đầu ([ADR 0007](../adr/0007-hosting-railway-cloudflare-pages.md)) hoặc số đo lấy từ ADR đó.
 
 | Phần | Nội dung |
 |---|---|
@@ -18,6 +19,7 @@
 | 7 | Team Builder từ đầu đến cuối |
 | 8 | Câu hỏi tổng quát: sản phẩm, quyết định, quy trình, AI, hạn chế |
 | 9 | Tra cứu nhanh: phiên bản, giới hạn, số đo, lệnh, mốc |
+| 10 | Kịch bản pitching 15 phút: mốc thời gian, lời thoại từng slide, lời dẫn demo, slide phụ lục |
 
 ---
 
@@ -84,9 +86,9 @@
 ```mermaid
 flowchart LR
     U["Trình duyệt"] -->|HTTPS| FE["React SPA<br/>Cloudflare Pages"]
-    FE -->|"REST /api/v1, JSON"| BE["Spring Boot 4.1<br/>Railway, Docker"]
+    FE -->|"REST /api/v1, JSON"| BE["Spring Boot 4.1<br/>Render, Docker"]
     FE -->|"ảnh artwork"| GH["raw.githubusercontent.com<br/>PokeAPI/sprites"]
-    BE -->|"JDBC"| DB[("MySQL 8.4")]
+    BE -->|"JDBC, TLS"| DB[("MySQL 8.4<br/>Aiven")]
     BE --> MEM["Bộ nhớ: bảng tương khắc 18 x 18,<br/>hồ sơ 1.351 Pokémon"]
     CSV["CSV PokéAPI<br/>data/csv"] -.->|"ingestion ở máy dev"| DB
 ```
@@ -96,13 +98,13 @@ flowchart LR
 - **Database**: MySQL 8.4, schema do Flyway tạo từ 3 migration V1-V3 (`backend/src/main/resources/db/migration`).
 - **Synergy chạy trong bộ nhớ**: khi khởi động, backend dựng sẵn bảng tương khắc và hồ sơ phòng thủ, tấn công của từng Pokémon; `analyze` và `recommendations` không truy vấn DB (ADR 0003).
 - **Ảnh**: backend không trả URL ảnh; frontend tự sinh URL từ ID: sprite nhỏ lấy từ `frontend/public/sprites`, artwork lớn lấy từ kho GitHub của PokéAPI (`frontend/src/lib/assets.ts:3-17`, ADR 0005).
-- **Triển khai**: Railway chạy backend (Docker) và MySQL, Cloudflare Pages chạy frontend (ADR 0007; các bước ở `docs/architecture.md`, Phần 11).
+- **Triển khai**: Render chạy backend (Docker), Aiven chạy MySQL, Cloudflare Pages chạy frontend (ADR 0009, thay phần Railway của ADR 0007; các bước ở `docs/deploy.md` và `docs/architecture.md`, Phần 11).
 
 ### IV. Dữ liệu đi từ đâu tới đâu
 
 1. Ở máy dev, `scripts/download-csv.sh` tải 12 file CSV của PokéAPI, cố định ở một commit (`data/README.md`).
 2. Lần đầu backend chạy trên DB rỗng, `ingestion` đọc CSV và ghi vào MySQL (Phần 3, mục II.VI, II.VII).
-3. Production không chạy ingestion: `scripts/db-dump.sh export` xuất dữ liệu, `import` nạp vào MySQL trên Railway (Phần 3, mục III.V).
+3. Production không chạy ingestion: `scripts/db-dump.sh export` xuất dữ liệu, `import` nạp vào MySQL trên Aiven qua TLS (Phần 3, mục III.V).
 4. Khi khởi động, các registry trong bộ nhớ đọc DB một lần (Phần 4, mục II.VI).
 5. Request tra cứu (Pokédex, chi tiết) đọc DB qua JPA; request Synergy chỉ đọc bộ nhớ.
 6. Frontend nhận JSON, cache bằng TanStack Query, tự ghép URL ảnh.
@@ -242,7 +244,7 @@ flowchart LR
 - Schema do Flyway sở hữu (`application.yml:16-17`); Hibernate chỉ kiểm tra khớp schema (`application.yml:14`). Dữ liệu tĩnh do `IngestionRunner` nạp, dữ liệu đội do API ghi (`docs/database.md:294`).
 - Runtime không gọi PokéAPI: CSV được tải trước bằng script, nạp một lần vào MySQL (ADR 0002 ở `docs/adr/0002-offline-data-from-csv.md:14-15`, `download-csv.sh:6-8`). Production không nạp CSV mà nhập file dump (`application-prod.yml:11`, `docs/architecture.md:463`).
 - Mọi lỗi thống nhất: code ném `ApiException` kèm `ErrorCode`; lỗi khung Spring và lỗi bất ngờ đều qua `GlobalExceptionHandler`, trả `ProblemDetail` có thuộc tính `code`.
-- Hạ tầng: `docker-compose.yml` dựng MySQL (luôn), backend (profile Compose `app`), Adminer (profile `tools`); `backend/Dockerfile` đóng gói cho Railway; `scripts/` tải dữ liệu, xuất nhập dump, đo hiệu năng; CI chạy `mvnw verify` và build frontend.
+- Hạ tầng: `docker-compose.yml` dựng MySQL (luôn), backend (profile Compose `app`), Adminer (profile `tools`); `backend/Dockerfile` đóng gói cho Render; `scripts/` tải dữ liệu, xuất nhập dump, đo hiệu năng; CI chạy `mvnw verify` và build frontend.
 - Mọi thuộc tính `app.*` đi qua một record `AppProperties` (`AppProperties.java:8`); biến môi trường và file `../.env` cung cấp giá trị cho placeholder trong `application.yml`.
 
 ### II. Từng file
@@ -415,7 +417,7 @@ flowchart LR
 
 - **Vai trò:** endpoint `GET /api/v1/health` (`HealthController.java:12,22`).
 - **Thành phần chính:** `health()` gọi `HealthService.check()`; status `DOWN` thành 503, còn lại 200 (`:24-30`).
-- **Phụ thuộc:** `HealthService`, `HealthResponse`. Được Railway dùng làm Healthcheck Path (`docs/architecture.md:490`).
+- **Phụ thuộc:** `HealthService`, `HealthResponse`. Được Render dùng làm Health Check Path (`docs/architecture.md`, Phần 11, mục III.1) và được workflow "Keep backend awake" gọi mỗi 10 phút (PR #93).
 - **Dữ liệu:** JSON `{status, dataLoaded, pokemonCount}`.
 - **Biên và lỗi:** `UP` với `dataLoaded = false` vẫn trả 200; chỉ mất DB mới trả 503. `POST` vào endpoint này trả 405 `INVALID_PARAMETER`.
 - **Test:** `HealthControllerTest` (`@WebMvcTest`, `HealthService` mock): 200 với 1351 (`:23-33`), 503 khi `DOWN` (`:36-46`), 405 dạng problem (`:49-56`). `PokeNexusApplicationIT.java:25-32`: DB rỗng trả `UP`, `false`, `0`.
@@ -619,7 +621,7 @@ Các loader đều là `@Component`, nhận `CsvReader`, ghi bằng `JdbcTemplat
   - `app.*`: ingestion tắt, `csv-dir ../data/csv`, CORS, giới hạn lưu 10 (`:22-29`).
   - springdoc chỉ `/api/**`, Swagger UI bật ở `/swagger-ui.html` (`:31-35`).
   - Log: `root WARN`, `com.pokenexus INFO`, `org.springframework.boot.web INFO` (`:37-41`). Lý do giữ `INFO` cho `org.springframework.boot.web`: chưa xác định từ code.
-- **Phụ thuộc:** `.env` (máy dev), biến môi trường (Docker, Railway).
+- **Phụ thuộc:** `.env` (máy dev), biến môi trường (Docker, Render).
 - **Dữ liệu:** `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USERNAME`, `DB_PASSWORD`, `BACKEND_PORT`, `CORS_ALLOWED_ORIGINS`.
 - **Biên và lỗi:** mật khẩu mặc định rỗng; máy dev thật dùng cổng 3307 qua `.env` (`CLAUDE.local.md`). `validate` làm ứng dụng không khởi động nếu Entity lệch schema.
 - **Test:** gián tiếp qua mọi `@SpringBootTest`.
@@ -628,10 +630,10 @@ Các loader đều là `@Component`, nhận `CsvReader`, ghi bằng `JdbcTemplat
 
 | Thuộc tính | Gốc (`application.yml`) | `dev` (`application-dev.yml`) | `prod` (`application-prod.yml`) | `test` (`application-test.yml`) |
 |---|---|---|---|---|
-| Kích hoạt khi | Luôn | Không có profile nào active (`application.yml:7`), hoặc `SPRING_PROFILES_ACTIVE=dev` (`docker-compose.yml:38`) | `SPRING_PROFILES_ACTIVE=prod` trên Railway (`docs/architecture.md:498`) | `@ActiveProfiles("test")` trong test |
+| Kích hoạt khi | Luôn | Không có profile nào active (`application.yml:7`), hoặc `SPRING_PROFILES_ACTIVE=dev` (`docker-compose.yml:38`) | `SPRING_PROFILES_ACTIVE=prod` trên Render (`docs/architecture.md`, Phần 11, mục III.1) | `@ActiveProfiles("test")` trong test |
 | `app.ingestion.enabled` | `false` (`:24`) | `true` (`:3`) | `false` (`:11`) | `false` (`:3`); riêng `IngestionRunnerIT` ghi đè `true` |
 | `app.ingestion.csv-dir` | `../data/csv` (`:25`) | `../data/csv` (`:4`) | Kế thừa | `src/test/resources/csv` (`:4`) |
-| `app.cors.allowed-origins` | `${CORS_ALLOWED_ORIGINS:http://localhost:5173}` | Kế thừa | Kế thừa, Railway đặt domain Pages | `http://localhost:5173` (`:6`) |
+| `app.cors.allowed-origins` | `${CORS_ALLOWED_ORIGINS:http://localhost:5173}` | Kế thừa | Kế thừa, Render đặt domain Pages | `http://localhost:5173` (`:6`) |
 | `server.forward-headers-strategy` | Không đặt | Không đặt | `framework` (`:2`) | Không đặt |
 | `spring.datasource.hikari.connection-timeout` | Không đặt (Hikari mặc định 30 s theo `docs/architecture.md:436`) | Không đặt | `5000` ms (`:8`) | Không đặt; Testcontainers thay datasource |
 
@@ -646,15 +648,16 @@ Các loader đều là `@Component`, nhận `CsvReader`, ghi bằng `JdbcTemplat
 
 **4. `application-prod.yml` (`backend/src/main/resources/application-prod.yml`)**
 
-- **Vai trò:** cấu hình chạy sau reverse proxy của Railway.
+- **Vai trò:** cấu hình chạy sau reverse proxy của Render (edge Cloudflare).
 - **Thành phần chính:**
-  - `server.forward-headers-strategy: framework` (`application-prod.yml:2`): Spring Boot đăng ký `ForwardedHeaderFilter`, filter này thay `getRemoteAddr()`, scheme, host bằng giá trị trong header `Forwarded` hoặc `X-Forwarded-*`. `TeamController.java:41` dùng `getRemoteAddr()` làm khóa giới hạn lưu đội, nên phải bật để mỗi người dùng có IP riêng thay vì cùng IP của proxy.
+  - `server.forward-headers-strategy: framework` (`application-prod.yml:2`): Spring Boot đăng ký `ForwardedHeaderFilter`, filter này thay `getRemoteAddr()`, scheme, host bằng giá trị trong header `Forwarded` hoặc `X-Forwarded-*`.
   - Hikari `connection-timeout: 5000` (`:7`): `/health` trả 503 sau khoảng 5 s khi mất DB thay vì 30 s.
   - Ingestion tắt (`:11`): production chỉ nhập dump.
-- **Phụ thuộc:** `SaveRateLimiter`, `HealthService`.
-- **Dữ liệu:** không có placeholder riêng.
-- **Biên và lỗi:** tin header forwarded có rủi ro bị giả mạo nếu proxy không ghi đè; dự án chấp nhận vì chỉ là chống spam cơ bản và có kế hoạch kiểm chứng với cả `X-Forwarded-For` lẫn `Forwarded` (`docs/architecture.md:383,522-523`, `docs/adr/0007-hosting-railway-cloudflare-pages.md:41`). Không bật ở `dev` vì local không có proxy.
-- **Test:** không có test tự động; kiểm chứng thủ công sau deploy.
+  - `app.team.client-ip-header: ${CLIENT_IP_HEADER:CF-Connecting-IP}` (`:13`, PR #91): `ClientIpResolver` lấy IP client cho giới hạn lưu đội từ header này, header vắng thì dùng `getRemoteAddr()` (`backend/src/main/java/com/pokenexus/common/web/ClientIpResolver.java:18-26`, `TeamController.java:45`).
+- **Phụ thuộc:** `ClientIpResolver`, `SaveRateLimiter`, `HealthService`.
+- **Dữ liệu:** không có placeholder riêng ngoài `CLIENT_IP_HEADER`.
+- **Biên và lỗi:** proxy của Render chỉ nối IP vào cuối `X-Forwarded-For`, giá trị đầu do client tự đặt: kiểm chứng ngày 04/11, 11 request giả header đều qua giới hạn (lỗi B3, Issue #89). Vì vậy PR #91 không dùng `getRemoteAddr()` đã qua `ForwardedHeaderFilter` cho giới hạn lưu đội mà đọc `CF-Connecting-IP`, header edge Cloudflare ghi đè bằng IP thật (`docs/architecture.md`, Phần 8; `docs/deploy.md`, Phần 8, mục III). Không bật ở `dev` vì local không có proxy.
+- **Test:** `backend/src/test/java/com/pokenexus/common/web/ClientIpResolverTest.java`; trên link thật, bài kiểm chứng 11 request chạy bằng `node scripts/acceptance-check.mjs --rate-limit`.
 
 **5. `backend/src/main/resources/db/migration/V1__create_reference_tables.sql` (`backend/src/main/resources/db/migration/V1__create_reference_tables.sql`)**
 
@@ -729,13 +732,13 @@ Các loader đều là `@Component`, nhận `CsvReader`, ghi bằng `JdbcTemplat
 
 **2. `Dockerfile` (`backend/Dockerfile`)**
 
-- **Vai trò:** build image backend nhiều stage cho Railway và Docker Compose.
+- **Vai trò:** build image backend nhiều stage cho Render và Docker Compose.
 - **Thành phần chính:**
   - Stage `build` từ `eclipse-temurin:25-jdk` (`Dockerfile:1`); copy wrapper và `pom.xml` trước, chạy `dependency:go-offline` (`:3-5`) để layer dependency được cache khi chỉ sửa code.
   - Copy `src/`, `package -DskipTests`, đổi tên jar, tách layer bằng `-Djarmode=tools ... extract --layers` (`:6-9`).
   - Stage chạy `eclipse-temurin:25-jre` (`:11`); tạo user hệ thống `pokenexus` (`:12`); copy 4 layer theo thứ tự ít đổi đến hay đổi: `dependencies`, `spring-boot-loader`, `snapshot-dependencies`, `application` (`:14-17`); `USER pokenexus` (`:18`); `EXPOSE 8080` (`:19`).
   - `ENTRYPOINT java -XX:MaxRAMPercentage=75 -jar application.jar` (`:20`): heap tối đa 75% RAM của container.
-- **Phụ thuộc:** `docker-compose.yml:29` (`build: ./backend`); Railway Root Directory `backend` (`docs/architecture.md:490`).
+- **Phụ thuộc:** `docker-compose.yml:29` (`build: ./backend`); Render Root Directory `backend` (`docs/architecture.md`, Phần 11, mục III.1).
 - **Dữ liệu:** không đặt `SPRING_PROFILES_ACTIVE`; môi trường chạy phải cung cấp.
 - **Biên và lỗi:** test bị bỏ qua khi build image (CI chạy test riêng). Không dùng AOT cache vì bước huấn luyện cần MySQL lúc build (`docs/architecture.md:464`). Số đo: giới hạn 512 MB, 0,5 CPU khởi động 27,5 s, chiếm 277 MiB (`docs/adr/0007-hosting-railway-cloudflare-pages.md:10`).
 - **Test:** không có test tự động.
@@ -883,7 +886,7 @@ Các loader đều là `@Component`, nhận `CsvReader`, ghi bằng `JdbcTemplat
 
 **1. `db-dump.sh` (`scripts/db-dump.sh`)**
 
-- **Vai trò:** xuất dữ liệu tĩnh từ MySQL local và nhập vào DB đích (Railway).
+- **Vai trò:** xuất dữ liệu tĩnh từ MySQL local và nhập vào DB đích (Aiven).
 - **Thành phần chính:**
   - `set -euo pipefail` (`db-dump.sh:2`); container `${MYSQL_CONTAINER:-pokenexus-mysql}` (`:5`); file `${2:-data/dumps/pokenexus.sql}` (`:6`).
   - `export_dump` (`:14-23`): `docker exec` vào container, dùng `MYSQL_PWD` lấy từ biến của chính container (`:17`); tùy chọn `--single-transaction --no-tablespaces --set-gtid-purged=OFF` (`:18`); lần 1 dump cả DB trừ dữ liệu `teams`, `team_members` (`:19`); lần 2 dump `--no-data` hai bảng đó (`:20`); ghi `.part` rồi `mv` (`:20-21`) để không để lại file dở.
@@ -996,16 +999,16 @@ Các loader đều là `@Component`, nhận `CsvReader`, ghi bằng `JdbcTemplat
 4. `POST /api/v1/health`: 405; không có nhánh riêng nên `fallbackCode` thành `INVALID_PARAMETER`, giữ mã 405 (`GlobalExceptionHandler.java:91-99`, `HealthControllerTest.java:49-56`).
 5. `@Valid` body sai ràng buộc: `handleMethodArgumentNotValid` thêm `detail` và mảng `errors` (`GlobalExceptionHandler.java:56-63`), sau đó cũng đi qua `handleExceptionInternal` để gắn `VALIDATION_FAILED` (`:82`).
 
-#### V. Xuất dump ở máy dev, nhập vào Railway, khởi động production
+#### V. Xuất dump ở máy dev, nhập vào Aiven, khởi động production
 
 1. Máy dev đã nạp dữ liệu (luồng I). Chạy `bash scripts/db-dump.sh export` (`db-dump.sh:43-44`).
 2. `export_dump`: `docker exec pokenexus-mysql` chạy `mysqldump` với `--single-transaction` (ảnh chụp nhất quán, không khóa bảng InnoDB), bỏ dữ liệu `teams`, `team_members`, thêm schema rỗng của hai bảng đó, ghi `data/dumps/pokenexus.sql` qua file `.part` (`db-dump.sh:14-22`).
-3. Trên Railway bật Public Networking của MySQL, lấy `MYSQL_PUBLIC_URL` (`docs/architecture.md:520`).
-4. `TARGET_DB_URL='<url>' bash scripts/db-dump.sh import` (`db-dump.sh:45`): kiểm định dạng URL (`:28-31`), đếm bảng ở DB đích và từ chối nếu khác 0 mà không có `FORCE=1` (`:34-38`), đẩy dump qua client `mysql` trong container local (`:39`), in `pokemon rows: 1351`, `flyway migrations: 3` (`:40`, `docs/architecture.md:520`). Tắt Public Networking sau đó.
-5. Railway build `backend/Dockerfile` và chạy với `SPRING_PROFILES_ACTIVE=prod` (`docs/architecture.md:490,494`).
+3. Tạo service MySQL gói Free trên Aiven, lấy Host, Port, User, Password, Database name ở khối Connection information của tab Overview; kết nối có mã hóa TLS (`docs/deploy.md`, Phần 3, mục III).
+4. `TARGET_DB_URL='<url>' bash scripts/db-dump.sh import` (`db-dump.sh:45`): kiểm định dạng URL (`:28-31`), đếm bảng ở DB đích và từ chối nếu khác 0 mà không có `FORCE=1` (`:34-38`), đẩy dump qua client `mysql` trong container local (`:39`), in `pokemon rows: 1351`, `flyway migrations: 3` (`:40`, `docs/deploy.md`, Phần 4).
+5. Render build `backend/Dockerfile` (Root Directory `backend`) và chạy với `SPRING_PROFILES_ACTIVE=prod`, DB qua các biến `DB_*` trỏ tới Aiven (`docs/architecture.md`, Phần 11, mục III.1).
 6. Flyway đọc `flyway_schema_history` (có trong dump) thấy V1-V3 đã áp dụng, checksum khớp, không làm gì; Hibernate `validate` thành công.
 7. `IngestionRunner.run` thấy `enabled = false` và thoát (`application-prod.yml:11`, `IngestionRunner.java:53-56`).
-8. Cache nạp ở `ApplicationReadyEvent`; Railway gọi `/api/v1/health`, nhận 200 `UP`, `pokemonCount` 1351 nên chuyển traffic sang bản deploy mới (`docs/architecture.md:490,520`).
+8. Cache nạp ở `ApplicationReadyEvent`; Render gọi Health Check Path `/api/v1/health`, nhận 200 `UP`, `pokemonCount` 1351 nên chuyển traffic sang bản deploy mới (`docs/architecture.md`, Phần 11, mục III.1).
 
 ### IV. Câu hỏi có thể bị hỏi
 
@@ -1030,10 +1033,10 @@ Các loader đều là `@Component`, nhận `CsvReader`, ghi bằng `JdbcTemplat
 | 17 | Flyway hoạt động thế nào? | Lúc khởi động Flyway đọc `db/migration`, so với bảng `flyway_schema_history` và chạy các phiên bản chưa áp dụng. Hibernate để `ddl-auto: validate`, chỉ kiểm tra Entity khớp schema chứ không tự sửa bảng. Test kiểm đúng 3 phiên bản đã chạy thành công. | `application.yml:14,17`, `SchemaMigrationIT.java:47-53` |
 | 18 | Vì sao không sửa migration đã merge? | Flyway lưu checksum từng file đã chạy; sửa file cũ thì DB nào đã chạy nó, kể cả production nhập từ dump có sẵn lịch sử, sẽ báo lệch checksum và dừng khởi động. Thay đổi schema phải là file `V4__...`; trước khi merge kiểm số lớn nhất trên `main` để hai nhánh không cùng tạo V4. Ba file V1-V3 được thêm ở một commit và `git log --diff-filter=M` không có lần sửa nào sau đó. | `docs/database.md:293`, `docs/git-workflow.md:193-197`, commit `2076455` |
 | 19 | Các profile khác nhau thế nào? | `dev` bật ingestion và là mặc định khi không chọn profile. `prod` tắt ingestion, bật `forward-headers-strategy: framework` và hạ timeout lấy kết nối xuống 5 giây. `test` tắt ingestion và trỏ tới CSV mẫu. | `application.yml:7`, `application-dev.yml:1-4`, `application-prod.yml:1-11`, `application-test.yml:1-6` |
-| 20 | Cấu hình kết nối DB lấy từ đâu? | `application.yml` dùng placeholder `DB_HOST`, `DB_PORT`... có giá trị mặc định. Khi chạy từ `backend/`, file `../.env` được import tự động; trong Docker hoặc Railway, giá trị đến từ biến môi trường. | `application.yml:5,9-11`, `docker-compose.yml:38-45`, `docs/architecture.md:499-499` |
+| 20 | Cấu hình kết nối DB lấy từ đâu? | `application.yml` dùng placeholder `DB_HOST`, `DB_PORT`... có giá trị mặc định. Khi chạy từ `backend/`, file `../.env` được import tự động; trong Docker hoặc Render, giá trị đến từ biến môi trường. | `application.yml:5,9-11`, `docker-compose.yml:38-45`, `docs/architecture.md:499-499` |
 | 21 | CORS cấu hình thế nào? | Chỉ `/api/**`, chỉ origin trong `CORS_ALLOWED_ORIGINS`, method GET, POST, OPTIONS, preflight cache 1 giờ. Expose `Location` và `Retry-After` để JavaScript đọc được hai header này. Origin lạ nhận 403, có test. | `CorsConfig.java:23-28`, `CorsConfigTest.java:36-43` |
-| 22 | `forward-headers-strategy: framework` để làm gì? | Trên Railway, request đi qua proxy nên `getRemoteAddr()` là IP proxy. Cấu hình này bật `ForwardedHeaderFilter` của Spring để lấy IP thật từ `Forwarded` hoặc `X-Forwarded-For`, và giới hạn lưu đội dùng IP đó làm khóa. Chỉ bật ở `prod` vì local không có proxy. | `application-prod.yml:2`, `TeamController.java:41`, `docs/architecture.md:383` |
-| 23 | Header forwarded có thể bị giả không? | Có, nếu proxy không ghi đè header client gửi. Em chấp nhận vì đây chỉ là chống spam cơ bản; theo Railway, edge ghi đè `X-Forwarded-For`, và kế hoạch kiểm chứng là gửi 11 request với IP giả khác nhau, request thứ 11 phải bị 429, làm cả với header `Forwarded`. | `docs/adr/0007-hosting-railway-cloudflare-pages.md:41`, `docs/architecture.md:524-524` |
+| 22 | `forward-headers-strategy: framework` để làm gì? | Trên Render, request đi qua proxy nên `getRemoteAddr()` gốc là IP proxy. Cấu hình này bật `ForwardedHeaderFilter` của Spring để thay IP, scheme, host bằng giá trị trong `Forwarded` hoặc `X-Forwarded-*`. Giới hạn lưu đội không dựa vào giá trị này nữa mà đọc `CF-Connecting-IP` qua `ClientIpResolver` (PR #91). Chỉ bật ở `prod` vì local không có proxy. | `application-prod.yml:2,13`, `ClientIpResolver.java:18-26`, `TeamController.java:45`, `docs/architecture.md`, Phần 8 |
+| 23 | Header forwarded có thể bị giả không? | Có. Ngày 04/11 em kiểm chứng trên Render: proxy chỉ nối IP vào cuối `X-Forwarded-For`, nên 11 request với giá trị đầu giả khác nhau đều qua giới hạn (lỗi B3, Issue #89). PR #91 chuyển sang `CF-Connecting-IP`, header mà edge Cloudflare của Render ghi đè bằng IP thật; bài thử 11 request chạy lại trên production bằng `acceptance-check.mjs --rate-limit`. | `docs/adr/0009-hosting-render-aiven.md`, Phần 4; `docs/deploy.md`, Phần 8, mục III |
 | 24 | `RequestBodyLimitFilter` chặn body lớn thế nào khi client không gửi `Content-Length`? | Filter không tin `Content-Length`: nếu khai báo nhỏ hoặc không có, nó đọc tối đa 16.385 byte; đọc được hơn 16.384 là quá lớn. Nếu khai báo lớn thì không đọc gì. Body hợp lệ được đưa lại cho Controller qua một request bọc. | `RequestBodyLimitFilter.java:27,40-44`, `RequestBodyLimitFilterTest.java:22-39` |
 | 25 | Vì sao 413 không trả thẳng trong filter? | Filter chỉ đánh dấu body quá lớn; exception được ném khi Controller đọc body, tức là bên trong `DispatcherServlet`, nên đi qua `GlobalExceptionHandler` và ra cùng định dạng `ProblemDetail` với `code`. Hệ quả: endpoint không đọc body sẽ không trả 413. Lý do thiết kế không ghi trong tài liệu, đây là điều code thể hiện. | `RequestBodyLimitFilter.java:104-110`, `SynergyControllerTest.java:181-190` |
 | 26 | Giới hạn 16 KB có chặt quá không? | Body hợp lệ lớn nhất là lưu đội 6 thành viên, dưới 1 KB, nên 16 KB dư nhiều lần. Mục tiêu là chặn request làm cạn bộ nhớ, không ảnh hưởng người dùng thật. | `docs/architecture.md:375` |
@@ -1042,8 +1045,8 @@ Các loader đều là `@Component`, nhận `CsvReader`, ghi bằng `JdbcTemplat
 | 29 | Sai method (405) hay sai `Content-Type` (415) trả `code` gì? | Không có mã riêng; `fallbackCode` giữ mã HTTP gốc và dùng `INVALID_PARAMETER`. 404 khác dùng `ROUTE_NOT_FOUND`, 5xx dùng `INTERNAL_ERROR`. | `GlobalExceptionHandler.java:91-99`, `HealthControllerTest.java:49-56`, `docs/api.md:401` |
 | 30 | `NotFoundException` khác `ApiException` ở đâu? | Nó chỉ nhận mã có status 404; truyền mã khác hoặc `null` thì ném `IllegalArgumentException` ngay khi tạo. Đó là cách chặn lỗi lập trình kiểu "không tìm thấy mà trả 400". | `NotFoundException.java:9-14`, `NotFoundExceptionTest.java:19-28` |
 | 31 | Health endpoint trả gì, khi nào 503? | Trả `status`, `dataLoaded`, `pokemonCount`. Chỉ khi không truy vấn được DB mới là `DOWN` và 503; bảng chưa tồn tại hoặc rỗng vẫn `UP` 200 với `dataLoaded = false`. `dataLoaded` đúng khi bảng có dòng và mọi cache trong bộ nhớ đã nạp. | `HealthController.java:24-30`, `HealthService.java:26-35,55-63`, `HealthServiceTest.java:69-99` |
-| 32 | Mất DB thì bao lâu health báo 503? | Ở `prod`, Hikari chỉ chờ lấy kết nối 5 giây, nên khoảng 5 giây; mặc định là 30 giây. Railway dựa vào mã này để biết dịch vụ hỏng. | `application-prod.yml:7`, `docs/adr/0007-hosting-railway-cloudflare-pages.md:42` |
-| 33 | Điểm yếu của health check? | Health trả 200 cả khi `dataLoaded = false`, nên deploy lên DB rỗng vẫn qua Healthcheck của Railway dù API dữ liệu trả 503. Em xử lý bằng quy trình: nhập dump trước lần deploy đầu. Ngoài ra health có tác dụng phụ là thử nạp lại cache, mỗi lần gọi khi cache chưa nạp sẽ truy vấn lại DB. | `HealthController.java:26-28`, `HealthService.java:48`, `docs/architecture.md:518` |
+| 32 | Mất DB thì bao lâu health báo 503? | Ở `prod`, Hikari chỉ chờ lấy kết nối 5 giây, nên khoảng 5 giây; mặc định là 30 giây. Render dựa vào mã này (Health Check Path) để biết dịch vụ hỏng. | `application-prod.yml:7`, `docs/adr/0007-hosting-railway-cloudflare-pages.md:42` |
+| 33 | Điểm yếu của health check? | Health trả 200 cả khi `dataLoaded = false`, nên deploy lên DB rỗng vẫn qua Health Check của Render dù API dữ liệu trả 503. Em xử lý bằng quy trình: nhập dump trước lần deploy đầu. Ngoài ra health có tác dụng phụ là thử nạp lại cache, mỗi lần gọi khi cache chưa nạp sẽ truy vấn lại DB. | `HealthController.java:26-28`, `HealthService.java:48`, `docs/architecture.md:518` |
 | 34 | Header cache HTTP đặt ở đâu, bao lâu? | `/types` và `/types/matrix` đặt `public, max-age=86400` vì bảng tương khắc không đổi. Chi tiết Pokémon, `speed-tiers`, `generations` đặt `public, max-age=3600`. Endpoint còn lại không đặt. | `TypeController.java:22,33,39`, `PokemonController.java:37,100,108,116` |
 | 35 | Giới hạn phân trang và sắp xếp? | `size` mặc định 24, từ 1 đến 100; `page` từ 0 đến `Integer.MAX_VALUE / size` để offset không tràn `int`. `sort` chỉ nhận `id`, `name`, `baseStatTotal`, `speed`, và luôn thêm `id` làm tiêu chí phụ để thứ tự trang ổn định. Sai là 400 `INVALID_PARAMETER`. | `PageRequestFactory.java:13-15,20-54`, `PokemonQueryService.java:38`, `PageRequestFactoryTest.java:39-46` |
 | 36 | `db-dump.sh export` xuất những gì, vì sao bỏ đội đã lưu? | Xuất 8 bảng tĩnh cùng `flyway_schema_history`, còn `teams`, `team_members` chỉ có cấu trúc. Đội thử nghiệm ở máy dev không được lên production. Có lịch sử Flyway nên production không chạy lại migration. | `db-dump.sh:14-22`, `docs/adr/0007-hosting-railway-cloudflare-pages.md:22` |
@@ -2122,7 +2125,7 @@ Content-Type: application/problem+json
 | 37 | Lưu đội diễn ra thế nào? | Kiểm tra giới hạn tần suất, rồi trong một transaction: kiểm tra slot, Pokémon trùng, ID tồn tại, chấm điểm bằng `SynergyAnalyzer`, sinh mã, lưu `teams` và `team_members` bằng cascade. Trả 201 kèm `Location` tới đường dẫn chia sẻ. | `backend/src/main/java/com/pokenexus/team/controller/TeamController.java:37-44`, `backend/src/main/java/com/pokenexus/team/service/TeamService.java:62-87` |
 | 38 | Mã chia sẻ sinh thế nào, có trùng không? | 8 ký tự base62 từ `SecureRandom`, khoảng 2,18 x 10^14 tổ hợp nên khó đoán. Trước khi lưu kiểm tra tồn tại, trùng thì sinh lại, tối đa 3 lần rồi 500. Cột có collation `utf8mb4_bin` và UNIQUE nên phân biệt hoa thường và DB chặn trùng lần cuối. | `backend/src/main/java/com/pokenexus/team/service/ShareCodeGenerator.java:11-23`, `TeamService.java:101-110`, `backend/src/main/resources/db/migration/V3__create_team_tables.sql:5-10` |
 | 39 | Giới hạn lưu đội hoạt động thế nào? | 10 lần mỗi phút mỗi IP, cửa sổ cố định trong `ConcurrentHashMap`. Lần 11 trả 429 với `Retry-After` là số giây tới hết cửa sổ, làm tròn lên. Theo dõi tối đa 10.000 IP; đầy thì dọn cửa sổ hết hạn, vẫn đầy thì IP mới nhận 429. | `backend/src/main/java/com/pokenexus/team/service/SaveRateLimiter.java:18-75`, `backend/src/test/java/com/pokenexus/team/service/SaveRateLimiterTest.java:25-114` |
-| 40 | IP lấy từ đâu, giả mạo header được không? | Lấy `getRemoteAddr()`; ở `prod` bật `forward-headers-strategy: framework` nên Spring thay bằng IP trong header proxy. Railway ghi đè `X-Forwarded-For`, nhưng header `Forwarded` (RFC 7239) được Spring đọc trước và chưa kiểm chứng trên Railway, đang mở trong PLAN là B3. Đây là chống spam cơ bản, chấp nhận rủi ro. | `TeamController.java:41`, `backend/src/main/resources/application-prod.yml:2`, `PLAN.md:115`, `docs/architecture.md:383` |
+| 40 | IP lấy từ đâu, giả mạo header được không? | `ClientIpResolver` đọc header cấu hình ở `app.team.client-ip-header`; ở `prod` là `CF-Connecting-IP` do edge Cloudflare của Render ghi đè bằng IP thật, header vắng thì dùng `getRemoteAddr()`. Trước PR #91, IP lấy từ giá trị đầu của `X-Forwarded-For` do client tự đặt được, nên giả header thì vượt giới hạn (lỗi B3, kiểm chứng trên Render 04/11, Issue #89). Đây vẫn là chống spam cơ bản, không phải xác thực. | `backend/src/main/java/com/pokenexus/common/web/ClientIpResolver.java:18-26`, `TeamController.java:45`, `backend/src/main/resources/application-prod.yml:13`, `docs/architecture.md`, Phần 8 |
 | 41 | Mở đội đã lưu có tính lại điểm không? | Không, trả `synergy_score` đã lưu lúc tạo (DECIMAL 2 chữ số). Tên, hệ của thành viên thì lấy mới qua `findRefs`. Nếu sau này đổi thuật toán, điểm cũ vẫn giữ. | `TeamService.java:89-99`, `docs/api.md:377` |
 | 42 | Hiệu năng đo được bao nhiêu? | Mục tiêu p95 dưới 50 ms. Đo 28/10 với 1.351 Pokémon trong Docker: `analyze` 7,2 ms (đội 5), 6,9 ms (đội 6), `recommendations` 8,6 ms; phần lớn là chi phí HTTP. Số này đo trước PR #60 (31/10) thêm vai trò chỉ số; tài liệu chưa ghi số đo lại sau đó. | `docs/spec.md:196`, `docs/architecture.md:393-398`, `PLAN.md:56` |
 | 43 | Điểm yếu thật thà của thuật toán? | Chỉ xét hệ, bỏ qua Ability như Levitate, chiêu thức, vật phẩm. `teamScore` chỉ đo phòng thủ. Điểm đề xuất chuẩn hóa tương đối nên không so được giữa hai lần gọi, và tập 1 ứng viên luôn được 100. Trọng số là lựa chọn thiết kế dựa trên hướng dẫn cộng đồng, chưa hiệu chỉnh bằng dữ liệu trận đấu. | `docs/architecture.md:221`, `:267`, `RecommendationEngineTest.java:94-104` |
@@ -2611,11 +2614,11 @@ export function retryUnlessClientError(failureCount: number, error: Error): bool
 - **Biên và lỗi:** hệ lạ coi là trung tính.
 - **Test:** `frontend/src/lib/typeEffectiveness.test.ts`: tra đơn (dòng 21-24), hệ lạ là 1 (dòng 26-28), hệ kép x4, x0, rỗng (dòng 30-34), nhóm của Ground (dòng 36-42).
 
-**11. `useMediaQuery`, `LG_MEDIA_QUERY` (`frontend/src/lib/useMediaQuery.ts`)**
+**11. `useMediaQuery`, `MD_MEDIA_QUERY`, `LG_MEDIA_QUERY` (`frontend/src/lib/useMediaQuery.ts`)**
 
 - **Vai trò:** hook đọc media query trong JS, an toàn với concurrent rendering.
-- **Thành phần chính:** `LG_MEDIA_QUERY = '(min-width: 64rem)'` (1024 px, trùng breakpoint `lg` mặc định của Tailwind) (dòng 4); `mediaQueryList` trả `null` khi không có `window.matchMedia` (dòng 6-8); `useMediaQuery(query)`: `subscribe` bọc `useCallback([query])`, lắng nghe sự kiện `change`; `useSyncExternalStore(subscribe, getSnapshot, () => false)` (dòng 10-25).
-- **Phụ thuộc:** React. Dùng duy nhất ở `frontend/src/pages/TeamBuilderPage.tsx:27,68` để render khối đề xuất ở đúng một vị trí trong DOM theo bố cục (dòng 266, 332, 367), giữ thứ tự DOM khớp thứ tự hiển thị trên mobile.
+- **Thành phần chính:** `MD_MEDIA_QUERY = '(min-width: 48rem)'` (768 px, breakpoint `md`) (dòng 3); `LG_MEDIA_QUERY = '(min-width: 64rem)'` (1024 px, trùng breakpoint `lg` mặc định của Tailwind) (dòng 4); `mediaQueryList` trả `null` khi không có `window.matchMedia` (dòng 6-8); `useMediaQuery(query)`: `subscribe` bọc `useCallback([query])`, lắng nghe sự kiện `change`; `useSyncExternalStore(subscribe, getSnapshot, () => false)` (dòng 10-25).
+- **Phụ thuộc:** React. Dùng ở 3 nơi, đều để thứ tự DOM (và thứ tự `Tab`) khớp thứ tự hiển thị: `frontend/src/pages/TeamBuilderPage.tsx:68-69` (khối đề xuất ở đúng một vị trí theo bố cục, dòng 266, 341, 376; 2 nút Lưu, Đặt lại dưới `md`, dòng 293), `frontend/src/pages/DexPage.tsx:36` (dòng kết quả và thanh công cụ dưới `lg`, dòng 138), `frontend/src/features/landing/components/TeamSteps.tsx:117` (dải 3 bước cuộn ngang nhận focus dưới `md`, dòng 163).
 - **Dữ liệu:** không có.
 - **Biên và lỗi:** jsdom không có `matchMedia` nên hook trả `false` (bố cục mobile) trong test; snapshot phía server là `false`.
 - **Test:** không có test riêng; `frontend/src/pages/TeamBuilderPage.test.tsx:491-494` giả `matchMedia` với đúng chuỗi `(min-width: 64rem)`.
@@ -2943,8 +2946,8 @@ export function retryUnlessClientError(failureCount: number, error: Error): bool
 **1. Cơ chế**
 
 - `@import 'tailwindcss'` (dòng 1). Tailwind 4 không có `tailwind.config.js`; token khai báo bằng `@theme` trong CSS, mỗi biến sinh class (`--color-type-fire` thành `bg-type-fire`) (`docs/design-system.md`, Phần 3, mục I).
-- Hai custom variant: `dark` theo class `.dark` (dòng 3), `short` cho màn hình thấp dưới 50rem (dòng 4), dùng ở `LandingHero` (`lg:short:...`).
-- `@font-face` "Dela Gothic One Fallback" dựa trên Arial Black, chỉnh `size-adjust`, `ascent-override`, `descent-override` để chữ dự phòng chiếm gần đúng chỗ của font thật, giảm nhảy bố cục khi font tải xong (dòng 6-13).
+- Ba custom variant: `dark` theo class `.dark` (dòng 3), `short` cho màn hình thấp dưới 50rem (dòng 4), `shorter` cho màn hình thấp dưới 42rem (dòng 5, thêm ở PR #92, Issue #84); `short` và `shorter` dùng ở `LandingHero` (`lg:short:...`, `lg:shorter:...`) để hero không bị cắt trên màn hình thấp hoặc scale 150%.
+- `@font-face` "Dela Gothic One Fallback" dựa trên Arial Black, chỉnh `size-adjust`, `ascent-override`, `descent-override` để chữ dự phòng chiếm gần đúng chỗ của font thật, giảm nhảy bố cục khi font tải xong (dòng 7-14).
 
 **2. Token**
 
@@ -3093,7 +3096,7 @@ export function retryUnlessClientError(failureCount: number, error: Error): bool
 | 27 | Có những lựa chọn accessibility nào ở khung chung? | `lang="vi"`, skip link tới `#main-content`, nav có `aria-label`, mục đang chọn có `aria-current="page"` kèm gạch chân chứ không chỉ màu. Menu mobile có `aria-expanded`, `aria-controls`, `Escape` đóng và trả focus về nút. Mỗi trang có đúng một `h1` trong `PageHero`. | `frontend/index.html:2`; `frontend/src/app/layout/AppLayout.tsx:11-18`; `frontend/src/app/layout/Header.tsx:24-28, 62-69`; `router.test.tsx:41-54` |
 | 28 | Ô tìm kiếm hỗ trợ bàn phím và trình đọc màn hình thế nào? | Theo mẫu ARIA combobox: input `role="combobox"` với `aria-activedescendant` trỏ tới option đang chọn, phím mũi tên xoay vòng, `Enter` chọn, `Escape` đóng. Vùng `role="status"` đọc "N gợi ý" hoặc thông báo lỗi. Option chặn `mousedown` để input không mất focus trước khi click. | `frontend/src/components/pokemon/PokemonSearchBox.tsx:82-110, 129-176, 191-196` |
 | 29 | Gõ nhanh rồi `Enter` có chọn nhầm kết quả của chữ cũ không? | Không. Có debounce 250 ms và cờ `settled` so chữ đã debounce với chữ đang gõ; chưa khớp thì `Enter` không chọn. Test gõ "ga" rồi gõ tiếp "rchomp" + `Enter` khẳng định không chọn Gastly. | `frontend/src/components/pokemon/PokemonSearchBox.tsx:22, 54, 97`; `PokemonSearchBox.test.tsx:55-75` |
-| 30 | Responsive dựa trên những breakpoint nào, sao còn cần `useMediaQuery`? | Dùng breakpoint mặc định của Tailwind (`sm` 640, `md` 768, `lg` 1024, `xl` 1280) và một variant `short` cho màn hình thấp. Hầu hết bố cục đổi bằng CSS. `useMediaQuery` chỉ dùng ở Team Builder để khối đề xuất nằm đúng một chỗ trong DOM, giữ thứ tự đọc khớp thứ tự nhìn thấy. | `frontend/src/styles/index.css:4`; `frontend/src/lib/useMediaQuery.ts:4-25`; `frontend/src/pages/TeamBuilderPage.tsx:68, 240, 332, 367` |
+| 30 | Responsive dựa trên những breakpoint nào, sao còn cần `useMediaQuery`? | Dùng breakpoint mặc định của Tailwind (`sm` 640, `md` 768, `lg` 1024, `xl` 1280) và hai variant `short`, `shorter` cho màn hình thấp. Hầu hết bố cục đổi bằng CSS. `useMediaQuery` dùng ở 3 nơi, khi CSS `order` sẽ làm thứ tự `Tab` khác thứ tự nhìn: Team Builder đặt khối đề xuất và 2 nút Lưu, Đặt lại đúng chỗ trong DOM; Pokédex đổi thứ tự dòng kết quả và thanh công cụ dưới `lg`; `TeamSteps` ở trang Tổng quan cho dải 3 bước cuộn ngang nhận focus (`tabIndex`) dưới `md`. | `frontend/src/styles/index.css:4-5`; `frontend/src/lib/useMediaQuery.ts:3-25`; `frontend/src/pages/TeamBuilderPage.tsx:68-69, 266, 293, 341, 376`; `frontend/src/pages/DexPage.tsx:36, 138`; `frontend/src/features/landing/components/TeamSteps.tsx:117, 163` |
 | 31 | Vì sao `pokemonTypes.ts` viết đủ 18 chuỗi class thay vì ghép `bg-type-${type}`? | Tailwind sinh CSS bằng cách quét chuỗi trong mã nguồn lúc build. Chuỗi ghép động không xuất hiện nguyên văn nên class không được sinh. Map viết đầy đủ còn giữ một nguồn duy nhất cho màu hệ. | `frontend/src/lib/pokemonTypes.ts:24-66` |
 | 32 | Token màu tổ chức thế nào, có dark mode không? | Token ngữ nghĩa khai báo ở `:root` và `.dark`, nối vào Tailwind qua `@theme inline` để class tự đổi theo theme. Dark mode mới có token, chưa có nút bật, là mức Could. Màu hệ, `scrim`, vỏ Pokédex cố định ở mọi theme. | `frontend/src/styles/index.css:15-67, 149`; `docs/design-system.md`, Phần 9 |
 | 33 | Biểu đồ radar có truy cập được không, sao không dùng Recharts? | SVG có `role="img"` và `aria-label` liệt kê đủ 6 chỉ số mỗi series. Series thứ hai có nét đứt để không chỉ phân biệt bằng màu. Chỉ cần radar 6 trục nên tự vẽ, không thêm dependency. | `frontend/src/components/pokemon/StatRadar.tsx:91-99, 25-33`; `docs/architecture.md:66` |
@@ -4899,7 +4902,7 @@ Garchomp
 | 10 | Vì sao Java 25 và Spring Boot 4.1? | Java 25 là LTS mới nhất; Spring Boot 3.5 đã hết hỗ trợ mã nguồn mở. Nhược điểm: nhiều hướng dẫn trên mạng còn viết cho Boot 3, nên phải đối chiếu tài liệu chính thức. | ADR 0004 |
 | 11 | Vì sao monorepo? | Một PR sửa được cả API lẫn giao diện, tài liệu ở một chỗ, CI tách job backend và frontend. | ADR 0001 |
 | 12 | Vì sao backend không trả URL ảnh? | Ảnh là chuyện hiển thị: frontend sinh URL từ ID. Sprite nhỏ tự host để lưới vẫn có ảnh khi mất mạng; artwork lớn hotlink từ kho của PokéAPI để repo không nặng thêm khoảng 170 MB; lỗi thì lùi về sprite rồi ảnh dự phòng. | ADR 0005 |
-| 13 | Vì sao Railway và Cloudflare Pages? | Gói miễn phí đủ đến ngày demo, có vùng Singapore gần Việt Nam, backend không ngủ đông. Pages tự trả `index.html` cho mọi route nên SPA chạy không cần cấu hình rewrite. | ADR 0007 |
+| 13 | Vì sao Render, Aiven và Cloudflare Pages? | Kế hoạch đầu là Railway (ADR 0007), nhưng Railway dừng nhận đăng ký mới từ 22/10. Ngày 02/11 em chọn Render Free và Aiven Free: không tốn phí, không cần thẻ, MySQL thật nên dump và Flyway dùng nguyên trạng, không sửa code. Đánh đổi: Render ngủ sau 15 phút, nên có workflow gọi `/health` mỗi 10 phút (PR #93). Pages tự trả `index.html` cho mọi route nên SPA chạy không cần cấu hình rewrite. | ADR 0007, ADR 0009 |
 | 14 | Vì sao TanStack Query mà không Redux? | Gần như toàn bộ state là dữ liệu server: cần cache, trạng thái tải, thử lại. Phần còn lại (bộ lọc, đội nháp) nằm trên URL. Chỉ `useTeamDraft` là state toàn cục. | `docs/architecture.md`, Phần 2; `frontend/CLAUDE.md` |
 | 15 | Vì sao lưu bộ lọc và đội nháp trên URL? | Gửi link là người khác thấy đúng màn hình; nút Back hoạt động tự nhiên; tải lại trang không mất trạng thái. | `docs/architecture.md`, Phần 6 |
 | 16 | Vì sao Flyway? | Schema được quản lý bằng script có phiên bản; DB local, Testcontainers và production đi qua cùng V1-V3. Quy tắc: không sửa migration đã merge, thay đổi thì thêm file mới. | `docs/database.md`, Phần 5 |
@@ -4930,8 +4933,8 @@ Garchomp
 
 | # | Câu hỏi | Trả lời mẫu | Nguồn |
 |---|---|---|---|
-| 29 | Nếu nhiều người dùng cùng lúc thì sao? | Synergy chỉ đọc cấu trúc trong bộ nhớ, không truy vấn DB; endpoint `/pokemon/...` trả `Cache-Control` 1 giờ, `/types` 1 ngày nên trình duyệt và CDN đỡ được phần lớn request lặp. Giới hạn thật nằm ở gói hosting (RAM, CPU của Railway Trial), chưa đo tải. | Phần 4, mục II.VI; ADR 0007 |
-| 30 | Chống spam lưu đội thế nào? | Tối đa 10 lần lưu mỗi phút cho mỗi IP, theo dõi tối đa 10.000 IP; vượt thì 429 `RATE_LIMITED` kèm `Retry-After`. Trên Railway cần kiểm chứng IP lấy từ header proxy không bị giả mạo (B3). | `backend/src/main/resources/application.yml:29`; `backend/src/main/java/com/pokenexus/team/service/SaveRateLimiter.java:19`; `backend/src/main/java/com/pokenexus/common/exception/GlobalExceptionHandler.java:42`; `docs/architecture.md`, Phần 11 |
+| 29 | Nếu nhiều người dùng cùng lúc thì sao? | Synergy chỉ đọc cấu trúc trong bộ nhớ, không truy vấn DB; endpoint `/pokemon/...` trả `Cache-Control` 1 giờ, `/types` 1 ngày nên trình duyệt và CDN đỡ được phần lớn request lặp. Giới hạn thật nằm ở gói hosting (Render Free dưới 1 nhân CPU; Aiven Free 1 CPU, 1 GB RAM, 76 kết nối), chưa đo tải. | Phần 4, mục II.VI; ADR 0009 |
+| 30 | Chống spam lưu đội thế nào? | Tối đa 10 lần lưu mỗi phút cho mỗi IP, theo dõi tối đa 10.000 IP; vượt thì 429 `RATE_LIMITED` kèm `Retry-After`. IP lấy từ `CF-Connecting-IP` do Cloudflare ghi đè (PR #91, sửa lỗi B3 giả `X-Forwarded-For`). | `backend/src/main/resources/application.yml:29`; `backend/src/main/java/com/pokenexus/team/service/SaveRateLimiter.java:19`; `backend/src/main/java/com/pokenexus/common/exception/GlobalExceptionHandler.java:42`; `docs/architecture.md`, Phần 11 |
 | 31 | Có chống SQL injection không? | Truy vấn qua JPA có tham số; ô tìm còn lọc ký tự `[a-z0-9-]` trước khi đưa vào `LIKE`. | `backend/src/main/java/com/pokenexus/pokedex/service/PokemonQueryService.java`; review #70 |
 | 32 | Gửi body thật lớn thì sao? | `RequestBodyLimitFilter` giới hạn 16 KB cho `POST`, `PUT`, `PATCH`, kể cả khi client không gửi `Content-Length`; vượt thì 413 `PAYLOAD_TOO_LARGE`, có header CORS. | Phần 3, mục II.V |
 | 33 | DB chưa có dữ liệu thì API trả gì? | 503 `DATA_NOT_READY` thay vì danh sách rỗng hay lỗi 500; `/health` trả `dataLoaded` và `pokemonCount`. | Phần 3, mục III; Phần 4, mục III.VI |
@@ -5017,3 +5020,184 @@ bash scripts/bench-synergy.sh
 | 02/11 | Bug bash 13 lỗi (PR #69); ban tổ chức yêu cầu pitching |
 | 05/11 | Đóng băng tính năng (chỉ `fix`, `docs`, `chore`) |
 | 08/11 | Checkpoint 4: pitching, demo trên link thật, tag `v1.0.0` |
+
+---
+
+## Phần 10. Kịch bản pitching 15 phút
+
+### I. Cách dùng
+
+- Slide: [slides.html](slides.html) mở bằng trình duyệt, không cần mạng; mũi tên trái, phải hoặc `Space` chuyển slide, `F` toàn màn hình, `N` bật ghi chú lời thoại. [PokeNexus-Pitch.pptx](PokeNexus-Pitch.pptx) cùng nội dung, lời thoại nằm trong Notes của từng slide.
+- 19 slide chính nói trong 15 phút; 8 slide phụ lục (A1-A8, slide 20-27) chỉ mở khi bị hỏi (mục V).
+- Cách ước lượng: đếm từ theo cách đọc thành tiếng, số viết bằng chữ số tính theo số âm tiết khi đọc (ví dụ "1.351" là 7 từ: một nghìn ba trăm năm mươi mốt). Tốc độ chuẩn 140 từ mỗi phút; mốc mm:ss ở mục II, III tính theo tốc độ này.
+- Tổng: 1.918 từ khi đếm theo khoảng trắng, 2.093 từ khi đọc thành tiếng. Ước lượng 14:57 ở 140 từ/phút; 13:57 nếu nói 150 từ/phút, 16:06 nếu nói 130 từ/phút. Tiêu chí của T406: 15 phút, lệch không quá 1 phút.
+- Demo trực tiếp không tính vào 15 phút (ban tổ chức yêu cầu pitching khoảng 15 phút, chưa kể demo; `docs/roadmap.md`, dòng "Thay đổi so với 1.1"). Ở slide 6, dừng đồng hồ, demo theo mục IV, xong thì sang slide 7 và tính giờ tiếp.
+- Số liệu trên slide chốt ngày 05/11/2026, cùng nguồn với báo cáo tổng kết (`PokeNexus-BaoCao.docx`). Trước buổi pitching, nếu đã gắn tag `v1.0.0`, đã đo Lighthouse trên link thật hoặc đã kiểm chứng B3 trên production thì sửa slide 17 và câu tương ứng ở mục III.
+
+### II. Bảng thời gian
+
+| Slide | Tiêu đề | Bắt đầu | Thời lượng | Số từ (đọc) |
+|---|---|---|---|---|
+| 1 | PokeNexus | 00:00 | 00:28 | 65 |
+| 2 | Người chơi VGC đang phải tự nhẩm | 00:28 | 00:53 | 124 |
+| 3 | PokeNexus trong một câu | 01:21 | 00:42 | 97 |
+| 4 | Ba người dùng, mười user story | 02:03 | 00:52 | 121 |
+| 5 | 10 tính năng trên 8 trang | 02:54 | 00:43 | 101 |
+| 6 | Demo trực tiếp | 03:38 | 00:21 | 49 |
+| 7 | Omni-Dex và trang Chi tiết | 03:59 | 00:52 | 122 |
+| 8 | Bảng tương khắc và Bàn Cân Sức Mạnh | 04:51 | 00:46 | 108 |
+| 9 | Team Builder: bản đồ điểm yếu | 05:37 | 00:51 | 118 |
+| 10 | Synergy: điểm đội tính thế nào | 06:28 | 01:09 | 160 |
+| 11 | Đề xuất slot 6 theo lối chơi | 07:36 | 01:03 | 146 |
+| 12 | Đội demo: 20 lên 48 nhờ Excadrill | 08:39 | 00:49 | 114 |
+| 13 | Dữ liệu offline từ CSV PokéAPI | 09:28 | 00:50 | 116 |
+| 14 | Kiến trúc và hosting | 10:18 | 00:56 | 131 |
+| 15 | Chất lượng và kiểm thử | 11:14 | 00:48 | 112 |
+| 16 | Quy trình 3 tuần | 12:02 | 00:54 | 126 |
+| 17 | Kết quả so với tiêu chí | 12:56 | 00:49 | 115 |
+| 18 | Hạn chế và hướng phát triển | 13:45 | 00:55 | 128 |
+| 19 | Cảm ơn ban giám khảo | 14:40 | 00:17 | 40 |
+| | **Tổng** | | **14:57** | **2.093** |
+
+- Slide 6 chỉ có câu chuyển sang demo; đồng hồ dừng sau câu này.
+- Lệch quá 1 phút khi tổng duyệt: rút gọn slide 4 (bỏ câu về ba story mở rộng) và slide 16 (bỏ câu về Claude Code); hai câu này có sẵn ở slide và ở Phần 8 để trả lời khi được hỏi.
+
+### III. Lời thoại từng slide
+
+#### 1. Slide 1 - PokeNexus (00:00 - 00:28)
+
+- Em chào ban giám khảo. Em là Nguyễn Quốc Khánh, một mình làm dự án PokeNexus trong ba tuần, từ ngày 18 tháng 10 đến hôm nay.
+- PokeNexus là bách khoa Pokémon kiêm công cụ phân tích đội hình VGC. Trong mười lăm phút, em trình bày vấn đề, sản phẩm, thuật toán, kiến trúc, kết quả, và demo trực tiếp trên link thật.
+
+#### 2. Slide 2 - Người chơi VGC đang phải tự nhẩm (00:28 - 01:21)
+
+- Người chơi Pokémon, nhất là người chơi đấu đôi VGC, đang phải tra dữ liệu ở nhiều nơi: một trang xem chỉ số, một trang xem tương khắc, một công cụ khác để kiểm tra đội.
+- Bảng tương khắc có 18 hệ đánh vào 18 hệ, tức 324 hệ số; gặp hệ kép còn phải nhân hai hệ số trong đầu. Ghép sáu Pokémon thành đội, người chơi phải tự nhẩm cả đội cùng yếu hệ nào, vừa lâu vừa dễ sai.
+- Câu hỏi khó nhất: đội đang hở thì nên thêm Pokémon nào? Có 1.025 loài, không ai thử tay hết được. Đó là bốn vấn đề em chọn giải quyết.
+
+#### 3. Slide 3 - PokeNexus trong một câu (01:21 - 02:03)
+
+- Câu giới thiệu của sản phẩm là: PokeNexus là bách khoa Pokémon kiêm cố vấn chiến thuật: xây đội, thấy ngay lỗ hổng, nhận gợi ý lấp lỗ hổng kèm lý do.
+- Sản phẩm có ba giá trị khác biệt. Một, giải thích được: mọi kết luận đều có lý do bằng lời và số liệu. Hai, nhanh: phân tích đội chạy trên dữ liệu đã nạp sẵn trong bộ nhớ. Ba, chia sẻ được: bộ lọc và đội nháp nằm trên URL, đội đã lưu có mã chia sẻ tám ký tự, không cần đăng nhập.
+
+#### 4. Slide 4 - Ba người dùng, mười user story (02:03 - 02:54)
+
+- Em thiết kế cho ba nhóm người dùng. An là người chơi mới, cần tra cứu nhanh và hiểu tương khắc. Bình là người chơi VGC, cần kiểm tra lỗ hổng của đội và tìm Pokémon bổ sung; đây là nhóm em ưu tiên nhất. Chi thích số liệu, muốn so sánh chỉ số trực quan.
+- Từ ba người này em viết bảy user story cho MVP, mỗi story có tiêu chí chấp nhận đo được, ví dụ US-06: ba gợi ý khác tổ hợp hệ, mỗi gợi ý có ít nhất một lý do. Cả bảy đều đạt. Sau MVP em làm thêm ba story: cây tiến hóa, tốc độ cấp 50, và nhập xuất đội Showdown.
+
+#### 5. Slide 5 - 10 tính năng trên 8 trang (02:54 - 03:38)
+
+- Tổng cộng có mười tính năng trên tám trang. Nhóm tra cứu gồm trang Tổng quan, Pokédex có bộ lọc kết hợp, trang Chi tiết, Bảng tương khắc, và Bàn Cân Sức Mạnh để so sánh hai Pokémon.
+- Trọng tâm là Team Builder với Synergy Analyzer, kèm lưu và chia sẻ đội. Phần mở rộng em làm sau khi MVP chạy: trang Địa hình có minigame, Bảng tốc độ cấp 50, và nhập xuất Showdown.
+- Backend có 14 endpoint REST dưới đường dẫn api v1. Bây giờ em demo trực tiếp để ban giám khảo thấy luồng chính.
+
+#### 6. Slide 6 - Demo trực tiếp (03:38 - 03:59)
+
+- Kịch bản demo có sáu bước, đúng như đặc tả: từ trang Tổng quan, lọc Pokédex, so sánh, xây đội năm Pokémon, nhận đề xuất, rồi lưu và mở link chia sẻ ở cửa sổ ẩn danh. Em chuyển sang trình duyệt; nếu mạng chậm, em chiếu video demo.
+
+#### 7. Slide 7 - Omni-Dex và trang Chi tiết (03:59 - 04:51)
+
+- Em quay lại slide để giải thích những gì vừa xem. Pokédex mặc định hiện 1.083 dạng thường và vùng miền. Bộ lọc kết hợp hệ, thế hệ, tổng chỉ số và tốc độ tối thiểu; mọi tham số nằm trên URL, nên tải lại hay gửi link vẫn giữ bộ lọc. Lọc Dragon thế hệ 4 ra sáu kết quả có Garchomp.
+- Trang Chi tiết có sáu chỉ số gốc, lưới phòng thủ 18 hệ, cây tiến hóa đủ nhánh, và tốc độ cấp 50: Garchomp đạt 96, 122 hoặc 169 tùy mức đầu tư, nhanh hơn 88% Pokémon.
+
+#### 8. Slide 8 - Bảng tương khắc và Bàn Cân Sức Mạnh (04:51 - 05:37)
+
+- Bảng tương khắc là ma trận 18 nhân 18, hàng là hệ tấn công, cột là hệ phòng thủ. Ô x1 để trống, nên người xem chỉ cần nhìn các ô có màu. Chọn hai hệ phòng thủ thì thấy ngay hệ số hệ kép: Fire cộng Flying chịu Rock x4 và miễn nhiễm Ground.
+- Bàn Cân Sức Mạnh chồng hai radar sáu chỉ số và tự viết ba kết luận: lợi thế hệ, lợi thế tổng chỉ số, bên nào nhanh hơn. Garchomp và Salamence cùng tổng chỉ số 600, nhưng Garchomp nhanh hơn, 102 so với 100.
+
+#### 9. Slide 9 - Team Builder: bản đồ điểm yếu (05:37 - 06:28)
+
+- Đây là phần giá trị nhất. Người dùng chọn tối đa năm Pokémon, slot thứ sáu dành cho đề xuất. Bản đồ điểm yếu có 18 hàng là 18 hệ tấn công, mỗi cột là một thành viên, mỗi ô ghi hệ số sát thương.
+- Với đội demo gồm Charizard, Gyarados, Dragonite, Talonflame và Volcarona, hàng Rock đỏ rực: cả năm thành viên đều yếu, ba con chịu x4, không ai kháng. Hệ thống gắn nhãn lỗ hổng nghiêm trọng. Electric cũng là lỗ hổng, vì Gyarados chịu x4 mà không ai kháng.
+- Bên cạnh bản đồ là đánh giá đội bằng lời, độ phủ tấn công và bảng tốc độ cấp 50.
+
+#### 10. Slide 10 - Synergy: điểm đội tính thế nào (06:28 - 07:36)
+
+- Điểm đội tính qua ba bước. Một, mỗi hệ số đổi thành điểm phòng thủ: miễn nhiễm cộng ba, x0,25 cộng hai, x0,5 cộng một, x2 trừ một, x4 trừ hai.
+- Hai, với mỗi hệ tấn công: weakness là tổng mức yếu, resistCount là số người kháng, pressure bằng weakness trừ resistCount, không âm. Lỗ hổng nghiêm trọng là khi weakness từ hai trở lên mà không ai kháng.
+- Ba, điểm đội bằng 100 trừ bốn nhân tổng pressure, trừ tám nhân số lỗ hổng, kẹp trong khoảng 0 đến 100.
+- Đội demo có Rock pressure 8, Electric 4, bốn hệ khác mỗi hệ 1, tổng 16, và hai lỗ hổng: 100 trừ 64 trừ 16 bằng 20, đúng số API trả về. Thuật toán chỉ duyệt 18 hệ nhân tối đa sáu người, không truy vấn cơ sở dữ liệu.
+
+#### 11. Slide 11 - Đề xuất slot 6 theo lối chơi (07:36 - 08:39)
+
+- Từ chỗ hở đó, Recommendation Engine chấm mọi ứng viên trong bộ nhớ: dạng thường hoặc vùng miền, đã tiến hóa hoàn toàn, chưa có trong đội.
+- Mỗi ứng viên có bốn thành phần. Phòng thủ: kháng đúng hệ đội đang hở thì được thưởng theo pressure, yếu thêm hệ thì bị phạt. Độ phủ: số hệ đội chưa đánh được mà ứng viên đánh được. Vai trò: chỉ số có bù chỗ thiếu của đội không. Sức mạnh: tổng chỉ số.
+- Bốn giá trị được chuẩn hóa min-max rồi nhân trọng số của lối chơi: Cân bằng là 40, 20, 25, 15; Trâu bò dồn 50% vào phòng thủ; Tấn công nhanh và Trick Room còn lọc theo tốc độ gốc. Cuối cùng lấy ba ứng viên điểm cao nhất, khác tổ hợp hệ, kèm lý do.
+
+#### 12. Slide 12 - Đội demo: 20 lên 48 nhờ Excadrill (08:39 - 09:28)
+
+- Áp vào đội demo, bật ô loại huyền thoại, còn 484 ứng viên, đề xuất số một là Excadrill, hệ Ground và Steel, 85,1 điểm. Excadrill kháng Rock x0,25 và miễn nhiễm Electric, đúng hai lỗ hổng của đội. Hệ thống cũng cảnh báo: thêm Excadrill thì đội yếu Water nhiều hơn.
+- Thêm Excadrill vào slot sáu: Rock còn pressure 7, Electric còn 3, hết lỗ hổng nghiêm trọng. Tổng pressure 13, điểm đội bằng 100 trừ 52, bằng 48. Đây là ví dụ số năm trong đặc tả, có unit test giữ đáp án.
+
+#### 13. Slide 13 - Dữ liệu offline từ CSV PokéAPI (09:28 - 10:18)
+
+- Ứng dụng không gọi API của PokéAPI lúc chạy. Em dùng bộ CSV công khai của PokéAPI, cố định ở một commit để số liệu và test giống nhau trên mọi máy. Ingestion ghi vào MySQL bằng JDBC batch trong một transaction, nạp đủ trong 3,1 giây: 18 hệ, 324 hệ số, 1.025 loài, 1.351 dạng.
+- Em tách loài và dạng: Vulpix thường là hệ Fire, Vulpix Alola là hệ Ice. ADR 0002 ghi lý do: so với gọi API lúc chạy, cách này nhanh, không bị giới hạn tần suất, và demo được khi mạng yếu.
+
+#### 14. Slide 14 - Kiến trúc và hosting (10:18 - 11:14)
+
+- Kiến trúc có ba lớp. Frontend React, TypeScript, Vite chạy trên Cloudflare Pages, mỗi trang là một chunk tải lười. Backend Java 25, Spring Boot 4.1 chạy Docker trên Render. MySQL 8.4 trên Aiven, kết nối TLS.
+- Backend chia package theo tính năng: pokedex, typechart, synergy, team, cùng ingestion và common. Luồng một chiều Controller, Service, Repository, DTO là record.
+- Điểm quan trọng: khi khởi động, backend nạp bảng tương khắc và hồ sơ của 1.351 dạng vào bộ nhớ, nên Synergy không truy vấn cơ sở dữ liệu. Kế hoạch ban đầu là Railway, nhưng Railway ngừng nhận đăng ký mới, nên ngày 2 tháng 11 em chuyển sang Render và Aiven mà không phải sửa code.
+
+#### 15. Slide 15 - Chất lượng và kiểm thử (11:14 - 12:02)
+
+- Backend có 142 unit test và 57 integration test chạy MySQL thật bằng Testcontainers; frontend có 352 test. CI chạy hai job trên mỗi Pull Request, và main đang xanh.
+- Năm ví dụ có đáp án trong đặc tả đều có unit test, đáp án tính tay chứ không lấy từ code. Kịch bản demo chạy hai lần liên tiếp bằng script Chrome ở local và đủ sáu bước qua API production; em có thêm một script nghiệm thu chạy trên link thật. p95 của phân tích đội là 7,2 mili giây, mục tiêu dưới 50.
+
+#### 16. Slide 16 - Quy trình 3 tuần (12:02 - 12:56)
+
+- Dù làm một mình, em vẫn theo quy trình của một nhóm nhỏ. Lộ trình lùi từ hạn 8 tháng 11, chia Epic, Feature, Task, mỗi task tối đa một ngày, có đầu vào, đầu ra, cách kiểm tra; 62% thời gian để xây dựng, 38% để kiểm thử, sửa lỗi, tài liệu.
+- Mọi thay đổi đi qua Issue và Pull Request có CI: 41 Issue, 50 Pull Request đã merge, chín ADR cho các quyết định lớn. Từ ngày 5 tháng 11 em đóng băng tính năng.
+- Em dùng Claude Code như cộng sự lập trình; em quyết định phạm vi, duyệt kết quả và kiểm lại số liệu bằng API thật.
+
+#### 17. Slide 17 - Kết quả so với tiêu chí (12:56 - 13:45)
+
+- Đối chiếu với tiêu chí Checkpoint 4, trạng thái ngày 5 tháng 11. Đạt: đủ mười tính năng, bảy Issue lỗi đều đã đóng, CI xanh, năm ví dụ có test, p95 dưới 50 mili giây, link chạy được trên điện thoại và máy tính, có bản local bằng Docker.
+- Một phần: kịch bản demo đã chạy đủ qua API production, còn hai lần liên tiếp trên giao diện production thuộc buổi tổng duyệt. Chưa đo: Lighthouse trên link thật; ở local, Lighthouse Accessibility đạt 100. Tag v1.0.0 gắn sau tổng duyệt. Em ghi rõ phần chưa đạt thay vì làm tròn thành đạt.
+
+#### 18. Slide 18 - Hạn chế và hướng phát triển (13:45 - 14:40)
+
+- Hạn chế lớn nhất là phân tích mới chỉ theo hệ, chưa có chiêu thức, Ability, vật phẩm; Pokémon có Levitate vẫn bị tính là yếu Ground. Điểm đề xuất là tương đối, và hệ số phạt 4 và 8 chưa hiệu chỉnh bằng dữ liệu trận đấu. Hosting miễn phí có cold start khoảng hai phút rưỡi đến ba phút; em đã thêm lịch gọi health mỗi mười phút.
+- Bài học: em làm tính năng mở rộng trước khi deploy, nên lỗi chỉ có trên production lộ ra muộn. Lần sau em sẽ deploy sớm một bản tối thiểu. Hướng tiếp theo là chiêu thức và Ability trong phân tích, E2E tự động trong CI, và dữ liệu meta VGC để hiệu chỉnh trọng số.
+
+#### 19. Slide 19 - Cảm ơn ban giám khảo (14:40 - 14:57)
+
+- Sản phẩm đang chạy ở pokenexus chấm pages chấm dev, mã nguồn ở GitHub Nha-Cong-Dong, PokeNexus. Em cảm ơn ban giám khảo đã lắng nghe. Em sẵn sàng trả lời câu hỏi, kể cả câu hỏi chi tiết về code.
+
+### IV. Lời dẫn khi demo (không tính vào 15 phút)
+
+- Chuẩn bị: gọi `https://pokenexus-api-s6g6.onrender.com/api/v1/health` trước ít nhất 5 phút, chờ tới khi trả `UP` (cold start khoảng 2,5-3 phút, Issue #90); mở sẵn tab trang Tổng quan và một cửa sổ ẩn danh.
+- Dự phòng: mạng chậm thì chiếu [PokeNexus-Demo.mp4](PokeNexus-Demo.mp4) (04:40, [PokeNexus-Demo.md](PokeNexus-Demo.md)); mất mạng thì chạy bản local `docker compose --profile app up -d --build`.
+
+| Bước | Màn hình | Lời dẫn |
+|---|---|---|
+| 1 | Trang Tổng quan | Đây là trang Tổng quan, hero là vỏ Pokédex với khung cảnh vùng đất. Em bấm "Mở Pokédex". |
+| 2 | Pokédex, Chi tiết | Em chọn hệ Dragon và thế hệ 4: ra 6 kết quả, URL đổi theo bộ lọc. Em mở Garchomp: 6 chỉ số, lưới phòng thủ 18 hệ, tốc độ cấp 50. |
+| 3 | Bàn Cân | Em bấm "So sánh" và chọn Salamence: hai radar chồng lớp, kết luận "Garchomp nhanh hơn (102 so với 100)". |
+| 4 | Xây đội | Em thêm Charizard, Gyarados, Dragonite, Talonflame, Volcarona. Hàng Rock gắn nhãn "Lỗ hổng", điểm đội 20. |
+| 5 | Đề xuất | Em bật ô "Loại huyền thoại, thần thoại và Paradox": đề xuất số 1 là Excadrill, 85 điểm phù hợp. Em bấm "Thêm vào đội": điểm đội lên 48, Rock hết lỗ hổng. |
+| 6 | Lưu và chia sẻ | Em bấm "Lưu đội", sao chép link, mở ở cửa sổ ẩn danh: đúng 6 thành viên, cùng điểm 48. |
+
+- Bước 5: giao diện hiện điểm phù hợp làm tròn (85); API trả 85,1, là số trên slide 12.
+
+### V. Slide phụ lục cho phần hỏi đáp
+
+| Slide | Phụ lục | Dùng khi bị hỏi |
+|---|---|---|
+| 20 | A1. Schema cơ sở dữ liệu | Vì sao tách species và pokemon, vì sao lưu hệ và chỉ số thành cột, ràng buộc của đội, Flyway. Chi tiết: tài liệu luyện tập, Phần 3. |
+| 21 | A2. 14 endpoint REST | Về thiết kế API, mã lỗi, vì sao Synergy dùng POST. Chi tiết: tài liệu luyện tập, Phần 3 và 4. |
+| 22 | A3. Trọng số PlayStyle | Chi tiết trọng số, vai trò chỉ số, vì sao mặc định ra Paradox. Chi tiết: tài liệu luyện tập, Phần 4, mục II.VII. |
+| 23 | A4. Xử lý lỗi và bảo mật | Về validate, giới hạn lưu đội, CORS, lỗi B3. Chi tiết: tài liệu luyện tập, Phần 3 và 4. |
+| 24 | A5. Hiệu năng | Về hiệu năng, vì sao tính trong bộ nhớ, tải nhiều người dùng (chưa đo). Chi tiết: tài liệu luyện tập, Phần 4, mục II.VI. |
+| 25 | A6. Accessibility | Về responsive, accessibility, chuyển động. Chi tiết: tài liệu luyện tập, Phần 5 và 6. |
+| 26 | A7. Các ADR chính | Vì sao chọn công nghệ, hosting, dữ liệu offline. Chi tiết: tài liệu luyện tập, Phần 8, mục II. |
+| 27 | A8. Sáu lỗi sửa ngày 05/11 | Về lỗi sau triển khai, cách tìm và sửa, B3. Chi tiết: báo cáo tổng kết, Chương 9, mục V. |
+
+- Phím `End` nhảy tới slide cuối, `Home` về slide đầu; gõ số slide vào cuối địa chỉ (ví dụ `slides.html#22`) để mở thẳng một phụ lục.
+
+### VI. Tập luyện
+
+- Đọc to mục III với đồng hồ bấm giờ, ghi thời gian thật của từng slide cạnh mốc ở mục II; slide nào lệch quá 15 giây thì sửa câu, không nói nhanh hơn.
+- Các con số phải nói đúng: 20 lên 48, 85,1, 596 và 484 ứng viên, 1.025 loài và 1.351 dạng, 142, 57 và 352 test, p95 7,2 ms. Nguồn của từng số: báo cáo tổng kết, Bảng 1.3 và Chương 6.
+- Tổng duyệt 2 lần đúng thời gian ở T407 (07-08/11), một lần có demo trên link thật.
