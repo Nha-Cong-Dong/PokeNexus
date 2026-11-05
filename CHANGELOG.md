@@ -9,6 +9,10 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ### Added
 
+- Script nghiệm thu `scripts/acceptance-check.mjs` (#94): kịch bản demo qua API, 9 route ở 375 và 1440 px bằng Chrome headless, các lỗi sửa ngày 2026-11-05, tùy chọn `--rate-limit` kiểm giới hạn lưu đội mà không ghi DB.
+- Workflow `keep-alive.yml` gọi `/api/v1/health` mỗi 10 phút để backend Render Free không ngủ (#90).
+- Báo cáo tổng kết `docs/pitching/PokeNexus-BaoCao.docx` (T413) và video demo `docs/pitching/PokeNexus-Demo.mp4` (#97).
+- Thẻ thành viên ở Xây đội và Đội chia sẻ: rê chuột, `Tab` hoặc giữ ngón tay 1,5 giây hiện bảng "Xem thông tin chi tiết"; bấm thẻ không còn chuyển trang ngay (#83).
 - Tài liệu luyện tập pitching và hỏi đáp `docs/pitching/PokeNexus-LuyenTap.md` (T414): một file gồm lộ trình học, tổng quan hệ thống, số liệu đội demo đo từ API, từng file backend và frontend, luồng xử lý đầu cuối, khoảng 250 câu hỏi có trả lời mẫu, tra cứu nhanh. Lộ trình 1.2 khôi phục T406 (slide, không video), thêm T413 (báo cáo), T414 khi ban tổ chức yêu cầu pitching ngày 2026-11-02.
 - Bảng tốc độ cấp 50 (US-09, T408): endpoint `GET /api/v1/pokemon/speed-tiers`; trang Chi tiết có khối "Tốc độ ở cấp 50" (tối thiểu, không đầu tư, tối đa, nhanh hơn N% Pokémon, mốc vừa thua, vừa vượt); Team Builder có panel xếp đội từ nhanh đến chậm.
 - Nhập, xuất đội Showdown (US-10, T409): dán đội từ Pokémon Showdown vào Team Builder (chỉ lấy tên Pokémon, báo dòng không nhận ra), xuất đội ra văn bản Showdown ở Team Builder và trang Đội chia sẻ.
@@ -47,6 +51,10 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ### Fixed
 
+- Ô tìm kiếm Pokémon không ra dạng Mega, Gmax và dạng khác; nay ra mọi dạng khớp tên, kèm nhãn Mega, Gmax, Vùng miền, Dạng khác (#82).
+- 16 dạng trùng hệ, chỉ số và ảnh với dạng khác của cùng loài (Zygarde Power Construct, Greninja Battle Bond, Rockruff Own Tempo, 12 dạng Totem) bị ẩn khỏi danh sách, tìm kiếm và mục Các dạng (#81).
+- Danh sách Pokédex trên mobile: nhãn hệ của Pokémon 2 hệ bị đẩy xuống dưới tên; nay luôn nằm bên phải tên (#80).
+- Trang Tổng quan: hero bị cắt ở màn hình thấp (1920 x 1080 đặt scale 150%), Năm vùng đất 2 cột thẻ quá to dưới 1280 px; trên điện thoại trang dài 11.327 px, nay 6.853 px (#84).
 - `GET /api/v1/health` trả 503 với `status = "DOWN"` khi không kết nối được DB; trước đây vẫn trả 200 `UP` nên health check của hosting không phát hiện được DB chết. Bảng `pokemon` chưa tạo vẫn trả 200 `UP`.
 - Bảng task tuần 3 trong `docs/roadmap.md` bị tách đôi do dòng trống trước T313, làm T313-T315 mất header.
 - Nút đáp án đúng và sai của Thử tài Trainer hiện chữ trắng trên nền trắng, vì lớp `bg-surface` của biến thể nút được Tailwind sinh sau lớp ghi đè; bộ câu hỏi đang chọn cũng không có nền vàng.
@@ -64,6 +72,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 
 ### Security
 
+- Giới hạn lưu đội lấy IP client từ `CF-Connecting-IP` do edge Cloudflare của Render ghi; trước đây đổi `X-Forwarded-For` mỗi request là vượt được giới hạn 10 lần mỗi phút (B3, #89).
 - `SaveRateLimiter` theo dõi tối đa 10.000 IP; trước đây map trong bộ nhớ có thể tăng không giới hạn khi nhiều IP khác nhau lưu đội trong cùng một phút.
 - Body của `POST`, `PUT`, `PATCH` giới hạn 16 KB (413 `PAYLOAD_TOO_LARGE`), kể cả request không gửi `Content-Length`; trước đây body vài chục MB có thể làm backend hết bộ nhớ.
 - Build frontend trên Cloudflare Pages dừng khi `VITE_API_BASE_URL` thiếu, rỗng hoặc không phải `https://`, tránh phát hành bản gọi `localhost`.
