@@ -24,13 +24,13 @@
 |---|---|---|---|---|
 | T403 (#49) | 30-31/10 | Triển khai production | Xong | Deploy 04/11, deploy lại từ `main` (xác nhận 06/11); `acceptance-check --rate-limit` 36/36 (PR #106 sửa vòng `CF-Connecting-IP`) |
 | T404 (#51) | 03/11 | Bug bash, đo hiệu năng | Xong | Lighthouse mobile trên link thật 06/11: Accessibility 100 ở 9/9, CLS, TBT, Best Practices đạt; LCP đạt 1/9 route (2,1-5,5 s). Chủ dự án chốt không sửa code thêm, LCP ghi lệch ngưỡng ([worklog](docs/worklog.md), 06/11) |
-| T405 (#52) | 04/11 | README: link demo, ảnh chụp, sơ đồ, CHANGELOG | Xong | PR #99: bảng link (dùng thử, API, video, báo cáo, nghiệm thu), CHANGELOG `[Unreleased]`; 7 ảnh chụp `docs/images/` ở README Phần 2 mục IV, chụp từ `main` chạy local (cùng mã với bản sẽ deploy) |
+| T405 (#52) | 04/11 | README: link demo, ảnh chụp, sơ đồ, CHANGELOG | Xong | PR #99: bảng link (dùng thử, API, báo cáo, nghiệm thu), CHANGELOG `[Unreleased]`; 7 ảnh chụp `docs/images/` ở README Phần 2 mục IV, chụp từ `main` chạy local (cùng mã với bản sẽ deploy) |
 | T406 (#72) | 04-06/11 | Slide và kịch bản pitch 15 phút | Xong | PR #101: `docs/pitching/slides.html`, `PokeNexus-Pitch.pptx` (27 slide), kịch bản Phần 10 của file luyện tập; 06/11 cập nhật slide 17, 18 theo số đo production (ước lượng 15:05); bấm giờ thật ở T407 |
 | T407 (#53) | 07-08/11 | Tổng duyệt 2 lần, tag `v1.0.0` | Chưa làm | Link thật đã chạy bản mới (06/11); chờ chủ dự án tổng duyệt |
 | T413 (#73) | 05/11 | Báo cáo tổng kết `.docx` | Xong | PR #96 |
 | T414 (#71) | 02-03/11 | Tài liệu luyện tập hỏi đáp | Xong | PR #77; cập nhật theo code sau 02/11 ở PR #101 (bản 0.2); số đo production 06/11 (bản 0.3) |
 | #74 | 05/11 | Sửa tài liệu lệch code, rút gọn `PLAN.md` | Xong | PR #98 |
-| #97 | 05/11 | Video demo cho buổi pitching | Xong | PR #100: `docs/pitching/PokeNexus-Demo.mp4` 04:40, quay từ bản `main` chạy local |
+| #97 | 05/11 | Video demo cho buổi pitching | Cắt giảm | PR #100 làm video 04:40; ngày 07/11 chủ dự án chọn demo trực tiếp, xóa video ở #109 |
 
 - Giá trị cột Trạng thái: Chưa làm, Đang làm, Bị chặn, Xong, Cắt giảm.
 
@@ -47,4 +47,4 @@
 
 1. Chủ dự án tổng duyệt 2 lần trên link thật: slide 1-19 theo kịch bản Phần 10 của [file luyện tập](docs/pitching/PokeNexus-LuyenTap.md) (ước lượng 15:05, đạt khi lệch không quá 1 phút) và demo trực tiếp theo [spec.md](docs/spec.md), Phần 4. Ghi thời gian thật từng lần.
 2. Sau tổng duyệt: nếu demo chạy trọn 2 lần liên tiếp thì đổi dòng "Kịch bản demo" ở slide 17 thành Đạt; chuyển CHANGELOG `[Unreleased]` sang `[1.0.0]`, gắn tag `v1.0.0`, tạo GitHub Release, đóng #53 và milestone `W4 - Demo và phát triển` (T407).
-3. Sáng 08/11, 15-30 phút trước giờ pitching: gọi `https://pokenexus-api-s6g6.onrender.com/api/v1/health` để đánh thức Render (cold start 36 s ngày 06/11); chuẩn bị dự phòng: video `docs/pitching/PokeNexus-Demo.mp4`, bản local chạy sẵn, file `.pptx` trên máy.
+3. Sáng 08/11, 15-30 phút trước giờ pitching: gọi `https://pokenexus-api-s6g6.onrender.com/api/v1/health` để đánh thức Render (cold start 36 s ngày 06/11); chuẩn bị dự phòng: bản local chạy sẵn, file `.pptx` trên máy.

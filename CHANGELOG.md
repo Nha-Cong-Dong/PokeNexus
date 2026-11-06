@@ -12,7 +12,7 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây.
 - README Phần 2 mục IV: 7 ảnh chụp (Tổng quan, Omni-Dex, Chi tiết, Tương khắc, So sánh, Xây đội trên desktop và điện thoại) trong `docs/images/` (T405).
 - Script nghiệm thu `scripts/acceptance-check.mjs` (#94): kịch bản demo qua API, 9 route ở 375 và 1440 px bằng Chrome headless, các lỗi sửa ngày 2026-11-05, tùy chọn `--rate-limit` kiểm giới hạn lưu đội mà không ghi DB.
 - Workflow `keep-alive.yml` gọi `/api/v1/health` mỗi 10 phút để backend Render Free không ngủ (#90).
-- Báo cáo tổng kết `docs/pitching/PokeNexus-BaoCao.docx` (T413) và video demo `docs/pitching/PokeNexus-Demo.mp4` (#97).
+- Báo cáo tổng kết `docs/pitching/PokeNexus-BaoCao.docx` (T413).
 - Thẻ thành viên ở Xây đội và Đội chia sẻ: rê chuột, `Tab` hoặc giữ ngón tay 1,5 giây hiện bảng "Xem thông tin chi tiết"; bấm thẻ không còn chuyển trang ngay (#83).
 - Tài liệu luyện tập pitching và hỏi đáp `docs/pitching/PokeNexus-LuyenTap.md` (T414): một file gồm lộ trình học, tổng quan hệ thống, số liệu đội demo đo từ API, từng file backend và frontend, luồng xử lý đầu cuối, khoảng 250 câu hỏi có trả lời mẫu, tra cứu nhanh. Lộ trình 1.2 khôi phục T406 (slide, không video), thêm T413 (báo cáo), T414 khi ban tổ chức yêu cầu pitching ngày 2026-11-02.
 - Bảng tốc độ cấp 50 (US-09, T408): endpoint `GET /api/v1/pokemon/speed-tiers`; trang Chi tiết có khối "Tốc độ ở cấp 50" (tối thiểu, không đầu tư, tối đa, nhanh hơn N% Pokémon, mốc vừa thua, vừa vượt); Team Builder có panel xếp đội từ nhanh đến chậm.
