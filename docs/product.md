@@ -1,6 +1,7 @@
 # PokeNexus - Tài liệu Sản phẩm
 
-- Phiên bản: 0.1 (Tuần 1)
+- Phiên bản: 0.2 (cập nhật 2026-11-07: persona và user story dùng tên vai trò thay cho tên người)
+- Bản 0.1 (Tuần 1)
 - Mục đích: thống nhất **làm gì, cho ai, vì sao** trước khi đặc tả chi tiết ở [spec.md](spec.md).
 
 ---
@@ -34,9 +35,9 @@
 
 | Persona | Mô tả | Nhu cầu | Tính năng phục vụ |
 |---|---|---|---|
-| An - Người chơi mới | Chơi các game chính truyện | Tra cứu nhanh, hiểu tương khắc | Omni-Dex, Chi tiết, Bảng tương khắc |
-| Bình - Người chơi VGC | Đấu đôi trực tuyến | Kiểm tra lỗ hổng, tìm Pokémon bổ sung | Team Builder, Synergy Analyzer |
-| Chi - Người thích số liệu | Thích so sánh, thống kê | So sánh chỉ số trực quan | Bàn Cân Sức Mạnh |
+| Người chơi mới | Chơi các game chính truyện | Tra cứu nhanh, hiểu tương khắc | Omni-Dex, Chi tiết, Bảng tương khắc |
+| Người chơi VGC | Đấu đôi trực tuyến | Kiểm tra lỗ hổng, tìm Pokémon bổ sung | Team Builder, Synergy Analyzer |
+| Người thích số liệu | Thích so sánh, thống kê | So sánh chỉ số trực quan | Bàn Cân Sức Mạnh |
 
 ---
 
@@ -46,21 +47,21 @@
 
 | Mã | User Story | Tiêu chí chấp nhận |
 |---|---|---|
-| US-01 | Là An, tôi muốn lọc Pokémon theo hệ, thế hệ và chỉ số để tìm nhanh | Lọc kết hợp nhiều điều kiện; có phân trang và sắp xếp; URL giữ trạng thái lọc |
-| US-02 | Là An, tôi muốn xem chi tiết một Pokémon | Có chỉ số gốc, tổng chỉ số, hệ, lưới phòng thủ 18 hệ |
-| US-03 | Là An, tôi muốn tra hệ số tương khắc giữa các hệ | Bảng 18 x 18; chọn 2 hệ phòng thủ để xem hệ số hệ kép |
-| US-04 | Là Chi, tôi muốn so sánh 2 Pokémon trên cùng biểu đồ | Radar chồng lớp; kết luận tự động về hệ, chỉ số, tốc độ |
-| US-05 | Là Bình, tôi muốn chọn tối đa 5 Pokémon và thấy lỗ hổng phòng thủ | Heatmap 18 hệ; hệ nguy hiểm được đánh dấu; điểm tổng 0-100 |
-| US-06 | Là Bình, tôi muốn nhận 3 gợi ý cho vị trí thứ 6 | 3 gợi ý khác tổ hợp hệ; mỗi gợi ý có ít nhất 1 lý do |
-| US-07 | Là Bình, tôi muốn lưu và chia sẻ đội hình | Lưu không cần đăng nhập; có đường dẫn chia sẻ; người khác mở xem được |
+| US-01 | Là người chơi mới, tôi muốn lọc Pokémon theo hệ, thế hệ và chỉ số để tìm nhanh | Lọc kết hợp nhiều điều kiện; có phân trang và sắp xếp; URL giữ trạng thái lọc |
+| US-02 | Là người chơi mới, tôi muốn xem chi tiết một Pokémon | Có chỉ số gốc, tổng chỉ số, hệ, lưới phòng thủ 18 hệ |
+| US-03 | Là người chơi mới, tôi muốn tra hệ số tương khắc giữa các hệ | Bảng 18 x 18; chọn 2 hệ phòng thủ để xem hệ số hệ kép |
+| US-04 | Là người thích số liệu, tôi muốn so sánh 2 Pokémon trên cùng biểu đồ | Radar chồng lớp; kết luận tự động về hệ, chỉ số, tốc độ |
+| US-05 | Là người chơi VGC, tôi muốn chọn tối đa 5 Pokémon và thấy lỗ hổng phòng thủ | Heatmap 18 hệ; hệ nguy hiểm được đánh dấu; điểm tổng 0-100 |
+| US-06 | Là người chơi VGC, tôi muốn nhận 3 gợi ý cho vị trí thứ 6 | 3 gợi ý khác tổ hợp hệ; mỗi gợi ý có ít nhất 1 lý do |
+| US-07 | Là người chơi VGC, tôi muốn lưu và chia sẻ đội hình | Lưu không cần đăng nhập; có đường dẫn chia sẻ; người khác mở xem được |
 
 ### II. Sau MVP
 
 | Mã | User Story |
 |---|---|
-| US-08 | Là An, tôi muốn xem cây tiến hóa với điều kiện tiến hóa ở từng nhánh |
-| US-09 | Là Bình, tôi muốn biết Pokémon của mình nhanh hơn những ai ở cấp 50 |
-| US-10 | Là Bình, tôi muốn nhập và xuất đội theo định dạng Pokémon Showdown |
+| US-08 | Là người chơi mới, tôi muốn xem cây tiến hóa với điều kiện tiến hóa ở từng nhánh |
+| US-09 | Là người chơi VGC, tôi muốn biết Pokémon của mình nhanh hơn những ai ở cấp 50 |
+| US-10 | Là người chơi VGC, tôi muốn nhập và xuất đội theo định dạng Pokémon Showdown |
 
 ---
 

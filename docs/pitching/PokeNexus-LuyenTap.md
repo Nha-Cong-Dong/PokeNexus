@@ -1,6 +1,7 @@
 # PokeNexus - Tài liệu luyện tập pitching và hỏi đáp
 
-- Phiên bản: 0.3 (cập nhật 2026-11-06; số đo trên production bản mới nhất: script nghiệm thu 36/36, Lighthouse mobile 9 route; câu hỏi 23, 35, 40 và Phần 9, mục III điền số thật; slide 17, 18 và bảng thời gian Phần 10 cập nhật theo, Issue #107)
+- Phiên bản: 0.4 (cập nhật 2026-11-07: lời thoại slide 4 bỏ tên persona, bảng thời gian tính lại, Issue #113)
+- Bản 0.3 (2026-11-06; số đo trên production bản mới nhất: script nghiệm thu 36/36, Lighthouse mobile 9 route; câu hỏi 23, 35, 40 và Phần 9, mục III điền số thật; slide 17, 18 và bảng thời gian Phần 10 cập nhật theo, Issue #107)
 - Bản 0.2 (2026-11-05; thêm Phần 10 kịch bản pitching 15 phút (T406, Issue #72); Phần 5 sửa 2 chỗ lệch code: custom variant `shorter`, `useMediaQuery` dùng ở 3 nơi; các câu mô tả hosting hiện tại đổi Railway thành Render và Aiven, giới hạn lưu đội lấy IP từ `CF-Connecting-IP` theo PR #91)
 - Bản 0.1 (2026-11-02): Phần 1 đến Phần 9.
 - Mục đích: chuẩn bị cho buổi pitching Checkpoint 4 ngày 08/11: hiểu và tự giải thích được từng phần code, luồng dữ liệu, quyết định thiết kế; trả lời câu hỏi chi tiết của giám khảo (T414, Issue #71).
@@ -5032,7 +5033,7 @@ bash scripts/bench-synergy.sh
 - Slide: [slides.html](slides.html) mở bằng trình duyệt, không cần mạng; mũi tên trái, phải hoặc `Space` chuyển slide, `F` toàn màn hình, `N` bật ghi chú lời thoại. [PokeNexus-Pitch.pptx](PokeNexus-Pitch.pptx) cùng nội dung, lời thoại nằm trong Notes của từng slide.
 - 19 slide chính nói trong 15 phút; 8 slide phụ lục (A1-A8, slide 20-27) chỉ mở khi bị hỏi (mục V).
 - Cách ước lượng: đếm từ theo cách đọc thành tiếng, số viết bằng chữ số tính theo số âm tiết khi đọc (ví dụ "1.351" là 7 từ: một nghìn ba trăm năm mươi mốt). Tốc độ chuẩn 140 từ mỗi phút; mốc mm:ss ở mục II, III tính theo tốc độ này.
-- Tổng: 1.932 từ khi đếm theo khoảng trắng, 2.111 từ khi đọc thành tiếng. Ước lượng 15:05 ở 140 từ/phút; 14:04 nếu nói 150 từ/phút, 16:14 nếu nói 130 từ/phút. Tiêu chí của T406: 15 phút, lệch không quá 1 phút.
+- Tổng: 1.935 từ khi đếm theo khoảng trắng, 2.114 từ khi đọc thành tiếng. Ước lượng 15:06 ở 140 từ/phút; 14:06 nếu nói 150 từ/phút, 16:16 nếu nói 130 từ/phút. Tiêu chí của T406: 15 phút, lệch không quá 1 phút.
 - Demo trực tiếp không tính vào 15 phút (ban tổ chức yêu cầu pitching khoảng 15 phút, chưa kể demo; `docs/roadmap.md`, dòng "Thay đổi so với 1.1"). Ở slide 6, dừng đồng hồ, demo theo mục IV, xong thì sang slide 7 và tính giờ tiếp.
 - Số liệu trên slide chốt ngày 05/11/2026, cùng nguồn với báo cáo tổng kết (`PokeNexus-BaoCao.docx`); riêng slide 17, 18 cập nhật ngày 06/11 theo số đo trên production (nghiệm thu 36/36, Lighthouse). Sau tổng duyệt, nếu kịch bản demo đã chạy 2 lần liên tiếp trên link thật thì đổi dòng tương ứng ở slide 17 thành Đạt.
 
@@ -5043,23 +5044,23 @@ bash scripts/bench-synergy.sh
 | 1 | PokeNexus | 00:00 | 00:28 | 65 |
 | 2 | Người chơi VGC đang phải tự nhẩm | 00:28 | 00:53 | 124 |
 | 3 | PokeNexus trong một câu | 01:21 | 00:42 | 97 |
-| 4 | Ba người dùng, mười user story | 02:03 | 00:52 | 121 |
-| 5 | 10 tính năng trên 8 trang | 02:54 | 00:43 | 101 |
-| 6 | Demo trực tiếp | 03:38 | 00:21 | 49 |
-| 7 | Omni-Dex và trang Chi tiết | 03:59 | 00:52 | 122 |
-| 8 | Bảng tương khắc và Bàn Cân Sức Mạnh | 04:51 | 00:46 | 108 |
-| 9 | Team Builder: bản đồ điểm yếu | 05:37 | 00:51 | 118 |
-| 10 | Synergy: điểm đội tính thế nào | 06:28 | 01:09 | 160 |
-| 11 | Đề xuất slot 6 theo lối chơi | 07:36 | 01:03 | 146 |
-| 12 | Đội demo: 20 lên 48 nhờ Excadrill | 08:39 | 00:49 | 114 |
-| 13 | Dữ liệu offline từ CSV PokéAPI | 09:28 | 00:50 | 116 |
-| 14 | Kiến trúc và hosting | 10:18 | 00:56 | 131 |
-| 15 | Chất lượng và kiểm thử | 11:14 | 00:48 | 112 |
-| 16 | Quy trình 3 tuần | 12:02 | 00:54 | 126 |
-| 17 | Kết quả so với tiêu chí | 12:56 | 00:57 | 133 |
-| 18 | Hạn chế và hướng phát triển | 13:53 | 00:55 | 128 |
-| 19 | Cảm ơn ban giám khảo | 14:48 | 00:17 | 40 |
-| | **Tổng** | | **15:05** | **2.111** |
+| 4 | Ba người dùng, mười user story | 02:03 | 00:53 | 124 |
+| 5 | 10 tính năng trên 8 trang | 02:56 | 00:43 | 101 |
+| 6 | Demo trực tiếp | 03:39 | 00:21 | 49 |
+| 7 | Omni-Dex và trang Chi tiết | 04:00 | 00:52 | 122 |
+| 8 | Bảng tương khắc và Bàn Cân Sức Mạnh | 04:52 | 00:46 | 108 |
+| 9 | Team Builder: bản đồ điểm yếu | 05:39 | 00:51 | 118 |
+| 10 | Synergy: điểm đội tính thế nào | 06:29 | 01:09 | 160 |
+| 11 | Đề xuất slot 6 theo lối chơi | 07:38 | 01:03 | 146 |
+| 12 | Đội demo: 20 lên 48 nhờ Excadrill | 08:40 | 00:49 | 114 |
+| 13 | Dữ liệu offline từ CSV PokéAPI | 09:29 | 00:50 | 116 |
+| 14 | Kiến trúc và hosting | 10:19 | 00:56 | 131 |
+| 15 | Chất lượng và kiểm thử | 11:15 | 00:48 | 112 |
+| 16 | Quy trình 3 tuần | 12:03 | 00:54 | 126 |
+| 17 | Kết quả so với tiêu chí | 12:57 | 00:57 | 133 |
+| 18 | Hạn chế và hướng phát triển | 13:54 | 00:55 | 128 |
+| 19 | Cảm ơn ban giám khảo | 14:49 | 00:17 | 40 |
+| | **Tổng** | | **15:06** | **2.114** |
 
 - Slide 6 chỉ có câu chuyển sang demo; đồng hồ dừng sau câu này.
 - Lệch quá 1 phút khi tổng duyệt: rút gọn slide 4 (bỏ câu về ba story mở rộng) và slide 16 (bỏ câu về Claude Code); hai câu này có sẵn ở slide và ở Phần 8 để trả lời khi được hỏi.
@@ -5082,88 +5083,88 @@ bash scripts/bench-synergy.sh
 - Câu giới thiệu của sản phẩm là: PokeNexus là bách khoa Pokémon kiêm cố vấn chiến thuật: xây đội, thấy ngay lỗ hổng, nhận gợi ý lấp lỗ hổng kèm lý do.
 - Sản phẩm có ba giá trị khác biệt. Một, giải thích được: mọi kết luận đều có lý do bằng lời và số liệu. Hai, nhanh: phân tích đội chạy trên dữ liệu đã nạp sẵn trong bộ nhớ. Ba, chia sẻ được: bộ lọc và đội nháp nằm trên URL, đội đã lưu có mã chia sẻ tám ký tự, không cần đăng nhập.
 
-#### 4. Slide 4 - Ba người dùng, mười user story (02:03 - 02:54)
+#### 4. Slide 4 - Ba người dùng, mười user story (02:03 - 02:56)
 
-- Em thiết kế cho ba nhóm người dùng. An là người chơi mới, cần tra cứu nhanh và hiểu tương khắc. Bình là người chơi VGC, cần kiểm tra lỗ hổng của đội và tìm Pokémon bổ sung; đây là nhóm em ưu tiên nhất. Chi thích số liệu, muốn so sánh chỉ số trực quan.
+- Em thiết kế cho ba nhóm người dùng. Nhóm một là người chơi mới, cần tra cứu nhanh và hiểu tương khắc. Nhóm hai là người chơi VGC, cần kiểm tra lỗ hổng của đội và tìm Pokémon bổ sung; đây là nhóm em ưu tiên nhất. Nhóm ba thích số liệu, muốn so sánh chỉ số trực quan.
 - Từ ba người này em viết bảy user story cho MVP, mỗi story có tiêu chí chấp nhận đo được, ví dụ US-06: ba gợi ý khác tổ hợp hệ, mỗi gợi ý có ít nhất một lý do. Cả bảy đều đạt. Sau MVP em làm thêm ba story: cây tiến hóa, tốc độ cấp 50, và nhập xuất đội Showdown.
 
-#### 5. Slide 5 - 10 tính năng trên 8 trang (02:54 - 03:38)
+#### 5. Slide 5 - 10 tính năng trên 8 trang (02:56 - 03:39)
 
 - Tổng cộng có mười tính năng trên tám trang. Nhóm tra cứu gồm trang Tổng quan, Pokédex có bộ lọc kết hợp, trang Chi tiết, Bảng tương khắc, và Bàn Cân Sức Mạnh để so sánh hai Pokémon.
 - Trọng tâm là Team Builder với Synergy Analyzer, kèm lưu và chia sẻ đội. Phần mở rộng em làm sau khi MVP chạy: trang Địa hình có minigame, Bảng tốc độ cấp 50, và nhập xuất Showdown.
 - Backend có 14 endpoint REST dưới đường dẫn api v1. Bây giờ em demo trực tiếp để ban giám khảo thấy luồng chính.
 
-#### 6. Slide 6 - Demo trực tiếp (03:38 - 03:59)
+#### 6. Slide 6 - Demo trực tiếp (03:39 - 04:00)
 
 - Kịch bản demo có sáu bước, đúng như đặc tả: từ trang Tổng quan, lọc Pokédex, so sánh, xây đội năm Pokémon, nhận đề xuất, rồi lưu và mở link chia sẻ ở cửa sổ ẩn danh. Em chuyển sang trình duyệt; nếu mạng chậm, em dùng bản local.
 
-#### 7. Slide 7 - Omni-Dex và trang Chi tiết (03:59 - 04:51)
+#### 7. Slide 7 - Omni-Dex và trang Chi tiết (04:00 - 04:52)
 
 - Em quay lại slide để giải thích những gì vừa xem. Pokédex mặc định hiện 1.083 dạng thường và vùng miền. Bộ lọc kết hợp hệ, thế hệ, tổng chỉ số và tốc độ tối thiểu; mọi tham số nằm trên URL, nên tải lại hay gửi link vẫn giữ bộ lọc. Lọc Dragon thế hệ 4 ra sáu kết quả có Garchomp.
 - Trang Chi tiết có sáu chỉ số gốc, lưới phòng thủ 18 hệ, cây tiến hóa đủ nhánh, và tốc độ cấp 50: Garchomp đạt 96, 122 hoặc 169 tùy mức đầu tư, nhanh hơn 88% Pokémon.
 
-#### 8. Slide 8 - Bảng tương khắc và Bàn Cân Sức Mạnh (04:51 - 05:37)
+#### 8. Slide 8 - Bảng tương khắc và Bàn Cân Sức Mạnh (04:52 - 05:39)
 
 - Bảng tương khắc là ma trận 18 nhân 18, hàng là hệ tấn công, cột là hệ phòng thủ. Ô x1 để trống, nên người xem chỉ cần nhìn các ô có màu. Chọn hai hệ phòng thủ thì thấy ngay hệ số hệ kép: Fire cộng Flying chịu Rock x4 và miễn nhiễm Ground.
 - Bàn Cân Sức Mạnh chồng hai radar sáu chỉ số và tự viết ba kết luận: lợi thế hệ, lợi thế tổng chỉ số, bên nào nhanh hơn. Garchomp và Salamence cùng tổng chỉ số 600, nhưng Garchomp nhanh hơn, 102 so với 100.
 
-#### 9. Slide 9 - Team Builder: bản đồ điểm yếu (05:37 - 06:28)
+#### 9. Slide 9 - Team Builder: bản đồ điểm yếu (05:39 - 06:29)
 
 - Đây là phần giá trị nhất. Người dùng chọn tối đa năm Pokémon, slot thứ sáu dành cho đề xuất. Bản đồ điểm yếu có 18 hàng là 18 hệ tấn công, mỗi cột là một thành viên, mỗi ô ghi hệ số sát thương.
 - Với đội demo gồm Charizard, Gyarados, Dragonite, Talonflame và Volcarona, hàng Rock đỏ rực: cả năm thành viên đều yếu, ba con chịu x4, không ai kháng. Hệ thống gắn nhãn lỗ hổng nghiêm trọng. Electric cũng là lỗ hổng, vì Gyarados chịu x4 mà không ai kháng.
 - Bên cạnh bản đồ là đánh giá đội bằng lời, độ phủ tấn công và bảng tốc độ cấp 50.
 
-#### 10. Slide 10 - Synergy: điểm đội tính thế nào (06:28 - 07:36)
+#### 10. Slide 10 - Synergy: điểm đội tính thế nào (06:29 - 07:38)
 
 - Điểm đội tính qua ba bước. Một, mỗi hệ số đổi thành điểm phòng thủ: miễn nhiễm cộng ba, x0,25 cộng hai, x0,5 cộng một, x2 trừ một, x4 trừ hai.
 - Hai, với mỗi hệ tấn công: weakness là tổng mức yếu, resistCount là số người kháng, pressure bằng weakness trừ resistCount, không âm. Lỗ hổng nghiêm trọng là khi weakness từ hai trở lên mà không ai kháng.
 - Ba, điểm đội bằng 100 trừ bốn nhân tổng pressure, trừ tám nhân số lỗ hổng, kẹp trong khoảng 0 đến 100.
 - Đội demo có Rock pressure 8, Electric 4, bốn hệ khác mỗi hệ 1, tổng 16, và hai lỗ hổng: 100 trừ 64 trừ 16 bằng 20, đúng số API trả về. Thuật toán chỉ duyệt 18 hệ nhân tối đa sáu người, không truy vấn cơ sở dữ liệu.
 
-#### 11. Slide 11 - Đề xuất slot 6 theo lối chơi (07:36 - 08:39)
+#### 11. Slide 11 - Đề xuất slot 6 theo lối chơi (07:38 - 08:40)
 
 - Từ chỗ hở đó, Recommendation Engine chấm mọi ứng viên trong bộ nhớ: dạng thường hoặc vùng miền, đã tiến hóa hoàn toàn, chưa có trong đội.
 - Mỗi ứng viên có bốn thành phần. Phòng thủ: kháng đúng hệ đội đang hở thì được thưởng theo pressure, yếu thêm hệ thì bị phạt. Độ phủ: số hệ đội chưa đánh được mà ứng viên đánh được. Vai trò: chỉ số có bù chỗ thiếu của đội không. Sức mạnh: tổng chỉ số.
 - Bốn giá trị được chuẩn hóa min-max rồi nhân trọng số của lối chơi: Cân bằng là 40, 20, 25, 15; Trâu bò dồn 50% vào phòng thủ; Tấn công nhanh và Trick Room còn lọc theo tốc độ gốc. Cuối cùng lấy ba ứng viên điểm cao nhất, khác tổ hợp hệ, kèm lý do.
 
-#### 12. Slide 12 - Đội demo: 20 lên 48 nhờ Excadrill (08:39 - 09:28)
+#### 12. Slide 12 - Đội demo: 20 lên 48 nhờ Excadrill (08:40 - 09:29)
 
 - Áp vào đội demo, bật ô loại huyền thoại, còn 484 ứng viên, đề xuất số một là Excadrill, hệ Ground và Steel, 85,1 điểm. Excadrill kháng Rock x0,25 và miễn nhiễm Electric, đúng hai lỗ hổng của đội. Hệ thống cũng cảnh báo: thêm Excadrill thì đội yếu Water nhiều hơn.
 - Thêm Excadrill vào slot sáu: Rock còn pressure 7, Electric còn 3, hết lỗ hổng nghiêm trọng. Tổng pressure 13, điểm đội bằng 100 trừ 52, bằng 48. Đây là ví dụ số năm trong đặc tả, có unit test giữ đáp án.
 
-#### 13. Slide 13 - Dữ liệu offline từ CSV PokéAPI (09:28 - 10:18)
+#### 13. Slide 13 - Dữ liệu offline từ CSV PokéAPI (09:29 - 10:19)
 
 - Ứng dụng không gọi API của PokéAPI lúc chạy. Em dùng bộ CSV công khai của PokéAPI, cố định ở một commit để số liệu và test giống nhau trên mọi máy. Ingestion ghi vào MySQL bằng JDBC batch trong một transaction, nạp đủ trong 3,1 giây: 18 hệ, 324 hệ số, 1.025 loài, 1.351 dạng.
 - Em tách loài và dạng: Vulpix thường là hệ Fire, Vulpix Alola là hệ Ice. ADR 0002 ghi lý do: so với gọi API lúc chạy, cách này nhanh, không bị giới hạn tần suất, và demo được khi mạng yếu.
 
-#### 14. Slide 14 - Kiến trúc và hosting (10:18 - 11:14)
+#### 14. Slide 14 - Kiến trúc và hosting (10:19 - 11:15)
 
 - Kiến trúc có ba lớp. Frontend React, TypeScript, Vite chạy trên Cloudflare Pages, mỗi trang là một chunk tải lười. Backend Java 25, Spring Boot 4.1 chạy Docker trên Render. MySQL 8.4 trên Aiven, kết nối TLS.
 - Backend chia package theo tính năng: pokedex, typechart, synergy, team, cùng ingestion và common. Luồng một chiều Controller, Service, Repository, DTO là record.
 - Điểm quan trọng: khi khởi động, backend nạp bảng tương khắc và hồ sơ của 1.351 dạng vào bộ nhớ, nên Synergy không truy vấn cơ sở dữ liệu. Kế hoạch ban đầu là Railway, nhưng Railway ngừng nhận đăng ký mới, nên ngày 2 tháng 11 em chuyển sang Render và Aiven mà không phải sửa code.
 
-#### 15. Slide 15 - Chất lượng và kiểm thử (11:14 - 12:02)
+#### 15. Slide 15 - Chất lượng và kiểm thử (11:15 - 12:03)
 
 - Backend có 142 unit test và 57 integration test chạy MySQL thật bằng Testcontainers; frontend có 352 test. CI chạy hai job trên mỗi Pull Request, và main đang xanh.
 - Năm ví dụ có đáp án trong đặc tả đều có unit test, đáp án tính tay chứ không lấy từ code. Kịch bản demo chạy hai lần liên tiếp bằng script Chrome ở local và đủ sáu bước qua API production; em có thêm một script nghiệm thu chạy trên link thật. p95 của phân tích đội là 7,2 mili giây, mục tiêu dưới 50.
 
-#### 16. Slide 16 - Quy trình 3 tuần (12:02 - 12:56)
+#### 16. Slide 16 - Quy trình 3 tuần (12:03 - 12:57)
 
 - Dù làm một mình, em vẫn theo quy trình của một nhóm nhỏ. Lộ trình lùi từ hạn 8 tháng 11, chia Epic, Feature, Task, mỗi task tối đa một ngày, có đầu vào, đầu ra, cách kiểm tra; 62% thời gian để xây dựng, 38% để kiểm thử, sửa lỗi, tài liệu.
 - Mọi thay đổi đi qua Issue và Pull Request có CI: 41 Issue, 50 Pull Request đã merge, chín ADR cho các quyết định lớn. Từ ngày 5 tháng 11 em đóng băng tính năng.
 - Em dùng Claude Code như cộng sự lập trình; em quyết định phạm vi, duyệt kết quả và kiểm lại số liệu bằng API thật.
 
-#### 17. Slide 17 - Kết quả so với tiêu chí (12:56 - 13:53)
+#### 17. Slide 17 - Kết quả so với tiêu chí (12:57 - 13:54)
 
 - Đối chiếu với tiêu chí Checkpoint 4, trạng thái ngày 6 tháng 11. Đạt: đủ mười tính năng, bảy Issue lỗi đều đã đóng, CI xanh, năm ví dụ có test, p95 dưới 50 mili giây, link chạy được trên điện thoại và máy tính, có bản local bằng Docker.
 - Một phần: script nghiệm thu trên link thật đạt 36 trên 36 mục, còn hai lần liên tiếp trên giao diện production thuộc buổi tổng duyệt. Lighthouse trên link thật: Accessibility 100 ở cả chín route, nhưng LCP mới đạt một trên chín route vì ảnh hero tải sau JavaScript. Tag v1.0.0 gắn sau tổng duyệt. Em ghi rõ phần chưa đạt thay vì làm tròn thành đạt.
 
-#### 18. Slide 18 - Hạn chế và hướng phát triển (13:53 - 14:48)
+#### 18. Slide 18 - Hạn chế và hướng phát triển (13:54 - 14:49)
 
 - Hạn chế lớn nhất là phân tích mới chỉ theo hệ, chưa có chiêu thức, Ability, vật phẩm; Pokémon có Levitate vẫn bị tính là yếu Ground. Điểm đề xuất là tương đối, và hệ số phạt 4 và 8 chưa hiệu chỉnh bằng dữ liệu trận đấu. Hosting miễn phí có cold start khoảng hai phút rưỡi đến ba phút; em đã thêm lịch gọi health mỗi mười phút.
 - Bài học: em làm tính năng mở rộng trước khi deploy, nên lỗi chỉ có trên production lộ ra muộn. Lần sau em sẽ deploy sớm một bản tối thiểu. Hướng tiếp theo là chiêu thức và Ability trong phân tích, E2E tự động trong CI, và dữ liệu meta VGC để hiệu chỉnh trọng số.
 
-#### 19. Slide 19 - Cảm ơn ban giám khảo (14:48 - 15:05)
+#### 19. Slide 19 - Cảm ơn ban giám khảo (14:49 - 15:06)
 
 - Sản phẩm đang chạy ở pokenexus chấm pages chấm dev, mã nguồn ở GitHub Nha-Cong-Dong, PokeNexus. Em cảm ơn ban giám khảo đã lắng nghe. Em sẵn sàng trả lời câu hỏi, kể cả câu hỏi chi tiết về code.
 
