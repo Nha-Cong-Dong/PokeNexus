@@ -25,7 +25,7 @@
 | T403 (#49) | 30-31/10 | Triển khai production | Xong | Deploy 04/11, deploy lại từ `main` (xác nhận 06/11); `acceptance-check --rate-limit` 36/36 (PR #106 sửa vòng `CF-Connecting-IP`) |
 | T404 (#51) | 03/11 | Bug bash, đo hiệu năng | Xong | Lighthouse mobile trên link thật 06/11: Accessibility 100 ở 9/9, CLS, TBT, Best Practices đạt; LCP đạt 1/9 route (2,1-5,5 s). Chủ dự án chốt không sửa code thêm, LCP ghi lệch ngưỡng ([worklog](docs/worklog.md), 06/11) |
 | T405 (#52) | 04/11 | README: link demo, ảnh chụp, sơ đồ, CHANGELOG | Xong | PR #99: bảng link (dùng thử, API, báo cáo, nghiệm thu), CHANGELOG `[Unreleased]`; 7 ảnh chụp `docs/images/` ở README Phần 2 mục IV, chụp từ `main` chạy local (cùng mã với bản sẽ deploy) |
-| T406 (#72) | 04-06/11 | Slide và kịch bản pitch 15 phút | Xong | PR #101: `docs/pitching/slides.html`, `PokeNexus-Pitch.pptx` (27 slide), kịch bản Phần 10 của file luyện tập; 06/11 cập nhật slide 17, 18 theo số đo production (ước lượng 15:05); bấm giờ thật ở T407 |
+| T406 (#72) | 04-06/11 | Slide và kịch bản pitch 15 phút | Xong | PR #101: `docs/pitching/slides.html`, `PokeNexus-Pitch.pptx` (27 slide), kịch bản Phần 10 của file luyện tập; 06/11 cập nhật slide 17, 18 theo số đo production (ước lượng 15:05); 07/11 thiết kế lại `slides.html` với chuyển cảnh, hiệu ứng, nền đa dạng (#111); bấm giờ thật ở T407 |
 | T407 (#53) | 07-08/11 | Tổng duyệt 2 lần, tag `v1.0.0` | Chưa làm | Link thật đã chạy bản mới (06/11); chờ chủ dự án tổng duyệt |
 | T413 (#73) | 05/11 | Báo cáo tổng kết `.docx` | Xong | PR #96 |
 | T414 (#71) | 02-03/11 | Tài liệu luyện tập hỏi đáp | Xong | PR #77; cập nhật theo code sau 02/11 ở PR #101 (bản 0.2); số đo production 06/11 (bản 0.3) |
