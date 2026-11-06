@@ -1,6 +1,7 @@
 # PokeNexus - Hướng dẫn triển khai production
 
-- Phiên bản: 1.1 (cập nhật 2026-11-05; Phần 8: script nghiệm thu `scripts/acceptance-check.mjs`; Phần 9 mục II: keep-alive bằng GitHub Actions đã bật; Phần 8 mục III: kiểm chứng giới hạn lưu đội bằng body có ID Pokémon không tồn tại để không ghi DB, thêm vòng `CF-Connecting-IP`, ghi kết quả 04/11)
+- Phiên bản: 1.2 (cập nhật 2026-11-06; Phần 8 mục III: vòng `CF-Connecting-IP` bị edge Cloudflare chặn bằng `403` cũng là đạt, ghi kết quả 06/11)
+- Bản 1.1 (2026-11-05; Phần 8: script nghiệm thu `scripts/acceptance-check.mjs`; Phần 9 mục II: keep-alive bằng GitHub Actions đã bật; Phần 8 mục III: kiểm chứng giới hạn lưu đội bằng body có ID Pokémon không tồn tại để không ghi DB, thêm vòng `CF-Connecting-IP`, ghi kết quả 04/11)
 - Bản 1.0 (2026-11-02)
 - Nền tảng: backend trên Render (gói Free), MySQL trên Aiven (gói Free), frontend trên Cloudflare Pages. Lý do chọn và rủi ro: [ADR 0009](adr/0009-hosting-render-aiven.md). Thiết kế triển khai: [architecture.md](architecture.md), Phần 11.
 - Tài liệu này là hướng dẫn thao tác từng bước để một người tự làm từ đầu đến khi có link chạy thật. Giao diện các trang web có thể đổi tên nút đôi chút; nếu không thấy đúng tên, tìm mục có ý nghĩa tương đương.
@@ -449,10 +450,12 @@ done
 | Kết quả mỗi vòng | Ý nghĩa |
 |---|---|
 | Lần 1-10 trả `400`, lần 11 trả `429` | **Đạt**: header giả không quyết định IP |
+| Cả 11 lần trả `403`, body là trang lỗi Cloudflare 1000 (chỉ vòng `CF-Connecting-IP`) | **Đạt**: edge Cloudflare của Render từ chối request tự gắn header này trước khi tới backend |
 | Cả 11 lần trả `400` | **Không đạt**: header giả vượt được giới hạn. Kiểm tra header IP mà edge của Render đang gửi, đặt biến `CLIENT_IP_HEADER` trên Render cho đúng rồi chạy lại |
 | Lần 1 đã trả `429` | Chưa hết cửa sổ 1 phút từ lần thử trước; chờ thêm rồi chạy lại |
 
 - Kết quả 04/11 (trước Issue #89): vòng `X-Forwarded-For` không đạt (11/11 lần `400`), còn cùng body không có header giả thì lần 11 trả `429`. Từ Issue #89, profile `prod` lấy IP từ `CF-Connecting-IP`.
+- Kết quả 06/11 (sau PR #91, bản mới nhất của `main`): `node scripts/acceptance-check.mjs --rate-limit` đạt 36/36. Vòng `X-Forwarded-For` và `Forwarded` ra 10 lần `400` rồi `429`; vòng `CF-Connecting-IP` ra 11 lần `403` từ edge Cloudflare (PR #106 sửa script để nhận kết quả này).
 
 ### IV. Dọn đội thử
 
