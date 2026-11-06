@@ -5095,7 +5095,7 @@ bash scripts/bench-synergy.sh
 
 #### 6. Slide 6 - Demo trực tiếp (03:38 - 03:59)
 
-- Kịch bản demo có sáu bước, đúng như đặc tả: từ trang Tổng quan, lọc Pokédex, so sánh, xây đội năm Pokémon, nhận đề xuất, rồi lưu và mở link chia sẻ ở cửa sổ ẩn danh. Em chuyển sang trình duyệt; nếu mạng chậm, em chiếu video demo.
+- Kịch bản demo có sáu bước, đúng như đặc tả: từ trang Tổng quan, lọc Pokédex, so sánh, xây đội năm Pokémon, nhận đề xuất, rồi lưu và mở link chia sẻ ở cửa sổ ẩn danh. Em chuyển sang trình duyệt; nếu mạng chậm, em dùng bản local.
 
 #### 7. Slide 7 - Omni-Dex và trang Chi tiết (03:59 - 04:51)
 
@@ -5170,7 +5170,7 @@ bash scripts/bench-synergy.sh
 ### IV. Lời dẫn khi demo (không tính vào 15 phút)
 
 - Chuẩn bị: gọi `https://pokenexus-api-s6g6.onrender.com/api/v1/health` trước ít nhất 5 phút, chờ tới khi trả `UP` (cold start khoảng 2,5-3 phút, Issue #90); mở sẵn tab trang Tổng quan và một cửa sổ ẩn danh.
-- Dự phòng: mạng chậm thì chiếu [PokeNexus-Demo.mp4](PokeNexus-Demo.mp4) (04:40, [PokeNexus-Demo.md](PokeNexus-Demo.md)); mất mạng thì chạy bản local `docker compose --profile app up -d --build`.
+- Dự phòng: mạng chậm hoặc mất mạng thì chạy bản local `docker compose --profile app up -d --build` (chuẩn bị sẵn trước giờ pitching).
 
 | Bước | Màn hình | Lời dẫn |
 |---|---|---|

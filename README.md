@@ -8,7 +8,6 @@ https://github.com/Nha-Cong-Dong/PokeNexus
 |---|---|
 | Dùng thử | https://pokenexus.pages.dev (frontend Cloudflare Pages; backend Render Free có thể mất 1-3 phút để thức dậy nếu lâu không có ai dùng) |
 | API | https://pokenexus-api-s6g6.onrender.com/api/v1/health |
-| Video demo (4 phút 40 giây) | [docs/pitching/PokeNexus-Demo.mp4](docs/pitching/PokeNexus-Demo.mp4), mốc từng cảnh ở [PokeNexus-Demo.md](docs/pitching/PokeNexus-Demo.md) |
 | Báo cáo tổng kết | [docs/pitching/PokeNexus-BaoCao.docx](docs/pitching/PokeNexus-BaoCao.docx) |
 | Slide pitching | [docs/pitching/slides.html](docs/pitching/slides.html) (mở bằng trình duyệt, chạy không cần mạng), [PokeNexus-Pitch.pptx](docs/pitching/PokeNexus-Pitch.pptx) |
 | Kiểm tra bản đã deploy | `node scripts/acceptance-check.mjs` ([docs/deploy.md](docs/deploy.md), Phần 8) |
