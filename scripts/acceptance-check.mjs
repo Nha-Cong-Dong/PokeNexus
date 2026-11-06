@@ -56,7 +56,9 @@ async function api(path, init = {}) {
     headers: { 'Content-Type': 'application/json', ...(init.headers ?? {}) },
   })
   const text = await response.text()
-  return { status: response.status, headers: response.headers, body: text ? JSON.parse(text) : null }
+  const isJson = (response.headers.get('content-type') ?? '').includes('json')
+  const body = text && isJson ? JSON.parse(text) : text || null
+  return { status: response.status, headers: response.headers, body }
 }
 
 const post = (path, body, headers = {}) =>
@@ -157,11 +159,20 @@ async function runRateLimitChecks() {
   for (const [id, header, value] of rounds) {
     await check(id, `spoofed ${header} cannot bypass the save limit (#89)`, async () => {
       const statuses = []
+      let edgeBlocked = 0
       for (let i = 1; i <= 11; i += 1) {
-        statuses.push((await post('/teams', probe, { [header]: value(i) })).status)
+        const response = await post('/teams', probe, { [header]: value(i) })
+        statuses.push(response.status)
+        const fromEdge = response.headers.get('server') === 'cloudflare'
+        const edgeError = /error[ -]?code:? ?1000|error-1000/i.test(String(response.body))
+        if (response.status === 403 && fromEdge && edgeError) {
+          edgeBlocked += 1
+        }
       }
       await sleep(65_000)
-      return { ok: statuses.slice(0, 10).every((s) => s === 400) && statuses[10] === 429, detail: statuses.join(' ') }
+      const limited = statuses.slice(0, 10).every((s) => s === 400) && statuses[10] === 429
+      const detail = statuses.join(' ') + (edgeBlocked === 11 ? ', blocked at the Cloudflare edge' : '')
+      return { ok: limited || edgeBlocked === 11, detail }
     })
   }
 }
