@@ -61,7 +61,7 @@
 - **Mục tiêu:** Chào, giới thiệu bản thân và sản phẩm trong một câu, báo trước nội dung.
 - **Trên slide có:**
   - Tên sản phẩm, câu mô tả: bách khoa Pokémon và công cụ phân tích đội hình VGC.
-  - Một người làm, 18/10 - 08/11/2026.
+  - Tên người trình bày, thời gian dự án 18/10 - 08/11/2026.
   - Đội demo 5 Pokémon và ô "Slot 6?".
 - **Nói:**
 
