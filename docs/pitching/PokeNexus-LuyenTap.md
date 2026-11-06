@@ -1,6 +1,7 @@
 # PokeNexus - Tài liệu luyện tập pitching và hỏi đáp
 
-- Phiên bản: 0.2 (cập nhật 2026-11-05; thêm Phần 10 kịch bản pitching 15 phút (T406, Issue #72); Phần 5 sửa 2 chỗ lệch code: custom variant `shorter`, `useMediaQuery` dùng ở 3 nơi; các câu mô tả hosting hiện tại đổi Railway thành Render và Aiven, giới hạn lưu đội lấy IP từ `CF-Connecting-IP` theo PR #91)
+- Phiên bản: 0.3 (cập nhật 2026-11-06; số đo trên production bản mới nhất: script nghiệm thu 36/36, Lighthouse mobile 9 route; câu hỏi 23, 35, 40 và Phần 9, mục III điền số thật; slide 17, 18 và bảng thời gian Phần 10 cập nhật theo, Issue #107)
+- Bản 0.2 (2026-11-05; thêm Phần 10 kịch bản pitching 15 phút (T406, Issue #72); Phần 5 sửa 2 chỗ lệch code: custom variant `shorter`, `useMediaQuery` dùng ở 3 nơi; các câu mô tả hosting hiện tại đổi Railway thành Render và Aiven, giới hạn lưu đội lấy IP từ `CF-Connecting-IP` theo PR #91)
 - Bản 0.1 (2026-11-02): Phần 1 đến Phần 9.
 - Mục đích: chuẩn bị cho buổi pitching Checkpoint 4 ngày 08/11: hiểu và tự giải thích được từng phần code, luồng dữ liệu, quyết định thiết kế; trả lời câu hỏi chi tiết của giám khảo (T414, Issue #71).
 - Trích dẫn `path:line` tính từ gốc repo, khớp nhánh `main` ngày 2026-11-02 sau PR #76 và PR của T414. Code đổi thì chạy lại bước kiểm trích dẫn (mục Kiểm tra trong mô tả PR của T414).
@@ -657,7 +658,7 @@ Các loader đều là `@Component`, nhận `CsvReader`, ghi bằng `JdbcTemplat
 - **Phụ thuộc:** `ClientIpResolver`, `SaveRateLimiter`, `HealthService`.
 - **Dữ liệu:** không có placeholder riêng ngoài `CLIENT_IP_HEADER`.
 - **Biên và lỗi:** proxy của Render chỉ nối IP vào cuối `X-Forwarded-For`, giá trị đầu do client tự đặt: kiểm chứng ngày 04/11, 11 request giả header đều qua giới hạn (lỗi B3, Issue #89). Vì vậy PR #91 không dùng `getRemoteAddr()` đã qua `ForwardedHeaderFilter` cho giới hạn lưu đội mà đọc `CF-Connecting-IP`, header edge Cloudflare ghi đè bằng IP thật (`docs/architecture.md`, Phần 8; `docs/deploy.md`, Phần 8, mục III). Không bật ở `dev` vì local không có proxy.
-- **Test:** `backend/src/test/java/com/pokenexus/common/web/ClientIpResolverTest.java`; trên link thật, bài kiểm chứng 11 request chạy bằng `node scripts/acceptance-check.mjs --rate-limit`.
+- **Test:** `backend/src/test/java/com/pokenexus/common/web/ClientIpResolverTest.java`; trên link thật, bài kiểm chứng 11 request chạy bằng `node scripts/acceptance-check.mjs --rate-limit`; ngày 06/11 đạt cả 3 vòng: `X-Forwarded-For` và `Forwarded` ra 10 lần `400` rồi `429`, còn `CF-Connecting-IP` giả bị edge Cloudflare chặn ngay (`403`, lỗi 1000), không tới backend.
 
 **5. `backend/src/main/resources/db/migration/V1__create_reference_tables.sql` (`backend/src/main/resources/db/migration/V1__create_reference_tables.sql`)**
 
@@ -1036,7 +1037,7 @@ Các loader đều là `@Component`, nhận `CsvReader`, ghi bằng `JdbcTemplat
 | 20 | Cấu hình kết nối DB lấy từ đâu? | `application.yml` dùng placeholder `DB_HOST`, `DB_PORT`... có giá trị mặc định. Khi chạy từ `backend/`, file `../.env` được import tự động; trong Docker hoặc Render, giá trị đến từ biến môi trường. | `application.yml:5,9-11`, `docker-compose.yml:38-45`, `docs/architecture.md:499-499` |
 | 21 | CORS cấu hình thế nào? | Chỉ `/api/**`, chỉ origin trong `CORS_ALLOWED_ORIGINS`, method GET, POST, OPTIONS, preflight cache 1 giờ. Expose `Location` và `Retry-After` để JavaScript đọc được hai header này. Origin lạ nhận 403, có test. | `CorsConfig.java:23-28`, `CorsConfigTest.java:36-43` |
 | 22 | `forward-headers-strategy: framework` để làm gì? | Trên Render, request đi qua proxy nên `getRemoteAddr()` gốc là IP proxy. Cấu hình này bật `ForwardedHeaderFilter` của Spring để thay IP, scheme, host bằng giá trị trong `Forwarded` hoặc `X-Forwarded-*`. Giới hạn lưu đội không dựa vào giá trị này nữa mà đọc `CF-Connecting-IP` qua `ClientIpResolver` (PR #91). Chỉ bật ở `prod` vì local không có proxy. | `application-prod.yml:2,13`, `ClientIpResolver.java:18-26`, `TeamController.java:45`, `docs/architecture.md`, Phần 8 |
-| 23 | Header forwarded có thể bị giả không? | Có. Ngày 04/11 em kiểm chứng trên Render: proxy chỉ nối IP vào cuối `X-Forwarded-For`, nên 11 request với giá trị đầu giả khác nhau đều qua giới hạn (lỗi B3, Issue #89). PR #91 chuyển sang `CF-Connecting-IP`, header mà edge Cloudflare của Render ghi đè bằng IP thật; bài thử 11 request chạy lại trên production bằng `acceptance-check.mjs --rate-limit`. | `docs/adr/0009-hosting-render-aiven.md`, Phần 4; `docs/deploy.md`, Phần 8, mục III |
+| 23 | Header forwarded có thể bị giả không? | Có. Ngày 04/11 em kiểm chứng trên Render: proxy chỉ nối IP vào cuối `X-Forwarded-For`, nên 11 request với giá trị đầu giả khác nhau đều qua giới hạn (lỗi B3, Issue #89). PR #91 chuyển sang `CF-Connecting-IP`, header mà edge Cloudflare của Render ghi đè bằng IP thật; chạy lại trên production ngày 06/11 bằng `acceptance-check.mjs --rate-limit`: giả `X-Forwarded-For` hay `Forwarded` thì lần 11 vẫn bị `429`; tự gắn `CF-Connecting-IP` thì edge Cloudflare trả `403` (lỗi 1000) trước khi tới backend. | `docs/adr/0009-hosting-render-aiven.md`, Phần 4; `docs/deploy.md`, Phần 8, mục III |
 | 24 | `RequestBodyLimitFilter` chặn body lớn thế nào khi client không gửi `Content-Length`? | Filter không tin `Content-Length`: nếu khai báo nhỏ hoặc không có, nó đọc tối đa 16.385 byte; đọc được hơn 16.384 là quá lớn. Nếu khai báo lớn thì không đọc gì. Body hợp lệ được đưa lại cho Controller qua một request bọc. | `RequestBodyLimitFilter.java:27,40-44`, `RequestBodyLimitFilterTest.java:22-39` |
 | 25 | Vì sao 413 không trả thẳng trong filter? | Filter chỉ đánh dấu body quá lớn; exception được ném khi Controller đọc body, tức là bên trong `DispatcherServlet`, nên đi qua `GlobalExceptionHandler` và ra cùng định dạng `ProblemDetail` với `code`. Hệ quả: endpoint không đọc body sẽ không trả 413. Lý do thiết kế không ghi trong tài liệu, đây là điều code thể hiện. | `RequestBodyLimitFilter.java:104-110`, `SynergyControllerTest.java:181-190` |
 | 26 | Giới hạn 16 KB có chặt quá không? | Body hợp lệ lớn nhất là lưu đội 6 thành viên, dưới 1 KB, nên 16 KB dư nhiều lần. Mục tiêu là chặn request làm cạn bộ nhớ, không ảnh hưởng người dùng thật. | `docs/architecture.md:375` |
@@ -2125,7 +2126,7 @@ Content-Type: application/problem+json
 | 37 | Lưu đội diễn ra thế nào? | Kiểm tra giới hạn tần suất, rồi trong một transaction: kiểm tra slot, Pokémon trùng, ID tồn tại, chấm điểm bằng `SynergyAnalyzer`, sinh mã, lưu `teams` và `team_members` bằng cascade. Trả 201 kèm `Location` tới đường dẫn chia sẻ. | `backend/src/main/java/com/pokenexus/team/controller/TeamController.java:37-44`, `backend/src/main/java/com/pokenexus/team/service/TeamService.java:62-87` |
 | 38 | Mã chia sẻ sinh thế nào, có trùng không? | 8 ký tự base62 từ `SecureRandom`, khoảng 2,18 x 10^14 tổ hợp nên khó đoán. Trước khi lưu kiểm tra tồn tại, trùng thì sinh lại, tối đa 3 lần rồi 500. Cột có collation `utf8mb4_bin` và UNIQUE nên phân biệt hoa thường và DB chặn trùng lần cuối. | `backend/src/main/java/com/pokenexus/team/service/ShareCodeGenerator.java:11-23`, `TeamService.java:101-110`, `backend/src/main/resources/db/migration/V3__create_team_tables.sql:5-10` |
 | 39 | Giới hạn lưu đội hoạt động thế nào? | 10 lần mỗi phút mỗi IP, cửa sổ cố định trong `ConcurrentHashMap`. Lần 11 trả 429 với `Retry-After` là số giây tới hết cửa sổ, làm tròn lên. Theo dõi tối đa 10.000 IP; đầy thì dọn cửa sổ hết hạn, vẫn đầy thì IP mới nhận 429. | `backend/src/main/java/com/pokenexus/team/service/SaveRateLimiter.java:18-75`, `backend/src/test/java/com/pokenexus/team/service/SaveRateLimiterTest.java:25-114` |
-| 40 | IP lấy từ đâu, giả mạo header được không? | `ClientIpResolver` đọc header cấu hình ở `app.team.client-ip-header`; ở `prod` là `CF-Connecting-IP` do edge Cloudflare của Render ghi đè bằng IP thật, header vắng thì dùng `getRemoteAddr()`. Trước PR #91, IP lấy từ giá trị đầu của `X-Forwarded-For` do client tự đặt được, nên giả header thì vượt giới hạn (lỗi B3, kiểm chứng trên Render 04/11, Issue #89). Đây vẫn là chống spam cơ bản, không phải xác thực. | `backend/src/main/java/com/pokenexus/common/web/ClientIpResolver.java:18-26`, `TeamController.java:45`, `backend/src/main/resources/application-prod.yml:13`, `docs/architecture.md`, Phần 8 |
+| 40 | IP lấy từ đâu, giả mạo header được không? | `ClientIpResolver` đọc header cấu hình ở `app.team.client-ip-header`; ở `prod` là `CF-Connecting-IP` do edge Cloudflare của Render ghi đè bằng IP thật, header vắng thì dùng `getRemoteAddr()`. Trước PR #91, IP lấy từ giá trị đầu của `X-Forwarded-For` do client tự đặt được, nên giả header thì vượt giới hạn (lỗi B3, kiểm chứng trên Render 04/11, Issue #89). Sau PR #91, ngày 06/11 chạy lại trên production: cả 3 kiểu header giả đều không vượt được giới hạn. Đây vẫn là chống spam cơ bản, không phải xác thực. | `backend/src/main/java/com/pokenexus/common/web/ClientIpResolver.java:18-26`, `TeamController.java:45`, `backend/src/main/resources/application-prod.yml:13`, `docs/architecture.md`, Phần 8 |
 | 41 | Mở đội đã lưu có tính lại điểm không? | Không, trả `synergy_score` đã lưu lúc tạo (DECIMAL 2 chữ số). Tên, hệ của thành viên thì lấy mới qua `findRefs`. Nếu sau này đổi thuật toán, điểm cũ vẫn giữ. | `TeamService.java:89-99`, `docs/api.md:377` |
 | 42 | Hiệu năng đo được bao nhiêu? | Mục tiêu p95 dưới 50 ms. Đo 28/10 với 1.351 Pokémon trong Docker: `analyze` 7,2 ms (đội 5), 6,9 ms (đội 6), `recommendations` 8,6 ms; phần lớn là chi phí HTTP. Số này đo trước PR #60 (31/10) thêm vai trò chỉ số; tài liệu chưa ghi số đo lại sau đó. | `docs/spec.md:196`, `docs/architecture.md:393-398`, `PLAN.md:56` |
 | 43 | Điểm yếu thật thà của thuật toán? | Chỉ xét hệ, bỏ qua Ability như Levitate, chiêu thức, vật phẩm. `teamScore` chỉ đo phòng thủ. Điểm đề xuất chuẩn hóa tương đối nên không so được giữa hai lần gọi, và tập 1 ứng viên luôn được 100. Trọng số là lựa chọn thiết kế dựa trên hướng dẫn cộng đồng, chưa hiệu chỉnh bằng dữ liệu trận đấu. | `docs/architecture.md:221`, `:267`, `RecommendationEngineTest.java:94-104` |
@@ -3127,7 +3128,7 @@ export function retryUnlessClientError(failureCount: number, error: Error): bool
 **Ghi chú thêm: điều chưa xác định từ code (không phải lệch tài liệu)**
 
 - Mã HTTP và header cache mà Cloudflare Pages trả cho `index.html`, `/sprites/**`, đường dẫn lạ: repo không có `_headers`, `_redirects`; hành vi do nền tảng quyết định.
-- Số đo LCP, CLS, khung hình thực tế: chưa đo trong phạm vi tài liệu này. Kích thước bundle lấy từ `frontend/dist` có sẵn (build 17:27 ngày 2026-11-02), không chạy build mới.
+- Số đo khung hình thực tế: chưa đo trong phạm vi tài liệu này. LCP, CLS trên link thật: Phần 9, mục III. Kích thước bundle lấy từ `frontend/dist` có sẵn (build 17:27 ngày 2026-11-02), không chạy build mới.
 - Endpoint nào trả 204 không có thân (ảnh hưởng `response.json()` trong `http.ts`): không thấy trong phạm vi frontend đã đọc.
 
 ---
@@ -4939,7 +4940,7 @@ Garchomp
 | 32 | Gửi body thật lớn thì sao? | `RequestBodyLimitFilter` giới hạn 16 KB cho `POST`, `PUT`, `PATCH`, kể cả khi client không gửi `Content-Length`; vượt thì 413 `PAYLOAD_TOO_LARGE`, có header CORS. | Phần 3, mục II.V |
 | 33 | DB chưa có dữ liệu thì API trả gì? | 503 `DATA_NOT_READY` thay vì danh sách rỗng hay lỗi 500; `/health` trả `dataLoaded` và `pokemonCount`. | Phần 3, mục III; Phần 4, mục III.VI |
 | 34 | Mất kết nối DB thì sao? | `/health` trả 503 `DOWN`; profile `prod` đặt timeout kết nối 5 giây để hosting phát hiện nhanh. Phân tích đội vẫn chạy nếu hồ sơ Pokémon đã nạp vào bộ nhớ lúc khởi động, vì `SynergyAnalyzer` chỉ đọc `PokemonProfileRegistry` (`backend/src/main/java/com/pokenexus/synergy/service/SynergyAnalyzer.java:60`). | ADR 0007, Phần 4 |
-| 35 | Hiệu năng giao diện đo thế nào? | Lighthouse chế độ mobile trên link thật, 3 lần mỗi route, lấy trung vị; ngưỡng LCP 2,5 s, CLS 0,1, TBT 200 ms, Accessibility và Best Practices từ 90. Đã giảm CLS 375 px mạng chậm từ 0,196-0,884 xuống 0,021 (PR #58). Điền số Lighthouse thật sau T404. | `docs/roadmap.md`, Phần 1, mục I; `PLAN.md` |
+| 35 | Hiệu năng giao diện đo thế nào? | Lighthouse chế độ mobile trên link thật, 3 lần mỗi route, lấy trung vị; ngưỡng LCP 2,5 s, CLS 0,1, TBT 200 ms, Accessibility và Best Practices từ 90. Đã giảm CLS 375 px mạng chậm từ 0,196-0,884 xuống 0,021 (PR #58). Đo ngày 06/11: Accessibility 100 cả 9 route, CLS, TBT, Best Practices đạt; LCP chỉ đạt 1/9 route (2,1-5,5 s) vì ảnh hero được phát hiện sau khi JS chạy. Cách sửa: preload ảnh hero, `fetchpriority=high`, bỏ hiệu ứng hiện dần; chưa làm vì đóng băng tính năng từ 05/11. | `docs/roadmap.md`, Phần 1, mục I; `PLAN.md` |
 | 36 | Khả năng tiếp cận (accessibility)? | Tương phản WCAG AA, màu luôn kèm chữ (`x2`, tên hệ), điều khiển được bằng bàn phím, thứ tự `Tab` khớp thứ tự hiển thị (#69, #76), tôn trọng `prefers-reduced-motion`. | `docs/design-system.md`, Phần 8 |
 
 ### VI. Hạn chế và hướng phát triển
@@ -4993,7 +4994,8 @@ Garchomp
 | CLS 375 px mạng chậm | Từ 0,196-0,884 xuống tối đa 0,021 | `PLAN.md` (PR #58) |
 | Bundle JS chính | 371 KB (117 KB gzip) | Review #70 |
 | Repo | 1.862 file, pack 13,9 MiB; sprite 1,42 MB, ảnh khung cảnh 8,1 MB | Review #70 |
-| Lighthouse trên link thật | Chưa đo (T404 sau deploy) | |
+| Lighthouse mobile trên link thật (06/11, trung vị 3 lần) | Accessibility 100 ở 9/9; LCP đạt 1/9 (2,1-5,5 s); CLS tối đa 0,094; TBT tối đa 118 ms | `docs/worklog.md`, 06/11 |
+| Script nghiệm thu trên link thật (06/11) | 36/36 | `scripts/acceptance-check.mjs`; `docs/worklog.md`, 06/11 |
 
 ### IV. Lệnh hay dùng
 
@@ -5030,9 +5032,9 @@ bash scripts/bench-synergy.sh
 - Slide: [slides.html](slides.html) mở bằng trình duyệt, không cần mạng; mũi tên trái, phải hoặc `Space` chuyển slide, `F` toàn màn hình, `N` bật ghi chú lời thoại. [PokeNexus-Pitch.pptx](PokeNexus-Pitch.pptx) cùng nội dung, lời thoại nằm trong Notes của từng slide.
 - 19 slide chính nói trong 15 phút; 8 slide phụ lục (A1-A8, slide 20-27) chỉ mở khi bị hỏi (mục V).
 - Cách ước lượng: đếm từ theo cách đọc thành tiếng, số viết bằng chữ số tính theo số âm tiết khi đọc (ví dụ "1.351" là 7 từ: một nghìn ba trăm năm mươi mốt). Tốc độ chuẩn 140 từ mỗi phút; mốc mm:ss ở mục II, III tính theo tốc độ này.
-- Tổng: 1.918 từ khi đếm theo khoảng trắng, 2.093 từ khi đọc thành tiếng. Ước lượng 14:57 ở 140 từ/phút; 13:57 nếu nói 150 từ/phút, 16:06 nếu nói 130 từ/phút. Tiêu chí của T406: 15 phút, lệch không quá 1 phút.
+- Tổng: 1.932 từ khi đếm theo khoảng trắng, 2.111 từ khi đọc thành tiếng. Ước lượng 15:05 ở 140 từ/phút; 14:04 nếu nói 150 từ/phút, 16:14 nếu nói 130 từ/phút. Tiêu chí của T406: 15 phút, lệch không quá 1 phút.
 - Demo trực tiếp không tính vào 15 phút (ban tổ chức yêu cầu pitching khoảng 15 phút, chưa kể demo; `docs/roadmap.md`, dòng "Thay đổi so với 1.1"). Ở slide 6, dừng đồng hồ, demo theo mục IV, xong thì sang slide 7 và tính giờ tiếp.
-- Số liệu trên slide chốt ngày 05/11/2026, cùng nguồn với báo cáo tổng kết (`PokeNexus-BaoCao.docx`). Trước buổi pitching, nếu đã gắn tag `v1.0.0`, đã đo Lighthouse trên link thật hoặc đã kiểm chứng B3 trên production thì sửa slide 17 và câu tương ứng ở mục III.
+- Số liệu trên slide chốt ngày 05/11/2026, cùng nguồn với báo cáo tổng kết (`PokeNexus-BaoCao.docx`); riêng slide 17, 18 cập nhật ngày 06/11 theo số đo trên production (nghiệm thu 36/36, Lighthouse). Sau tổng duyệt, nếu kịch bản demo đã chạy 2 lần liên tiếp trên link thật thì đổi dòng tương ứng ở slide 17 thành Đạt.
 
 ### II. Bảng thời gian
 
@@ -5054,10 +5056,10 @@ bash scripts/bench-synergy.sh
 | 14 | Kiến trúc và hosting | 10:18 | 00:56 | 131 |
 | 15 | Chất lượng và kiểm thử | 11:14 | 00:48 | 112 |
 | 16 | Quy trình 3 tuần | 12:02 | 00:54 | 126 |
-| 17 | Kết quả so với tiêu chí | 12:56 | 00:49 | 115 |
-| 18 | Hạn chế và hướng phát triển | 13:45 | 00:55 | 128 |
-| 19 | Cảm ơn ban giám khảo | 14:40 | 00:17 | 40 |
-| | **Tổng** | | **14:57** | **2.093** |
+| 17 | Kết quả so với tiêu chí | 12:56 | 00:57 | 133 |
+| 18 | Hạn chế và hướng phát triển | 13:53 | 00:55 | 128 |
+| 19 | Cảm ơn ban giám khảo | 14:48 | 00:17 | 40 |
+| | **Tổng** | | **15:05** | **2.111** |
 
 - Slide 6 chỉ có câu chuyển sang demo; đồng hồ dừng sau câu này.
 - Lệch quá 1 phút khi tổng duyệt: rút gọn slide 4 (bỏ câu về ba story mở rộng) và slide 16 (bỏ câu về Claude Code); hai câu này có sẵn ở slide và ở Phần 8 để trả lời khi được hỏi.
@@ -5151,17 +5153,17 @@ bash scripts/bench-synergy.sh
 - Mọi thay đổi đi qua Issue và Pull Request có CI: 41 Issue, 50 Pull Request đã merge, chín ADR cho các quyết định lớn. Từ ngày 5 tháng 11 em đóng băng tính năng.
 - Em dùng Claude Code như cộng sự lập trình; em quyết định phạm vi, duyệt kết quả và kiểm lại số liệu bằng API thật.
 
-#### 17. Slide 17 - Kết quả so với tiêu chí (12:56 - 13:45)
+#### 17. Slide 17 - Kết quả so với tiêu chí (12:56 - 13:53)
 
-- Đối chiếu với tiêu chí Checkpoint 4, trạng thái ngày 5 tháng 11. Đạt: đủ mười tính năng, bảy Issue lỗi đều đã đóng, CI xanh, năm ví dụ có test, p95 dưới 50 mili giây, link chạy được trên điện thoại và máy tính, có bản local bằng Docker.
-- Một phần: kịch bản demo đã chạy đủ qua API production, còn hai lần liên tiếp trên giao diện production thuộc buổi tổng duyệt. Chưa đo: Lighthouse trên link thật; ở local, Lighthouse Accessibility đạt 100. Tag v1.0.0 gắn sau tổng duyệt. Em ghi rõ phần chưa đạt thay vì làm tròn thành đạt.
+- Đối chiếu với tiêu chí Checkpoint 4, trạng thái ngày 6 tháng 11. Đạt: đủ mười tính năng, bảy Issue lỗi đều đã đóng, CI xanh, năm ví dụ có test, p95 dưới 50 mili giây, link chạy được trên điện thoại và máy tính, có bản local bằng Docker.
+- Một phần: script nghiệm thu trên link thật đạt 36 trên 36 mục, còn hai lần liên tiếp trên giao diện production thuộc buổi tổng duyệt. Lighthouse trên link thật: Accessibility 100 ở cả chín route, nhưng LCP mới đạt một trên chín route vì ảnh hero tải sau JavaScript. Tag v1.0.0 gắn sau tổng duyệt. Em ghi rõ phần chưa đạt thay vì làm tròn thành đạt.
 
-#### 18. Slide 18 - Hạn chế và hướng phát triển (13:45 - 14:40)
+#### 18. Slide 18 - Hạn chế và hướng phát triển (13:53 - 14:48)
 
 - Hạn chế lớn nhất là phân tích mới chỉ theo hệ, chưa có chiêu thức, Ability, vật phẩm; Pokémon có Levitate vẫn bị tính là yếu Ground. Điểm đề xuất là tương đối, và hệ số phạt 4 và 8 chưa hiệu chỉnh bằng dữ liệu trận đấu. Hosting miễn phí có cold start khoảng hai phút rưỡi đến ba phút; em đã thêm lịch gọi health mỗi mười phút.
 - Bài học: em làm tính năng mở rộng trước khi deploy, nên lỗi chỉ có trên production lộ ra muộn. Lần sau em sẽ deploy sớm một bản tối thiểu. Hướng tiếp theo là chiêu thức và Ability trong phân tích, E2E tự động trong CI, và dữ liệu meta VGC để hiệu chỉnh trọng số.
 
-#### 19. Slide 19 - Cảm ơn ban giám khảo (14:40 - 14:57)
+#### 19. Slide 19 - Cảm ơn ban giám khảo (14:48 - 15:05)
 
 - Sản phẩm đang chạy ở pokenexus chấm pages chấm dev, mã nguồn ở GitHub Nha-Cong-Dong, PokeNexus. Em cảm ơn ban giám khảo đã lắng nghe. Em sẵn sàng trả lời câu hỏi, kể cả câu hỏi chi tiết về code.
 
