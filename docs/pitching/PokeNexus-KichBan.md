@@ -10,13 +10,13 @@
 
 ### I. Điều khiển slide
 
-| Phím | Tác dụng |
-|---|---|
-| Mũi tên phải, `Space`, `Enter` | Slide sau |
-| Mũi tên trái, `Backspace` | Slide trước |
-| `F` | Toàn màn hình |
-| `N` | Bật, tắt ghi chú lời nói ở cạnh dưới |
-| `Home`, `End` | Slide đầu, slide cuối |
+| Phím                           | Tác dụng                             |
+| ------------------------------ | ------------------------------------ |
+| Mũi tên phải, `Space`, `Enter` | Slide sau                            |
+| Mũi tên trái, `Backspace`      | Slide trước                          |
+| `F`                            | Toàn màn hình                        |
+| `N`                            | Bật, tắt ghi chú lời nói ở cạnh dưới |
+| `Home`, `End`                  | Slide đầu, slide cuối                |
 
 - Mở file bằng Chrome hoặc Edge, không cần mạng. Thêm `#số` vào cuối địa chỉ để mở thẳng một slide, ví dụ `slides.html#6`.
 - Hiệu ứng mỗi slide chạy khoảng 1,5 giây; nói câu đầu trong lúc nội dung hiện ra, không cần chờ.
@@ -30,27 +30,27 @@
 
 ### III. Bảng thời gian
 
-| Slide | Tiêu đề | Bắt đầu | Thời lượng | Số từ (đọc) |
-|---|---|---|---|---|
-| 1 | PokeNexus | 00:00 | 00:28 | 65 |
-| 2 | Người chơi VGC đang phải tự nhẩm | 00:28 | 00:53 | 124 |
-| 3 | PokeNexus trong một câu | 01:21 | 00:42 | 97 |
-| 4 | Ba người dùng, mười user story | 02:03 | 00:53 | 124 |
-| 5 | 10 tính năng trên 8 trang | 02:56 | 00:43 | 101 |
-| 6 | Demo trực tiếp | 03:39 | 00:21 | 49 |
-| 7 | Omni-Dex và trang Chi tiết | 04:00 | 00:52 | 122 |
-| 8 | Bảng tương khắc và Bàn Cân Sức Mạnh | 04:52 | 00:46 | 108 |
-| 9 | Team Builder: bản đồ điểm yếu | 05:39 | 00:51 | 118 |
-| 10 | Synergy: điểm đội tính thế nào | 06:29 | 01:09 | 160 |
-| 11 | Đề xuất slot 6 theo lối chơi | 07:38 | 01:03 | 146 |
-| 12 | Đội demo: 20 lên 48 nhờ Excadrill | 08:40 | 00:49 | 114 |
-| 13 | Dữ liệu offline từ CSV PokéAPI | 09:29 | 00:50 | 116 |
-| 14 | Kiến trúc và hosting | 10:19 | 00:56 | 131 |
-| 15 | Chất lượng và kiểm thử | 11:15 | 00:48 | 112 |
-| 16 | Quy trình 3 tuần | 12:03 | 00:54 | 126 |
-| 17 | Hạn chế và hướng phát triển | 12:57 | 00:55 | 128 |
-| 18 | Cảm ơn ban giám khảo | 13:52 | 00:17 | 40 |
-| | **Tổng** | | **14:09** | **1.981** |
+| Slide | Tiêu đề                             | Bắt đầu | Thời lượng | Số từ (đọc) |
+| ----- | ----------------------------------- | ------- | ---------- | ----------- |
+| 1     | PokeNexus                           | 00:00   | 00:28      | 65          |
+| 2     | Người chơi VGC đang phải tự nhẩm    | 00:28   | 00:53      | 124         |
+| 3     | PokeNexus trong một câu             | 01:21   | 00:42      | 97          |
+| 4     | Ba người dùng, mười user story      | 02:03   | 00:53      | 124         |
+| 5     | 10 tính năng trên 8 trang           | 02:56   | 00:43      | 101         |
+| 6     | Demo trực tiếp                      | 03:39   | 00:21      | 49          |
+| 7     | Omni-Dex và trang Chi tiết          | 04:00   | 00:52      | 122         |
+| 8     | Bảng tương khắc và Bàn Cân Sức Mạnh | 04:52   | 00:46      | 108         |
+| 9     | Team Builder: bản đồ điểm yếu       | 05:39   | 00:51      | 118         |
+| 10    | Synergy: điểm đội tính thế nào      | 06:29   | 01:09      | 160         |
+| 11    | Đề xuất slot 6 theo lối chơi        | 07:38   | 01:03      | 146         |
+| 12    | Đội demo: 20 lên 48 nhờ Excadrill   | 08:40   | 00:49      | 114         |
+| 13    | Dữ liệu offline từ CSV PokéAPI      | 09:29   | 00:50      | 116         |
+| 14    | Kiến trúc và hosting                | 10:19   | 00:56      | 131         |
+| 15    | Chất lượng và kiểm thử              | 11:15   | 00:48      | 112         |
+| 16    | Quy trình 3 tuần                    | 12:03   | 00:54      | 126         |
+| 17    | Hạn chế và hướng phát triển         | 12:57   | 00:55      | 128         |
+| 18    | Cảm ơn ban giám khảo                | 13:52   | 00:17      | 40          |
+|       | **Tổng**                            |         | **14:09**  | **1.981**   |
 
 ---
 
@@ -67,7 +67,7 @@
 
 > Em chào ban giám khảo. Em là Nguyễn Quốc Khánh, một mình làm dự án PokeNexus trong ba tuần, từ ngày 18 tháng 10 đến hôm nay.
 >
-> PokeNexus là bách khoa Pokémon kiêm công cụ phân tích đội hình VGC. Trong mười lăm phút, em trình bày vấn đề, sản phẩm, thuật toán, kiến trúc, kết quả, và demo trực tiếp trên link thật.
+> PokeNexus là bách khoa Pokémon kiêm công cụ phân tích đội hình VGC.
 
 ### II. Slide 2 - Người chơi VGC đang phải tự nhẩm (00:28 - 01:21)
 
@@ -315,14 +315,14 @@
 
 ### II. Sáu bước
 
-| Bước | Màn hình | Lời dẫn |
-|---|---|---|
-| 1 | Trang Tổng quan | Đây là trang Tổng quan, hero là vỏ Pokédex với khung cảnh vùng đất. Em bấm "Mở Pokédex". |
-| 2 | Pokédex, Chi tiết | Em chọn hệ Dragon và thế hệ 4: ra 6 kết quả, URL đổi theo bộ lọc. Em mở Garchomp: 6 chỉ số, lưới phòng thủ 18 hệ, tốc độ cấp 50. |
-| 3 | Bàn Cân | Em bấm "So sánh" và chọn Salamence: hai radar chồng lớp, kết luận "Garchomp nhanh hơn (102 so với 100)". |
-| 4 | Xây đội | Em thêm Charizard, Gyarados, Dragonite, Talonflame, Volcarona. Hàng Rock gắn nhãn "Lỗ hổng", điểm đội 20. |
-| 5 | Đề xuất | Em bật ô "Loại huyền thoại, thần thoại và Paradox": đề xuất số 1 là Excadrill, 85 điểm phù hợp. Em bấm "Thêm vào đội": điểm đội lên 48, Rock hết lỗ hổng. |
-| 6 | Lưu và chia sẻ | Em bấm "Lưu đội", sao chép link, mở ở cửa sổ ẩn danh: đúng 6 thành viên, cùng điểm 48. |
+| Bước | Màn hình          | Lời dẫn                                                                                                                                                   |
+| ---- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Trang Tổng quan   | Đây là trang Tổng quan, hero là vỏ Pokédex với khung cảnh vùng đất. Em bấm "Mở Pokédex".                                                                  |
+| 2    | Pokédex, Chi tiết | Em chọn hệ Dragon và thế hệ 4: ra 6 kết quả, URL đổi theo bộ lọc. Em mở Garchomp: 6 chỉ số, lưới phòng thủ 18 hệ, tốc độ cấp 50.                          |
+| 3    | Bàn Cân           | Em bấm "So sánh" và chọn Salamence: hai radar chồng lớp, kết luận "Garchomp nhanh hơn (102 so với 100)".                                                  |
+| 4    | Xây đội           | Em thêm Charizard, Gyarados, Dragonite, Talonflame, Volcarona. Hàng Rock gắn nhãn "Lỗ hổng", điểm đội 20.                                                 |
+| 5    | Đề xuất           | Em bật ô "Loại huyền thoại, thần thoại và Paradox": đề xuất số 1 là Excadrill, 85 điểm phù hợp. Em bấm "Thêm vào đội": điểm đội lên 48, Rock hết lỗ hổng. |
+| 6    | Lưu và chia sẻ    | Em bấm "Lưu đội", sao chép link, mở ở cửa sổ ẩn danh: đúng 6 thành viên, cùng điểm 48.                                                                    |
 
 - Bước 5: giao diện làm tròn điểm phù hợp thành 85; API trả 85,1, là số trên slide 12.
 - Nếu một bước lỗi: nói ngắn gọn "em chuyển sang bản local", không dừng lại sửa trước giám khảo.
@@ -333,16 +333,16 @@
 
 ### I. Các con số phải nói đúng
 
-| Con số | Ý nghĩa | Slide |
-|---|---|---|
-| 324 | Hệ số tương khắc 18 x 18 | 2 |
-| 1.025 loài, 1.351 dạng, 1.083 dạng mặc định | Dữ liệu PokéAPI | 7, 13 |
-| 20 lên 48 | Điểm đội demo trước và sau khi thêm Excadrill | 9, 10, 12 |
-| 85,1 | Điểm phù hợp của Excadrill | 12 |
-| 596, 484, 165 | Số ứng viên: mặc định, loại huyền thoại, thêm Trick Room | 11 |
-| 142, 57, 352 | Unit test backend, integration test, test frontend | 15 |
-| 7,2 ms | p95 phân tích đội, mục tiêu dưới 50 ms | 15 |
-| 41, 50, 9 | Issue, Pull Request đã merge, ADR | 16 |
+| Con số                                      | Ý nghĩa                                                  | Slide     |
+| ------------------------------------------- | -------------------------------------------------------- | --------- |
+| 324                                         | Hệ số tương khắc 18 x 18                                 | 2         |
+| 1.025 loài, 1.351 dạng, 1.083 dạng mặc định | Dữ liệu PokéAPI                                          | 7, 13     |
+| 20 lên 48                                   | Điểm đội demo trước và sau khi thêm Excadrill            | 9, 10, 12 |
+| 85,1                                        | Điểm phù hợp của Excadrill                               | 12        |
+| 596, 484, 165                               | Số ứng viên: mặc định, loại huyền thoại, thêm Trick Room | 11        |
+| 142, 57, 352                                | Unit test backend, integration test, test frontend       | 15        |
+| 7,2 ms                                      | p95 phân tích đội, mục tiêu dưới 50 ms                   | 15        |
+| 41, 50, 9                                   | Issue, Pull Request đã merge, ADR                        | 16        |
 
 ### II. Câu hỏi hay gặp
 
